@@ -135,7 +135,7 @@ $$
 ${\mathbb{R}}$를 사용해 덧셈과 곱셈 연산을 시각화 할 것입니다.
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(0).png){: .align-center}
-(실수 ${\mathbb{R}}$){: .text-center}
+(실수 ${\mathbb{R}}$){: .align-center}
 
 직선 상에 유리수 Q의 원소를 모두 순서대로 나열하는 상황을 가정해봅시다. 유리수는 ${\pi}$나 ${\sqrt 2}$같은 무리수를 표현 할 수 없기 때문에 직선의 어느 지점에서는 빈틈이 발생할 것입니다. 이러한 빈틈을 무리수로 채워 완벽한 연속성을 가지는 직선을 만들어내는 수가 실수 입니다. 
 
