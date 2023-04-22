@@ -135,19 +135,19 @@ $$
 ${\mathbb{R}}$를 사용해 덧셈과 곱셈 연산을 시각화 할 것입니다.
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(0).png){: .align-center}
-(실수 ${\mathbb{R}}$){: style="text-align: center;"}
+(실수 ${\mathbb{R}}$){: .text-center}
 
 직선 상에 유리수 Q의 원소를 모두 순서대로 나열하는 상황을 가정해봅시다. 유리수는 ${\pi}$나 ${\sqrt 2}$같은 무리수를 표현 할 수 없기 때문에 직선의 어느 지점에서는 빈틈이 발생할 것입니다. 이러한 빈틈을 무리수로 채워 완벽한 연속성을 가지는 직선을 만들어내는 수가 실수 입니다. 
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(1).png){: .align-center}
-(수직선, Number Line){: style="text-align: center;"}
+(수직선, Number Line){: .text-center}
 
 이렇게 실수를 대응 시켜 표현한 직선을 수직선(Number line)이라고 하며 위와 같이 표현합니다. 실수의 모든 요소는 상호간에 크기를 비교할 수 있습니다. 
 더 큰 수는 오른쪽에 표시하는 규칙을 사용해 실수의 모든 원소는 수직선 상에 자신의 고유한 위치를 갖게 됩니다. 따라서 하나의 실수를 시각화할 때는 위 이미지 처럼 수의 고유한 위치에 점을 찍어 표현합니다.
 
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(2).png){: .align-center}
-(양수와 음수의 대칭성){: style="text-align: center;"}
+(양수와 음수의 대칭성){: .text-center}
 
 실수를 점으로 표현한다고 했을 때 앞서 체의 구조에서 살펴본 덧셈과 곱셈의 이항연산은 시각적으로 어떻게 표현되는지 생각해봅시다. 
 수직선은 0을 기준으로 양수와 음수라는 두 개의 체계가 서로 대칭되어 있는 것으로도 해석할 수 있습니다. 이러한 관점에서 하나의 수는  원점에서 부터 크기와 방향을 가진 벡터로서 표현할 수도 있습니다.
@@ -159,13 +159,13 @@ $$
 이와 같이 수가 지니는 방향의 속성은 부호를 사용해 나타내며 크기의 속성은 원점으로부터의 거리를 의미합니다. 어떤 수의 원점으로 부터의 거리는 수직막대(Vertical bar) 기호를 사용해서 나타내는데 이를 절댓값(Absolute value)라고 합니다. 예를 들어 -1의 절댓값은 위와 같이 표현합니다.
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(3).png){: .align-center}
-(덧셈은 평행이동){: style="text-align: center;"}
+(덧셈은 평행이동){: .text-center}
 
 우리는 시각적인 효과를 나타내기 위해 수와 연산을 사용합니다. 물체에 힘을 가해 이동하거나, 크기를 늘리는 작업은 덧셈과 곱셈 연산으로 해석할 수 있습니다. 이항연산에서 왼쪽 항의 수를 물체를 구성하는 점으로 보고, 오른쪽 항의 수를 점을 이동시키는 힘으로 보면 덧셈 연산은 점을 평행이동 시키는 작업으로 해석 할 수 있습니다.
 
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(4).png){: .align-center}
 ![Numbers and Set](/assets/images/Docs/Numbers%20and%20Set/image%20(5).png){: .align-center}
-(곱셈은 배율과 대칭){: style="text-align: center;"}
+(곱셈은 배율과 대칭){: .text-center}
 
 그리고 곱셈 연산은 원점을 기준으로 점의 위치를 지정된 배율만큼 늘리고 대칭 시키는 작업으로 해석 할 수 있습니다. 예를 들어 어떤 수와 3의 곱셈은 원점으로부터 거리를 같은 방향으로 세 배 키우는 작업이고, -1와 곱셈은 원점으로부터 거리를 1배로 늘린 후, 반대 방향으로 대칭 시키는 작업으로 해석할 수 있습니다.
 
