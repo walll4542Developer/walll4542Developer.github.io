@@ -1,0 +1,11 @@
+<div class="gallery" data-gallery>
+    {% for image in include.gallery %}
+      <figure class="gallery__item" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+        <a href="{{ image.url | relative_url }}" itemprop="contentUrl" data-size="{{ image.width }}x{{ image.height }}">
+          <img src="{{ image.url | relative_url }}" itemprop="thumbnail" alt="{{ image.alt }}" />
+        </a>
+        <figcaption itemprop="caption description">{{ image.caption }}</figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+  
