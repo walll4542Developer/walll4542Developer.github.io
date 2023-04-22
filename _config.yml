@@ -60,9 +60,14 @@ author:
   bio    : "Junior Technical Artist / 3d WEEABOO
 This blog use personal issue only."
   links:
-    - label: "Website"
+    - label: "Seoul, KR"
+      icon: "fas fa-fw fa-location-dot"
+    - label: "Blog"
       icon: "fas fa-fw fa-link"
       url: "https://walll4542.wixsite.com/watchthis"
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "gmail:walll4542@gmail.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/dPv79Noe77Xze92"
