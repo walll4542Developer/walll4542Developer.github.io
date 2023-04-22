@@ -5,5 +5,7 @@ main:
     url: /categories/
   - title: "Tags"
     url: /tags/
-  - title: "About"
+  - title: "자기 소개서(Resume)"
+    url: /about/
+  - title: "경력 기술서"
     url: /about/
