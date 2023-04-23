@@ -1,9 +1,9 @@
 ---
-title: "csharp"
+title: "CSharp"
 layout: archive
-permalink: /categories/csharp
+permalink: /categories/CSharp
 author_profile: true
 ---
 
-{% assign posts = site.categories.csharp %}
+{% assign posts = site.categories.CSharp %}
 {% for post in posts %} {% include archive-single.html type=page.entries_layout %} {% endfor %}
