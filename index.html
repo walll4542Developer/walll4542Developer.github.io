@@ -1,4 +1,12 @@
 ---
-layout: home
+layout: archive
 author_profile: true
+entries_layout: list
 ---
+
+<div class="grid__wrapper">
+    {% for post in paginator.posts %}
+    {% include archive-single.html type="list" %}
+    {% endfor %}
+</div>
+{% include paginator.html %} 
