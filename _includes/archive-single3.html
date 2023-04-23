@@ -17,7 +17,7 @@
       <img src="{{ teaser | relative_url }}" alt="">
     </div>
     {% endif %}
-    
+
     {% if include.type == "list" and teaser %}
     <div class="archive__item-teaser_list">
       <img src="{{ teaser | relative_url }}" alt="">
@@ -34,9 +34,6 @@
       </h2>
     {% include page__meta.html type=include.type %}
     {% if post.excerpt %}<p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify | strip_html | truncate: 160 }}</p>{% endif %}
-    {% if site.category_archive.type and post.categories[0] and site.tag_archive.type and post.tags[0] %}
-    {%- include post__taxonomy.html -%}
-    {% endif %}
     </div>
   </article>
 </div>
