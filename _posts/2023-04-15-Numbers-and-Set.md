@@ -1,7 +1,6 @@
 ---
 title: "수와 집합(Numbers and Set)"
-excerpt: 게임을 구성하는 가상 세계를 이해하기 위한 첫 걸음은 집합(Set)이라는 개념으로 수를 이해하는 것입니다. 집합이란 서로 구분되는 원소(Element)로 구성된 묶음을 의미합니다.
-이러한 집합론을 소박한 집합론(Naive set theory)이라고 합니다.
+excerpt: 게임을 구성하는 가상 세계를 이해하기 위한 첫 걸음은 집합(Set)이라는 개념으로 수를 이해하는 것입니다. 집합이란 서로 구분되는 원소(Element)로 구성된 묶음을 의미합니다. 이러한 집합론을 소박한 집합론(Naive set theory)이라고 합니다.
 date: 2023-04-15 00:00:00 -0000
 categories: Math
 tag: Algebra
