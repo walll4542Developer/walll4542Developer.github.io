@@ -61,7 +61,7 @@ author:
 This blog use personal issue only."
   links:
     - label: "Seoul, KR"
-      icon: "fas fa-fw fa-location-dot"
+      icon: "fas fa-fw fa-map-marker"
     - label: "Blog"
       icon: "fas fa-fw fa-link"
       url: "https://walll4542.wixsite.com/watchthis"
