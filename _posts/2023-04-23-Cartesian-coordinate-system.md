@@ -6,8 +6,8 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Function/image%20(0).png
-  overlay_image: /assets/images/Docs/Function/image%20(0).png
+  teaser: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
+  overlay_image: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
   overlay_filter: 0.5
 
 # table of contents
@@ -22,7 +22,7 @@ toc_sticky: true
 이전 포스트에서 함수에 대해서 알아봤을 때, 실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian Product)라고 부릅니다. 
 곱집합의 원어가 데카르트 곱(Cartesian Product)임을 생각해본다면 이 둘은 동일한 개념임을 알 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Function/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
 (데카르트 좌표계)
 
 데카르트 좌표계는 위 이미지와 같이 수평으로 배치한 첫 번째 실수 집합의 미지수를 ${x}$, 수직으로 배치한 두 번째 실수 집합의 미지수를 ${y}$로 표기하고 원점을 기준으로 x축의 오른편, y축의 위편은 양의 영역을 나타냅니다.
@@ -34,10 +34,10 @@ $$
 
 데카르트 좌표계의 한 원소는 곱집합과 동일하게 위와 같은 순서쌍으로 표현하며 좌표(Coordinate)라고 부릅니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Function/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
 (데카르트 좌표계)
 
-일반적으로 좌표는 수와 동일하게 점 또는 원점으로부터의 화살표로 표현합니다. 좌표는 크기와 방향 두 가지 속성을 가집니다.
+일반적으로 좌표는 수와 동일하게 점 또는 원점으로부터의 화살표로 표현합니다. 좌표는 **크기와 방향** 두 가지 속성을 가집니다.
 
 좌표를 다루는 작업은 직선에서 평면으로 무대만 넓어졌을 뿐, 수직선에서 수를 다루는 방식과 매우 유사합니다. 하지만 평면에서 점이 움직이는 것 처럼 보이게 하려면 평면에서 이뤄지는 새로운 연산을 고안해야 할 것입니다.
 
