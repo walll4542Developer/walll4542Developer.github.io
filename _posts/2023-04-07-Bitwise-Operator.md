@@ -45,7 +45,6 @@ public class BitwiseOperator : MonoBehaviour
         // 따라서 n는 1이 됩니다.
     }
 }
-
 ```
 
 ![7](/assets/images/Docs/Bitwise%20Operator/image%20(7).png){: .align-center}
