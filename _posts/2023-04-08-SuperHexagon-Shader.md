@@ -1,11 +1,14 @@
 ---
 title: "슈퍼 헥사곤 UV 셰이더(Super Hexagon UV Shader)"
+excerpt: UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 date: 2023-04-08 00:00:00 -0000
 categories: HLSL Unity
 tag: Shader
 
 header:
   teaser: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+  overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+  overlay_filter: 0.5
 
 gallery:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
@@ -20,11 +23,17 @@ gallery:
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif
     alt: Image 3
     caption: This is image 3
+
+# table of contents
+toc: true # 오른쪽 부분에 목차를 자동 생성해준다.
+toc_label: "table of content" # toc 이름 설정
+toc_icon: "bars" # 아이콘 설정
+toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 ---
 
 {% include gallery gallery=page.gallery %}
 
-안녕하세요, 오늘은 UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
+UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 
 ![33](/assets/images/Docs/Super%20Hexagon%20Shader/image%20(33).png)
 ```hlsl

@@ -1,11 +1,21 @@
 ---
 title: "비트 단위 연산자(Bitwise Operator)"
+excerpt: 비트 단위 연산자(Bitwise Operator)는 컴퓨터에서 비트(bit) 단위로 데이터를 처리할 때 사용되는 연산자입니다. 비트는 컴퓨터에서 정보의 최소 단위이며, 2진수이기 때문에 0 또는 1의 값을 가집니다. 이러한 비트를 조작하는 연산을 비트 연산이라고 합니다.
 date: 2023-04-07 00:00:00 -0000
 categories: C# Unity
 tag: Script
 
 header:
   teaser: /assets/images/Docs/Bitwise%20Operator/image%20(6).png
+  overlay_image: /assets/images/Docs/Bitwise%20Operator/image%20(6).png
+  overlay_filter: 0.5
+
+# table of contents
+toc: true # 오른쪽 부분에 목차를 자동 생성해준다.
+toc_label: "table of content" # toc 이름 설정
+toc_icon: "bars" # 아이콘 설정
+toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
+
 ---
 
 ![6](/assets/images/Docs/Bitwise%20Operator/image%20(6).png){: .align-center}
