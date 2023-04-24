@@ -125,7 +125,8 @@ $$
 ### 벡터의 크기와 이동
 벡터 ${\vec{v}}$의 크기는 원점으로 부터의 거리를 의미하며 절댓값 기호 ${|\vec{v}|}$ 를 사용해 구할 수 있습니다. 벡터의 크기도 동일하게 원점으로부터의 최단거리를 의미합니다. 
 
-TMI : 수학에서 일반적인 표기법으로 벡터의 크기는 기호를 두 번 사용하여(${||\vec{v}||}$) 표기하지만 이 포스트에서는 하나만 사용합니다. {: .notice--info}
+수학에서 일반적인 표기법으로 벡터의 크기는 기호를 두 번 사용하여( ${||\vec{v}||}$ ) 표기하지만 이 포스트에서는 하나만 사용합니다.
+{: .notice--info}
 
 ![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
 
@@ -141,17 +142,16 @@ $$
 
 ![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
 
-따라서 스칼라 곱셈의 성질을 이용해서 임의의 벡터 ${\vec{v}}$ 를 크기인 ${|\vec{v}|}$ 로 나누면 단위벡터 ${|\hat{v}|}$ 를 얻을 수 있습니다. 
+따라서 스칼라 곱셈의 성질을 이용해서 임의의 벡터 ${\vec{v}}$ 를 크기인 ${|\vec{v}|}$ 로 나누면 단위벡터 ${\hat{v}}$ 를 얻을 수 있습니다. 
 
 $$
-|\vec{v}| = \sqrt{x^{2} + y^{2}}
+\hat{v} = \vec{v} \frac |\vec{v}|
 $$
 
-임의의 벡터 ${\vec{v}}$를 크기가 1인 단위벡터 ${|\hat{v}|}$로 다듬는 작업을 정규화한다(Normalize) 라고 부르며 수식은 위와 같습니다.
+임의의 벡터 ${\vec{v}}$를 크기가 1인 단위벡터 ${\hat{v}}$ 로 다듬는 작업을 정규화한다(Normalize) 라고 부르며 수식은 위와 같습니다.
 
-TMI : 위 계산은 HLSL 언어에서 x / length(x) 연산과 같으며, normalize() 라는 이름의 함수로 만들어져있습니다. {: .notice--info}
-
-
+위 계산은 HLSL 언어에서 x / length(x) 연산과 같으며, normalize() 라는 이름의 함수로 만들어져있습니다. 
+{: .notice--info}
 
 ## 레퍼런스(Reference)
 - 이득우의 게임수학 : ([http://www.yes24.com/Product/Goods/107025224](http://www.yes24.com/Product/Goods/107025224))
