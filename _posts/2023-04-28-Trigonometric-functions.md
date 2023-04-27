@@ -1,7 +1,7 @@
 ---
 title: "삼각함수(Trigonometric function)"
 excerpt: 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 삼각함수(Trigonometric function)라고 합니다.
-date: 2023-04-25 00:00:00 -0000
+date: 2023-04-28 00:00:00 -0000
 categories: Math
 tag: Algebra
 
