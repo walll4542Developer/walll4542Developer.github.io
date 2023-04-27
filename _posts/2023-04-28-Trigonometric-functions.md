@@ -46,7 +46,7 @@ $$
 그런 다음에는 빗변에서 x축으로 수직선을 내려 직각 삼각형을 그려봅시다. 직각삼각형으로 부터 삼각비를 계산 할 수 있을 것입니다.
 
 $$
-sin \theta = \frac{b}{1} = b
+sin \theta = \frac{b}{1} = b \\
 cos \theta = \frac{a}{1} = a
 $$
 
@@ -65,7 +65,7 @@ $$
 이로써 빗변의 길이가 r인 직각삼각형의 밑변의 길이는 ${r * cos\theta}$가 되고, 높이의 길이는 ${r * sin\theta}$가 됨을 알 수 있습니다.
 
 $$
-r^{2}(cos^{2}\theta + sin^{2}\theta) = r^{2}
+r^{2}(cos^{2}\theta + sin^{2}\theta) = r^{2} \\
 \therefore cos^{2}\theta + sin^{2}\theta = 1
 $$
 
@@ -77,7 +77,7 @@ $$
 ### 삼각함수의 성질
 
 $$
-\vec{v} = (v_{x}, v_{y}) = (cos0, sin0) = (1,0)
+\vec{v} = (v_{x}, v_{y}) = (cos0, sin0) = (1,0) \\
 \therefore sin0 = 0, cos0 = 1
 $$
 
