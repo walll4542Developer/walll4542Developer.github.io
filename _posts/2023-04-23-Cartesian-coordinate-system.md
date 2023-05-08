@@ -22,7 +22,7 @@ toc_sticky: true
 이전 포스트에서 함수에 대해서 알아봤을 때, 실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다. 
 곱집합의 원어가 데카르트 곱(Cartesian Product)임을 생각해본다면 이 둘은 동일한 개념임을 알 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png){: .align-center}
 
 (데카르트 좌표계)
 {: .text-center}
@@ -38,7 +38,7 @@ $$
 
 ![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
 
-(데카르트 좌표계)
+(좌표의 시각화)
 {: .text-center}
 
 일반적으로 좌표는 수와 동일하게 점 또는 원점으로부터의 화살표로 표현합니다. 좌표는 **크기와 방향** 두 가지 속성을 가집니다.
@@ -105,7 +105,7 @@ $$
 \therefore \vec{v_{1}} + \vec{v_{2}} = \vec{v_{2}} + \vec{v_{1}}
 $$
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(2).png){: .align-center}
 
 (벡터의 합 연산)
 {: .text-center}
@@ -114,13 +114,13 @@ $$
 진행한 방법과 동일하게 벡터의 이항연산에서 왼쪽의 벡터는 물체를 구성하는 점으로, 오른쪽의 벡터는 점을 이동하는 힘으로 연산을 시각화 해봅시다.
 벡터의 합은 위 이미지와 같이 평면의 점을 각 축에 대해 독립적으로 평행이동 시키는 작업으로 해석할 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(3).png){: .align-center}
 
 (스칼라 곱셈)
 {: .text-center}
 
-다음으로 스칼라 곱셈의 시각적 의미를 살펴봅시다. 스칼라 곱셈으로 생성된 벡터는 원점을 지나고 벡터와 평행한 직선상에 위치합니다. 
-따라서 스칼라 곱셈의 결과는 항상 붉은색으로 표현한 원점을 지나는 직성산의 벡터를 만들어냅니다.
+다음으로 스칼라 곱셈의 시각적 의미를 살펴봅시다. 벡터 ${\vec{v}}$에 스칼라 곱셈을 하여 생성된 벡터는 원점을 지나고 벡터와 평행한 직선상에 위치합니다. 
+따라서 스칼라 곱셈의 결과는 항상 검은색 점선으로 표현한 원점을 지나는 직선상의 벡터를 만들어냅니다.
 
 ### 벡터의 크기와 이동
 벡터 ${\vec{v}}$의 크기는 원점으로 부터의 거리를 의미하며 절댓값 기호 ${|\vec{v}|}$ 를 사용해 구할 수 있습니다. 벡터의 크기도 동일하게 원점으로부터의 최단거리를 의미합니다. 
@@ -128,7 +128,10 @@ $$
 수학에서 일반적인 표기법으로 벡터의 크기는 절댓값 기호를 두 번 사용하여 표기하지만 이 포스트에서는 하나만 사용합니다.
 {: .notice--info}
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(4).png){: .align-center}
+
+(피타고라스 정리로 벡터의 크기를 측정)
+{: .text-center}
 
 이를 측정하려면 원점과 벡터를 연결해 직각 삼각형을 그린 후, 피타고라스 정리를 사용해 거리를 측정 할 수 있습니다.
 
@@ -143,7 +146,10 @@ $$
 단위 벡터는 벡터의 크기를 측정하는 기준이 되며, 앞으로 벡터와 관련된 다양한 응용식을 전개하는데 자주 사용될 것입니다. 
 단위 벡터는 다음과 같이 모자 기호(Hat)을 씌워 ${\hat{v}}$의 형태로 표시합니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(5).png){: .align-center}
+
+(벡터의 정규화)
+{: .text-center}
 
 스칼라 곱셈의 성질을 이용해서 임의의 벡터 ${\vec{v}}$를 크기인 ${|\vec{v}|}$로 나누면 단위벡터 ${\hat{v}}$ 를 얻을 수 있습니다. 
 
