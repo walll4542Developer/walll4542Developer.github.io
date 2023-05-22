@@ -6,8 +6,8 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
-  overlay_image: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
+  teaser: /assets/images/Docs/Vector%20Combination/image%20(0).png
+  overlay_image: /assets/images/Docs/Vector%20Combination/image%20(0).png
   overlay_filter: 0.5
 
 # table of contents
@@ -55,7 +55,7 @@ $$
 두 벡터 ${\vec{u}}, \vec{v}$와 두 스칼라 ${a,b}$를 결합해서 새로운 벡터 ${\vec{w}}$를 생성하는 수식은 위와 같이 나타낼 수 있습니다.
 두 벡터가 선형 독립의 관계를 가진다면 선형 결합식으로 2차원 벡터 공간에 속한 모든 벡터를 생성할 수 있습니다. 그 원리를 알아봅시다. 
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Vector%20Combination/image%20(0).png){: .align-center}
 
 (두 단위 벡터의 선형 결합으로 벡터를 생성한 예시)
 {: .text-center}
@@ -66,7 +66,7 @@ $$
 
 예를 들어 벡터 ${\vec{w}}$ 값이 ${(5,5)}$라고 가정한다면, 이 벡터를 생성하는 두 벡터의 결합으로는 x축과 y축에 일치하는 두 단위 벡터 ${(1,0)}$과 ${(0,1)}$를 사용한 위와 같은 선형 결합식을 생각할 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Vector%20Combination/image%20(0).png){: .align-center}
 
 위 이미지와 같이 벡터 ${(5,5)}$를 생성할 수 있는 선형 결합식은 이 밖에도 얼마든지 다양하게 존재합니다.
 
@@ -121,7 +121,7 @@ $$
 
 그런데 연립방정식을 만족하는 a와 b의 값을 구할 수가 없습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Vector%20Combination/image%20(0).png){: .align-center}
 
 (선형결합 결과)
 {: .text-center}
