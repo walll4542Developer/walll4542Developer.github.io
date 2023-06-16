@@ -6,8 +6,8 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
-  overlay_image: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png
+  teaser: /assets/images/Docs/Trigonometric%20functions/000.png
+  overlay_image: /assets/images/Docs/Trigonometric%20functions/000.png
   overlay_filter: 0.5
 
 # table of contents
@@ -17,7 +17,7 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 한 각이 직각(90도)인 직각삼각형을 이루는 세 변은 각 위치에 따라 빗변, 밑변, 높이 라고 부릅니다. 한 각이 직각이므로 나머지 두 각의 합이 90도가 되어야 합니다. 따라서 두 각은 모두 90도 보다 작은 예각입니다. 빗변과 밑변의 사잇각은 기호 (${\theta}$)를 이용해 나타냅니다.
 
@@ -33,15 +33,15 @@ $$
 
 직각 삼각형에서 측정할 수 있는 사잇각은 0도 보다 크거나 90도 보다 작아야 합니다. 이때 위 이미지와 같이 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 **삼각함수(Trigonometric function)**라고 합니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 가장 많이 사용하는 삼각함수인 sin() 함수와 cos() 함수의 개념은 직각삼각형에서 출발했지만 원점을 중심으로 반지름이 1인 평면 위의 **단위 원(Unit circle)**을 사용해 나타내면 좀 더 쉽게 파악할 수 있습니다. 데카르트 좌표계에서 원점에서부터 제 1 사분면의 단위 원의 원주 위에 있는 임의의 점을 이어 빗변을 그었습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 원의 반지름의 길이는 1이므로 이 빗변의 길이는 항상 1입니다. 그리고 x축과 해당 빗변이 이루는 각을 사잇각으로 지정합니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 그런 다음에는 빗변에서 x축으로 수직선을 내려 직각 삼각형을 그려봅시다. 직각삼각형으로 부터 삼각비를 계산 할 수 있을 것입니다.
 
@@ -58,7 +58,7 @@ $$
 
 그렇다면 밑변 a의 x좌표는 ${cos\theta}$가 되고, 높이 b의 좌표는 ${sin\theta}$가 되는데 이를 피타고라스 정리 ${a^{2} + b^{2} = c^{2}}$에 대입하면 위와 같은 공식을 얻을 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 단위 원의 반지름 길이를 r으로 일반화 시켜서 생각해봅시다. 
 반지름이 r인 원에서의 빗변은 벡터의 개념으로 보았을 때 길이가 1인 벡터와 평행하고 길이는 r배 만큼 증가 했으므로 스칼라 곱셈에 의해 ${r * (cos\theta, sin\theta)}$라는 좌표를 갖게 됩니다. 
@@ -84,11 +84,11 @@ $$
 데카르트 좌표계에서 각도(angle)는 x축에서 원의 궤적을 따라 반시계 방향으로 회전한 크기를 의미합니다. 반지름이 1인 단위 원에서 반시계 방향의 회전을 생각해봅시다.
 아직 회전하지 않아서 x축 상에 위치한 빗변 ${\vec{v}}$와의 좌표는 ${(1,0)}$인데, 이 각도는 0도에 대응한다고 할 수 있습니다. 따라서 각도에 대한 sin 함수와 cos함수의 값은 위와 같습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 각도를 0도에서 90도까지 서서히 증가시키면서 회전하는 빗변의 좌표 ${v_{x}}$와 ${v_{y}}$의 변화를 살펴봅시다. 각도가 증가할수록 ${v_{x}}$값은 감소하고 ${v_{y}}$값은 증가합니다. 그리고 목적지인 90도에 도달하면 y축 상에 위치한 좌표 ${(0,1)}$과 일치하는 벡터가 만들어집니다. ${v_{x}}$값을 빨간색으로, ${v_{y}}$값을 청록색으로 표시해서 좌표의 x값과 y값의 변화를 추적하면 부드러운 곡선이 만들어집니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 각도가 90을 넘어서면 ${v_{x}}$값은 0을 지나 음수가 되고, ${v_{y}}$ 값은 다시 0을 향해 감소하기 시작합니다. 계속해서 한바퀴에 해당하는 360도 까지 빗변의 좌표 변화를 계속 관찰하면, -1에 도달할 때 까지 계속 감소하다가 -1에 도달하면 방향을 바꿔서 1을 향해 증가하며, 1에 도달하면 다시 -1을 향해 감소하는 패턴을 반복합니다. 
 이런 값의 변화는 ${[-1,1]}$ 범위 내에서 360도 마다 반복되는데, 변화값의 범위를 **진폭(Amplitude)**, 반복되는 각도를 **주기(Period)**라고 합니다.
@@ -110,13 +110,13 @@ $$
 특히 3번에서 언급한 sin함수와 cos함수 그래프가 지니는 홀함수와 짝함수의 성질은 위의 식으로 정리할 수 있습니다. 이 역시 향후 회전에 관련된 계산에 유용하게 사용되므로 숙지해둡시다.
 
 $$
-tan \theta = frac{b}{a}
+tan \theta = \frac{b}{a}
 $$
 
 이번에는 tan 함수의 특징을 알아봅시다. tan 함수는 빗변과 무관하게 밑변과 높이의 관계만을 나타냅니다. 
 
 $$
-tan\theta = \frac{\frac{b}{c}}{\frac{a}{c}} = \frac{sin\theta}{cos\theta}
+tan \theta = \frac{\frac{b}{c}}{\frac{a}{c}} = \frac{sin\theta}{cos\theta}
 $$
 
 분자와 분모를 모두 빗변 값으로 각각 나누면 위와 같이 cos와 sin으로 tan을 표현할 수 있습니다.
@@ -130,21 +130,21 @@ $$
 벡터의 경우 크기를 비교하기 용이하도록 크기 1의 단위 벡터를 정의한 것 처럼, 각을 측정할 때도 단위량 1을 기반으로 상대적인 크기를 측정할 수 있도록 체계를 만들면 합리적일 것입니다. 
 그래서 실무 계산에서 삼각함수를 응용할 때에는 각도법 대신 호의 길이를 기준으로 각을 측정하는 방법을 사용합니다. 이를 호도법(Radian)이라고 부릅니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 호도법은 호의 길이가 1이 되는 부채꼴의 각을 기준으로 각을 측정합니다. 호도법의 단위 각을 측정하는 방법을 살펴봅시다. 위와 같이 원점에 중심을 둔 반지름이 1인 단위 반원을 그립니다. 반원의 호 길이를 비교하기 위해 x축에 원점에서 크기가 1인 벡터를 배치했습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 반원의 호 길이를 재기 위해 위와 같이 반원의 왼쪽 끝 점을 원점으로 평행이동 시켜봅시다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 그리고 반원의 왼쪽 끝을 고정한 후, x축의 양의 방향으로 반원의 오른쪽 끝점을 잡아당겨 x축 위에 쭉 펼친후, 길이를 x축 상의 단위 벡터와 함께 비교해봅시다.
 
 반원의 호의 길이는 단위 벡터의 길이 1보다 대략적으로 3.14배 더 큰데, 정확한 값을 구할 수는 없습니다. 바로 이것이 3.141592...로 이어지는 무리수인 원주율 ${\pi}$입니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 180도에 해당하는 반원의 호 길이가 파이임을 알았으니, 이번에는 거꾸로 호의 길이가 1인 부채꼴의 중심각은 몇 도인지 생각해봅시다. 
 호의 길이를 1으로 설정하면, 위 이미지같은 부채꼴이 나오는데, 이 부채꼴의 각이 바로 호도법에서 사용하는 각의 기준인 ${1rad}$(라디안)입니다. 
