@@ -1,0 +1,783 @@
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+namespace Assets.TestDummies.Shaders.ShaderGUISample.Editor
+{
+    /// <summary>
+    /// bool 값을 에디터  프리퍼런스에 저장하고 저장한 값을 가져오는 것을 편하게 하기 위한 클래스.
+    /// 지금은 샘플을 위해서 이 곳에 클래스가 위치하지만, 범용으로 사용하고자 한다면 독립된 파일로 분리해야한다.
+    /// </summary>
+    public class SavedBool
+    {
+        readonly string key;
+        bool isLoaded;
+        bool loadedValue;
+
+        public bool Value
+        {
+            get
+            {
+                Load();
+                return loadedValue;
+            }
+            set
+            {
+                Load();
+
+                if (loadedValue.Equals(value))
+                {
+                    return;
+                }
+
+                loadedValue = value;
+                EditorPrefs.SetBool(key, value);
+            }
+        }
+
+        void Load()
+        {
+            if (isLoaded)
+            {
+                return;
+            }
+
+            isLoaded = true;
+            loadedValue = EditorPrefs.GetBool(key, loadedValue);
+        }
+
+        public SavedBool(string key, bool value)
+        {
+            this.key = key;
+            isLoaded = false;
+            loadedValue = value;
+        }
+    }
+
+    public enum BlendMode
+    {
+        Normal,
+        AdditiveColor,
+        AdditiveAlpha,
+        AdditiveMultiply,
+        AlphaBlend,
+        Blend,
+        Multiply,
+        MultiplyDouble
+    }
+
+    public class ShaderGUISample : ShaderGUI
+    {
+        #region EnumsAndClasses
+        public enum ColorMode
+        {
+            None,
+            Green,
+            Red
+        }
+
+        struct Properties
+        {
+            public MaterialProperty Texture1;
+            public MaterialProperty Texture2;
+
+            public MaterialProperty BumpTexture;
+            public MaterialProperty BumpMapScale;
+
+            public MaterialProperty FloatValue1;
+            public MaterialProperty FloatValue2;
+
+            public MaterialProperty ToggleValue;
+
+            public MaterialProperty VectorValue1;
+            public MaterialProperty VectorValue2;
+
+            public MaterialProperty ColorValue1;
+            public MaterialProperty ColorValue2;
+
+            public MaterialProperty ColorMode;
+            public MaterialProperty BlendMode;
+
+            public Properties(MaterialProperty[] properties)
+            {
+                Texture1 = FindProperty("_Texture1", properties);
+                Texture2 = FindProperty("_Texture2", properties);
+
+                BumpTexture = FindProperty("_BumpTexture", properties);
+                BumpMapScale = FindProperty("_BumpMapScale", properties);
+
+                FloatValue1 = FindProperty("_FloatValue1", properties);
+                FloatValue2 = FindProperty("_FloatValue2", properties);
+
+                ToggleValue = FindProperty("_ToggleValue", properties);
+
+                VectorValue1 = FindProperty("_VectorValue1", properties);
+                VectorValue2 = FindProperty("_VectorValue2", properties);
+
+                ColorValue1 = FindProperty("_ColorValue1", properties);
+                ColorValue2 = FindProperty("_ColorValue2", properties);
+
+                ColorMode = FindProperty("_ColorMode", properties);
+                BlendMode = FindProperty("_BlendMode", properties);
+            }
+        }
+
+        /// <summary>
+        /// 인스펙터에 보일 글자들 및 스타일을 미리 생성해두는 클래스.
+        /// OnGUI에서 매번 생성하면 가비지에 취약하므로 이렇게 미리 생성해둔다.
+        /// </summary>
+        class Styles
+        {
+            public static readonly GUIContent TextureSection = new GUIContent("Texture Section", "텍스쳐 섹션입니다.");
+            public static readonly GUIContent ValueSection = new GUIContent("Value Section", "float, vector, color 등");
+            public static readonly GUIContent AdvancedSection = new GUIContent("Advanced Section", "어드밴스드 섹션입니다.");
+
+            public static readonly GUIContent BasicTextureType = new GUIContent("기본 텍스쳐 타입", "타일링과 오프셋을 조절할 수 있는 기본 텍스쳐 타입");
+            public static readonly GUIContent NoTilingOffsetTextureType = new GUIContent("타일링, 오프셋 없는 타입", "타일링과 오프셋이 그려지지 않는 텍스쳐 타입");
+            public static readonly GUIContent SingleLineTextureType = new GUIContent("한 줄 텍스쳐 타입", "한 즐로만 나오는 텍스쳐 타입");
+            public static readonly GUIContent TwoLineTextureType = new GUIContent("두 줄 텍스쳐 타입", "두 즐로만 나오는 텍스쳐 타입");
+            public static readonly GUIContent NormalMap = new GUIContent("Normal Map", "Assigns a tangent-space normal map.");
+            public static readonly GUIContent BumpScaleNotSupported = new GUIContent("Bump scale is not supported on mobile platforms");
+            public static readonly GUIContent FixNormalNow = new GUIContent("Fix now", "Converts the assigned texture to be a normal map format.");
+
+            public static readonly GUIContent FloatProperties = new GUIContent("Float Properties 단순 레이블", "Float 프로퍼티들");
+            public static readonly GUIContent FloatValue1 = new GUIContent("Float 값 1", "Float 값입니다.");
+            public static readonly GUIContent FloatValue2 = new GUIContent("Float 값 2", "Float 값입니다.");
+            public static readonly GUIContent InstantToggle = new GUIContent("에디터에 있는 토글", "에디터에 있는 값입니다.");
+            public static readonly GUIContent PropertyToggle = new GUIContent("프로퍼티 토글", "프로퍼티에 시리얼라이즈 되는 값입니다.");
+
+            public static readonly GUIContent VectorValue1 = new GUIContent("Vector 값 1", "Vector 값입니다.");
+            public static readonly GUIContent VectorValue2 = new GUIContent("Vector 값 2", "Vector 값입니다.");
+
+            public static readonly GUIContent ColorValue1 = new GUIContent("Color 값 1", "Color 값입니다.");
+            public static readonly GUIContent ColorValue2 = new GUIContent("Color 값 2", "Color 값입니다.");
+
+            public const string VectorToColorMessage = "아래 Vector 필드에 값을 변경하면 Color2의 색상이 변경됩니다.";
+
+            public static readonly GUIContent ColorMode = new GUIContent("Color Mode 1", "Color Mode입니다.");
+            public static readonly GUIContent ColorMode2 = new GUIContent("Color Mode 2", "Color Mode입니다.");
+
+            public static readonly GUIContent ResetButton = new GUIContent("Reset", "Reset");
+
+            public static readonly GUIContent AddButton = new GUIContent("+", "더하기");
+            public const float AddButtonWidth = 20.0f;
+
+            public static readonly GUIContent SubtractButton = new GUIContent("-", "빼기");
+            public const float SubtractButtonWidth = 20.0f;
+
+            public const float VerticalSpace = 16.0f;
+        }
+        #endregion
+
+        Properties properties;
+        MaterialEditor materialEditor;
+
+        bool firstTimeApply = true;
+
+        bool instantToggle = true;
+
+        // Header foldout states
+        // 이전에 폴딩을 열어뒀는지 닫아뒀는지 저장해두고 다음에 해당 재질을 열어 봤을 때
+        // 상태를 유지하도록 하기 위해서 SavedBool 이란 편의 클래스를 사용한다.
+        // 폴딩 상태 유지가 필요없다면 단순히 bool 타입으로 사용해도 상관 없다.
+        const string KEY_PREFIX = "MMShader:Material:UI_State:";
+        string headerStateKey = null;
+
+        SavedBool textureSectionFoldout;
+        SavedBool valueSectionFoldout;
+        bool advancedSectionFoldout;    // 단순 bool 타입으로 처리
+
+        public override void OnGUI(MaterialEditor materialEditorIn, MaterialProperty[] propertiesIn)
+        {
+            if (materialEditorIn == null)
+            {
+                throw new ArgumentNullException("materialEditorIn");
+            }
+
+            properties = new Properties(propertiesIn); // MaterialProperties can be animated so we do not cache them but fetch them every event to ensure animated values are updated correctly
+            materialEditor = materialEditorIn;
+            Material material = materialEditor.target as Material;
+
+            // Make sure that needed setup (ie keywords/renderqueue) are set up if we're switching some existing
+            // material to a universal shader.
+            if (firstTimeApply)
+            {
+                OnOpenGUI(material, materialEditorIn);
+                firstTimeApply = false;
+            }
+
+            ShaderPropertiesGUI(material);
+        }
+
+        void OnOpenGUI(Material material, MaterialEditor materialEditor)
+        {
+            // Foldout states
+            headerStateKey = KEY_PREFIX + material.shader.name; // Create key string for editor prefs
+            textureSectionFoldout = new SavedBool($"{headerStateKey}.TextureSectionFoldout", false);
+            valueSectionFoldout = new SavedBool($"{headerStateKey}.ValueSectionFoldout", false);
+            advancedSectionFoldout = false;
+
+            foreach (var target in materialEditor.targets)
+            {
+                MaterialChanged((Material)target);
+            }
+        }
+
+        /// <summary>
+        /// 전체 틀을 여기에서 그리고 각 섹션별로는 별도의 Draw...() 함수를 통해 그린다.
+        /// </summary>
+        /// <param name="material"></param>
+        void ShaderPropertiesGUI(Material material)
+        {
+            if (material == null)
+            {
+                throw new ArgumentNullException("material");
+            }
+
+            // 인스펙터에 나와있는 특정한 값이 변경되는지를 확인해서 ...
+            EditorGUI.BeginChangeCheck();
+
+            // BeginFoldoutHeaderGroup()와 EndFoldoutHeaderGroup() 가 쌍으로 이뤄져야 한다.
+            // BeginFoldoutHeaderGroup()의 반환값이 참이면 폴딩이 열려 있는 상태이다.
+            textureSectionFoldout.Value = EditorGUILayout.BeginFoldoutHeaderGroup(textureSectionFoldout.Value, Styles.TextureSection);
+            if (textureSectionFoldout.Value)
+            {
+                DrawTextureSection(material);
+                EditorGUILayout.Space();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            valueSectionFoldout.Value = EditorGUILayout.BeginFoldoutHeaderGroup(valueSectionFoldout.Value, Styles.ValueSection);
+            if (valueSectionFoldout.Value)
+            {
+                DrawValueSection(material);
+                EditorGUILayout.Space();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            advancedSectionFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(advancedSectionFoldout, Styles.AdvancedSection);
+            if (advancedSectionFoldout)
+            {
+                DrawAdvancedSection(material);
+                EditorGUILayout.Space();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            // 폴딩 없이 그냥 해당 섹션을 그리고자 할 때는 이렇게 바로 함수를 호출한다.
+            DrawAdditionalFoldouts(material);
+
+            // ... 변경된 값이 있다면 재질에 특정한 작업을 해줄 때 이런 형태로 사용할 수 있다.
+            // 예를 들면, 프로퍼티와 연결되어 있지 않은 에디터 인스펙터(모드를 바꾸는 팝업 메뉴 같은 것 등)을 그리고
+            // 그 값(모드)가 변경되면 셰이더의 키워드를 변경하고, 블랜딩 모드를 바꿔줘야 할 때 사용할 수 있다.
+            // (ProjectMM 프로젝트에 있는 BGShaderGUI.cs 파일에서 자세히 볼 수 있다.)
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (var obj in materialEditor.targets)
+                {
+                    MaterialChanged((Material)obj);
+                }
+            }
+        }
+
+        #region DrawingFunctions
+        void DrawTextureSection(Material material)
+        {
+            // ShaderProperty() 함수는 첫 파라미터인 MaterialProperty 형태에 따라 자동으로 형태에 맞게 그려준다.
+            // 또한, 기본적인 멀티 선택에 대한 처리도 해주고 있다.
+            materialEditor.ShaderProperty(properties.Texture1, Styles.BasicTextureType);
+
+            // 텍스쳐 형태로 강제로 그리는 함수. 아래 파라미터 형태를 사용하면
+            // ShaderProperty()를 사용한 것과 동일한 형태로 그려진다.
+            materialEditor.TextureProperty(properties.Texture1, Styles.BasicTextureType.text);
+
+            // 세번째 파라미터의 값이 false 이면 타일링과 오프셋을 그리지 않는다.
+            materialEditor.TextureProperty(properties.Texture1, Styles.NoTilingOffsetTextureType.text, false);
+
+            // 에디터에 공간을 띄울 때 사용한다.
+            // 기본적으로 줄 단위로 띄우지만 Scope를 지정하면 가로 공백도 줄 수 있다. (이건 아래 Value 섹션에서)
+            EditorGUILayout.Space();
+
+
+            // 한 줄로 그리기. 타일링, 오프셋은 안그린다.
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1);
+
+            // 한 줄로 그리기. 타일링, 오프셋은 안그린다.
+            // 추가 프로퍼티를 최대 2개까지 같이 그릴 수 있다.
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.FloatValue1);
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.FloatValue1, properties.FloatValue2);
+
+            // 추가 프로퍼티의 타입에 따라 그려지는 모습은 자동으로 정해진다.
+            // 단, 두번째 추가 프로퍼티는 어떤 프로퍼티 타입이든 Float 값 한 칸 크기만큼으로 그려지므로 주의해야한다.
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.FloatValue1, properties.VectorValue1);
+            //materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.FloatValue1, texture2);
+
+            // 첫번째 추가 프로퍼티는 레이블과 두번째 추가 프로퍼티 사이의 공간만큼 크기를 할당 받을 수 있다.
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.VectorValue1, properties.FloatValue2);
+            // 하지만 추가 프로퍼티로 텍스쳐를 사용하는 것은 한 줄 크기를 넘어가기 때문에 깨져보여서 권장하지 않는다.
+            //materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, texture2, properties.FloatValue2);
+
+            // 추가 프로퍼티에 컬러를 넣는 것은 좋다. 첫번째, 두번째 어디든 좋지만 자동으로 정렬되는 모습은 컬러가 두번째인게 좀 더 보기 좋다.
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.ColorValue1, properties.FloatValue1);
+            materialEditor.TexturePropertySingleLine(Styles.SingleLineTextureType, properties.Texture1, properties.FloatValue1, properties.ColorValue1);
+
+            // 파라미터로 숫자 값을 주면 그만큼 공백으로 띄운다.
+            EditorGUILayout.Space(Styles.VerticalSpace);
+
+
+            // 두 줄로 그리기. 타일링, 오프셋은 안그린다.
+            // 추가 프로퍼티 모두를 null로 넣으면 한 줄 그리기와 동일하다.
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, null, null, null);
+
+            // 추가 프로퍼티는 최대 2개까지 넣을 수 있다.
+            // 첫번째 추가 프로퍼티는 텍스쳐가 그려지는 줄에 같이 그릴 수 있고,
+            // 두번째 추가 프로퍼티는 두 번째 줄에 레이블과 같이 그릴 수 있다.
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.FloatValue1, Styles.FloatValue2, properties.FloatValue2);
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.FloatValue1, Styles.VectorValue1, properties.VectorValue1);
+
+            // 두 줄로 그리는 것에서는 첫번째 추가 프로퍼티로 벡터를 넣어도 깔끔하게 출력된다.
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.VectorValue1, Styles.FloatValue2, properties.FloatValue2);
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.VectorValue1, Styles.VectorValue2, properties.VectorValue2);
+
+            // 단, 추가 프로퍼티에 텍스쳐를 넣는 것은 권장하지 않는다.
+            //materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.FloatValue1, Styles.BasicTextureType, texture2);
+
+            // 프로퍼티가 같으면 몇 번을 그리든 동시에 수정이 된다.
+            materialEditor.TexturePropertyTwoLines(Styles.TwoLineTextureType, properties.Texture1, properties.VectorValue1, Styles.VectorValue1, properties.VectorValue1);
+
+            // 유니티에서 자동으로 계산한 한 줄만큼 띄우고 싶을 때는 이렇게 할 수도 있다.
+            // EditorGUILayout.Space(); 와 동일하다.
+            EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+
+
+            // 타일링, 오프셋만 그리려면 이렇게 할 수 있다.
+            materialEditor.TextureScaleOffsetProperty(properties.Texture1);
+
+            EditorGUILayout.Space();
+
+
+            // 노멀맵 같은 경우에는 이렇게 함수로 묶어서 그려주기도 한다.
+            DrawNormalArea(materialEditor, properties.BumpTexture, properties.BumpMapScale);
+        }
+
+        static void DrawNormalArea(MaterialEditor materialEditor, MaterialProperty bumpMap, MaterialProperty bumpMapScale = null)
+        {
+            if (bumpMapScale != null)
+            {
+                // 셰이더에서 [Normal] 키워드가 있는 텍스쳐 프로퍼티일 경우에,
+                // 노멀맵 타입의 텍스쳐가 할당되지 않으면 자동으로 고쳐주는 버튼(Fix Now)이 나온다.
+                // 이 버튼은 ShaderProperty(), TextureProperty(), TextureProperty...() 등
+                // 모든 텍스쳐 관련 함수에서 동일하게 동작한다.
+                materialEditor.TexturePropertySingleLine(
+                    Styles.NormalMap,
+                    bumpMap,
+                    bumpMap.textureValue != null ? bumpMapScale : null);
+
+                // [Normal] 키워드 말고 커스텀하게 자동으로 고쳐주는 버튼(Fix Now)을 추가하고 싶을 때는
+                // 아래와 같이 버튼이 나올 조건문을 작성하고 조건이 참이면 HelpBoxWithButton() 함수를 통해 버튼을 그릴 수 있다.
+                // 아래 예시는 모바일 플랫폼일 때는 범프 스케일이 1.0이 아니면 1.0으로 고치는 버튼을 그려주고
+                // 버튼을 누르면 1.0으로 고친다.
+                if (bumpMapScale.floatValue != 1.0f
+                    && UnityEditorInternal.InternalEditorUtility.IsMobilePlatform(EditorUserBuildSettings.activeBuildTarget))
+                {
+                    // HelpBoxWithButton() 함수가 헬프 박스를 그리고 그 안에 첫번째 파라미터 값으로 설명을,
+                    // 두번째 파라미터 값으로 버튼을 생성해주는 편의 함수이다.
+                    // 버튼을 누르면 반환값으로 true를 반환해준다.
+                    if (materialEditor.HelpBoxWithButton(Styles.BumpScaleNotSupported, Styles.FixNormalNow))
+                    {
+                        bumpMapScale.floatValue = 1.0f;
+                    }
+                }
+            }
+            else
+            {
+                materialEditor.TexturePropertySingleLine(Styles.NormalMap, bumpMap);
+            }
+        }
+
+        void DrawValueSection(Material material)
+        {
+            // float 값도 마법의 함수인 ShaderProperty로 그릴 수 있다.
+            materialEditor.ShaderProperty(properties.FloatValue1, Styles.FloatValue1);
+
+            EditorGUILayout.Space();
+
+
+            // 단순 레이블을 그릴 수도 있다. 특정 프로퍼티를 하나의 레이블로 묶고 indent로 들여쓰기 하면
+            // 하나의 작은 그룹이 되어 보기가 좋다.
+            EditorGUILayout.LabelField(Styles.FloatProperties);
+
+            // 세번째 파라미터에 indent값을 주면 들여쓰기를 한다.
+            materialEditor.ShaderProperty(properties.FloatValue2, Styles.FloatValue2, 1);
+
+            EditorGUILayout.Space();
+
+
+            // 헬프 박스로 문구를 그릴 수도 있다.
+            EditorGUILayout.HelpBox(Styles.FloatProperties);
+
+            // ShaderProperty()말고 직접 FloatProperty()로 그릴 수도 있다.
+            materialEditor.FloatProperty(properties.FloatValue1, Styles.FloatValue1.text);
+
+            // 프로퍼티의 값이 조건을 만족할 때만 헬프 박스를 그리게 할 수도 있다.
+            // 당연한 이야기지만, 프로퍼티의 값을 조건으로 할 필요는 없다.
+            // 이 클래스의 멤버 변수로 조건을 따질 수도 있고, 다른 값으로도 조건을 따질 수도 있다.
+            if (properties.FloatValue1.floatValue > 10.0f)
+            {
+                EditorGUILayout.HelpBox(
+                    "이렇게 직접 스트링을 써도 되지만 Styles 정적 클래스에 미리 만들어두는 것이 더 좋다.",
+                    MessageType.Warning);   // 헬프 박스에 아이콘도 출력할 수 있다.
+
+                // 물론 헬프 박스 뿐만 아니라 다른 프로퍼티를 조건에 따라 그리게 할 수도 있다.
+                materialEditor.ShaderProperty(properties.FloatValue2, Styles.FloatValue2, 1);
+            }
+
+            // Sapce()에 입력하는 float 파라미터는 픽셀단위는 아니다. Vertical 일 때와 Horizontal 일 때 다르게 띄운다.
+            EditorGUILayout.Space(20.0f);
+
+
+            // 프로퍼티와 버튼을 같은 줄에 그리려면 가로 영역(BeginHorizontal, EndHorizontal)을 지정하면 편리하다.
+            // 참고로 인스펙터를 그리는 시작점인 OnGUI() 함수는 Vertical 영역으로 이미 설정되어 있다.
+            EditorGUILayout.BeginHorizontal();
+            {
+                materialEditor.ShaderProperty(properties.FloatValue1, Styles.FloatValue1);
+
+                // Horizontal 영역일 때 Space()는 가로로 공백을 만든다.
+                // Sapce()에 입력하는 float 파라미터는 픽셀단위는 아니다. Vertical 일 때와 Horizontal 일 때 다르게 띄운다.
+                EditorGUILayout.Space(20.0f);
+
+                // Button() 함수는 EditorGUILayout 클래스가 아님을 주의한다.
+                if (GUILayout.Button(Styles.AddButton, GUILayout.Width(Styles.AddButtonWidth)))
+                {
+                    // 버튼이 눌리면 이곳으로 온다.
+                    properties.FloatValue1.floatValue += 2.0f;
+                }
+
+                if (GUILayout.Button(Styles.SubtractButton, GUILayout.Width(Styles.SubtractButtonWidth)))
+                {
+                    // 버튼이 눌리면 이곳으로 온다.
+                    properties.FloatValue1.floatValue -= 2.0f;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            // Button() 클래스에 두번째 파라미터인 옵션을 넣지 않으면 자동으로 크기를 잡아준다.
+            if (GUILayout.Button(Styles.ResetButton))
+            {
+                // 버튼이 눌리면 이곳으로 온다.
+                properties.FloatValue1.floatValue = 0.0f;
+            }
+
+            EditorGUILayout.Space();
+
+
+            // 에디터에서만 사용하는 값으로 토글을 만들고, 토글이 체크되어 있지 않으면 아래 프로퍼티들을 비활성화 시킬 수도 있다.
+            instantToggle = EditorGUILayout.Toggle(Styles.InstantToggle, instantToggle);
+
+            // 단, 에디터에서만 사용하는 값, 다시 말하면 에디터 클래스의 인스턴스인 값,
+            // 또 다른 의미로는 재질에 시리얼라이즈(저장)이 되지 않는 값일 경우에는 인스펙터를 다시 그릴 때
+            // (다른 인스펙터가 그려지다가 재질을 선택해서 인스펙터가 그려질 때)
+            // 값이 초기화 되는 것에 주의해야 한다.
+            // 이런 경우는 주로, 저장될 필요가 없고 초기화 값으로 항상 보여주는 것이 좋을 때 사용할 수 있다.
+            // 예를 들면 이 프로퍼티들은 자주 수정하지 않는 편이 좋아서 숨겨 두는게 좋을 경우에 사용할 수 있다.
+
+            // 그래서 프로퍼티 값, 다시 말하면 시리얼라이즈 되는 값으로 사용하면 저장된 값을 가져와서 설정할 수 있다.
+            // 토글은 bool 타입이기 때문에 float를 bool로 변환해준다.
+            // (properties.FloatValue2.floatValue != 0.0f) 처럼 해도 되는데
+            // float는 부동소수점 오차로 인해 잘못 변환될 수 있으므로 아래와 같은 함수를 사용해서 변환한다.
+            //var toggle = !Mathf.Approximately(properties.ToggleValue.floatValue, 0.0f);
+            var toggle = properties.ToggleValue.floatValue != 0.0f;
+            EditorGUI.BeginChangeCheck();
+
+            // 단, 아래와 같이 materialEditor에 있는 함수를 사용하지 않고 에디터 자체 함수를 사용하는 경우
+            // 여러 재질을 동시에 선택하는 경우에 문제가 발생한다.
+            // 문제는 최초로 선택한 재질의 값으로 동시에 선택한 모든 재질에 덮어 써버린다.
+
+            // 문제가 발생하는 경우
+            //toggle = EditorGUILayout.Toggle(Styles.PropertyToggle, toggle);
+
+            // 문제를 해결하는 방법
+            EditorGUI.showMixedValue = properties.ToggleValue.hasMixedValue;
+            toggle = EditorGUILayout.Toggle(Styles.PropertyToggle, toggle);
+            EditorGUI.showMixedValue = false;
+
+            // 프로퍼티에 있는 hasMixedValue의 값이 참이면 여러 재질이 동시에 선택된 상태이므로
+            // EditorGUI.showMixedValue 도 참으로 설정한다.
+            // 값이 참인 경우 거짓이 되기 전까지 해당 에디터 요소들은 모두 복합 상태(mixed value)가 된다.
+            // 참고로, materialEditor에 있는 함수들은 자동으로 이 처리가 되어 있다.
+
+            // Toggle에 변경이 있을 때만 값을 대입해야한다.
+            // 그렇지 않으면 showMixedValue를 했더라도 여러 재질을 동시에 선택했을 때 처음 선택한 값으로 모두 덮어쓴다.
+            if (EditorGUI.EndChangeCheck())
+            {
+                // 토글 결과를 프로퍼티에 저장한다. 프로퍼티는 float 타입이기 때문에 bool 타입에 따라 1 또는 0으로 변환해서 저장한다.
+                properties.ToggleValue.floatValue = (toggle) ? 1.0f : 0.0f;
+            }
+
+            // 비활성화 그룹은 또 EditorGUI 클래스 함수라는 것에 주의한다.
+            // (좀 제각각이라 헷갈리는게 당연. 유니티가 이런건 또 정리를 제대로 안해줌.)
+            // 함수의 파라미터 값이 참이면 비활성화, 거짓이면 활성화 임에도 주의한다.
+            EditorGUI.BeginDisabledGroup(!instantToggle && !toggle);
+            {
+                materialEditor.ShaderProperty(properties.FloatValue2, Styles.FloatValue2);
+            }
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.Space();
+
+
+            // 벡터나 컬러 타입도 실수 타입과 동일하다.
+            // 마법의 ShaderProperty()를 이용하든, 각 타입 전용인 VectorProperty() 또는 ColorProperty()든 같다.
+            materialEditor.ShaderProperty(properties.VectorValue1, Styles.VectorValue1);
+            materialEditor.VectorProperty(properties.VectorValue2, Styles.VectorValue2.text);
+
+            // 셰이더에서 [HDR] 키워드가 프로퍼티 앞에 붙어 있으면 자동으로 HDR 컬러를 입력 받을 수 있는 창으로 변경된다.
+            materialEditor.ShaderProperty(properties.ColorValue1, Styles.ColorValue1);
+            materialEditor.ColorProperty(properties.ColorValue2, Styles.ColorValue2.text);
+
+            // Vector 프로퍼티 값으로 컬러 값으로 대체해서 넣을 수도 있다.
+            // 이 때 아래 주석과 같이 무조건 대입할 수도 있지만 이러면 가비지가 많이 생겨서 좋지 않다.
+            //var vectorToColor = new Color(
+            //    properties.VectorValue2.vectorValue.x / 255.0f,
+            //    properties.VectorValue2.vectorValue.y / 255.0f,
+            //    properties.VectorValue2.vectorValue.z / 255.0f,
+            //    properties.VectorValue2.vectorValue.w / 255.0f);
+            //properties.ColorValue1.colorValue = vectorToColor;
+
+            EditorGUILayout.HelpBox(Styles.VectorToColorMessage, MessageType.Info);
+
+            // 이럴 때 해당 벡터값이 변경이 됐는지 아닌지를 체크해서 변경 됐을 때만 값을 대입하도록 한다.
+            EditorGUI.BeginChangeCheck();
+            materialEditor.ShaderProperty(properties.VectorValue2, Styles.VectorValue2);
+            if (EditorGUI.EndChangeCheck())
+            {
+                var vectorToColor = new Color(
+                    properties.VectorValue2.vectorValue.x / 255.0f,
+                    properties.VectorValue2.vectorValue.y / 255.0f,
+                    properties.VectorValue2.vectorValue.z / 255.0f,
+                    properties.VectorValue2.vectorValue.w / 255.0f);
+                properties.ColorValue2.colorValue = vectorToColor;
+            }
+        }
+
+        void DrawAdvancedSection(Material material)
+        {
+            // 모드 팝업을 띄우고 선택한 모드에 따라 키워드를 세팅해줄 수 있다.
+            // 이곳에도 팝업을 에디터용으로 띄우면 멀티 선택 시 문제가 발생할 수 있으므로
+            // mixed 모드를 설정해준다.
+            EditorGUI.showMixedValue = properties.ColorMode.hasMixedValue;
+            var colorMode = (ColorMode)properties.ColorMode.floatValue;
+
+            EditorGUI.BeginChangeCheck();
+            colorMode = (ColorMode)EditorGUILayout.Popup(Styles.ColorMode, (int)colorMode, Enum.GetNames(typeof(ColorMode)));
+            if (EditorGUI.EndChangeCheck())
+            {
+                // 에디터용 함수들은 언두 기능을 사용하려면 직접 설정해줘야 한다.
+                materialEditor.RegisterPropertyChangeUndo(properties.ColorMode.displayName);
+
+                // 이 프로퍼티에 값을 넣는다고 셰이더에서 실제로 키워드가 세팅되지는 않는다.
+                // 키워드 세팅은 해당 재질 인스턴스(material)에 직접 해줘야 한다.
+                // 그럼에도 이 프로퍼티에 값을 세팅하는 이유는 이 값이 시리얼라이즈 되어서 파일에 저장되고,
+                // 저장된 값을 재질을 선택하여 인스펙터에서 불러왔을 때, 키워드를 값에 따라 세팅해주기 위해서 이다.
+                // 키워드가 세팅이 되고 나면 키워드도 파일에 시리얼라이즈 된다.
+                // 실제 셰이더 내부에서는 이 모드 값으로 컴파일이 분기가 되는게 아니고 키워드로 분기가 되기 때문에
+                // 이 프로퍼티 값은 셰이더 코드를 분기하는데에는 필요 없다.
+                // 하지만, 인스펙터에서 키워드를 세팅하는 근거로 사용하는 값이 이 프로퍼티의 값이기 때문에 이 값도 필요하다.
+                //
+                // 키워드 세팅은 ShaderPropertiesGUI에서 BeginChangeCheck()로 통합해서 변경 내역을 파악하여
+                // 세팅하는 함수(아래에 있는 MaterialChanged())를 호출하고 있다.
+                properties.ColorMode.floatValue = (float)colorMode;
+            }
+            EditorGUI.showMixedValue = false;
+
+            // 모드 팝업은 셰이더 프로퍼티에 [Enum()] 또는 [MaterialEnum()] 키워드가 있으면
+            // 아래와 같이 마법의 함수로 한방에 그려준다. 위와 동일한 기능이다.
+            // 단, 셰이더 프로퍼티 키워드에 [Enum()] 또는 [MaterialEnum()]에 사용하는 enum 타입은 반드시
+            // 클래스 내부에 있는 enum 타입이면 안된다. 클래스 외부에 독립적으로 있어야 한다. (네임스페이스는 상관 없음)
+            materialEditor.ShaderProperty(properties.BlendMode, Styles.ColorMode2);
+        }
+
+        void DrawAdditionalFoldouts(Material material)
+        {
+            materialEditor.RenderQueueField();
+
+            // multi_compile_instancing 이 없으면 아래 함수를 호출해도 아무것도 그리지 않는다.
+            materialEditor.EnableInstancingField();
+        }
+        #endregion
+
+        #region GeneralFunctions
+        /// <summary>
+        /// 재질을 선택했을 때 자동으로 처리해줘야하는 내용이 있을 때 사용할 수 있다.
+        /// 보통 프로퍼티에 있는 값을 기반으로 키워드(define 값)을 자동으로 세팅해주거나
+        /// 블렌드 모드를 자동으로 세팅해주는 일들을 한다.
+        /// ProjectMM 프로젝트의 BGShaderGUI.cs 파일을 참고할 수 있다.
+        /// </summary>
+        /// <param name="material"></param>
+        void MaterialChanged(Material material)
+        {
+            if (material == null)
+            {
+                throw new ArgumentNullException("material");
+            }
+
+            SetMaterialKeywords(material);
+        }
+
+        void SetMaterialKeywords(Material material)
+        {
+            // Clear all keywords for fresh start
+            material.shaderKeywords = null;
+
+            SetupMaterialColorMode(material);
+            SetupMaterialBlendMode(material);
+        }
+
+        void SetupMaterialColorMode(Material material)
+        {
+            var colorMode = (ColorMode)(material.GetFloat(properties.ColorMode.name));
+
+            switch (colorMode)
+            {
+                case ColorMode.None:
+                    // 이 편의 함수가 아래 주석과 동일하다.
+                    UnityEngine.Rendering.CoreUtils.SetKeyword(material, "_GREEN", false);
+                    CoreUtils.SetKeyword(material, "_RED", false);
+                    //material.DisableKeyword("_GREEN");
+                    //material.DisableKeyword("_RED");
+                    break;
+
+                case ColorMode.Green:
+                    CoreUtils.SetKeyword(material, "_GREEN", true);
+                    CoreUtils.SetKeyword(material, "_RED", false);
+                    //material.EnableKeyword("_GREEN");
+                    //material.DisableKeyword("_RED");
+                    break;
+
+                case ColorMode.Red:
+                    CoreUtils.SetKeyword(material, "_GREEN", false);
+                    CoreUtils.SetKeyword(material, "_RED", true);
+                    //material.DisableKeyword("_GREEN");
+                    //material.EnableKeyword("_RED");
+                    break;
+            }
+        }
+
+        void SetupMaterialBlendMode(Material material)
+        {
+            var blendMode = (BlendMode)material.GetFloat(properties.BlendMode.name);
+            switch (blendMode)
+            {
+                case BlendMode.Normal:
+                    material.SetOverrideTag("RenderType", "Opaque");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+                    break;
+
+                case BlendMode.AdditiveColor:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.AdditiveAlpha:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.AdditiveMultiply:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.AlphaBlend:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.Blend:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.DstColor);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.Multiply:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.SrcColor);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+
+                case BlendMode.MultiplyDouble:
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetFloat("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.DstColor);
+                    material.SetFloat("_DstBlend", (int)UnityEngine.Rendering.BlendMode.SrcColor);
+                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 재질에 새로운 셰이더를 할당할 때 호출되는 콜백 함수이다.
+        /// 콜백 함수 이므로 상위 클래스인 ShaderGUI에서 상황에 맞으면 자동으로 호출해준다.
+        /// 해당 재질에 셰이더를 변경할 때 자동으로 특정 프로퍼티의 값을 매핑해주거나
+        /// 키워드를 세팅해주거나 할 때 사용할 수 있다.
+        /// </summary>
+        /// <param name="material">현재 선택된 재질</param>
+        /// <param name="oldShader">이전에 할당되어 있던 셰이더</param>
+        /// <param name="newShader">새로 할당하는 셰이더</param>
+        public override void AssignNewShaderToMaterial(Material material, Shader oldShader, Shader newShader)
+        {
+            /*
+            if (material == null)
+            {
+                throw new ArgumentNullException("material");
+            }
+
+            // _Emission property is lost after assigning Standard shader to the material
+            // thus transfer it before assigning the new shader
+            if (material.HasProperty("_Emission"))
+            {
+                material.SetColor("_EmissionColor", material.GetColor("_Emission"));
+            }
+
+            base.AssignNewShaderToMaterial(material, oldShader, newShader);
+
+            if (oldShader == null || !oldShader.name.Contains("Legacy Shaders/"))
+            {
+                SetupMaterialBlendMode(material);
+                return;
+            }
+
+            SurfaceType surfaceType = SurfaceType.Opaque;
+            BlendMode blendMode = BlendMode.Alpha;
+            if (oldShader.name.Contains("/Transparent/Cutout/"))
+            {
+                surfaceType = SurfaceType.Opaque;
+                material.SetFloat("_AlphaClip", 1);
+            }
+            else if (oldShader.name.Contains("/Transparent/"))
+            {
+                // NOTE: legacy shaders did not provide physically based transparency
+                // therefore Fade mode
+                surfaceType = SurfaceType.Transparent;
+                blendMode = BlendMode.Alpha;
+            }
+            material.SetFloat("_Surface", (float)surfaceType);
+            material.SetFloat("_Blend", (float)blendMode);
+
+            MaterialChanged(material);
+            */
+        }
+        #endregion
+    }
+}

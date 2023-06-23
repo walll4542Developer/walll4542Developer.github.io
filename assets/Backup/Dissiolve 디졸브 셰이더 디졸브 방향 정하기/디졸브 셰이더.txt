@@ -1,0 +1,53 @@
+
+float2 OffsetPanning(float2 uv, float4 texture_ST, float speed)
+{
+    float panningSpeed = speed * _Time.y;
+    float2 tilingOffset = uv * texture_ST.xy + texture_ST.zw;
+    float2 panning = tilingOffset + panningSpeed;
+    return panning;
+}
+
+half TriplanarNoise(in float3 positionWS, in float3 normalWS,
+    TEXTURE2D_PARAM(dissolveMap, dissolveMapSampler), float4 dissolveMapST, float panningSpeed)
+{
+    half triplanarX = SAMPLE_TEXTURE2D_LOD(dissolveMap, dissolveMapSampler, OffsetPanning(positionWS.zy, dissolveMapST, panningSpeed), 0).r;
+    half triplanarY = SAMPLE_TEXTURE2D_LOD(dissolveMap, dissolveMapSampler, OffsetPanning(positionWS.xz, dissolveMapST, panningSpeed), 0).r;
+    half triplanarZ = SAMPLE_TEXTURE2D_LOD(dissolveMap, dissolveMapSampler, OffsetPanning(positionWS.xy, dissolveMapST, panningSpeed), 0).r;
+
+    float3 normalBlend = abs(normalWS);
+    normalBlend /= (normalBlend.x + normalBlend.y + normalBlend.z);
+
+    half nx = triplanarX * normalBlend.x;
+    half ny = triplanarY * normalBlend.y;
+    half nz = triplanarZ * normalBlend.z;
+
+    half triplanarNoise = nx + ny + nz;
+    return triplanarNoise;
+}
+
+float3 ApplyDissolve(in float3 resultColor,
+    in float3 positionWS, in float3 normalWS, in float3 positionOS,
+    float dissolveAmount, float notUseDirection, float3 dissolveDirection, float panningSpeed,
+    TEXTURE2D_PARAM(dissolveMap, dissolveMapSampler), float4 dissolveMapST, float dissolveTexScale,
+    float dissolveCutoff, float dissolveCutoffSmoothness,
+    float3 dissolveColor, float dissolveWidth, float3 dissolveEdgeColor, float dissolveEdgeWidth)
+{
+    float3 direction = normalize(dissolveDirection);
+
+    float movingPosition = dot(positionOS, direction);
+    half dissolvePos = (movingPosition + dissolveAmount);
+
+    half triplanarNoise = TriplanarNoise(positionWS, normalWS, TEXTURE2D_ARGS(dissolveMap, dissolveMapSampler), dissolveMapST, panningSpeed);
+    dissolvePos = lerp(dissolvePos + triplanarNoise, triplanarNoise + dissolveAmount / 30, notUseDirection) * dissolveTexScale;
+
+    half edge = smoothstep(dissolvePos, dissolvePos + dissolveCutoffSmoothness, 0);
+    half dissolve = smoothstep(dissolvePos, dissolvePos + dissolveCutoffSmoothness, min(dissolveEdgeWidth, dissolveWidth));
+    half alpha = smoothstep(dissolvePos, dissolvePos + dissolveCutoffSmoothness, min(dissolveEdgeWidth + dissolveWidth, dissolveWidth));
+
+    float3 finalColor = lerp(dissolveEdgeColor.rgb, resultColor, edge);
+    finalColor = lerp(dissolveColor.rgb, finalColor, dissolve);
+
+    clip(alpha - dissolveCutoff);
+
+    return finalColor;
+}
