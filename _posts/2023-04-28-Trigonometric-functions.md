@@ -17,6 +17,10 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
+이전 포스트에서 벡터 공간의 사칙연산을 활용해 벡터의 움직임을 구현했습니다. 하지만 직선적인 움직임만 표현할 수 있었습니다. 이번에는 회전에 대해서 살펴보겠습니다.
+회전은 원의 궤적을 따라 이동하는 움직임이기 때문에 이를 이해하려면 원과 밀접하게 연결되어있는 삼각함수를 알아야 합니다. 삼각함수의 정의부터 시작해서 단위 원을 활용해 삼각함수의 성질과 주요 공식을 학습할 것입니다.
+삼각함수가 만들어내는 회전의 성질을 활용해 다양한 효과를 만들어내는 원리에 대해서 알아봅시다.
+
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 한 각이 직각(90도)인 직각삼각형을 이루는 세 변은 각 위치에 따라 밑변(a), 높이(b), 빗변(c)이라고 부릅니다. 
@@ -33,6 +37,8 @@ tan \theta = \frac{b}{a}
 $$
 
 밑변의 길이를 a, 높이를 b, 빗변의 길이를 c, 빗변과 밑변과의 사잇 각을 ${\theta}$라고 할 때, 각 삼각비의 관계는 위와 같이 분수식으로 표현할 수 있습니다.
+
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/circle_cos_sin.webp){: .align-center}
 
 직각 삼각형에서 측정할 수 있는 사잇각은 0도 보다 크거나 90도 보다 작아야 합니다. 이때 위 이미지와 같이 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 **삼각함수(Trigonometric function)**라고 합니다.
 
