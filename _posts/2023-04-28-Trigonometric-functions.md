@@ -46,12 +46,12 @@ $$
 
 가장 많이 사용하는 삼각함수인 sin() 함수와 cos() 함수의 개념은 직각삼각형에서 출발했지만 원점을 중심으로 반지름이 1인 평면 위의 **단위 원(Unit circle)**을 사용해 나타내면 좀 더 쉽게 파악할 수 있습니다. 
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/001.png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/002.png){: .align-center}
 
 데카르트 좌표계에서 원점에서부터 제 1 사분면의 단위 원의 원주 위에 있는 임의의 점을 이어 빗변을 그었습니다.
 원의 반지름의 길이는 1이므로 이 빗변의 길이는 항상 1입니다. 그리고 x축과 해당 빗변이 이루는 각을 사잇각으로 지정합니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/001.png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/003.png){: .align-center}
 
 그런 다음에는 빗변에서 x축으로 수직선을 내려 직각 삼각형을 그려봅시다. 직각삼각형으로 부터 삼각비를 계산 할 수 있을 것입니다.
 
