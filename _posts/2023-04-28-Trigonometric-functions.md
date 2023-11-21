@@ -53,7 +53,9 @@ $$
 
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/003.png){: .align-center}
 
-그런 다음에는 빗변에서 x축으로 수직선을 내려 직각 삼각형을 그려봅시다. 직각삼각형으로 부터 삼각비를 계산 할 수 있을 것입니다.
+그런 다음에는 빗변에서 x축으로 수직선을 내려 직각 삼각형을 그려봅시다. 직각삼각형으로부터 삼각비를 계산 할 수 있을 것입니다.
+
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/004.png){: .align-center}
 
 $$
 sin \theta = \frac{b}{1} = b \\
@@ -68,7 +70,7 @@ $$
 
 그렇다면 밑변 a의 x좌표는 ${cos\theta}$가 되고, 높이 b의 좌표는 ${sin\theta}$가 되는데 이를 피타고라스 정리 ${a^{2} + b^{2} = c^{2}}$에 대입하면 위와 같은 공식을 얻을 수 있습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/005.png){: .align-center}
 
 단위 원의 반지름 길이를 r으로 일반화 시켜서 생각해봅시다. 
 반지름이 r인 원에서의 빗변은 벡터의 개념으로 보았을 때 길이가 1인 벡터와 평행하고 길이는 r배 만큼 증가 했으므로 스칼라 곱셈에 의해 ${r * (cos\theta, sin\theta)}$라는 좌표를 갖게 됩니다. 
@@ -94,11 +96,11 @@ $$
 데카르트 좌표계에서 각도(angle)는 x축에서 원의 궤적을 따라 반시계 방향으로 회전한 크기를 의미합니다. 반지름이 1인 단위 원에서 반시계 방향의 회전을 생각해봅시다.
 아직 회전하지 않아서 x축 상에 위치한 빗변 ${\vec{v}}$와의 좌표는 ${(1,0)}$인데, 이 각도는 0도에 대응한다고 할 수 있습니다. 따라서 각도에 대한 sin 함수와 cos함수의 값은 위와 같습니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/006.png){: .align-center}
 
-각도를 0도에서 90도까지 서서히 증가시키면서 회전하는 빗변의 좌표 ${v_{x}}$와 ${v_{y}}$의 변화를 살펴봅시다. 각도가 증가할수록 ${v_{x}}$값은 감소하고 ${v_{y}}$값은 증가합니다. 그리고 목적지인 90도에 도달하면 y축 상에 위치한 좌표 ${(0,1)}$과 일치하는 벡터가 만들어집니다. ${v_{x}}$값을 빨간색으로, ${v_{y}}$값을 청록색으로 표시해서 좌표의 x값과 y값의 변화를 추적하면 부드러운 곡선이 만들어집니다.
+각도를 0도에서 90도까지 서서히 증가시키면서 회전하는 빗변의 좌표 ${v_{x}}$와 ${v_{y}}$의 변화를 살펴봅시다. 각도가 증가할수록 ${v_{x}}$값은 감소하고 ${v_{y}}$값은 증가합니다. 그리고 목적지인 90도에 도달하면 y축 상에 위치한 좌표 ${(0,1)}$과 일치하는 벡터가 만들어집니다. ${v_{x}}$값을 빨간색으로, ${v_{y}}$값을 파란색으로 표시해서 좌표의 x값과 y값의 변화를 추적하면 부드러운 곡선이 만들어집니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/007.png){: .align-center}
 
 각도가 90을 넘어서면 ${v_{x}}$값은 0을 지나 음수가 되고, ${v_{y}}$ 값은 다시 0을 향해 감소하기 시작합니다. 계속해서 한바퀴에 해당하는 360도 까지 빗변의 좌표 변화를 계속 관찰하면, -1에 도달할 때 까지 계속 감소하다가 -1에 도달하면 방향을 바꿔서 1을 향해 증가하며, 1에 도달하면 다시 -1을 향해 감소하는 패턴을 반복합니다. 
 이런 값의 변화는 ${[-1,1]}$ 범위 내에서 360도 마다 반복되는데, 변화값의 범위를 **진폭(Amplitude)**, 반복되는 각도를 **주기(Period)**라고 합니다.
