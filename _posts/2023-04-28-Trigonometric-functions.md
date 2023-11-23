@@ -39,7 +39,6 @@ $$
 밑변의 길이를 a, 높이를 b, 빗변의 길이를 c, 빗변과 밑변과의 사잇 각을 ${\theta}$라고 할 때, 각 삼각비의 관계는 위와 같이 분수식으로 표현할 수 있습니다.
 
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/circle_cos_sin.webp){: .align-center}
-
 직각 삼각형에서 측정할 수 있는 사잇각은 0도 보다 크거나 90도 보다 작아야 합니다. 이때 위 이미지와 같이 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 **삼각함수(Trigonometric function)**라고 합니다.
 
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/001.png){: .align-center}
