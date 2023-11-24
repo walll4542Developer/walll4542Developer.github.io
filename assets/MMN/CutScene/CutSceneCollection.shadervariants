@@ -1,0 +1,386 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CutSceneCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 03f5ee19128d8004599dd0053f35eae5, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _FOG_RCV_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _RAYCAST_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 5870569b484023f40881af315cd81446, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _FOG_RCV_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _RAYCAST_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 93eec7aa22e563947bf58cb9aaa2f066, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _FOG_RCV_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: e9f5805d8841e074d8b558edc0fdc263, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _FOG_RCV_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+          _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _USE_CUSTOM_INTENSITY_COLOR_ON
+        passType: 0
+      - keywords: _USE_CUSTOM_INTENSITY_COLOR_ON _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+      - keywords: _USE_G_CHANNEL_ALPHA_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 8b2c1573ed1b0e646b2a500db9351f28, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _FOG_RCV_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _FOG_RCV_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _LIGHTRECEIVE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _RAYCAST_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _RAYCAST_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON
+        passType: 0
+      - keywords: _SOFTPARTICLE_ON _USE_CUTOUT_ON
+        passType: 0
+      - keywords: _USE_CUTOUT_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 3c09a2132bc078646b2c6b4508f16404, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: _FOG_RCV_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _RAYCAST_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _FOG_RCV_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _LIGHTRECEIVE_ON
+        passType: 13
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON
+        passType: 13
+      - keywords: _LIGHTRECEIVE_ON _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _LIGHTRECEIVE_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _RAYCAST_ON
+        passType: 13
+      - keywords: _RAYCAST_ON _SOFTPARTICLE_ON
+        passType: 13
+      - keywords: _SOFTPARTICLE_ON
+        passType: 13

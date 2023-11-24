@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: MMN_CommonOutputs
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.1.2\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19102\nNode;AmplifyShaderEditor.CommentaryNode;118;654,318;Inherit;False;479;377;SoftParticle;3;80;83;18;;1,1,1,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode;107;-1504,320;Inherit;False;415.1738;451.6331;Raycast
+    & HalftoneClip;2;92;102;;1,1,1,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode;105;-720,320;Inherit;False;890;412;Light
+    & Shadow;4;41;6;85;104;;1,1,1,1;0;0\nNode;AmplifyShaderEditor.CustomExpressionNode;104;-672,464;Inherit;False;
+    ;7;File;4;True;finalColor;FLOAT4;0,0,0,0;InOut;;Half;False;True;shadowCoord;FLOAT4;0,0,0,0;In;;Float;False;True;positionWS;FLOAT3;0,0,0;In;;Float;False;True;lightRatio;FLOAT;0;In;;Float;False;ApplyShadowAtten;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;5;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;2;FLOAT;0;FLOAT4;2\nNode;AmplifyShaderEditor.StaticSwitch;85;-112,368;Inherit;False;Property;_LightReceive;\uBE5B
+    \uC801\uC6A9;5;0;Create;False;0;0;0;True;2;HideInInspector;Space(10);False;1;0;0;True;_LIGHTRECEIVE_ON;Toggle;2;Key0;Key1;Create;True;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.WireNode;101;-1536,320;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.StaticSwitch;102;-1456,368;Inherit;False;Property;_Raycast;\uB808\uC774\uCE90\uC2A4\uD2B8
+    \uC801\uC6A9;7;0;Create;False;0;0;0;True;1;HideInInspector;False;1;0;0;True;_RAYCAST_ON;Toggle;2;Key0;Key1;Create;True;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;9;-1936,208;Inherit;False;finalColor;3;0;True;1;0;FLOAT3;1,1,1;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.DynamicAppendNode;32;-1776,240;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.FunctionInput;28;-1936,288;Inherit;False;finalAlpha;1;1;True;1;0;FLOAT;1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;6;-112,464;Inherit;False;
+    ;7;File;3;True;finalColor;FLOAT4;0,0,0,0;InOut;;Half;False;True;normalWS;FLOAT3;0,0,0;In;;Float;False;True;lightRatio;FLOAT;0;In;;Float;False;ApplyLightColor;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;4;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;2;FLOAT;0;FLOAT4;2\nNode;AmplifyShaderEditor.WorldPosInputsNode;113;-960,736;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.TexCoordVertexDataNode;50;-976,560;Inherit;False;0;4;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.RangedFloatNode;86;-1056,896;Inherit;False;Property;_LightRatio;lightRatio;8;1;[HideInInspector];Create;False;0;2;Off;0;On;1;0;True;0;False;1;1;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.WireNode;111;-192,848;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.WorldNormalVector;41;-336,560;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.CustomExpressionNode;80;800,464;Inherit;False;
+    ;7;File;5;True;finalColor;FLOAT4;0,0,0,0;InOut;;Half;False;True;near;FLOAT;0;In;;Float;False;True;far;FLOAT;0;In;;Float;False;True;fadeOutRange;FLOAT;0;In;;Float;False;True;positionNDC;FLOAT4;0,0,0,0;In;;Float;False;ApplySoftParticle;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;6;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT4;0,0,0,0;False;2;FLOAT;0;FLOAT4;2\nNode;AmplifyShaderEditor.StaticSwitch;83;880,368;Inherit;False;Property;_SoftParticle;\uC18C\uD504\uD2B8
+    \uD30C\uD2F0\uD074 \uC801\uC6A9;6;0;Create;False;0;0;0;True;1;HideInInspector;False;1;0;0;True;_SOFTPARTICLE_ON;Toggle;2;Key0;Key1;Create;True;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.StaticSwitch;18;704,368;Inherit;False;Property;_FogReceive;\uC548\uAC1C
+    \uC801\uC6A9;0;0;Create;False;0;0;0;True;1;HideInInspector;False;1;0;0;True;_FOG_RCV_ON;Toggle;2;Key0;Key1;Create;True;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;58;368,816;Float;False;
+    ;7;File;3;True;positionCS;FLOAT4;0,0,0,0;Out;;Float;False;True;positionNDC;FLOAT4;0,0,0,0;Out;;Float;False;True;positionOS;FLOAT3;0,0,0;In;;Float;False;GetPositionCSForBending;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;4;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT3;0,0,0;False;3;FLOAT;0;FLOAT4;2;FLOAT4;3\nNode;AmplifyShaderEditor.WireNode;117;656,864;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.PosVertexDataNode;60;176,832;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.RangedFloatNode;78;416,560;Inherit;False;Property;_SoftParticleNearFadeDistance;Soft
+    Particle Near Fade;9;1;[HideInInspector];Create;False;0;2;Off;0;On;1;0;True;0;False;0;2;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;79;416,640;Inherit;False;Property;_SoftParticleFarFadeDistance;Soft
+    Particle Far Fade;10;1;[HideInInspector];Create;False;0;2;Off;0;On;1;0;True;0;False;1;2;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;84;368,720;Inherit;False;Property;_SoftParticleFadeOutRange;\uC0AC\uB77C\uC9C0\uB294
+    \uBC94\uC704 \uC870\uC808;11;1;[HideInInspector];Create;False;0;2;Off;0;On;1;0;True;0;False;1;2;0;10;0;1;FLOAT;0\nNode;AmplifyShaderEditor.ScreenPosInputsNode;108;-1792,544;Inherit;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.WorldPosInputsNode;103;-1776,400;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.CustomExpressionNode;92;-1456,464;Half;False;
+    ;7;File;8;True;finalColor;FLOAT4;0,0,0,0;InOut;;Half;False;True;positionWS;FLOAT3;0,0,0;In;;Float;False;True;screenUV;FLOAT4;0,0,0,0;In;;Half;False;True;screenPos;FLOAT4;0,0,0,0;In;;Half;False;True;nearPlane;FLOAT;0.5;In;;Inherit;False;True;nearPlaneInvertDistance;FLOAT;0;In;;Inherit;False;True;raycastHarftoneClip;FLOAT;0;In;;Half;False;True;raycastMinimumAlpha;FLOAT;0;In;;Inherit;False;ApplyRaycastingAlpha;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;9;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT;0.5;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;2;FLOAT;0;FLOAT4;2\nNode;AmplifyShaderEditor.BreakToComponentsNode;64;1200,496;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15\nNode;AmplifyShaderEditor.DynamicAppendNode;76;1328,496;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionOutput;26;1488,576;Inherit;False;False;-1;finalAlpha;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;2;1488,512;Inherit;False;True;-1;finalColor;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.RangedFloatNode;112;-1856,800;Float;False;Property;_NearPlaneInvertDistance;nearPlaneInvertDistance;4;2;[HideInInspector];[Toggle];Create;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;0;1;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;95;-1856,880;Float;False;Property;_RaycastHarftoneClip;raycastHarftoneClip;1;2;[HideInInspector];[PerRendererData];Create;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;0;5;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;110;-1856,960;Float;False;Property;_RaycastMinimumAlpha;raycastMinimumAlpha;2;1;[HideInInspector];Create;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;0;1;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;119;-1856,720;Float;False;Property;_NearPlaneAlpha;nearPlaneAlpha;3;1;[HideInInspector];Create;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;0;1;0;1;0;1;FLOAT;0\nWireConnection;104;1;92;2\nWireConnection;104;2;50;0\nWireConnection;104;3;113;0\nWireConnection;104;4;86;0\nWireConnection;101;0;32;0\nWireConnection;32;0;9;0\nWireConnection;32;3;28;0\nWireConnection;6;1;104;2\nWireConnection;6;2;41;0\nWireConnection;6;3;111;0\nWireConnection;111;0;86;0\nWireConnection;80;1;6;2\nWireConnection;80;2;78;0\nWireConnection;80;3;79;0\nWireConnection;80;4;84;0\nWireConnection;80;5;117;0\nWireConnection;58;3;60;0\nWireConnection;117;0;58;3\nWireConnection;92;1;101;0\nWireConnection;92;2;103;0\nWireConnection;92;3;108;0\nWireConnection;92;4;108;0\nWireConnection;92;5;119;0\nWireConnection;92;6;112;0\nWireConnection;92;7;95;0\nWireConnection;92;8;110;0\nWireConnection;64;0;80;2\nWireConnection;76;0;64;0\nWireConnection;76;1;64;1\nWireConnection;76;2;64;2\nWireConnection;26;0;64;3\nWireConnection;2;0;76;0\nASEEND*/\n//CHKSM=B395D56ADF1612ECF124A329442E294A28D7886F"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 1
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_headerStyle: 0
+  m_headerColor: {r: 1, g: 0.4, b: 0, a: 1}
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 
