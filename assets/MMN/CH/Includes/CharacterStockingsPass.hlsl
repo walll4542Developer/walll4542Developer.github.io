@@ -14,16 +14,16 @@
 #include "CharacterDebugging.hlsl"
 
 
-float4 BasePassFragment(Varyings input) : SV_Target
+half4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    float3 baseColor = baseMap.rgb;
-    float alpha = 1.0;
+    half3 baseColor = baseMap.rgb;
+    half alpha = 1.0;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -46,32 +46,32 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Stockings Color
     //-----------------------------------------------------------------------------
-    float3 dyedBaseColor = baseColor;
+    half3 dyedBaseColor = baseColor;
 
     // _Denier : [10 ~ 180] 범위의 값을 가짐.
-    float nomalizedDenier = (_Denier - 10.0) / 170.0;
-    float reverseNomalizedDenier = 1.0 - nomalizedDenier;
+    half nomalizedDenier = (_Denier - 10.0) / 170.0;
+    half reverseNomalizedDenier = 1.0 - nomalizedDenier;
 
-    float3 skinColor = _DyeColor1.rgb;
-    float3 stockingsColor = _DyeColor2.rgb;
-    float3 stockingsBlendColor = sqrt(stockingsColor * skinColor);
+    half3 skinColor = _DyeColor1.rgb;
+    half3 stockingsColor = _DyeColor2.rgb;
+    half3 stockingsBlendColor = sqrt(stockingsColor * skinColor);
     stockingsBlendColor = lerp(stockingsBlendColor, stockingsColor, nomalizedDenier); // 두께가 얇으면 스킨과 스타킹이 적절히 섞인 컬러로, 두꺼울 수록 스타킹 본연의 색으로 표현.
-    float3 stockingsHighlightColor = lerp(skinColor, float3(1, 1, 1), nomalizedDenier); // 두께가 얇으면 스킨색으로, 두꺼울 수록 흰색으로 표현
+    half3 stockingsHighlightColor = lerp(skinColor, half3(1, 1, 1), nomalizedDenier); // 두께가 얇으면 스킨색으로, 두꺼울 수록 흰색으로 표현
 
-    float nDotV = dot(inputData.normalWS, inputData.viewDirectionWS);
+    half nDotV = dot(inputData.normalWS, inputData.viewDirectionWS);
 
     // 스타킹 베이스 컬러 공식.
     // 기본 N dot V 공식인데 두께가 얇으면 스킨의 컬러가 넓은 면적이 되도록,
     // 두꺼울 수록 스킨은 튀어나온 곳에만 보이고 대부분 스타킹 본연의 컬러가 나오도록 표현.
-    float denierFactor = (180.0 - _Denier) / 170.0;
+    half denierFactor = (180.0 - _Denier) / 170.0;
     denierFactor = saturate(PositivePow(denierFactor, 5.0));
-    float stockingsBaseFactor = max(0.0, nDotV * denierFactor - (denierFactor * 0.3) - 0.06);
+    half stockingsBaseFactor = max(0.0, nDotV * denierFactor - (denierFactor * 0.3) - 0.06);
     dyedBaseColor = lerp(stockingsBlendColor, skinColor, stockingsBaseFactor);
 
     // 스타킹 하이라이트 컬러 공식.
     // 두께가 얇으면 하이라이트가 넓게 표현하고, 두꺼울 수록 좁게 표현함.
     // 그리고 두꺼울 수록 하이라이트가 연하게 보이도록 조정.
-    float stockingsHighlightFactor = saturate(nDotV - lerp(nomalizedDenier * 0.2 + 0.6, 0.96, PositivePow(nomalizedDenier, 0.2)));
+    half stockingsHighlightFactor = saturate(nDotV - lerp(nomalizedDenier * 0.2 + 0.6, 0.96, PositivePow(nomalizedDenier, 0.2)));
     stockingsHighlightFactor *= reverseNomalizedDenier * 1.2;
     dyedBaseColor += stockingsHighlightColor * stockingsHighlightFactor * nomalizedDenier * 0.4;
 
@@ -94,19 +94,40 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, STOCKINGS_SHADING, _SilhouetteOff, _SilhouetteTintColor);
+        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        float3 outlineColor = OnePassOutline(STOCKINGS_SHADING, inputData, mainLight.direction, _OutlineColorMode);
+        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = float3(1, 1, 1);
+            outlineColor = half3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
+    #endif
+
+    #ifdef _DISSOLVE_FEATURE
+        DissolveInput dissolveInput;
+        dissolveInput.range = _DissolveRange;
+        dissolveInput.notUseDirection = _NotUseDirection;
+        dissolveInput.direction = _DissolveDirection.xyz;
+        dissolveInput.panningSpeed = _DissolvePanningSpeed;
+        dissolveInput.dissolveMap = _DissolveMap;
+        dissolveInput.dissolveMapSampler = sampler_DissolveMap;
+        dissolveInput.dissolveMapST = _DissolveMap_ST;
+        dissolveInput.useCutoff = _DissolveCutoff;
+        dissolveInput.mainColor = _DissolveColor;
+        dissolveInput.mainWidth = _DissolveWidth;
+        dissolveInput.edgeColor = _DissolveEdgeColor;
+        dissolveInput.edgeWidth = _DissolveEdgeWidth;
+        dissolveInput.positionWS = inputData.positionWS;
+        dissolveInput.positionOS = input.positionOS;
+        dissolveInput.normalWS = inputData.normalWS;
+        dissolveInput.characterData = characterData;
+        resultColor.rgb = ApplyDissolve(resultColor.rgb, _DissolveAmount, dissolveInput);
     #endif
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
@@ -128,7 +149,7 @@ float4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

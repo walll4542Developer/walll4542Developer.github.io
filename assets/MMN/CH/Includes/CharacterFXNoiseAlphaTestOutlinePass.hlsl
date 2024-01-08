@@ -17,15 +17,15 @@
 // //                           Fragment functions                              //
 // ///////////////////////////////////////////////////////////////////////////////
 
-// float4 OutlinePassFragment(Varyings input) : SV_Target
+// half4 OutlinePassFragment(Varyings input) : SV_Target
 // {
 //     //-----------------------------------------------------------------------------
 //     // Diffuse
 //     //-----------------------------------------------------------------------------
 //     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-//     float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-//     float3 baseColor = baseMap.rgb;
-//     float alpha = baseMap.a;
+//     half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+//     half3 baseColor = baseMap.rgb;
+//     half alpha = baseMap.a;
 
 //     #ifndef _TRANSPARENCY
 //         alpha = 1.0;
@@ -33,7 +33,7 @@
 
 //     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-//     float3 dyedBaseColor = baseColor;
+//     half3 dyedBaseColor = baseColor;
 //     #ifdef _DYE_FEATURE
 //         if (IS_TRUE(_IsDyable))
 //         {
@@ -60,10 +60,10 @@
 //     //-----------------------------------------------------------------------------
 //     // Process Color
 //     //-----------------------------------------------------------------------------
-//     float4 resultColor;
+//     half4 resultColor;
 //     resultColor.rgb = ProcessCharacterColor(inputData,
 //         mainLight, lightingData, characterData,
-//         dyedBaseColor, _ShadingType, _SilhouetteOff, _SilhouetteTintColor);
+//         dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
 //     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
 //     resultColor = ProcessNoiseAlphaTest(resultColor, input.uv.xy);

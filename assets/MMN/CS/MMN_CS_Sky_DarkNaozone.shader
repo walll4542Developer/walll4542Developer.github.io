@@ -6,7 +6,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
         _MaskMap ("노이즈 텍스쳐(R) 달 (G) 달 알파(B) 헤일로(A)", 2D) = "black" { }
         _DistortionSpeedMultix ("스피드 멀티플라이x. ", float) = 0
         _DistortionSpeedMultiy ("스피드 멀티플라이y. ", float) = 0
-        
+
         [Space(30)]
         // [HDR]_MainColor ("BaseTexColor", Color) = (1, 1, 1, 1)
         [MainTex] _BaseTex ("구름레이어", 2D) = "black" { }
@@ -37,7 +37,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
         // _Distortion4 ("디스토션4", float) = 0.1
         _SkyMultiply ("하늘의 불길한 멀티플라이 ", float) = 2
         _Distortion4 ("디스토션4. 하늘에 노이즈 디스토션", float) = 0.1
-        
+
         [HideInInspector] _Blend ("__blend", Float) = 0.0
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
@@ -48,8 +48,9 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
 
     SubShader
     {
+        LOD 100
+
         Tags { "Queue" = "Transparent-395" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
-        LOD 300
         ZClip False
 
         Pass
@@ -61,7 +62,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
             // Blend[_SrcBlend][_DstBlend]
             Blend SrcAlpha OneMinusSrcAlpha
             // Blend One Zero
-            
+
             // Blend one OneMinusSrcAlpha
             // Blend One OneMinusSrcAlpha, SrcAlpha One
             // Blend One Zero, One One
@@ -74,7 +75,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
                 Comp Equal
                 Pass Keep
             }
-            
+
             ZWrite Off
             Cull[_Cull]
 
@@ -90,12 +91,12 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                
+
                 float4 _BaseTex_ST;
                 float4 _BaseTex3_ST;
                 float4 _BaseTex4_ST;
                 float4 _MaskMap_ST;
-                
+
                 float4 _RedMoonColor;
                 float4 _HaloUV;
                 float4 _MoonUV;
@@ -103,13 +104,13 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
                 float _Distortion;
                 float _Distortion3;
                 float _Distortion4;
-                
+
                 float _SkyMultiply;
                 float4 _HaloColor;
-                
+
                 float _DistortionSpeedMultix;
                 float _DistortionSpeedMultiy;
-                
+
                 float _BaseTexSpeedMultix;
                 float _BaseTexSpeedMultiy;
                 float _BaseTex3SpeedMultix;
@@ -187,7 +188,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
                 InitializeGlobalValue();
                 return uv + frac(_Global_WindUV * float2(x, y) * speedmul * 2);
             }
-            
+
             // Used for StandardSimpleLighting shader
             half4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
@@ -211,7 +212,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
                 float dottest = dot(cameraDir, float3(1, 0, 0)); //90도 돌린곳과 닷 연산
 
                 //////////////////// 텍스쳐 준비/////////////////////////
-                
+
                 //마스크맵
                 float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
                 half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
@@ -238,7 +239,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
 
                 //////////////////// 최종연산 /////////////////////////
 
-                
+
                 float4 color ;
                 //하늘을 일단 넣고
                 color.rgb = basemap4.rgb + pow(abs(basemap4.rgb), 1.5) * _SkyMultiply;
@@ -253,7 +254,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
                 color.rgb = lerp(color.rgb, basemap.rgb, basemap.a);
 
                 color.a = 1;
-                
+
                 // if (unity_OrthoParams.w == 1) //Ortho에서는 사라지게 한다
                 // return 0;
                 // else

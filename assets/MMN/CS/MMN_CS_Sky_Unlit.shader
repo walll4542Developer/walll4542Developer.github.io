@@ -4,7 +4,7 @@ Shader "MMN/CutScene/Sky_Unlit"
     {
         [KeywordEnum(Unlit1, Unlit2)] _UnlitMember ("Unlit Member", Float) = 0
         _StencilRef ("Stencil Ref", Int) = 0
-        
+
         [Header(Distortion)]
         _MaskMap ("디스토션을 위한 마스크맵", 2D) = "black" { }
         _DistortionSpeedMultix ("스피드 멀티플라이x. 로컬값 ", float) = 0
@@ -30,13 +30,14 @@ Shader "MMN/CutScene/Sky_Unlit"
 
     SubShader
     {
+        LOD 100
+
         // NOTE @wooyoung : https://deskcat.io/d/N28009/MM-미술-검은-나오존-흰-나오존-로딩없는-전환처리-연구
         Tags { "Queue" = "Transparent-396" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True"
             "ShaderModel" = "4.5" }
         // Tags { "Queue" = "Transparent-400" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "Unlit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
-        
-        LOD 300
+
         ZClip False
 
         Pass
@@ -55,7 +56,7 @@ Shader "MMN/CutScene/Sky_Unlit"
 
             // Use same blending / depth states as Standard shader
             Blend[_SrcBlend][_DstBlend]
-            
+
             // Blend SrcAlpha One
             // ZWrite[_ZWrite]
             Cull[_Cull]
@@ -64,7 +65,7 @@ Shader "MMN/CutScene/Sky_Unlit"
 
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
-            
+
             #pragma vertex LitPassVertexSimple
             #pragma fragment LitPassFragmentSimple
 
@@ -164,7 +165,7 @@ Shader "MMN/CutScene/Sky_Unlit"
                 {
 
                 }
-                
+
                 float2 uv = input.uv;
                 half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_DistortionSpeedMultix, _DistortionSpeedMultiy)), _MaskMap));
                 half4 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_EmissionSpeedMultix, _EmissionSpeedMultiy) * _GlobalSkyUnlitScrollSpeed), _EmissionMap) + maskMap.r * _Distortion) * _EmissionColor * _GlobalSkyUnlitColor;

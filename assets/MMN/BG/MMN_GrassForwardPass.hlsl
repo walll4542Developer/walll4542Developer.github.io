@@ -9,11 +9,11 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
+    half4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
-    float4 color : COLOR;
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -41,8 +41,6 @@ struct Varyings
     float4 color : COLOR;
     float4 positionCS : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
-    // UNITY_VERTEX_OUTPUT_STEREO
-
 };
 
 void InitializeInputData(Varyings input, out InputData inputData)
@@ -89,6 +87,7 @@ void InitializeInputData(Varyings input, out InputData inputData)
 ///////////////////////////////////////////////////////////////////////////////
 //                  Vertex and Fragment functions                            //
 ///////////////////////////////////////////////////////////////////////////////
+static const half defaultVisualRange = 20.0;
 
 // Used in Standard (Simple Lighting) shader
 Varyings LitPassVertexSimple(Attributes input)
@@ -99,7 +98,12 @@ Varyings LitPassVertexSimple(Attributes input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     // UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-    VertexPositionInputs vertexInput = GetVertexPositionInputs4treeShake(input.positionOS.xyz, _Global_VertexPositionOffset, _Global_VertexPositionOffset.z, input.color, _WindMultiply, _WindSpeedMultiply, _GrassPushPower, /* _VertexAniOn */ 1);
+    half visualRange = _GrassVisualRange + defaultVisualRange;
+
+    VertexPositionInputs vertexInput = GetVertexPositionInputsGrassVisualRange(
+        input.positionOS.xyz, input.color,
+        _WindMultiply, _WindSpeedMultiply, _GrassPushPower, 1,
+        visualRange, _Global_Grass_VisualRangeFactor, _GrassVisualActionToggle);
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
     half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
@@ -136,26 +140,16 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
     // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-    
-    // BatchingConfig.DEFAULT_LOD_FADE_DISTANCE와 수치를 맞춰야합니다.
-    // MonoBehaviour Script에서 내 캐릭터의 정확한 좌표를 현재 참조할 수가 없어서,
-    // 수치를 조절해 대략적으로 맞춘 상태입니다.
-    // 2022.07.14 박대명
-    float toPlayerDistance = length(_Global_pos.xyz - input.positionWS.xyz);
-    if (toPlayerDistance > _CullDistance)
-    {
-        discard;
-    }
 
     //글로벌 텍스쳐
     InitializeGlobalValue();
     float4 globalGrassTex = SAMPLE_TEXTURE2D(_Global_Grass_Texture, sampler_Global_Grass_Texture, input.positionWS.xz * 0.01 * _Global_Grass_TextureSP.rg + _Global_Grass_TextureSP.ba + (_Time.x * _Global_WindUV * 0.01 * _TextureBlendingScroll));
-    
+
     //글로벌 텍스쳐 미리보기 기능 가동
     #ifdef _SHOWGLOBALTEXTURE_ON
         return globalGrassTex;
     #endif
-    
+
     // 텍스쳐
     float2 uv = input.uv;
     float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
@@ -168,7 +162,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     // 조합해서 풀 기본 색상 결정
     float3 diffuse = diffuseAlpha.rgb * _BaseColor.rgb;
     diffuse = saturate(lerp(diffuse, topColor, input.color.g));
-    
+
 
     float alpha = diffuseAlpha.a * _BaseColor.a;
     clip(alpha - _Cutoff);
@@ -181,11 +175,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     InputData inputData;
     InitializeInputData(input, inputData);
 
-    // #ifdef _DBUFFER
-    // ApplyDecalToBaseColorAndNormal(input.positionCS, diffuse,  inputData.normalWS);
-    // #endif
-
-    #if defined(_NEARHALFTONECLIP_ON)&&(_GLOBAL_NEARHALFTONECLIP_ON)
+    #if defined(_NEARHALFTONECLIP_ON) && (_GLOBAL_NEARHALFTONECLIP_ON)
         //거리에 따라 하프톤으로 사라지게 하는 기능. 니어클리핑
         half halftoneAlpha;
         NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
@@ -197,32 +187,32 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     clip(RaycasthalftoneAlpha - 0.1);
 
     inputData.bakedGI = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _InstancingColor).rgb;
-    
+
     //눈내리는 텍스쳐 전환
     diffuse.rgb = snowTextureLerp(input.positionWS, diffuse.rgb, input.normalWS, inputData.bakedGI);
-    
-    //그림자 영역 밝기 조절이 들어간 오버라이드 라이팅 함수 . 
-    float shadowDim = saturate(lerp( _ShadowDimming , 0 ,  _Global_Raining));//비가 오면 _ShadowDimming 을 효과없게 한다. 비가올때 풀이 도드라지기 때문 
-    
+
+    //그림자 영역 밝기 조절이 들어간 오버라이드 라이팅 함수 .
+    float shadowDim = saturate(lerp(_ShadowDimming, 0, _Global_Raining));//비가 오면 _ShadowDimming 을 효과없게 한다. 비가올때 풀이 도드라지기 때문
+
     // inputData.bakedGI = pow( inputData.bakedGI,2);
-    
+
     float4 color = UniversalFragmentLightCustom
     (
-        inputData, 
-        diffuse, 
-        specular, 
-        smoothness, 
-        emission, 
-        alpha, 
-        /*normalTS*/ float3(0, 0, 1), 
-        0, 
-        /*RampY*/0.5, 
-        /* _BackfaceReceiveShadowOff */0, 
-        /* FRONT_FACE_TYPE isFacing */0.0, 
+        inputData,
+        diffuse,
+        specular,
+        smoothness,
+        emission,
+        alpha,
+        /*normalTS*/ float3(0, 0, 1),
+        0,
+        /*RampY*/0.5,
+        /* _BackfaceReceiveShadowOff */0,
+        /* FRONT_FACE_TYPE isFacing */0.0,
         /* float _BackFaceNormalturn */0.0
     );
 
-    
+
 
     //LOD 디더링 기능
     float fadeValue;
@@ -251,7 +241,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 
     //컨텍트 셰도우 연산
     color *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
-    
+
     // ===============================================================================
     // ==                            Fog & CloudShadow Calc                         ==
     // ===============================================================================

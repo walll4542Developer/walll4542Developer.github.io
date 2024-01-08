@@ -12,7 +12,7 @@ Shader "MMN/CutScene/Sky_Lit"
         // _Cutoff ("Alpha Clipping", Range(0.0, 1.0)) = 0.5
         [HideInInspector] _BumpScale ("Scale", Float) = 1.0
         [NoScaleOffset] _BumpMap ("Normal Map", 2D) = "bump" { }
-        
+
         [HideInInspector][NoScaleOffset]unity_Lightmaps ("unity_Lightmaps", 2DArray) = "" { }
         [HideInInspector][NoScaleOffset]unity_LightmapsInd ("unity_LightmapsInd", 2DArray) = "" { }
         [HideInInspector][NoScaleOffset]unity_ShadowMasks ("unity_ShadowMasks", 2DArray) = "" { }
@@ -20,10 +20,11 @@ Shader "MMN/CutScene/Sky_Lit"
 
     SubShader
     {
+        LOD 100
+
         Tags { "Queue" = "Transparent-394" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True"
             "ShaderModel" = "4.5" }
-        LOD 300
         ZClip False
         blend One Zero
 
@@ -51,6 +52,7 @@ Shader "MMN/CutScene/Sky_Lit"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             // #pragma multi_compile_fragment _ DEBUG_DISPLAY
             //--------------------------------------
             // GPU Instancing
@@ -65,14 +67,14 @@ Shader "MMN/CutScene/Sky_Lit"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
-            
+
             //GlobalVariables
             // half _Global_CloudDensity;
             // half _Global_CloudSpeed;
             // half _Global_CloudScale;
             // half _Global_CloudEdgeHardness;
             // half _Global_Night2Day;
-            
+
             #include "../Includes/bendingVertex.hlsl"
             #include "../Includes/CustomLighting.hlsl"
             #include "../Includes/BlendingHelper.hlsl"
@@ -219,7 +221,7 @@ Shader "MMN/CutScene/Sky_Lit"
 
                 half2 uv = input.uv;
                 half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                
+
                 half3 tintProp = _BaseColor.rgb;
                 half tintStrengthProp = _AlbedoTintStrength;
                 half3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp);

@@ -238,7 +238,7 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         // mixedDiffuse = lerp(diffAlbedo[0].rgb, diffAlbedo[1].rgb, 1 - sp_r);
         //텍스쳐 블렌딩 연산 신형
         //(_V_T2M_Splat2_EdgeColor * 4.2 - 1) * 0.25 : 4.2 는 2.2 감마에 *2-1 을 합친겁니다. 0.2로 강도조절
-        mixedDiffuse = lerp(diffAlbedo[1].rgb + (_V_T2M_Splat2_EdgeColor * 4.2 - 1) * 0.2, diffAlbedo[0].rgb, sp_rExpand);
+        mixedDiffuse = lerp(diffAlbedo[1].rgb + (_V_T2M_Splat2_EdgeColor.rgb * 4.2 - 1) * 0.2, diffAlbedo[0].rgb, sp_rExpand);
         mixedDiffuse = lerp(diffAlbedo[1].rgb, mixedDiffuse, sp_r);
         
         /* g ????ũ?? r?? ????? ????? ?????ϴ?.
@@ -248,10 +248,10 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         //half alpha = 1;
 
         // mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb.rgb + (_V_T2M_Splat3_EdgeColor * 4.2 - 1) * 0.1, sp_bExpand);
-        mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb.rgb + (_V_T2M_Splat3_EdgeColor * 4.2 - 1) * 0.2, sp_bExpand);
+        mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb.rgb + (_V_T2M_Splat3_EdgeColor.rgb * 4.2 - 1) * 0.2, sp_bExpand);
         mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb, sp_b);
 
-        mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[3].rgb + (_V_T2M_Splat4_EdgeColor * 4.2 - 1) * 0.2, sp_aExpand);
+        mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[3].rgb + (_V_T2M_Splat4_EdgeColor.rgb * 4.2 - 1) * 0.2, sp_aExpand);
         mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[3].rgb, sp_a);
 
 
@@ -342,7 +342,7 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
 
 
 //??? ???? ??? ?κ?
-void SplatmapFinalColor(inout half4 color, half fogCoord, float sp_alpha, float3 positionWS,  float3 normalWS)
+void SplatmapFinalColor(inout half4 color, half fogCoord, float sp_alpha, float3 positionWS, float3 normalWS)
 {
     color.rgb *= color.a; // ?? ?κ?? 2nd pass?? ?????? ?κ?
     

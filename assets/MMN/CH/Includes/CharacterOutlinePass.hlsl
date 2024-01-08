@@ -69,7 +69,7 @@
 //     #ifdef _OUTLINE_FEATURE
 //         resultColor.rgb = ProcessCharacterColorOutline(inputData,
 //             mainLight, lightingData, characterData,
-//             dyedBaseColor, SKIN_SHADING, _OutlineColor, _OutlineColorMode);
+//             dyedBaseColor, _OutlineColor, _OutlineColorMode);
 //     #endif
 
 //     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);

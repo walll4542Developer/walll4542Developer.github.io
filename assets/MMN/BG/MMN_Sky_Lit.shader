@@ -11,7 +11,7 @@ Shader "MMN/BG/Sky_Lit"
         // _Cutoff ("Alpha Clipping", Range(0.0, 1.0)) = 0.5
         [HideInInspector] _BumpScale ("Scale", Float) = 1.0
         [NoScaleOffset] _BumpMap ("Normal Map", 2D) = "bump" { }
-        
+
         [HideInInspector][NoScaleOffset]unity_Lightmaps ("unity_Lightmaps", 2DArray) = "" { }
         [HideInInspector][NoScaleOffset]unity_LightmapsInd ("unity_LightmapsInd", 2DArray) = "" { }
         [HideInInspector][NoScaleOffset]unity_ShadowMasks ("unity_ShadowMasks", 2DArray) = "" { }
@@ -41,6 +41,7 @@ Shader "MMN/BG/Sky_Lit"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             // #pragma multi_compile_fragment _ DEBUG_DISPLAY
             //--------------------------------------
             // GPU Instancing
@@ -55,14 +56,14 @@ Shader "MMN/BG/Sky_Lit"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
-            
+
             //GlobalVariables
             // half _Global_CloudDensity;
             // half _Global_CloudSpeed;
             // half _Global_CloudScale;
             // half _Global_CloudEdgeHardness;
             // half _Global_Night2Day;
-            
+
             #include "../Includes/bendingVertex.hlsl"
             #include "../Includes/CustomLighting.hlsl"
             #include "../Includes/BlendingHelper.hlsl"
@@ -77,11 +78,11 @@ Shader "MMN/BG/Sky_Lit"
 
             struct Attributes
             {
-                half4 positionOS : POSITION;
+                float4 positionOS : POSITION;
                 half3 normalOS : NORMAL;
                 half4 tangentOS : TANGENT;
-                half2 texcoord : TEXCOORD0;
-                half2 staticLightmapUV : TEXCOORD1;
+                float2 texcoord : TEXCOORD0;
+                float2 staticLightmapUV : TEXCOORD1;
                 half4 color : COLOR;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -89,11 +90,11 @@ Shader "MMN/BG/Sky_Lit"
 
             struct Varyings
             {
-                half2 uv : TEXCOORD0;
-                half3 positionWS : TEXCOORD1;    // xyz: posWS
-                half4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
-                half4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
-                half4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
+                float2 uv : TEXCOORD0;
+                float3 positionWS : TEXCOORD1;    // xyz: posWS
+                float4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
+                float4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
+                float4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
 
                 #ifdef _ADDITIONAL_LIGHTS_VERTEX
                     half4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
@@ -210,7 +211,7 @@ Shader "MMN/BG/Sky_Lit"
 
                 half2 uv = input.uv;
                 half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                
+
                 half3 tintProp = _BaseColor.rgb;
                 half tintStrengthProp = _AlbedoTintStrength;
                 half3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp);

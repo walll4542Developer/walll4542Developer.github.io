@@ -86,7 +86,7 @@ half4 CharacterDebuggingColor(InputData inputData, Light mainLight, LightingData
 
     surfaceData.smoothness = abs(distance(characterData.characterPos, inputData.positionWS.xyz));
 
-    float receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
+    half receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
         characterData.characterCenterPos, characterData.visualHeight,
         characterData.topShadow, characterData.bottomShadow);
     surfaceData.occlusion = receivedShadow;

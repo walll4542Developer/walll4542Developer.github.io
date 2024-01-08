@@ -39,8 +39,9 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 			#pragma vertex vert_surf
 			#pragma fragment frag_surf
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fwdbase
-			#pragma multi_compile_instancing
+			// #pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#include "HLSLSupport.cginc"
 			#if !defined( UNITY_INSTANCED_LOD_FADE )
@@ -160,7 +161,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;9;-1;_AlphaClipThreshold*/0/*end*/;
 				float4 bakedGI = /*ase_frag_out:Baked GI;Float4;8;-1;_BakedGI*/float4( 0, 0, 0, 0 )/*end*/;
-				
+
 				o.Albedo = albedo;
 				o.Normal = normal;
 				o.Emission = emission;
@@ -259,7 +260,8 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 			#pragma vertex vert_surf
 			#pragma fragment frag_surf
 			#pragma multi_compile_fog
-			#pragma multi_compile_instancing
+            #pragma skip_variants FOG_EXP FOG_EXP2
+			// #pragma multi_compile_instancing
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma skip_variants INSTANCING_ON
@@ -415,7 +417,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 			CGPROGRAM
 			#pragma vertex vert_surf
 			#pragma fragment frag_surf
-			#pragma multi_compile_instancing
+			// #pragma multi_compile_instancing
 			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma exclude_renderers nomrt
 			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
@@ -544,7 +546,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;9;-1;_AlphaClipThreshold*/0/*end*/;
 				float4 bakedGI = /*ase_frag_out:Baked GI;Float4;8;-1;_BakedGI*/float4( 0, 0, 0, 0 )/*end*/;
-				
+
 				o.Albedo = albedo;
 				o.Normal = normal;
 				o.Emission = emission;
@@ -774,7 +776,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 			#define UNITY_PASS_SHADOWCASTER
 			#endif
 			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
-			#pragma multi_compile_instancing
+			// #pragma multi_compile_instancing
 			#include "HLSLSupport.cginc"
 			#if !defined( UNITY_INSTANCED_LOD_FADE )
 				#define UNITY_INSTANCED_LOD_FADE

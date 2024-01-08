@@ -68,6 +68,7 @@ Shader "MMN/Special/PlanarReflection"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS

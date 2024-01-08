@@ -16,6 +16,8 @@
 
     SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Transparent"

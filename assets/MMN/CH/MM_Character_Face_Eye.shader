@@ -31,12 +31,13 @@ Shader "MMN/CH/Legacy/Face: Eye"
 
         _PupilPositionOffset("Pupil UV Position Offset", vector) = (0.0, 0.0, 1.0, 1.0)
 
-        // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들.
+        // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
         // 반드시 수정/추가가 필요할 때 MM_DECLARE_PROPERTIES_FROM_SCRIPT 매크로도 같이 수정해야 합니다!
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
+        [HideInInspector] _CharacterHeadDirection ("xyz: direction, w: height", Vector) = (0.0, 0.0, 1.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -48,19 +49,37 @@ Shader "MMN/CH/Legacy/Face: Eye"
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
-        [HideInInspector] _InflateWidth ("_InflateWidth", Float) = 0.0
-        [HideInInspector] _InflateColor ("_InflateColor", Color) = (0.0, 0.0, 0.0, 0.0)
-
         [HideInInspector] _InnerGlow ("_InnerGlow", Float) = 0.0
         [HideInInspector] _InnerGlowPower ("_InnerGlowPower", Float) = 0.0
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
-        [HideInInspector] _MotionBlurLerpValue("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
     }
 
-    Subshader
+    HLSLINCLUDE
+        #pragma exclude_renderers gles gles3 glcore
+        #pragma target 4.5
+
+        // 기능 분류를 위한 디파인
+        #undef _TRANSPARENCY
+        #undef _ALPHA_TEST
+        #undef _IS_SKIN
+
+        // Input 최적화를 위한 디파인
+        #undef _OUTLINE_FEATURE
+        #define _DYE_FEATURE
+        #undef _SILHOUETTE_FEATURE
+
+        #include "MM_Character_Face_Eye_Input.hlsl"
+    ENDHLSL
+
+    SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Transparent"
@@ -70,23 +89,6 @@ Shader "MMN/CH/Legacy/Face: Eye"
             "ShaderModel" = "4.5"
             "PreviewType" = "Plane"
         }
-
-        HLSLINCLUDE
-            #pragma exclude_renderers gles gles3 glcore
-            #pragma target 4.5
-
-            // 기능 분류를 위한 디파인
-            #undef _TRANSPARENCY
-            #undef _ALPHA_TEST
-            #undef _IS_SKIN
-
-            // Input 최적화를 위한 디파인
-            #undef _OUTLINE_FEATURE
-            #define _DYE_FEATURE
-            #undef _SILHOUETTE_FEATURE
-
-            #include "MM_Character_Face_Eye_Input.hlsl"
-        ENDHLSL
 
         Pass
         {
@@ -101,7 +103,7 @@ Shader "MMN/CH/Legacy/Face: Eye"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _ _MASK_ON
+            #pragma multi_compile_fragment _ _MASK_ON
             #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------

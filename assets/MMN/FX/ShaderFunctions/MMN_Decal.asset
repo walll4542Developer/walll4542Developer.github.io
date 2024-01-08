@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
   m_Name: MMN_Decal
   m_EditorClassIdentifier: 
-  m_functionInfo: "// Made with Amplify Shader Editor v1.9.2\n// Available at the
-    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19200\nNode;AmplifyShaderEditor.ScreenPosInputsNode;65;192,768;Inherit;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.CustomExpressionNode;36;368,768;Float;False;
-    ;7;File;3;True;screenPos;FLOAT4;0,0,0,0;In;;Float;False;True;decalUV;FLOAT2;0,0;Out;;Inherit;False;True;boundingBox;FLOAT;0;Out;;Inherit;False;ApplyScreenSpaceDecal;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;4;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT2;0,0;False;3;FLOAT;0;False;3;FLOAT;0;FLOAT2;3;FLOAT;4\nNode;AmplifyShaderEditor.FunctionOutput;62;672,752;Inherit;False;False;-1;DecalUV;0;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionOutput;2;672,816;Inherit;False;True;-1;BoundingBox;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;36;1;65;0\nWireConnection;62;0;36;3\nWireConnection;2;0;36;4\nASEEND*/\n//CHKSM=A99B426861E3D445B3EFE1674BFE8910198185FE"
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.2.2\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19202\nNode;AmplifyShaderEditor.ScreenPosInputsNode;65;160,768;Inherit;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.FunctionOutput;62;672,736;Inherit;False;False;-1;DecalUV;0;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionOutput;2;672,816;Inherit;False;True;-1;BoundingBox;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;36;352,768;Float;False;
+    ;7;File;4;True;screenPos;FLOAT4;0,0,0,0;In;;Float;False;True;decalUV;FLOAT2;0,0;Out;;Inherit;False;True;boundingBox;FLOAT;0;Out;;Inherit;False;True;decalWorldSpace;FLOAT4;0,0,0,0;Out;;Inherit;False;ApplyScreenSpaceDecal;False;False;0;d2b180d66d3b6594ba4923958c85921a;False;5;0;FLOAT;0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT2;0,0;False;3;FLOAT;0;False;4;FLOAT4;0,0,0,0;False;4;FLOAT;0;FLOAT2;3;FLOAT;4;FLOAT4;5\nNode;AmplifyShaderEditor.FunctionOutput;66;672,896;Inherit;False;False;-1;DecalWorldSpace;2;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nWireConnection;62;0;36;3\nWireConnection;2;0;36;4\nWireConnection;36;1;65;0\nWireConnection;66;0;36;5\nASEEND*/\n//CHKSM=BB37FAF8AB61A142FEBD193D6CB5679630C814A6"
   m_functionName: 
   m_description: 
   m_additionalIncludes:

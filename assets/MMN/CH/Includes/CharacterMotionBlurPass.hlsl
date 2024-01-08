@@ -8,7 +8,7 @@ float4x4 _CurrentWorldToLocalMatrix;
 float4x4 _CurrentLocalToWorldMatrix;
 
 // per frame, x minLengthSmoothStart, y minLengthSmoothEnd, z maxLength, w 예비
-float4 _MotionBlurLengthFactors; 
+float4 _MotionBlurLengthFactors;
 float _MotionBlurMultiplier;
 int _VertexBufferStride;
 
@@ -18,7 +18,8 @@ int _VertexBufferStride;
 
 ByteAddressBuffer _PreviousVertexBuffer;
 
-float3 GetPreviousVertexPosition(int id) {
+float3 GetPreviousVertexPosition(int id)
+{
     float3 previousVertexPosition = float3(0, 0, 0);
     previousVertexPosition.x = asfloat(_PreviousVertexBuffer.Load(id));
     previousVertexPosition.y = asfloat(_PreviousVertexBuffer.Load(id + 4));
@@ -26,7 +27,7 @@ float3 GetPreviousVertexPosition(int id) {
     return previousVertexPosition;
 }
 
-float cheapsmoothstep(float a, float b, float x)
+float CheapSmoothstep(float a, float b, float x)
 {
     float t = (x - a) / (b - a); // remap
 
@@ -50,7 +51,7 @@ float3 CaculateMotionBlurVertexPositionOS(float3 positionOS, float3 normalOS, ui
 
     float4 currentVertex = float4(positionOS, 1.0);
     float4 currentNormal = float4(normalOS, 0.0);
-    
+
     // -- Object -> World -> View Space
     previousVertex = mul(mul(_Global_PreviousViewMatrix, _PreviousLocalToWorldMatrix), previousVertex);
     float4x4 currentMatrixMV = mul(UNITY_MATRIX_V, _CurrentLocalToWorldMatrix);
@@ -58,8 +59,19 @@ float3 CaculateMotionBlurVertexPositionOS(float3 positionOS, float3 normalOS, ui
     currentNormal = mul(currentMatrixMV, currentNormal);
 
     float3 motionVector = (previousVertex.xyz - currentVertex.xyz);
-    float motionVectorDotNormal = dot(normalize(motionVector), normalize(currentNormal.xyz));
+    float3 motionVectorNormalized = normalize(motionVector);
+    float motionVectorDotNormal = dot(motionVectorNormalized, normalize(currentNormal.xyz));
     motionVectorDotNormal = max(0.0, motionVectorDotNormal);
+
+    float3 viewDirection = mul(currentMatrixMV, float4(UNITY_MATRIX_IT_MV[2].xyz, 0.0)).xyz;
+    float motionVectorDotViewDirection = dot(motionVectorNormalized, normalize(viewDirection));
+    motionVectorDotViewDirection = abs(motionVectorDotViewDirection);
+    motionVectorDotViewDirection = clamp(motionVectorDotViewDirection, 0.0, 1.0);
+    motionVectorDotViewDirection = 1.0 - (motionVectorDotViewDirection);
+
+    // MotionVector와 카메라 Forward가 평행할 수록 가중치가 작아지고, 직교할 수록 가중치가 커지도록 한다
+    // https://deskcat.io/d/R12498/MM-기술-던전-마스-던전-1-2의-3번째-방의-미믹-에게-천천히-다가갈-시-이빨이-노출됨#Shader
+    motionVectorDotNormal *= motionVectorDotViewDirection;
 
     // -- clamp(최소 길이, 최대 길이)
     // vertex motion blur는 초당 60프레임을 기준으로 되어있다, 이 보다 프레임레이트가 낮을 경우 적절한 길이를 추정한다
@@ -71,7 +83,7 @@ float3 CaculateMotionBlurVertexPositionOS(float3 positionOS, float3 normalOS, ui
 
     // 최소 모션 길이(최소 임계 값) 적용
     float currentMotionLength = length(motionVector);
-    float minMotionLengthSmooth = cheapsmoothstep(motionBlurMinLengthSmoothStart, motionBlurMinLengthSmoothEnd, currentMotionLength);
+    float minMotionLengthSmooth = CheapSmoothstep(motionBlurMinLengthSmoothStart, motionBlurMinLengthSmoothEnd, currentMotionLength);
 
     minMotionLengthSmooth = lerp(0.001, minMotionLengthSmooth, step(motionBlurMinLengthSmoothStart, currentMotionLength));
     motionVector = motionVector * minMotionLengthSmooth;
@@ -93,4 +105,5 @@ float3 CaculateMotionBlurVertexPositionOS(float3 positionOS, float3 normalOS, ui
     // 0 == _MotionBlurLerpValue, positionOS를 그대로 반환
     return lerp(positionOS, currentVertex.xyz, _MotionBlurLerpValue);
 }
+
 #endif // #ifndef MMN_CHARACTER_MOTION_PASS_VERTEX_INCLUDED

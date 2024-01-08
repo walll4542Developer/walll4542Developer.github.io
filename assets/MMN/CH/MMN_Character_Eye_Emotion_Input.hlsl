@@ -9,9 +9,14 @@ SAMPLER(sampler_EyeballTexture);
 float4 _EyeballTexture_TexelSize;
 float4 _EyeballTexture_MipInfo;
 
+#ifdef _DISSOLVE_FEATURE
+    TEXTURE2D(_DissolveMap);
+    SAMPLER(sampler_DissolveMap);
+#endif
+
 CBUFFER_START(UnityPerMaterial)
     float4 _EyeballTexture_ST;
-    float _Alpha;
+    half _Alpha;
 
     int _EyeballTextureRowNum;
     int _EyeballTextureColNum;
@@ -22,6 +27,24 @@ CBUFFER_START(UnityPerMaterial)
 
     float2 _EyePositionOffset;
     float _EyeRotationOffset;
+
+#ifdef _DISSOLVE_FEATURE
+    half _DissolveAmount;
+
+    half4 _DissolveRange;
+    half _NotUseDirection;
+    half3 _DissolveDirection;
+
+    half _DissolvePanningSpeed;
+    half4 _DissolveMap_ST;
+
+    half _DissolveCutoff;
+
+    half4 _DissolveColor;
+    half _DissolveWidth;
+    half4 _DissolveEdgeColor;
+    half _DissolveEdgeWidth;
+#endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)
     // 반드시 수정/추가가 필요할 때 관련된 모든 셰이더의 Property {} 에도 동일하게 넣어줘야 한다!

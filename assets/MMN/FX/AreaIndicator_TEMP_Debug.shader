@@ -58,11 +58,12 @@ Shader "MM/FX/AreaIndicator_TEMP_Debug"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 
             //--------------------------------------
             // GPU Instancing
-            #pragma multi_compile_instancing
-            #pragma instancing_options assumeuniformscaling maxcount:50 nolightprobe nolightmap
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options assumeuniformscaling maxcount:50 nolightprobe nolightmap
 
             #pragma vertex vert
             #pragma fragment frag
@@ -139,8 +140,8 @@ Shader "MM/FX/AreaIndicator_TEMP_Debug"
             real4 frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                
-                // NOTE @hanseok 2022-12-13: 1미터 단위로 라인을 그어주기 위해서 추가된 코드입니다.                
+
+                // NOTE @hanseok 2022-12-13: 1미터 단위로 라인을 그어주기 위해서 추가된 코드입니다.
                 float dist = length(input.refPositionWS.xyz - input.positionWS.xyz);
 
                 // NOTE @hanseok 2022-12-13: 1미터 단위로 라인을 그어주기 위해서 추가된 코드입니다.
@@ -148,7 +149,7 @@ Shader "MM/FX/AreaIndicator_TEMP_Debug"
                 float forwardSideLine = step(frac(dist), _LineWidth*.5);
                 // ceil 함수로 올림을 한 정수의 값에서 기존 값을 뺀 나머지 값이 라인 굵기의 반만큼 보다 작을 경우 라인을 표시해야하는 것으로 인식합니다.
                 float backSideLine = step(ceil(dist)-dist, _LineWidth*.5);
-                
+
                 // NOTE @hanseok 2022-12-13: AreaIndicator_TEMP_Arc 셰이더의 코드를 그대로 가지고 와서 각도를 구합니다.
                 float3 normalizedDirection = normalize(_Direction.xyz);
                 float3 pointDirection = input.positionWS.xyz -  input.refPositionWS.xyz;
@@ -157,7 +158,7 @@ Shader "MM/FX/AreaIndicator_TEMP_Debug"
                 float degree = degrees(acos(dotScalar));
 
                 // NOTE @hanseok 2022-12-13: 30도보다 각도가 작을 때 렌더링 영역이 두껍게 보이는 현상, 180도일 때 라인이 나오지 않는 현상을 해소하기 위해서 아래 예외 처리를 하였습니다.
-                float angleLine = degree < 30.0f ? step(degree%30, 1.0) : degree > 179.0 ? 1.0 : step(degree%30, 2.0);                
+                float angleLine = degree < 30.0f ? step(degree%30, 1.0) : degree > 179.0 ? 1.0 : step(degree%30, 2.0);
 
                 // NOTE @hanseok 2022-12-13: 바깥 원 영역일 경우 렌더링 대상에 속합니다.
                 float isOutline = (dist <= _Radius && dist > _Radius - _LineWidth) ? 1 : 0;

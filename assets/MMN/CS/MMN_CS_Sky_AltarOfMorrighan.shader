@@ -5,7 +5,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
         _StencilRef ("Stencil Ref", Int) = 0
         _MaskMap ("노이즈 텍스쳐(R) 별가루 (G) 헤일로(B) 검은달(A)", 2D) = "black" { }
         // _MaskMap2 ("노이즈 텍스쳐(R) 달 (G) 달 알파(B) 헤일로(A)", 2D) = "black" { }
-        
+
         [Space(15)]
         [Header(Distortion Speed)]
         [Space(10)]
@@ -13,7 +13,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
         // _DistortionSpeedMultiy ("디스토션 스피드 멀티플라이y. ", float) = 1
         _PolarDistortionSpeedMultix("폴라디스토션 스피드 멀티플라이x. ", float) = 1
         _PolarDistortionSpeedMultiy("폴라디스토션 스피드 멀티플라이x. ", float) = 1
-        
+
         // [Space(30)]
         // // [HDR]_MainColor ("BaseTexColor", Color) = (1, 1, 1, 1)
         // [MainTex] _BaseTex ("구름레이어", 2D) = "black" { }
@@ -24,7 +24,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
         [Header(BlackMoon)]
         [Space(10)]
         _BlackMoon ("달 타일링_크기조절 (XY) / 달 위치옵셋(ZW)", Vector) = (9.5, 5, -4.4, -2.1)
-    
+
 
         [Space(10)]
         [HDR]_HaloColor ("헤일로 색상", color) = (1, 1, 1, 1)
@@ -40,7 +40,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
         _SkyTexSpeedMultix ("하늘 흐르는 속도 X", float) = 0
         _SkyTexSpeedMultiy ("하늘 흐르는 속도 Y", float) = 0
         _SkyDistortion ("하늘 구겨지는 정도", float) = 0.1
-        
+
         [HideInInspector] _Blend ("__blend", Float) = 0.0
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
@@ -51,8 +51,9 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
 
     SubShader
     {
+        LOD 100
+
         Tags { "Queue" = "Transparent-395" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
-        LOD 300
         ZClip False
 
         Pass
@@ -68,7 +69,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 Comp Equal
                 Pass Keep
             }
-            
+
             ZWrite Off
             Cull[_Cull]
 
@@ -84,12 +85,12 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
             // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                
+
                 float4 _BaseTex_ST;
                 float4 _BaseTex3_ST;
                 float4 _SkyTex_ST;
                 float4 _MaskMap_ST;
-                
+
                 float4 _StarDustColor;
                 float4 _BlackMoon;
                 float4 _MoonUV;
@@ -97,16 +98,16 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 float _Distortion;
                 float _Distortion3;
                 float _SkyDistortion;
-                
+
                 // float _SkyMultiply;
                 float4 _HaloColor;
-                
+
                 // float _DistortionSpeedMultix;
                 // float _DistortionSpeedMultiy;
-                
+
                 float _PolarDistortionSpeedMultix;
                 float _PolarDistortionSpeedMultiy;
-                
+
                 // float _BaseTexSpeedMultix;
                 // float _BaseTexSpeedMultiy;
                 // float _BaseTex3SpeedMultix;
@@ -206,7 +207,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 UV += Center;
                 return UV;
             }
-            
+
             // Used for StandardSimpleLighting shader
             half4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
@@ -235,19 +236,19 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 // float dottest = dot(cameraDir, float3(1, 0, 0)); //90도 돌린곳과 닷 연산
 
                 //////////////////// 텍스쳐 준비/////////////////////////
-                
-                //폴라 UV 입니다.  
-                //가로가 긴 UV  비율을 맞추기 위해 가로에 1.5 곱합니다. 
-                //그래서 틀어진 위치를 보정하고, 보정하는 김에 검은 달 가운데로 위치 시키기 위해 매직넘버를 넣습니다. 
-                float2 polarUV = PolarCoordinates(uv * float2(1.5, 1), float2(0.76, 0.52), 1) ;  
-                
+
+                //폴라 UV 입니다.
+                //가로가 긴 UV  비율을 맞추기 위해 가로에 1.5 곱합니다.
+                //그래서 틀어진 위치를 보정하고, 보정하는 김에 검은 달 가운데로 위치 시키기 위해 매직넘버를 넣습니다.
+                float2 polarUV = PolarCoordinates(uv * float2(1.5, 1), float2(0.76, 0.52), 1) ;
+
                 //마스크맵 UV
                 // float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
                 float2 maskMapPolarUV = TRANSFORM_TEX(uvScroll(polarUV, _PolarDistortionSpeedMultix, _PolarDistortionSpeedMultiy, 0.01), _MaskMap);
                 float2 skyMapPolarUV = TRANSFORM_TEX(uvScroll(polarUV, _SkyTexSpeedMultix, _SkyTexSpeedMultiy, 0.01), _MaskMap);
                 float2 haloMapPolarUV = TRANSFORM_TEX(uvScroll(polarUV, _HaloSpeedMultix, _HaloSpeedMultiy, 0.01), _MaskMap);
-                
-                //마스크맵 만들기 
+
+                //마스크맵 만들기
                 // half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
                 half4 maskMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapPolarUV  * 0.5 /*타일링*/);
                 half4 skyMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, skyMapPolarUV  * 0.5 /*타일링*/);
@@ -260,43 +261,43 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 // float Noise = maskMap.r;
 
 
-                //하늘 
+                //하늘
                 float2 skymapUV = TRANSFORM_TEX(uv, _SkyTex);
                 half4 skymap = SAMPLE_TEXTURE2D(_SkyTex, sampler_SkyTex, skymapUV + skyPolarNoise * _SkyDistortion * 0.003) ;
-               
-                //헤일로 
+
+                //헤일로
                 float2 blackMoonUV = uv * _BlackMoon.xy + _BlackMoon.zw;
                 InitializeGlobalValue();
                 blackMoonUV = Rotate(blackMoonUV, float2(0.5, 0.5), _Global_WindUV * 5);
                 float4 halo = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_clamp_sampler, blackMoonUV + haloMapPolarNoise * 0.04/*구겨지는 정도*/);
 
                 //검은 달
-                //UV는 헤일로와 같은것을 씁니다. 
+                //UV는 헤일로와 같은것을 씁니다.
                 half4 blackMoon = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, blackMoonUV + polarNoise* 0.01);
 
-                //별가루 
+                //별가루
                 float2 starDustUV = TRANSFORM_TEX(uvScroll(polarUV , _PolarDistortionSpeedMultix * 3, _PolarDistortionSpeedMultiy, 0.05), _MaskMap);
                 half4 starDust = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, starDustUV  + polarNoise * 2 /*구겨지는 정도*/);
 
 
                 //////////////////// 최종연산 /////////////////////////
 
-                
+
                 float4 color ;
                 //하늘을 일단 넣고
                 color.rgb = skymap ;
-                //헤일로를 더하고 
+                //헤일로를 더하고
                 color.rgb += halo.bbb *_HaloColor;
-                //검은 달이 나오게 lerp합니다. 
+                //검은 달이 나오게 lerp합니다.
                 color.rgb = lerp( color.rgb ,float3(0,0,0),blackMoon.a );
-                //다시 헤일로를 더하고 
+                //다시 헤일로를 더하고
                 color.rgb += halo.bbb * 0.1;
                 //별가루를 더함
                 color.rgb += starDust.g * halo.b * _StarDustColor;
 
 
                 color.a = 1;
-                
+
                 // if (unity_OrthoParams.w == 1) //Ortho에서는 사라지게 한다
                 // return 0;
                 // else

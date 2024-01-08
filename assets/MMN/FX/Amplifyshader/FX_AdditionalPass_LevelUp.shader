@@ -1,5 +1,5 @@
 // Made with Amplify Shader Editor v1.9.1.5
-// Available at the Unity Asset Store - http://u3d.as/y3X 
+// Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "MMN/FX/Amplify shader/LevelUp"
 {
 	Properties
@@ -29,13 +29,13 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 		[HideInInspector][Enum(UnityEngine.Rendering.BlendMode)]_BlendDst("Blend Dst", Float) = 10
 		[ASEEnd][Enum(UnityEngine.Rendering.CullMode)][Header(Z Buffer)][Space(10)]_CullMode("Cull Mode", Float) = 0
 		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)]_ZTest("Z Test", Float) = 4
-		
-		// NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
+
+        // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
         // 반드시 수정/추가가 필요할 때 MM_DECLARE_PROPERTIES_FROM_SCRIPT 매크로도 같이 수정해야 합니다!
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -54,16 +54,17 @@ Shader "MMN/FX/Amplify shader/LevelUp"
         [HideInInspector] _InnerGlowPower ("_InnerGlowPower", Float) = 0.0
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
-        [HideInInspector] _EffectAlphaValue("_EffectAlphaValue", Float) = 0.0
-        [HideInInspector] _MotionBlurLerpValue("_MotionBlurLerpValue", Float) = 0.0
-        [HideInInspector] _VertexBufferLength("_VertexBufferLength", Integer) = 0
+        [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
 	}
 
 	SubShader
 	{
 		LOD 0
 
-		
+
 
 		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" }
 
@@ -71,34 +72,35 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 		#pragma target 4.5
 		ENDHLSL
 
-		
+
 		Pass
 		{
 			Name "Unlit"
-			
+
 
 			Cull [_CullMode]
 			Blend [_BlendSrc] [_BlendDst]
 			ZTest [_ZTest]
 			ZWrite Off
 			ColorMask RGBA
-			
+
 
 			HLSLPROGRAM
 
-			#pragma exclude_renderers glcore gles gles3 switch 
+			#pragma exclude_renderers glcore gles gles3 switch
 
 			// GPU Instancing
-			
+
 			// Material Keywords
 			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
 			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
             // Unity defined keywords
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
 			#pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -115,23 +117,23 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 			#pragma multi_compile_local __ _FOG_RCV_ON
 
 			CBUFFER_START( UnityPerMaterial )
-			float4 _MainColor;
-			float _LightRatio;
-			float _SoftParticleNearFadeDistance;
-			float _SoftParticleFarFadeDistance;
-			float _SoftParticleFadeOutRange;
-			float _NearPlaneInvertDistance;
-			float _RaycastHarftoneClip;
-			float _RaycastMinimumAlpha;
-			float _NearPlaneAlpha;
-			float _Progress;
-			float _Power;
+				float4 _MainColor;
+				float _LightRatio;
+				float _SoftParticleNearFadeDistance;
+				float _SoftParticleFarFadeDistance;
+				float _SoftParticleFadeOutRange;
+				float _NearPlaneInvertDistance;
+				float _RaycastHarftoneClip;
+				float _RaycastMinimumAlpha;
+				float _NearPlaneAlpha;
+				float _Progress;
+				float _Power;
 
-			MM_DECLARE_PROPERTIES_FROM_SCRIPT
-			
-			float _Mode = -1;
-			float _TransitionValue = 1;
-			float _FogPower = 0;
+				MM_DECLARE_PROPERTIES_FROM_SCRIPT
+
+				float _Mode = -1;
+				float _TransitionValue = 1;
+				float _FogPower = 0;
 			CBUFFER_END
 
 			#include "Assets/PatchableAssets/Shaders/MMN/CH/Includes/CharacterMotionBlurPass.hlsl"
@@ -149,7 +151,7 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream 
+				float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
 				float4 uv1 : TEXCOORD1; 				// xyzw : custom data
 				float4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
 				float4 screenPosition : TEXCOORD3;
@@ -159,7 +161,7 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 				float4 positionNDC : TEXCOORD7;
 			};
 
-						
+
 			Varyings vert(Attributes input)
 			{
 				Varyings output = (Varyings)0;
@@ -194,7 +196,7 @@ Shader "MMN/FX/Amplify shader/LevelUp"
 				baseline = frac(baseline + _Progress);
 				float thickness = lerp(20, 1, _Power);
 				baseline = pow(baseline, thickness);
-				
+
 				float3 color = _MainColor.rgb;
 				float alpha = baseline;
 				float4 finalColor = float4(color, alpha);

@@ -1,5 +1,5 @@
 // Made with Amplify Shader Editor v1.9.1.2
-// Available at the Unity Asset Store - http://u3d.as/y3X 
+// Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 {
 	Properties
@@ -47,7 +47,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 	{
 		LOD 0
 
-		
+
 
 		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="TransparentCutout" "Queue"="AlphaTest" }
 
@@ -60,28 +60,29 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 		Pass
 		{
 			Name "Unlit"
-			
+
 
 			Cull [_CullMode]
 			Blend Off
 			ZTest [_ZTest]
 			ZWrite On
 			ColorMask RGBA
-			
+
 
 			HLSLPROGRAM
 			#define ASE_SRP_VERSION 120110
 
-			#pragma exclude_renderers glcore gles gles3 
+			#pragma exclude_renderers glcore gles gles3
 
 			// GPU Instancing
-			
+
 			// Material Keywords
 			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
 			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
             // Unity defined keywords
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
 			// #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -89,7 +90,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
             // #pragma multi_compile_fragment _ _SHADOWS_SOFT
             // #pragma multi_compile_fragment _ _LIGHT_LAYERS
             // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -155,7 +156,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream 
+				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
 				half4 uv1 : TEXCOORD1; 				// xyzw : custom data
 				half4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
 				half3 positionWS : TEXCOORD11;
@@ -168,7 +169,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 				float4 ase_texcoord4 : TEXCOORD4;
 			};
 
-						
+
 			Varyings vert(Attributes input)
 			{
 				Varyings output = (Varyings)0;
@@ -181,11 +182,11 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 				float NoiseTexture341 = tex2Dlod( _NoiseTex, float4( panner313, 0, 0.0) ).g;
 				float2 uv_MaskTex = input.texcoord.xy * _MaskTex_ST.xy + _MaskTex_ST.zw;
 				float Mask320 = tex2Dlod( _MaskTex, float4( uv_MaskTex, 0, 0.0) ).g;
-				
+
 				float4 ase_clipPos = TransformObjectToHClip((input.positionOS).xyz);
 				float4 screenPos = ComputeScreenPos(ase_clipPos);
 				output.ase_texcoord4 = screenPos;
-				
+
 				output.ase_texcoord3 = input.ase_texcoord1;
 				output.ase_color = input.color;
 				output.ase_normal = input.normalOS;
@@ -284,7 +285,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 				ApplySoftParticle( finalColor80_g18 , near80_g18 , far80_g18 , fadeOutRange80_g18 , positionNDC80_g18 );
 				float4 break64_g18 = finalColor80_g18;
 				float3 appendResult76_g18 = (float3(break64_g18.x , break64_g18.y , break64_g18.z));
-				
+
 				float3 Color = appendResult76_g18;
 				float Alpha = break64_g18.w;
 
@@ -306,7 +307,7 @@ Shader "MMN/FX/Amplify shader/FX_AlphaTest_Explosion_01"
 	}
 	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxOpaqueShaderGUI"
 	FallBack Off
-	
+
 	Fallback "Off"
 }
 /*ASEBEGIN

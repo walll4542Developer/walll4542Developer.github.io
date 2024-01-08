@@ -1,5 +1,5 @@
 // Made with Amplify Shader Editor
-// Available at the Unity Asset Store - http://u3d.as/y3X 
+// Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "MMN/FX/Amplify shader/FX_CampFire"
 {
 	Properties
@@ -46,7 +46,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 	{
 		LOD 0
 
-		
+
 
 		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" }
 
@@ -54,32 +54,33 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 		#pragma target 4.5
 		ENDHLSL
 
-		
+
 		Pass
 		{
 			Name "Unlit"
-			
+
 
 			Cull [_CullMode]
 			Blend [_BlendSrc] [_BlendDst]
 			ZTest [_ZTest]
 			ZWrite Off
 			ColorMask RGBA
-			
+
 
 			HLSLPROGRAM
 			#define ASE_SRP_VERSION 999999
 
-			#pragma exclude_renderers glcore gles gles3 
+			#pragma exclude_renderers glcore gles gles3
 
 			// GPU Instancing
-			
+
 			// Material Keywords
 			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
 			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
             // Unity defined keywords
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
 			// #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -87,7 +88,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
             // #pragma multi_compile_fragment _ _SHADOWS_SOFT
             // #pragma multi_compile_fragment _ _LIGHT_LAYERS
             // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -148,7 +149,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream 
+				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
 				half4 uv1 : TEXCOORD1; 				// xyzw : custom data
 				half4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
 				half3 positionWS : TEXCOORD11;
@@ -160,7 +161,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 				float4 ase_texcoord4 : TEXCOORD4;
 			};
 
-						
+
 			Varyings vert(Attributes input)
 			{
 				Varyings output = (Varyings)0;
@@ -168,7 +169,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 				float4 ase_clipPos = TransformObjectToHClip((input.positionOS).xyz);
 				float4 screenPos = ComputeScreenPos(ase_clipPos);
 				output.ase_texcoord4 = screenPos;
-				
+
 				output.ase_texcoord3 = input.ase_texcoord1;
 				output.ase_color = input.color;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -255,7 +256,7 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 				ApplySoftParticle( finalColor80_g8 , near80_g8 , far80_g8 , fadeOutRange80_g8 , positionNDC80_g8 );
 				float4 break64_g8 = finalColor80_g8;
 				float3 appendResult76_g8 = (float3(break64_g8.x , break64_g8.y , break64_g8.z));
-				
+
 				float3 Color = appendResult76_g8;
 				float Alpha = break64_g8.w;
 
@@ -277,8 +278,8 @@ Shader "MMN/FX/Amplify shader/FX_CampFire"
 	}
 	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI"
 	FallBack Off
-	
-	
+
+
 }
 /*ASEBEGIN
 Version=18935

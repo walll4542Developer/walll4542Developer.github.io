@@ -17,18 +17,18 @@
 #include "CharacterDebugging.hlsl"
 
 
-float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEMANTIC) : SV_Target
+half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEMANTIC) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    float3 baseColor = baseMap.rgb;
-    float alpha = baseMap.a;
+    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    half3 baseColor = baseMap.rgb;
+    half alpha = baseMap.a;
 
     #ifdef _TEXTURE_LERP_FEATURE
-        float4 baseMap2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, uv);
+        half4 baseMap2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, uv);
         baseColor = lerp(baseColor, baseMap2.rgb, _LerpTex);
     #endif
 
@@ -41,6 +41,8 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
 
         #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY)
             alpha *= _AlphaOverride;
+            float alphaScaleRange = _AlphaScaleMax - _AlphaScaleMin;
+            alpha = (alpha * alphaScaleRange) + _AlphaScaleMin;
         #else
             alpha = 1.0;
         #endif
@@ -48,7 +50,7 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    float3 dyedBaseColor = baseColor;
+    half3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -60,7 +62,7 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
         dyedBaseColor *= _TintColor.rgb;
     #endif
 
-    float backFaceDarkenAmount = 1.0;
+    half backFaceDarkenAmount = 1.0;
     #ifdef _TWO_SIDE_FEATURE
         backFaceDarkenAmount = _BackFaceDarkenAmount;
     #endif
@@ -84,17 +86,17 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColorFull(inputData,
         mainLight, lightingData, characterData, isFacing, backFaceDarkenAmount,
-        dyedBaseColor, _ShadingType, _SilhouetteOff, _SilhouetteTintColor,
+        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor,
         _IsMetal, _Smoothness, alpha, _SpecularStrength, _MetalTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        float3 outlineColor = OnePassOutline(_ShadingType, inputData, mainLight.direction, _OutlineColorMode);
+        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = float3(1, 1, 1);
+            outlineColor = half3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
@@ -105,35 +107,44 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
     #endif
 
     #ifdef _EMISSION_FEATURE
-        float3 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb;
-        float3 emissionResult = ApplyEmissionColor(emissionMap, _EmissionColor,
+        half3 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb;
+        half3 emissionResult = ApplyEmissionColor(emissionMap, _EmissionColor,
             _IsEnableEmissionAtNight, _IsBreathingEmissionMode, _BreathingEmissionModePeriod);
         resultColor.rgb += emissionResult;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
     #endif
 
     #ifdef _DISSOLVE_FEATURE
-        if (IS_TRUE(_IsDissolve))
-        {
-            resultColor.rgb = ApplyDissolve(resultColor.rgb,
-                inputData.positionWS, inputData.normalWS, input.positionOS,
-                _DissolveAmount, _NotUseDirection, _DissolveDirection, _DissolvePanningSpeed,
-                TEXTURE2D_ARGS(_DissolveMap, sampler_DissolveMap), _DissolveMap_ST, _DissolveTexScale,
-                _DissolveCutoff, _DissolveCutoffSmoothness,
-                _DissolveColor.rgb, _DissolveWidth, _DissolveEdgeColor.rgb, _DissolveEdgeWidth);
-        }
+        DissolveInput dissolveInput;
+        dissolveInput.range = _DissolveRange;
+        dissolveInput.notUseDirection = _NotUseDirection;
+        dissolveInput.direction = _DissolveDirection.xyz;
+        dissolveInput.panningSpeed = _DissolvePanningSpeed;
+        dissolveInput.dissolveMap = _DissolveMap;
+        dissolveInput.dissolveMapSampler = sampler_DissolveMap;
+        dissolveInput.dissolveMapST = _DissolveMap_ST;
+        dissolveInput.useCutoff = _DissolveCutoff;
+        dissolveInput.mainColor = _DissolveColor;
+        dissolveInput.mainWidth = _DissolveWidth;
+        dissolveInput.edgeColor = _DissolveEdgeColor;
+        dissolveInput.edgeWidth = _DissolveEdgeWidth;
+        dissolveInput.positionWS = inputData.positionWS;
+        dissolveInput.positionOS = input.positionOS;
+        dissolveInput.normalWS = inputData.normalWS;
+        dissolveInput.characterData = characterData;
+        resultColor.rgb = ApplyDissolve(resultColor.rgb, _DissolveAmount, dissolveInput);
     #endif
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
 
-    float4 appliedFogResultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
+    half4 appliedFogResultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
     #ifdef _EMISSION_FEATURE
-        float3 noFogResultColorWithEmissionMask = (resultColor.rgb * emissionMap) + (appliedFogResultColor.rgb * (1.0 - emissionMap));
+        half3 noFogResultColorWithEmissionMask = (resultColor.rgb * emissionMap) + (appliedFogResultColor.rgb * (1.0 - emissionMap));
         resultColor.rgb = lerp(noFogResultColorWithEmissionMask.rgb, appliedFogResultColor.rgb, _IsApplyFogToEmission * _ApplyFogToEmissionFactor);
     #else
         resultColor.rgb = appliedFogResultColor.rgb;
@@ -146,8 +157,8 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY) && defined(_GRADIENT_ALPHA_FEATURE)
         if (IS_TRUE(_IsGradientAlpha))
         {
-            float visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
-            float gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
+            half visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
+            half gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
             resultColor.a *= saturate(max(gradientAlpha, 0.1));
         }
     #endif
@@ -165,7 +176,7 @@ float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SE
             dyedBaseColor *= outlineColor;
         #endif
 
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

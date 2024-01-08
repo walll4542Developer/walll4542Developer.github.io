@@ -9,9 +9,9 @@
 //     characterColor = lerp(characterColor, tintedColor.rgb, min(1.0, _EffectTint.a));
 // }
 
-void ApplyEffectTintColor(inout float3 characterColor, float4 effectTintColor)
+void ApplyEffectTintColor(inout half3 characterColor, half4 effectTintColor)
 {
-    float3 tintedColor = effectTintColor.rgb * min(1.0, characterColor * 20.0 + 0.3);
+    half3 tintedColor = effectTintColor.rgb * min(1.0, characterColor * 20.0 + 0.3);
     characterColor = lerp(characterColor, tintedColor.rgb, min(1.0, effectTintColor.a));
 }
 

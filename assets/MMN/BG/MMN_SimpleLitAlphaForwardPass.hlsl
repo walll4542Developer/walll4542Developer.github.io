@@ -10,12 +10,12 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
+    half4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
     // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-    float4 color : COLOR;
+    half4 color : COLOR;
     // UNITY_VERTEX_INPUT_INSTANCE_ID
 
 };
@@ -48,7 +48,7 @@ struct Varyings
 
     float4 screenPos : TEXCOORD5;
     float cameraDistance : TEXCOORD6; //이걸 나중에 positionWS 의 알파로 빼는걸 생각해 봅시다.
-    float4 color : COLOR;
+    half4 color : COLOR;
     float4 positionCS : SV_POSITION;
     // UNITY_VERTEX_INPUT_INSTANCE_ID
     // UNITY_VERTEX_OUTPUT_STEREO

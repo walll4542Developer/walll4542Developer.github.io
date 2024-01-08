@@ -18,42 +18,42 @@ CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
 
 #ifdef _TINTCOLOR_FEATURE
-    float4 _TintColor;
+    half4 _TintColor;
 #endif
 
 #ifdef _DYE_FEATURE
-    float4 _DyeColor1;
-    float4 _DyeColor2;
-    float4 _DyeColor3;
+    half4 _DyeColor1;
+    half4 _DyeColor2;
+    half4 _DyeColor3;
 #endif
 
-    float _Denier;
+    half _Denier;
 
 #ifdef _SILHOUETTE_FEATURE
-    float _SilhouetteOff;
-    float4 _SilhouetteTintColor;
+    half _SilhouetteOff;
+    half4 _SilhouetteTintColor;
 #endif
 
-    float4 _OutlineColor;
-    float _OutlineColorMode;
-    float _OutlineWidth;
+    half4 _OutlineColor;
+    half _OutlineColorMode;
+    // half _OutlineWidth;
 
 #ifdef _DISSOLVE_FEATURE
-    float _IsDissolve;
-    float _DissolveAmount;
-    float _NotUseDirection;
-    float3 _DissolveDirection;
-    float _DissolvePanningSpeed;
-    float4 _DissolveMap_ST;
-    float _DissolveTexScale;
+    half _DissolveAmount;
 
-    float _DissolveCutoff;
-    float _DissolveCutoffSmoothness;
+    half4 _DissolveRange;
+    half _NotUseDirection;
+    half3 _DissolveDirection;
 
-    float4 _DissolveColor;
-    float _DissolveWidth;
-    float4 _DissolveEdgeColor;
-    float _DissolveEdgeWidth;
+    half _DissolvePanningSpeed;
+    half4 _DissolveMap_ST;
+
+    half _DissolveCutoff;
+
+    half4 _DissolveColor;
+    half _DissolveWidth;
+    half4 _DissolveEdgeColor;
+    half _DissolveEdgeWidth;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

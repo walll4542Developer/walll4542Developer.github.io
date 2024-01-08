@@ -16,7 +16,6 @@ Shader "MMN/FX/ObjectDecal"
         [Space(10)]
         [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc("Blend Src", Float) = 5
         [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst("Blend Dst", Float) = 10
-        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("Z Test", Float) = 8
 
         [HideInInspector][NoScaleOffset] unity_Lightmaps ("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset] unity_LightmapsInd ("unity_LightmapsInd", 2DArray) = "" {}
@@ -39,8 +38,8 @@ Shader "MMN/FX/ObjectDecal"
 
             Blend [_BlendSrc] [_BlendDst]
             ZWrite Off
-            ZTest [_ZTest]
-            Cull Back
+            ZTest Always
+            Cull Front
             ColorMask RGBA
 
             HLSLPROGRAM

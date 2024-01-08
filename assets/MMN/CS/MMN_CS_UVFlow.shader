@@ -2,7 +2,7 @@ Shader "MMN/CutScene/UVFlow"
 {
     Properties
     {
-        
+
         [Header(Textures)]
         [Space(10)]
         _BaseMap ("베이스 맵", 2D) = "white" {}
@@ -16,6 +16,8 @@ Shader "MMN/CutScene/UVFlow"
 
     SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Opaque"
@@ -48,9 +50,9 @@ Shader "MMN/CutScene/UVFlow"
 
             //--------------------------------------
             // GPU Instancing
-            #pragma multi_compile_instancing
-            #pragma instancing_options renderinglayer
-            #pragma multi_compile _ DOTS_INSTANCING_ON
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options renderinglayer
+            // #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #pragma vertex vert
             #pragma fragment frag
@@ -86,7 +88,7 @@ Shader "MMN/CutScene/UVFlow"
 
                 float3 positionWS : TEXCOORD4;   // World space position
                 float3 positionOS : TEXCOORD5;   // Object space position
-                
+
                 float3 viewDirWS : TEXCOORD6;
 
                 float3 vertexSH : TEXCOORD7;
@@ -119,7 +121,7 @@ Shader "MMN/CutScene/UVFlow"
                 output.normalWS = normalInput.normalWS;
                 output.tangentWS = normalInput.tangentWS;
                 output.bitangentWS = normalInput.bitangentWS;
-                
+
                 output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
                 output.vertexSH = SampleSHVertex(output.normalWS.xyz);

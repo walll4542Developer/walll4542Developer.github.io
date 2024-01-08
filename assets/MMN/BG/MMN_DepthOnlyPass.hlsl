@@ -9,7 +9,7 @@ struct Attributes
 {
     float4 positionOS : POSITION;
     float2 texcoord : TEXCOORD0;
-    float4 color : COLOR;
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -68,19 +68,6 @@ half4 DepthOnlyFragment(Varyings input) : SV_TARGET
     // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
     UNITY_SETUP_INSTANCE_ID(input);
 
-    #if defined (GRASS_INSTANCING)
-    // BatchingConfig.DEFAULT_LOD_FADE_DISTANCE와 수치를 맞춰야합니다.
-    // MonoBehaviour Script에서 내 캐릭터의 정확한 좌표를 현재 참조할 수가 없어서,
-    // 수치를 조절해 대략적으로 맞춘 상태입니다.
-     // 2022.07.14 박대명
-    float toPlayerDistance = length(_Global_pos.xyz - input.positionWS.xyz);
-    if (toPlayerDistance > _CullDistance)
-    {
-        discard;
-    }
-    #endif
-
-
     half4 diffuseAlpha = SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
     half alpha = diffuseAlpha.a * _BaseColor.a;
 
@@ -100,8 +87,6 @@ half4 DepthOnlyFragment(Varyings input) : SV_TARGET
     #else
         alpha = 1;
     #endif
-
-
 
     #if RAYCAST
         //레이케스트 되면 사라지는 기능

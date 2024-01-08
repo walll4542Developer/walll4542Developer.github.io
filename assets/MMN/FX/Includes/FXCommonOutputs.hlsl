@@ -7,6 +7,9 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 
+#define IS_TRUE(value) (value > 0.5)
+#define IS_FALSE(value) (value <= 0.5)
+
 void GetPositionCSForBending(out float4 positionCS, out float4 positionNDC, float3 positionOS)
 {
     positionCS = float4(0, 0, 0, 0);
@@ -137,27 +140,28 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
     #endif
 }
 
-void ApplyShadowAtten(inout half4 finalColor, float4 shadowCoord, float3 positionWS, float lightRatio)
+// void ApplyShadowAtten(inout half4 finalColor, float4 shadowCoord, float3 positionWS, float lightRatio)
+// {
+//     #ifdef _LIGHTRECEIVE_ON
+//         // 그림자 영향 받음
+//         #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+//             shadowCoord = TransformWorldToShadowCoord(positionWS);
+//         #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+//             shadowCoord = TransformWorldToShadowCoord(positionWS);
+//         #endif
+
+//         Light mainLight = GetMainLight(shadowCoord);
+//         half shadowAtten = saturate(mainLight.shadowAttenuation + (1 - lightRatio));
+//         // half3 attenuatedLightColor = mainLight.color.rgb * saturate(mainLight.distanceAttenuation * shadowAtten);
+
+//         finalColor.rgb *= shadowAtten;
+//     #endif
+// }
+
+void ApplyLightColor(inout half4 finalColor, half3 normalWS, half lightRatio, half lightReceive)
 {
-    // #ifdef _LIGHTRECEIVE_ON
-    //     // 그림자 영향 받음
-    //     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    //         shadowCoord = TransformWorldToShadowCoord(positionWS);
-    //     #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    //         shadowCoord = TransformWorldToShadowCoord(positionWS);
-    //     #endif
-
-    //     Light mainLight = GetMainLight(shadowCoord);
-    //     half shadowAtten = saturate(mainLight.shadowAttenuation + (1 - lightRatio));
-    //     // half3 attenuatedLightColor = mainLight.color.rgb * saturate(mainLight.distanceAttenuation * shadowAtten);
-
-    //     finalColor.rgb *= shadowAtten;
-    // #endif
-}
-
-void ApplyLightColor(inout half4 finalColor, float3 normalWS, float lightRatio)
-{
-    #ifdef _LIGHTRECEIVE_ON
+    if (IS_TRUE(lightReceive))
+    {
         // 빛 영향 받음
         // float3 bakedGI = SampleSHPixel(vertexSH, normalWS);
         float3 bakedGI = _Global_GILightMulti.rgb;
@@ -165,7 +169,7 @@ void ApplyLightColor(inout half4 finalColor, float3 normalWS, float lightRatio)
         Light mainLight = GetMainLight();
         float3 light = mainLight.color.rgb;
         finalColor.rgb *= lerp(1, saturate(light + bakedGI), lightRatio);
-    #endif
+    }
 }
 
 float3 MainLightColor()
@@ -188,7 +192,6 @@ inline float4 MMN_GlobalTex_HeightFogAlpha(
     float3 positionWS,
     float3 normalWS,
     float4 fogCoord,
-    float fogPower,
     float _Global_FogHeightOffset,
     float _Global_FogHeightScale,
     float _Global_FogHeightNoiseValue,
@@ -233,7 +236,6 @@ inline float4 MMN_GlobalTex_HeightFogAdd(
     float3 positionWS,
     float3 normalWS,
     float4 fogCoord,
-    float fogPower,
     float _Global_FogHeightOffset,
     float _Global_FogHeightScale,
     float _Global_FogHeightNoiseValue,
@@ -278,7 +280,6 @@ inline float4 MMN_GlobalTex_HeightFogMulti(
     float3 positionWS,
     float3 normalWS,
     float4 fogCoord,
-    float fogPower,
     float _Global_FogHeightOffset,
     float _Global_FogHeightScale,
     float _Global_FogHeightNoiseValue,
@@ -315,15 +316,16 @@ inline float4 MMN_GlobalTex_HeightFogMulti(
     return color;
 }
 
-void ApplyFogColor(inout half4 finalColor, float3 positionWS, float3 normalWS, float blendMode, float fogPower, float fogCoord)
+void ApplyFogColor(inout half4 finalColor, float3 positionWS, half3 normalWS, half blendMode, half fogReceive, float fogCoord)
 {
-    #ifdef _FOG_RCV_ON
-        if (blendMode == 1 || blendMode == 2)
+    if (IS_TRUE(fogReceive))
+    {
+        if (blendMode >= 1 && blendMode <= 2)
         {
             //하이트 포그  연산 ADD
             finalColor = MMN_GlobalTex_HeightFogAdd(
                 finalColor,
-                positionWS, normalWS, fogCoord, fogPower,
+                positionWS, normalWS, fogCoord,
                 _Global_FogHeightOffset,
                 _Global_FogHeightScale,
                 _Global_FogHeightNoiseValue,
@@ -336,7 +338,7 @@ void ApplyFogColor(inout half4 finalColor, float3 positionWS, float3 normalWS, f
         //     // 하이트 포그  연산 Multi
         //     finalColor= MMN_GlobalTex_HeightFogMulti(
         //     finalColor,
-        //     positionWS, normalWS, fogCoord, fogPower,
+        //     positionWS, normalWS, fogCoord,
         //     _Global_FogHeightOffset,
         //     _Global_FogHeightScale,
         //     _Global_FogHeightNoiseValue,
@@ -349,7 +351,7 @@ void ApplyFogColor(inout half4 finalColor, float3 positionWS, float3 normalWS, f
             // 하이트 포그 연산 AlphaBlend
             finalColor = MMN_GlobalTex_HeightFogAlpha(
                 finalColor,
-                positionWS, normalWS, fogCoord, fogPower,
+                positionWS, normalWS, fogCoord,
                 _Global_FogHeightOffset,
                 _Global_FogHeightScale,
                 _Global_FogHeightNoiseValue,
@@ -361,7 +363,7 @@ void ApplyFogColor(inout half4 finalColor, float3 positionWS, float3 normalWS, f
         // finalColor.rgb = MixFog(finalColor.rgb, fogCoord);                             // NOTE: for normal blend mode
         // finalColor.rgb = MixFogColor(finalColor.rgb, half3(0.0, 0.0, 0.0), fogCoord);  // NOTE: for additive blend mode
         // finalColor.rgb = MixFogColor(finalColor.rgb, real3(1.0, 1.0, 1.0), fogCoord);  // NOTE: for multiply blend mode
-    #endif
+    }
 }
 
 // 환경 이펙트가 레이캐스트로 사라질 때 이펙트의 블렌드모드에 따라 트랜지션 되는 값을 다르게 합니다.
@@ -384,20 +386,21 @@ void ApplyTransitionValue(inout half4 finalColor, float blendMode, float transit
     }
 }
 
-void ApplySoftParticle(inout half4 finalColor, float near, float far, float fadeOutRange, float4 positionNDC)
+void ApplySoftParticle(inout half4 finalColor, half near, half far, half fadeOutRange, float4 positionNDC, half softParticle)
 {
-    #ifdef _SOFTPARTICLE_ON
-        float fade = 1;
-        float rawDepth = SampleSceneDepth(positionNDC.xy / positionNDC.w);
-        float sceneZ = LinearEyeDepth(rawDepth, _ZBufferParams);
-        float thisZ = LinearEyeDepth(positionNDC.z / positionNDC.w, _ZBufferParams);
+    if (IS_TRUE(softParticle))
+    {
+        half fade = 1;
+        half rawDepth = SampleSceneDepth(positionNDC.xy / positionNDC.w);
+        half sceneZ = LinearEyeDepth(rawDepth, _ZBufferParams);
+        half thisZ = LinearEyeDepth(positionNDC.z / positionNDC.w, _ZBufferParams);
         fade = saturate(far * fadeOutRange * ((sceneZ - near) - thisZ));
 
         finalColor.a *= fade;
-    #endif
+    }
 }
 
-void ApplyNearPlaneAlpha(inout half alpha, half distance, float4 screenPos, half nearPlaneInvertDistance, half nearPlane, half raycastMinimumAlpha)
+void ApplyNearPlaneAlpha(inout half alpha, half distance, float4 screenPos, half nearPlane, half nearPlaneInvertDistance, half raycastMinimumAlpha)
 {
     // float2 screenUV = float2(screenPos.x, screenPos.y) * ScreenRatio(); // 원형 비율 계산
     // screenUV = screenUV - 0.5 * ScreenRatio();
@@ -428,21 +431,25 @@ float3 GetCameraPosition()
 void ApplyRaycastingAlpha(
     inout half4 finalColor, float3 positionWS, half4 screenUV, half4 screenPos,
     half nearPlane, half nearPlaneInvertDistance,
-    half raycastHarftoneClip, half raycastMinimumAlpha)
+    half raycastHarftoneClip, half raycastMinimumAlpha,
+    half raycast)
 {
-    half alpha = 1;
-    half cameraDistance = GetCameraDistance(positionWS);
-
-    if(nearPlane != 0)
+    if (nearPlane != 0)
     {
-        ApplyNearPlaneAlpha(alpha, cameraDistance, screenPos, nearPlaneInvertDistance, nearPlane, raycastMinimumAlpha);
+        half alpha = 1;
+        half cameraDistance = GetCameraDistance(positionWS);
+        ApplyNearPlaneAlpha(alpha, cameraDistance, screenPos, nearPlane, nearPlaneInvertDistance, raycastMinimumAlpha);
         finalColor.a *= saturate(alpha);
     }
 
-    #ifdef _RAYCAST_ON
-        half raycastAlpha = 0;
-        raycastAlpha = RaycastingHalftoneAlphaBlend(screenUV, screenPos, raycastHarftoneClip, raycastMinimumAlpha);
-        finalColor.a *= saturate(raycastAlpha);
+    #if defined(_RAYCAST_ON)
+        if (IS_TRUE(raycast))
+        {
+            half raycastAlpha = 0;
+            raycastAlpha = RaycastingHalftoneAlphaBlend(screenUV, screenPos, raycastHarftoneClip, raycastMinimumAlpha);
+            finalColor.a *= saturate(raycastAlpha);
+            finalColor.rgb = half3(1, 0, 0); // TEST
+        }
     #endif
 }
 
@@ -605,5 +612,20 @@ void InterectionBorderFX(float3 positionWS, float3 globalPosition, float radius,
     offset = pushDirection * dist * range / objectScale;
     alpha = 1;
 } 
+
+void FXFinalColorOutputs(inout half4 finalColor, 
+in float4 positionNDC, float3 positionWS,
+in float4 screenUV, float4 screenPos,
+in half3 normalWS, 
+in half nearPlane, half nearPlaneInvertDistance, half raycastHarftoneClip, half raycastMinimumAlpha, half raycast,
+in half lightRatio, half lightReceive, 
+in half near, half far, half fadeOutRange, half softParticle)
+{
+    ApplyRaycastingAlpha(finalColor, positionWS, screenUV, screenPos,
+    nearPlane, nearPlaneInvertDistance,
+    raycastHarftoneClip, raycastMinimumAlpha, raycast);
+    ApplyLightColor(finalColor, normalWS, lightRatio, lightReceive);
+    ApplySoftParticle(finalColor, near, far, fadeOutRange, positionNDC, softParticle);
+}
 
 #endif // #ifndef MMN_FX_COMMON_OUTPUTS_INCLUDED

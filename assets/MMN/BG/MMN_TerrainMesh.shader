@@ -1,4 +1,4 @@
-// Shader targeted for low end devices. Single Pass Forward Rendering.
+// 실제 사용되는 터레인 셰이더는 이것입니다. 터레인 투 메쉬와 자동 연결을 위해서 이름을 이렇게 지었습니다.
 Shader "Amazing Assets/Terrain To Mesh/Splatmap"
 {
     // Keep properties of StandardSpecular shader for upgrade reasons.
@@ -77,9 +77,9 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
         // Editmode props
         [HideInInspector] _QueueOffset ("Queue offset", Float) = 0.0
         [HideInInspector] _Smoothness ("SMoothness", Float) = 0.5
-
     }
 
+    //LOD300
     SubShader
     {
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
@@ -107,9 +107,9 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING //이거 지우면 플레이때 어둡게 나옴
-            // #pragma multi_compile _ SHADOWS_SHADOWMASK
+            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
@@ -119,6 +119,7 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
             // Unity defined keywords
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple
@@ -222,6 +223,77 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
             #include "Assets/PatchableAssets/Shaders/MMN/BG/MMN_TerrainMesh_input.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/SimpleLitMetaPass.hlsl"
 
+            ENDHLSL
+        }
+    }
+
+    //LOD100
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
+        LOD 100
+
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "BG" }
+
+            // Use same blending / depth states as Standard shader
+            Blend[_SrcBlend][_DstBlend]
+            ZWrite[_ZWrite]
+            Cull[_Cull]
+
+            HLSLPROGRAM
+
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING //이거 지우면 플레이때 어둡게 나옴
+            #pragma multi_compile _ _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile_fog
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+
+            #pragma vertex LitPassVertexSimple
+            #pragma fragment LitPassFragmentSimple
+            #define BUMP_SCALE_NOT_SUPPORTED 1
+
+            #include "Assets/PatchableAssets/Shaders/MMN/BG/MMN_TerrainMesh_input.hlsl"
+            #include "MMN_TerrainMesh_ForwardPass.hlsl"
+
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+
+            ZWrite On
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            #define VERTEX_CAMERA_DEPEND_BENDING 1
+            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0
+            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0
+
+            #include "Assets/PatchableAssets/Shaders/MMN/BG/MMN_TerrainMesh_input.hlsl"
+            #include "MMN_DepthOnlyPass.hlsl"
             ENDHLSL
         }
     }

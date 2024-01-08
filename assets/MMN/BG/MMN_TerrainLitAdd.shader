@@ -76,10 +76,11 @@ Shader "Hidden/MMN/BG/TerrainLit(Add Pass)"
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
-            #pragma multi_compile_instancing
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
             #pragma multi_compile _ _DIM_FOG_ON
             #pragma multi_compile _ _DIM_FOG_ARRAY_ON
-            #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
 
             #pragma shader_feature_local_fragment _TERRAIN_BLEND_HEIGHT
             #pragma shader_feature_local _NORMALMAP
@@ -136,7 +137,7 @@ Shader "Hidden/MMN/BG/TerrainLit(Add Pass)"
         //     #include "MMN_TerrainLitInput.hlsl"
         //     // #include "Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainLitPasses.hlsl"
 
-        
+
         //     #include "MMN_TerrainLitPasses.hlsl"
         //     ENDHLSL
 

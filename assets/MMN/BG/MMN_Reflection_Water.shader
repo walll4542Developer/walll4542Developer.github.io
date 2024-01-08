@@ -46,7 +46,7 @@ Shader "MMN/Special/PlanerReflectionWater"
         // [Header(Specular Control)]
         // [Space 50]
         [HDR]_SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 0.5)
-        _SpecualrNormalMulti ("SpecularNormalMultiply", Range(1,10) ) = 1
+        _SpecualrNormalMulti ("SpecularNormalMultiply", Range(1, 10)) = 1
         [PowerSlider(5.0)]_Glossiness ("Glossiness", Range(1, 256)) = 128
 
 
@@ -54,9 +54,7 @@ Shader "MMN/Special/PlanerReflectionWater"
         [Space(10)]
         [NoScaleOffset] _PlanarReflectionTexture ("리플렉션 텍스쳐(수정 금지)", 2D) = "Black" { }
         _ReflectionColor ("리플렉션 컬러", Color) = (1, 1, 1, 1)
-        _ReflectionPower("리플렉션 거리 조절",Range(1,50)) = 10
-
-        
+        _ReflectionPower ("리플렉션 거리 조절", Range(1, 50)) = 10
     }
 
     SubShader
@@ -78,35 +76,13 @@ Shader "MMN/Special/PlanerReflectionWater"
             #pragma target 4.5
 
             // -------------------------------------
-            // Universal Pipeline keywords
-            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            // #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            // #pragma multi_compile_fragment _ _LIGHT_LAYERS
-            // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            // #pragma multi_compile _ _CLUSTERED_RENDERING
-
-            // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
-            // #pragma multi_compile _ _DIM_FOG_ON
-            // #pragma multi_compile _ _DIM_FOG_ARRAY_ON
-
-            //--------------------------------------
-            // GPU Instancing
-            // #pragma multi_compile_instancing
-            // #pragma instancing_options assumeuniformscaling maxcount:50 nolightprobe nolightmap //??
-            // #pragma instancing_options renderinglayer
-            // #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #pragma vertex vert
             #pragma fragment frag
-
-            //GlobalVariables
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
@@ -116,10 +92,10 @@ Shader "MMN/Special/PlanerReflectionWater"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                half3 normalOS : NORMAL;
+                half4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
-                real4 color : COLOR;
+                half4 color : COLOR;
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -145,7 +121,7 @@ Shader "MMN/Special/PlanerReflectionWater"
                 float4 shadowCoord : TEXCOORD7;
                 float4 screenPos : TEXCOORD8;
 
-                real4 color : COLOR0;               // low-precision, 0–1 range data
+                half4 color : COLOR0;               // low-precision, 0–1 range data
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -222,7 +198,7 @@ Shader "MMN/Special/PlanerReflectionWater"
                 // #endif
 
                 output.shadowCoord = GetShadowCoord(vertexInput);
-                output.screenPos = ComputeScreenPos(output.positionCS );
+                output.screenPos = ComputeScreenPos(output.positionCS);
 
                 return output;
             }
@@ -256,12 +232,12 @@ Shader "MMN/Special/PlanerReflectionWater"
                 float2 screenSpaceNormal = (viewSpaceNormal.xy / viewSpaceNormal.z) * 0.5 + 0.5;
 
                 //프레넬
-                float rim = saturate(1-dot(input.normal.xyz, viewDirWS ));//플렛한 노말의 림
-                float rim4ReflectionProbe = rim * rim  * rim * rim * rim  * rim;
-                float rim4PlanerReflection  = pow(rim,_ReflectionPower);
+                float rim = saturate(1 - dot(input.normal.xyz, viewDirWS));//플렛한 노말의 림
+                float rim4ReflectionProbe = rim * rim * rim * rim * rim * rim;
+                float rim4PlanerReflection = pow(rim, _ReflectionPower);
 
                 //스페큘러
-                half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti,1,_SpecualrNormalMulti));
+                half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti, 1, _SpecualrNormalMulti));
                 Light mainLight = GetMainLight(input.shadowCoord);
                 half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
                 half3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS4Specular, viewDirWS, 0.5, _Glossiness * 50);
@@ -289,7 +265,7 @@ Shader "MMN/Special/PlanerReflectionWater"
 
                 //리플렉션 프로브
                 float3 reflectVec = reflect(-viewDirWS, normalWS);
-                float reflectionProbeLodBias = (1.0 - _Glossiness/256 ) ;
+                float reflectionProbeLodBias = (1.0 - _Glossiness / 256) ;
                 float3 reflectionprobe = DecodeHDREnvironment(SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectVec, reflectionProbeLodBias), unity_SpecCube0_HDR);
                 reflectionprobe = saturate(reflectionprobe);
 
@@ -297,31 +273,33 @@ Shader "MMN/Special/PlanerReflectionWater"
                 float3 scatterColor1 = _ScatterColor1.rgb;
                 float3 scatterColor = lerp(scatterColor1, _ScatterColor2.rgb, saturate(scaledDepth / _ScatterDepth2));
                 scatterColor = lerp(scatterColor.rgb, _ScatterColor3.rgb, clamp((scaledDepth - _ScatterDepth2) / (_ScatterDepth3 - _ScatterDepth2), 0.0, 1.0));
-                
+
                 // 플래너 리플렉션 기능
                 half2 screenUV = input.screenPos.xy / (input.screenPos.w + 0.0001);
-                screenUV += float2((screenSpaceNormal.x - 0.5) * 0.1,0);
+                screenUV += float2((screenSpaceNormal.x - 0.5) * 0.1, 0);
                 half3 planarReflectionColor = SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_PlanarReflectionTexture, screenUV, 0).rgb; //밉맵이 안생기는군요
                 half3 planarReflectionResult = planarReflectionColor * _ReflectionColor.rgb;
 
                 //변수 초기화
                 float4 color = float4(0, 0, 0, 0);
                 float opacity = 1;
-                
-                //반사 합성 
+
+                //반사 합성
                 float3 fresnelColor = _FresnelColor.rgb;
                 float3 reflectionProbeColor = lerp(scatterColor.rgb, fresnelColor.rgb * reflectionprobe, rim4ReflectionProbe);
-                float3 planerReflectionColor = lerp(reflectionProbeColor.rgb, _ReflectionColor.rgb * planarReflectionResult.rgb , rim4PlanerReflection);
+                float3 planerReflectionColor = lerp(reflectionProbeColor.rgb, _ReflectionColor.rgb * planarReflectionResult.rgb, rim4PlanerReflection);
 
-                //파도 폼과 합성 
+                //파도 폼과 합성
                 color.rgb = lerp(planerReflectionColor, _FoamColor.rgb, saturate(foamCoeff));
 
-                //조명과 스페큘러 
+                //조명과 스페큘러
+                half powerdDepthCoeff = depthCoeff * depthCoeff;//알파를 진하게해서 끊어내기 위함
+
                 color.rgb *= input.color.rgb * mainLight.color * 1.5 ;
                 specularColor *= _SpecColor.rgb ; //모바일에서 블룸을 강조하기 위해
-                color.rgb += specularColor ;
+                color.rgb += specularColor * powerdDepthCoeff;
                 opacity = saturate(foamCoeff + depthCoeff);
-                opacity += Luminance(specularColor);
+                opacity += Luminance(specularColor) * powerdDepthCoeff;
 
                 //레이케스트 되면 사라지는 기능
                 // half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
@@ -338,8 +316,8 @@ Shader "MMN/Special/PlanerReflectionWater"
                 half fogHeight = max(fogHeightBottom, fogHeightTop);
 
 
-                //레인드롭 텍스쳐 
-                half3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS , normalWS) * 0.1;
+                //레인드롭 텍스쳐
+                half3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS, normalWS) * 0.1;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
 
@@ -375,7 +353,7 @@ Shader "MMN/Special/PlanerReflectionWater"
     // ===============================================================================
 
 
-
+    //LOD 100
     SubShader
     {
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent-200" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" "PreviewType" = "Plane" "ShaderModel" = "4.5" }
@@ -394,36 +372,13 @@ Shader "MMN/Special/PlanerReflectionWater"
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
-            // -------------------------------------
-            // Universal Pipeline keywords
-            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            // #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            // #pragma multi_compile_fragment _ _LIGHT_LAYERS
-            // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            // #pragma multi_compile _ _CLUSTERED_RENDERING
-
-            // -------------------------------------
-            // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
-            // #pragma multi_compile _ _DIM_FOG_ON
-            // #pragma multi_compile _ _DIM_FOG_ARRAY_ON
-
-            //--------------------------------------
-            // GPU Instancing
-            // #pragma multi_compile_instancing
-            // #pragma instancing_options assumeuniformscaling maxcount:50 nolightprobe nolightmap //??
-            // #pragma instancing_options renderinglayer
-            // #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #pragma vertex vert
             #pragma fragment frag
 
-            //GlobalVariables
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
@@ -433,10 +388,10 @@ Shader "MMN/Special/PlanerReflectionWater"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                half3 normalOS : NORMAL;
+                half4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
-                real4 color : COLOR;
+                half4 color : COLOR;
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -462,7 +417,7 @@ Shader "MMN/Special/PlanerReflectionWater"
                 float4 shadowCoord : TEXCOORD7;
                 float4 screenPos : TEXCOORD8;
 
-                real4 color : COLOR0;               // low-precision, 0–1 range data
+                half4 color : COLOR0;               // low-precision, 0–1 range data
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -538,7 +493,7 @@ Shader "MMN/Special/PlanerReflectionWater"
                 // #endif
 
                 output.shadowCoord = GetShadowCoord(vertexInput);
-                output.screenPos = ComputeScreenPos(output.positionCS );
+                output.screenPos = ComputeScreenPos(output.positionCS);
 
                 return output;
             }
@@ -550,7 +505,7 @@ Shader "MMN/Special/PlanerReflectionWater"
 
                 //플로우 UV와 텍스쳐
                 float2 flowingUV = input.uv * 5.0 + float2(0.0, -1.0) * _Time.g / 30.0 * _FlowSpeed;
-                float2 flowingUV2 = input.uv + float2(0.0, -1.0) * _Time.g / 42.0 * _FlowSpeed;
+                // float2 flowingUV2 = input.uv + float2(0.0, -1.0) * _Time.g / 42.0 * _FlowSpeed;
                 // float2 flowingUV3 = flowingUV.yx;
 
                 float4 distortion = SAMPLE_TEXTURE2D(_DistortionTexture, sampler_DistortionTexture, TRANSFORM_TEX(flowingUV, _DistortionTexture));
@@ -560,22 +515,22 @@ Shader "MMN/Special/PlanerReflectionWater"
                 // float4 distortion3 = SAMPLE_TEXTURE2D(_DistortionTexture, sampler_DistortionTexture, TRANSFORM_TEX(flowingUV3, _DistortionTexture));
 
                 //노말 + 디테일 노말 연산
-                half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
-                half3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
-                normalTS = normalize(float3(normalTS.rg + normalTS2.rg, normalTS.b * normalTS2.b) * float3(_DistortionAmount.xx, 1));
+                // half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
+                // half3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
+                // normalTS = normalize(float3(normalTS.rg + normalTS2.rg, normalTS.b * normalTS2.b) * float3(_DistortionAmount.xx, 1));
 
                 //각 변수 계산해주기
                 half3 viewDirWS = half3(input.normal.w, input.tangent.w, input.bitangent.w);
-                half3 normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
-                normalWS = NormalizeNormalPerPixel(normalWS);
+                // half3 normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
+                half3 normalWS = NormalizeNormalPerPixel(input.normal.xyz);
                 viewDirWS = SafeNormalize(viewDirWS);
                 // float3 viewSpaceNormal = normalize(mul((float3x3)UNITY_MATRIX_MV, normalWS));
                 // float2 screenSpaceNormal = (viewSpaceNormal.xy / viewSpaceNormal.z) * 0.5 + 0.5;
 
                 //프레넬
-                float rim = saturate(1-dot(input.normal.xyz, viewDirWS ));//플렛한 노말의 림
-                float rim4ReflectionProbe = rim * rim  * rim * rim * rim  * rim;
-                float rim4PlanerReflection  = pow(rim,30);
+                float rim = saturate(1 - dot(input.normal.xyz, viewDirWS));//플렛한 노말의 림
+                float rim4ReflectionProbe = rim * rim * rim * rim * rim * rim;
+                float rim4PlanerReflection = pow(rim, 30);
 
                 //스페큘러
                 // half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti,1,_SpecualrNormalMulti));
@@ -606,7 +561,7 @@ Shader "MMN/Special/PlanerReflectionWater"
 
                 //리플렉션 프로브
                 float3 reflectVec = reflect(-viewDirWS, normalWS);
-                float reflectionProbeLodBias = (1.0 - _Glossiness/256 ) ;
+                float reflectionProbeLodBias = (1.0 - _Glossiness / 256) ;
                 float3 reflectionprobe = DecodeHDREnvironment(SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectVec, reflectionProbeLodBias), unity_SpecCube0_HDR);
                 reflectionprobe = saturate(reflectionprobe);
 
@@ -614,7 +569,7 @@ Shader "MMN/Special/PlanerReflectionWater"
                 float3 scatterColor1 = _ScatterColor1.rgb;
                 float3 scatterColor = lerp(scatterColor1, _ScatterColor2.rgb, saturate(scaledDepth / _ScatterDepth2));
                 scatterColor = lerp(scatterColor.rgb, _ScatterColor3.rgb, clamp((scaledDepth - _ScatterDepth2) / (_ScatterDepth3 - _ScatterDepth2), 0.0, 1.0));
-                
+
                 // 플래너 리플렉션 기능
                 // half2 screenUV = input.screenPos.xy / (input.screenPos.w + 0.0001);
                 // screenUV += float2((screenSpaceNormal.x - 0.5) * 0.1,0);
@@ -625,21 +580,21 @@ Shader "MMN/Special/PlanerReflectionWater"
                 //변수 초기화
                 float4 color = float4(0, 0, 0, 0);
                 float opacity = 1;
-                
-                //반사 합성 
+
+                //반사 합성
                 float3 fresnelColor = _FresnelColor.rgb;
                 float3 reflectionProbeColor = lerp(scatterColor.rgb, fresnelColor.rgb * reflectionprobe, rim4ReflectionProbe);
-            //    float3 planerReflectionColor = lerp(reflectionProbeColor.rgb, _ReflectionColor * planarReflectionResult.rgb , rim4PlanerReflection);
+                //    float3 planerReflectionColor = lerp(reflectionProbeColor.rgb, _ReflectionColor * planarReflectionResult.rgb , rim4PlanerReflection);
 
-                //파도 폼과 합성 
+                //파도 폼과 합성
                 color.rgb = lerp(reflectionProbeColor, _FoamColor.rgb, saturate(foamCoeff));
 
-                //조명과 스페큘러 
+                //조명과 스페큘러
                 Light mainLight = GetMainLight();
                 color.rgb *= input.color.rgb * mainLight.color * 1.5 ;
                 // specularColor *= _SpecColor.rgb ; //모바일에서 블룸을 강조하기 위해
                 // color.rgb += specularColor ;
-                // opacity = saturate(foamCoeff + depthCoeff);
+                opacity = saturate(foamCoeff + depthCoeff);
                 // opacity += Luminance(specularColor);
 
                 //레이케스트 되면 사라지는 기능

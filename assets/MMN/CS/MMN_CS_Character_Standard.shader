@@ -2,7 +2,7 @@ Shader "MMN/CutScene/Standard"
 {
     Properties
     {
-        [Enum(Standard, 0, Monster, 1)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -29,11 +29,11 @@ Shader "MMN/CutScene/Standard"
         [ToggleOff(_OUTLINE_FEATURE)] _OutlineOff ("아웃라인 끄기", Float) = 1.0
         _OutlineColor ("아웃라인 색상", Color) = (1.0, 1.0, 1.0, 1.0)
         [Enum(Multiply, 0, Override, 1)] _OutlineColorMode ("아웃라인 색상 적용 방식", Float) = 0.0
-        _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
+        // _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
 
         [Header(Metal)]
         [Space(10)]
-        [Toggle] _IsMetal ("메탈 재질?", Float) = 0.0
+        [Toggle(_METAL_FEATURE)] _IsMetal ("메탈 재질?", Float) = 0.0
         [HDR] _MetalTintColor ("메탈 틴트 컬러", Color) = (1.0, 1.0, 1.0, 1.0)
         _Smoothness ("매끈한 정도", Range(0.01, 1.0)) = 1.0
         _SpecularStrength ("스펙큘러 세기", Range(0.0, 1.0)) = 0.5
@@ -48,12 +48,12 @@ Shader "MMN/CutScene/Standard"
         [Toggle] _IsBreathingEmissionMode ("숨쉬기 모드 활성화?", Float) = 0.0
         _BreathingEmissionModePeriod ("숨쉬기 모드가 반복될 간격 (초)", Float) = 2.0
 
-        // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들.
+        // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
         // 반드시 수정/추가가 필요할 때 MM_DECLARE_PROPERTIES_FROM_SCRIPT 매크로도 같이 수정해야 합니다!
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -73,12 +73,15 @@ Shader "MMN/CutScene/Standard"
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
-        [HideInInspector] _MotionBlurLerpValue("_MotionBlurLerpValue", Float) = 0.0
-        [HideInInspector] _VertexBufferLength("_VertexBufferLength", Integer) = 0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
     }
 
-    Subshader
+    SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Opaque"
@@ -125,7 +128,9 @@ Shader "MMN/CutScene/Standard"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------

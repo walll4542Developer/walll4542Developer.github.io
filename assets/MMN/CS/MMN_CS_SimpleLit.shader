@@ -43,7 +43,7 @@ Shader "MMN/CutScene/SimpleLit"
         _CenterPointHeight ("Center Position Height", float) = 0
         _GroundAOarea ("AOarea", Range(0, 20)) = 2
         _GroundAOintensity ("AOintensity", float) = 0
-        
+
         // Blending state
         [HideInInspector] _Surface ("__surface", Float) = 0.0
         [HideInInspector] _Blend ("__blend", Float) = 0.0
@@ -82,6 +82,8 @@ Shader "MMN/CutScene/SimpleLit"
 
     SubShader
     {
+        LOD 100
+
         // NOTE @wooyoung : https://deskcat.io/d/N28009/MM-미술-검은-나오존-흰-나오존-로딩없는-전환처리-연구
         Tags
         {
@@ -92,7 +94,6 @@ Shader "MMN/CutScene/SimpleLit"
             "IgnoreProjector" = "True"
             "ShaderModel" = "4.5"
         }
-        LOD 300
 
         Pass
         {
@@ -150,6 +151,7 @@ Shader "MMN/CutScene/SimpleLit"
             // Unity defined keywords
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             //--------------------------------------

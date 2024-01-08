@@ -2,6 +2,8 @@ Shader "MMN/BG/SimpleLitLOD"
 {
     Properties
     {
+        [Toggle]_ALPHATEST ("알파테스트", float) = 0
+        _Cutoff ("Alpha Clipping", Range(0.0, 1.0)) = 0.5 //인풋의 C버퍼 변수와 맞춰 SRP 배쳐가 돌아가게 하기 위해 Property에만 넣기
         [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
         _VertexColorWeight ("버텍스 칼라 영향력 가중치", Range(0, 1)) = 1
         [Toggle]_ShowVertexColor ("Show Vertex Color(확인용)", float) = 0
@@ -28,7 +30,7 @@ Shader "MMN/BG/SimpleLitLOD"
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma exclude_renderers gles gles3 glcore
+            #pragma exclude_renderers gles gles3 glcore d3d9
             #pragma target 4.5
 
             // -------------------------------------
@@ -37,7 +39,9 @@ Shader "MMN/BG/SimpleLitLOD"
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
 
             // -------------------------------------
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple
@@ -52,9 +56,9 @@ Shader "MMN/BG/SimpleLitLOD"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
+                half3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
-                float4 color : COLOR;
+                half4 color : COLOR;
             };
 
             struct Varyings
@@ -64,7 +68,7 @@ Shader "MMN/BG/SimpleLitLOD"
                 float3 normalWS : TEXCOORD2;
                 float fogFactor : TEXCOORD3;
                 float4 vertexSH : TEXCOORD7;
-                float4 color : COLOR;
+                half4 color : COLOR;
                 float4 positionCS : SV_POSITION;
             };
 
@@ -77,6 +81,7 @@ Shader "MMN/BG/SimpleLitLOD"
                 viewDirWS = SafeNormalize(viewDirWS);
                 inputData.viewDirectionWS = viewDirWS;
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
+                inputData.vertexLighting = half3(0, 0, 0);
                 inputData.bakedGI = SAMPLE_GI(/* input.staticLightmapUV */1, input.vertexSH.rgb, inputData.normalWS);
                 #if defined(DEBUG_DISPLAY)
                     inputData.vertexSH = input.vertexSH;
@@ -113,12 +118,18 @@ Shader "MMN/BG/SimpleLitLOD"
 
                 float2 uv = input.uv;
                 float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                
+                half3 diffuse = diffuseAlpha.rgb;
+                half alpha = diffuseAlpha.a * _BaseColor.a;
+
+                //알파 테스트 기능
+                #if defined(_ALPHATEST_ON)
+                    clip(alpha - _Cutoff);
+                #endif
+
                 //틴트칼라와 버텍스 칼라
                 half3 tintProp = _BaseColor.rgb;
                 half tintStrengthProp = _AlbedoTintStrength;
-                half3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
-                half alpha = 1;
+                diffuse = TextureTintBlend(diffuse.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
 
                 //버텍스칼라 디버깅
                 #ifdef _SHOWVERTEXCOLOR_ON
@@ -153,14 +164,13 @@ Shader "MMN/BG/SimpleLitLOD"
 
                 //눈내리는 텍스쳐 전환
                 diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
-                
+
                 //라이팅
                 half4 color = 0;
                 color = UniversalFragmentLightCustomLOD(inputData, diffuse, /* specular */0, /* smoothness */0, emission, /* alpha */1, /* normalTS */ half3(0, 0, 1));
 
-                //비내리는 텍스쳐 전환
+                //레인텍스쳐 only 레인 드롭 애니메이션은 삭제
                 half3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
-                color_Rain = color_Rain.rgb + MMN_GlobalTex_Raindrop(input.positionWS.rgb, input.normalWS.rgb) * step(0.85, inputData.bakedGI).r * color_Rain.rgb;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
                 //하이트 포그  연산
@@ -203,8 +213,8 @@ Shader "MMN/BG/SimpleLitLOD"
             #define VERTEX_CAMERA_DEPEND_BENDING 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0
-            #define RAYCAST 1
-            #define LODFADE 1
+            #define RAYCAST 0
+            #define LODFADE 0
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
@@ -215,7 +225,7 @@ Shader "MMN/BG/SimpleLitLOD"
         }
     }
 
-    
+
     Fallback off
     CustomEditor "MM.Client.Editor.ShaderGUI.MMN_SimpleLitGUI_LOD"
 }

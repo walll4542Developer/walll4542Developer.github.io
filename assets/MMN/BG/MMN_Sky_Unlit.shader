@@ -91,9 +91,9 @@ Shader "MMN/BG/Sky_Unlit"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
+                half3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
-                float4 color : COLOR;
+                half4 color : COLOR;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
             };
@@ -103,7 +103,7 @@ Shader "MMN/BG/Sky_Unlit"
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
                 half3 normalWS : TEXCOORD2;
-                float4 color : COLOR;
+                half4 color : COLOR;
                 float4 positionCS : SV_POSITION;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
                 // UNITY_VERTEX_OUTPUT_STEREO

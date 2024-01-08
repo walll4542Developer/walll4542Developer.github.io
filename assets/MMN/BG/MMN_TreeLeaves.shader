@@ -43,8 +43,8 @@ Shader "MMN/BG/TreeLeaves"
         _CenterPointHeight ("Center Position Height 센터 포지션 높이 ", float) = 0
         [Toggle]_ShowCenterPosition ("Show Center Position(확인용)", float) = 0
         [Toggle]_ShowVertexColor ("Show Vertex Color(확인용)", float) = 0
-        [Toggle]_IsBush("Isbush(임포스터 베이크 전용 옵션)",float) = 0
-        [Toggle]_IsSnow("IsSnow(임포스터 베이크 전용 옵션)", float) = 0
+        [Toggle]_IsBush ("Isbush(임포스터 베이크 전용 옵션)", float) = 0
+        [Toggle]_IsSnow ("IsSnow(임포스터 베이크 전용 옵션)", float) = 0
 
         // [Space(10)]
         // [Header(Wind n Push _바람과 푸시 영향력 _)]
@@ -74,7 +74,7 @@ Shader "MMN/BG/TreeLeaves"
         _RimRange ("RimRange", float) = 8
         [Toggle]_TOPLIGHT ("Show Top Light(확인용)", float) = 0
 
-        _GIStrength ("_GIStrength(암부 밝기 가중치)", Range(0,1)) = 0
+        _GIStrength ("_GIStrength(암부 밝기 가중치)", Range(0, 1)) = 0
 
         // [Space(10)]
         // [Header(Rim Control _____________________________________________________________________________)]
@@ -87,6 +87,7 @@ Shader "MMN/BG/TreeLeaves"
 
     }
 
+    //LOD300
     SubShader
     {
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
@@ -120,26 +121,16 @@ Shader "MMN/BG/TreeLeaves"
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            // #pragma multi_compile_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
-            // #pragma multi_compile _ SHADOWS_SHADOWMASK
-            // #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            // #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-            // #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            // #pragma multi_compile _ _CLUSTERED_RENDERING
-            // #pragma multi_compile _ _DIM_FOG_ON
-            // #pragma multi_compile _ _DIM_FOG_ARRAY_ON
 
             // -------------------------------------
             // Unity defined keywords
-            // #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            // #pragma multi_compile _ DYNAMICLIGHTMAP_ON
-            // #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             //--------------------------------------
@@ -218,55 +209,6 @@ Shader "MMN/BG/TreeLeaves"
         }
 
 
-
-
-
-
-
-
-        // This pass is used when drawing to a _CameraNormalsTexture texture
-        // Pass
-        // {
-        //     Name "DepthNormals"
-        //     Tags { "LightMode" = "DepthNormals" }
-
-        //     ZWrite On
-        //     Cull[_Cull]
-
-        //     HLSLPROGRAM
-
-        //     #pragma exclude_renderers gles gles3 glcore
-        //     #pragma target 4.5
-
-        //     #pragma vertex DepthNormalsVertex
-        //     #pragma fragment DepthNormalsFragment
-
-        //     // -------------------------------------
-        //     // Material Keywords
-        //     // #pragma shader_feature_local _NORMALMAP
-        //     // #pragma shader_feature_local_fragment _ _ALPHATEST_ON
-        //     // #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
-        //     // #pragma shader_feature_local_fragment _GLOSSINESS_FROM_BASE_ALPHA
-
-        //     //--------------------------------------
-        //     // GPU Instancing
-        //     #pragma multi_compile _ _ALPHATEST_ON
-        //     #pragma multi_compile _instancing
-        //     #pragma multi_compile _ DOTS_INSTANCING_ON
-        //     #pragma multi_compile _NEARHALFTONECLIP_ON
-        //     //에디터에서 니어 클리핑을 잠시 안보게 할 수 있는 기능
-        //     #pragma multi_compile _ _GLOBAL_NEARHALFTONECLIP_ON
-        //     #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
-        //     #define RAYCAST 1
-        //     #define LODFADE 1
-
-        //     #include "MMN_TreeLeaves_Input.hlsl"
-        //     // #include "MMN_TreeLeavesDepthNormalsPass.hlsl"
-        //     #include "MMN_DepthNormalsPass.hlsl"
-        //     ENDHLSL
-
-        // }
-
         // This pass it not used during regular rendering, only for lightmap baking.
         Pass
         {
@@ -293,6 +235,123 @@ Shader "MMN/BG/TreeLeaves"
         }
     }
 
+    //LOD100
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
+        LOD 100
+
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "BG" }
+
+            // Use same blending / depth states as Standard shader
+            Blend[_SrcBlend][_DstBlend]
+            ZWrite[_ZWrite]
+            // Cull[_Cull]
+            Cull off
+
+            HLSLPROGRAM
+
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature _ _SHOWCENTERPOSITION_ON
+            #pragma shader_feature _ _RIMPREVIEW_ON
+            #pragma shader_feature _ _SHOWAO_ON
+            #pragma shader_feature _ _TOPLIGHT_ON
+            #pragma shader_feature _ _SHOWVERTEXCOLOR_ON
+            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
+            #pragma multi_compile _ _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fog
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+
+            //--------------------------------------
+            // GPU Instancing
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options renderinglayer
+            // #pragma multi_compile _ DOTS_INSTANCING_ON
+
+            #pragma vertex LitPassVertexSimple
+            #pragma fragment LitPassFragmentSimple
+
+            #include "MMN_TreeLeaves_Input.hlsl"
+            #include "MMN_TreeLeavesForwardPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+
+            #pragma vertex ShadowPassVertex
+            #pragma fragment ShadowPassFragment
+
+            #include "MMN_TreeLeaves_Input.hlsl"
+            #include "MMN_TreeLeavesShadowCasterPass.hlsl"
+            ENDHLSL
+        }
+
+
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+
+            ZWrite On
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            //-------------------------------------
+            // Material Keywords
+            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+
+            //--------------------------------------
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            #define _NEARHALFTONECLIP_ON 1
+            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
+            #define RAYCAST 1
+            #define TREELODFADE 1
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            #include "MMN_TreeLeaves_Input.hlsl"
+            #include "MMN_DepthOnlyPass.hlsl"
+            ENDHLSL
+        }
+    }
 
     // Fallback  "Hidden/Universal Render Pipeline/FallbackError"
     Fallback off

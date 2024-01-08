@@ -14,53 +14,63 @@ float4 _BaseMap_MipInfo;
     SAMPLER(sampler_EmissionMap);
 #endif
 
-CBUFFER_START(UnityPerMaterial)
-    float _ShadingType;
+#ifdef _DISSOLVE_FEATURE
+    TEXTURE2D(_DissolveMap);
+    SAMPLER(sampler_DissolveMap);
+#endif
 
+#ifdef _TEXTURE_LERP_FEATURE
+    TEXTURE2D(_BaseMap2);
+    SAMPLER(sampler_BaseMap2);
+#endif
+
+CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
 
 #ifdef _ALPHA_OVERRIDE_FEATURE
-    float _AlphaOverride;
+    half _AlphaOverride;
+    half _AlphaScaleMin;
+    half _AlphaScaleMax;
     #ifdef _GRADIENT_ALPHA_FEATURE
-        float _IsGradientAlpha;
-        float _GradientAlphaHeight;
+        half _IsGradientAlpha;
+        half _GradientAlphaHeight;
     #endif
 #endif
 
 #ifdef _TINTCOLOR_FEATURE
-    float4 _TintColor;
+    half4 _TintColor;
 #endif
 
 #ifdef _TWO_SIDE_FEATURE
-    float _BackFaceDarkenAmount;
+    half _BackFaceDarkenAmount;
 #endif
 
 #ifdef _DYE_FEATURE
-    float _IsDyable;
-    float4 _DyeColor1;
-    float4 _DyeColor2;
-    float4 _DyeColor3;
-    float4 _DyeColor4;
-    float4 _DyeColor5;
-    float4 _DyeColor6;
-    float4 _DyeColor7;
-    float4 _DyeColor8;
-    float4 _DyeColor9;
-    float4 _DyeColor10;
-    float4 _DyeColor11;
-    float4 _DyeColor12;
-    float4 _DyeColor13;
-    float4 _DyeColor14;
-    float4 _DyeColor15;
-    float4 _DyeColor16;
-    float4 _DyeColor17;
-    float4 _DyeColor18;
-    float4 _DyeColor19;
-    float4 _DyeColor20;
-    float4 _DyeColor21;
-    float4 _DyeColor22;
-    float4 _DyeColor23;
-    float4 _DyeColor24;
+    half _IsDyable;
+    half4 _DyeColor1;
+    half4 _DyeColor2;
+    half4 _DyeColor3;
+    half4 _DyeColor4;
+    half4 _DyeColor5;
+    half4 _DyeColor6;
+    half4 _DyeColor7;
+    half4 _DyeColor8;
+    half4 _DyeColor9;
+    half4 _DyeColor10;
+    half4 _DyeColor11;
+    half4 _DyeColor12;
+    half4 _DyeColor13;
+    half4 _DyeColor14;
+    half4 _DyeColor15;
+    half4 _DyeColor16;
+    half4 _DyeColor17;
+    half4 _DyeColor18;
+    half4 _DyeColor19;
+    half4 _DyeColor20;
+    half4 _DyeColor21;
+    half4 _DyeColor22;
+    half4 _DyeColor23;
+    half4 _DyeColor24;
 
     float _UVOffset1;
     float _UVOffset2;
@@ -74,32 +84,59 @@ CBUFFER_START(UnityPerMaterial)
 #endif
 
 #ifdef _SILHOUETTE_FEATURE
-    float _SilhouetteOff;
-    float4 _SilhouetteTintColor;
+    half _SilhouetteOff;
+    half4 _SilhouetteTintColor;
 #endif
 
-    float4 _OutlineColor;
-    float _OutlineColorMode;
-    float _OutlineWidth;
+    half4 _OutlineColor;
+    half _OutlineColorMode;
+    // half _OutlineWidth;
 
-    float _IsMetal;
-    float4 _MetalTintColor;
-    float _Smoothness;
-    float _SpecularStrength;
+    half _IsMetal;
+    half4 _MetalTintColor;
+    half _Smoothness;
+    half _SpecularStrength;
 
 #ifdef _EMISSION_FEATURE
-    float3 _EmissionColor;
-    float _IsApplyFogToEmission;
-    float _ApplyFogToEmissionFactor;
-    float _IsEnableEmissionAtNight;
-    float _IsBreathingEmissionMode;
-    float _BreathingEmissionModePeriod;
+    half3 _EmissionColor;
+    half _IsApplyFogToEmission;
+    half _ApplyFogToEmissionFactor;
+    half _IsEnableEmissionAtNight;
+    half _IsBreathingEmissionMode;
+    half _BreathingEmissionModePeriod;
 #endif
 
 #ifdef _FRESNEL_FEATURE
-    float4 _FresnelColor;
-    float _FresnelRange;
-    float _FresnelPower;
+    half4 _FresnelColor;
+    half _FresnelRange;
+    half _FresnelPower;
+#endif
+
+#ifdef _DISSOLVE_FEATURE
+    half _DissolveAmount;
+
+    half4 _DissolveRange;
+    half _NotUseDirection;
+    half3 _DissolveDirection;
+
+    half _DissolvePanningSpeed;
+    half4 _DissolveMap_ST;
+
+    half _DissolveCutoff;
+
+    half4 _DissolveColor;
+    half _DissolveWidth;
+    half4 _DissolveEdgeColor;
+    half _DissolveEdgeWidth;
+#endif
+
+#ifdef _ARBALEST_FEATURE
+    half _RemainedMagazine;
+    half _MagazineNumber;
+#endif
+
+#ifdef _WEAPON_GRADE_FEATURE
+    half4 _WeaponGradeColor;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

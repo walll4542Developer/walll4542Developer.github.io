@@ -85,5 +85,52 @@ half4 FXDebugColor(in float3 normalWS, in half3 positionWS, in float4 positionOS
     return debugColor;
 }
 
+half4 FXDebugColor(in float3 normalWS, in half3 positionWS, in half4 fogCoord, half3 color, half alpha)
+{
+    half4 debugColor = half4(0, 0, 0, 0);
+
+    // initializeSurfaceData
+    SurfaceData surfaceData = (SurfaceData)0;
+    surfaceData.albedo = color;
+    surfaceData.alpha = alpha;
+    surfaceData.specular = 0;
+    surfaceData.normalTS = 0;
+    surfaceData.emission = 0;
+    surfaceData.metallic = 0;
+    surfaceData.smoothness = 1;
+    surfaceData.occlusion = 1;
+    surfaceData.clearCoatMask       = 0;
+    surfaceData.clearCoatSmoothness = 1;
+
+    // InitializeInputData
+    InputData inputData = (InputData)0;
+    inputData.positionWS = positionWS;
+    inputData.normalWS = normalWS;
+    inputData.fogCoord = fogCoord.x;
+
+    if (_DebugMaterialMode == DEBUGMATERIALMODE_LIGHTING_COMPLEXITY)
+    {
+        debugColor = CalculateDebugLightingComplexityColor(inputData, surfaceData);
+    }
+    else
+    {
+        if (_DebugLightingMode == DEBUGLIGHTINGMODE_SHADOW_CASCADES)
+        {
+            surfaceData.albedo = CalculateDebugShadowCascadeColor(inputData);
+        }
+        else
+        {
+            UpdateSurfaceAndInputDataForDebug(surfaceData, inputData);
+        }
+
+        if (CalculateColorForDebug(inputData, surfaceData, debugColor))
+        {
+            debugColor.a = alpha;
+            return debugColor;
+        }
+    }
+    return debugColor;
+}
+
 #endif // defined(DEBUG_DISPLAY)
 #endif // MMN_FX_DEBUGGING_INCLUDED

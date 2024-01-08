@@ -37,23 +37,23 @@ float OutlineByRim(float4 positionNDC, InputData inputData, Light mainLight)
     // return outlineWidth;
 }
 
-float4 OnePassWeaponOutlineAnimation(float4 baseColor, float4 weaponGradeColor, float outlineWidth)
+half4 OnePassWeaponOutlineAnimation(half4 baseColor, half4 weaponGradeColor, float outlineWidth)
 {
-    float3 weapon = lerp(weaponGradeColor.rgb, baseColor.rgb, outlineWidth);
+    half3 weapon = lerp(weaponGradeColor.rgb, baseColor.rgb, outlineWidth);
 
-    float speed = 2.0;
-    float time = sin(_Time.y * speed) * 0.5 + 0.5;
+    half speed = 2.0;
+    half time = sin(_Time.y * speed) * 0.5 + 0.5;
 
-    float animationByGrade = 1.0;
-    if (weaponGradeColor.a >= 3.0 && weaponGradeColor.a < 4.0) // only Epic item
+    half animationByGrade = 1.0;
+    if (weaponGradeColor.a >= 4.0 && weaponGradeColor.a < 5.0) // only Elite item
     {
         animationByGrade = 0.7;
     }
-    else if (weaponGradeColor.a >= 4.0 && weaponGradeColor.a < 5.0) // only Legendary item
+    else if (weaponGradeColor.a >= 5.0 && weaponGradeColor.a < 6.0) // only Epic item
     {
         animationByGrade = 0.85;
     }
-    else if (weaponGradeColor.a >= 5.0) // GEqual Mythic item
+    else if (weaponGradeColor.a >= 6.0) // GEqual Legendary item
     {
         animationByGrade = 1.0;
     }
@@ -62,17 +62,17 @@ float4 OnePassWeaponOutlineAnimation(float4 baseColor, float4 weaponGradeColor, 
         animationByGrade = 0.0;
     }
 
-    float4 animatedColor = float4(lerp(baseColor.rgb, weapon.rgb, time * animationByGrade), baseColor.a);
+    half4 animatedColor = half4(lerp(baseColor.rgb, weapon.rgb, time * animationByGrade), baseColor.a);
     return animatedColor;
 }
 
-float4 OnePassWeaponOutline(float4 baseColor, float4 weaponGradeColor, float4 positionNDC, float2 outlineNDC, InputData inputData, Light mainLight)
+half4 OnePassWeaponOutline(half4 baseColor, half4 weaponGradeColor, float4 positionNDC, float2 outlineNDC, InputData inputData, Light mainLight)
 {
     float outlineByDepth = OutlineByDepth(positionNDC, outlineNDC);
     float outlineByRim = OutlineByRim(positionNDC, inputData, mainLight);
     float outlineWidth = min(outlineByRim, outlineByDepth);
 
-    float4 finalColor = OnePassWeaponOutlineAnimation(baseColor, weaponGradeColor, outlineWidth);
+    half4 finalColor = OnePassWeaponOutlineAnimation(baseColor, weaponGradeColor, outlineWidth);
     return finalColor;
 }
 

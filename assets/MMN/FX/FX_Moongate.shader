@@ -152,6 +152,7 @@ Shader "MMN/FX/Moongate"
 
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             //--------------------------------------

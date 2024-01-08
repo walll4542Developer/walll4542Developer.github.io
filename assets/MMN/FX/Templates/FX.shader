@@ -4,18 +4,23 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 	{
 		[HideInInspector] _Mode("__mode", Float) = -1
 		[HideInInspector] _TransitionValue("_TransitionValue", Float) = 1
-		[HideInInspector] _FogPower("_FogPower", Range(0, 1)) = 0
+		[HideInInspector] _FogReceive("_FogReceive", Float) = 0
 		/*ase_props*/
 	}
 
 	SubShader
 	{
+		LOD 100
 		/*ase_subshader_options:Name=Additional Options
 			Option:Vertex Position:Absolute,Relative:Relative
 				Absolute:SetDefine:ASE_ABSOLUTE_VERTEX_POS 1
 				Absolute:SetPortName:Unlit:3,Vertex Position
 				Relative:RemoveDefine:ASE_ABSOLUTE_VERTEX_POS 1
 				Relative:SetPortName:Unlit:3,Vertex Offset
+		ase_subshader_options:Name=Raycast Define
+			Option:Raycast:On,Off:Off
+				On:SetDefine:_RAYCAST_ON 1
+				Off:RemoveDefine:_RAYCAST_ON 1
 		*/
 
 		Tags
@@ -33,6 +38,7 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 		/*ase_pass*/
 		Pass
 		{
+			
 			Name "Unlit"
 			Tags { }
 
@@ -47,21 +53,14 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			#pragma exclude_renderers gles gles3 glcore
 
 			// GPU Instancing
-			
-			// Material Keywords
-			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
-            // Unity defined keywords
+			// Material Keywords
+
+			// Unity defined keywords
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
-			// #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            // #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            // #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            // #pragma multi_compile_fragment _ _LIGHT_LAYERS
-            // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -72,9 +71,9 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			/*ase_pragma*/
 
 			/*ase_globals*/
-			float _Mode = -1;
-			float _TransitionValue = 1;
-			float _FogPower = 0;
+			half _Mode = -1;
+			half _TransitionValue = 1;
+			half _FogReceive = 0;
 
 			struct Attributes
 			{
@@ -89,18 +88,17 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream 
-				half4 uv1 : TEXCOORD1; 				// xyzw : custom data
-				half4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
-				half3 positionWS : TEXCOORD11;
+				float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
+				float4 uv1 : TEXCOORD1; 				// xyzw : custom data
+				float4 fogCoord : TEXCOORD2; 		    // x : fogcoord				yzw :
+				float3 positionWS : TEXCOORD11;
 				float4 positionOS : TEXCOORD12;
-				float3 normalWS : TEXCOORD13;
-
+				half3 normalWS : TEXCOORD13;
 				/*ase_interp(3,):sp=sp;uv0=tc0;wp=tc11;p=tc12;wn=tc13*/
 			};
 
 			/*ase_funcs*/
-			
+
 			Varyings vert(Attributes input/*ase_vert_input*/)
 			{
 				Varyings output = (Varyings)0;
@@ -136,11 +134,11 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			half4 frag(Varyings input/*ase_frag_input*/) : SV_Target
 			{
 				/*ase_frag_code:input=Varyings*/
-				float3 Color = /*ase_frag_out:Color;Float3;0*/float3(1, 1, 1)/*end*/;
-				float Alpha = /*ase_frag_out:Alpha;Float;1;-1;_Alpha*/1/*end*/;
+				half3 color = /*ase_frag_out:color;Float3;0*/half3(1, 1, 1)/*end*/;
+				half alpha = /*ase_frag_out:alpha;Float;1*/1/*end*/;
 
-				float4 finalColor = float4(Color, Alpha);
-				ApplyFogColor(finalColor, input.positionWS, input.normalWS, _Mode, _FogPower, input.fogCoord.x);
+				half4 finalColor = half4(color, alpha);
+				ApplyFogColor(finalColor, input.positionWS, input.normalWS, _Mode, _FogReceive, input.fogCoord.x);
 				ApplyTransitionValue(finalColor, _Mode, _TransitionValue);
 
 				// 디버그

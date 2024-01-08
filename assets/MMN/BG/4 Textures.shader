@@ -138,6 +138,7 @@ Shader "VacuumShaders/Terrain To Mesh/Universal Render Pipeline/Lit/4 Textures"
             // Unity defined keywords
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple
