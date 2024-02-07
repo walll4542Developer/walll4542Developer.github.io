@@ -1,7 +1,7 @@
 ---
 title: "후디니 입문 과정 01 - 인터페이스 / 작업 환경 설정하기"
 excerpt: 인터페이스 / 작업 환경 설정하기
-date: 2023-02-01 00:00:00 -0000
+date: 2024-02-01 00:00:00 -0000
 categories: Houdini
 tag: Research
 
