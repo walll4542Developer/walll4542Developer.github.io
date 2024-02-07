@@ -13,9 +13,8 @@ TEXTURE2D(_BaseMap2);
 SAMPLER(sampler_BaseMap2);
 
 CBUFFER_START(UnityPerMaterial)
-    float _ShadingType;
     float4 _TintColor;
-    
+
     float4 _BaseMap_ST;
     float _LerpTex;
 
@@ -27,7 +26,7 @@ CBUFFER_START(UnityPerMaterial)
 
     float4 _OutlineColor;
     float _OutlineColorMode;
-    float _OutlineWidth;
+    // float _OutlineWidth;
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)
     // 반드시 수정/추가가 필요할 때 관련된 모든 셰이더의 Property {} 에도 동일하게 넣어줘야 한다!

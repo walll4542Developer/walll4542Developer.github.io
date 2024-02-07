@@ -7,7 +7,7 @@
         _StencilRef("Stencil Ref", Int) = 1
         [MaterialEnum(UnityEngine.Rendering.CompareFunction)] _StencilComp("Stencil Comp", Int) = 8
         [MaterialEnum(UnityEngine.Rendering.StencilOp)] _StencilPass("Stencil Pass", Int) = 2
-        
+
         [Header(Rendering Options)]
         [Space]
         [MaterialEnum(Off, 0, On, 1)] _ZWrite ("ZWrite", Int) = 0
@@ -16,6 +16,8 @@
 
     SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Transparent"

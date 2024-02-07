@@ -9,13 +9,14 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
+    half4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
     // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-    float4 color : COLOR;
+    half4 color : COLOR;
     // UNITY_VERTEX_INPUT_INSTANCE_ID
+
 };
 
 struct Varyings
@@ -24,29 +25,30 @@ struct Varyings
     float4 positionOS : TEXCOORD1;
 
     float3 positionWS : TEXCOORD2;    // xyz: posWS
-    float3 normalWS : TEXCOORD3;
-    float3 viewDir : TEXCOORD4;
+    half3 normalWS : NORMAL;
+    float3 viewDir : TEXCOORD3;
     
     
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
+        half4 fogFactorAndVertexLight : TEXCOORD4; // x: fogFactor, yzw: vertex light
     #else
-        half fogFactor : TEXCOORD5;
+        half fogFactor : TEXCOORD4;
     #endif
 
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-        float4 shadowCoord : TEXCOORD6;
+        float4 shadowCoord : TEXCOORD5;
     #endif
 
-    DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
+    DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 6);
 
-    float4 screenPos : TEXCOORD8;
-    float cameraDistance : TEXCOORD9;
-    float4 color : COLOR;
+    float4 screenPos : TEXCOORD7;
+    float cameraDistance : TEXCOORD8;
+    half4 color : COLOR;
     float4 positionCS : SV_POSITION;
 
     // UNITY_VERTEX_INPUT_INSTANCE_ID
     // UNITY_VERTEX_OUTPUT_STEREO
+
 };
 
 void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
@@ -157,7 +159,7 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     half3 diffuse = diffuseAlpha.rgb * _BaseColor.rgb;
     half alpha = diffuseAlpha.a ;
     
-    // 이 셰이더는 평소 사용하지 않고 가시성 처리에서만 사용할 것이기 때문에 아래 기능은 봉인합니다 
+    // 이 셰이더는 평소 사용하지 않고 가시성 처리에서만 사용할 것이기 때문에 아래 기능은 봉인합니다
     // half nearAlpha = 1;
     // #if defined(_GLOBAL_NEARHALFTONECLIP_ON)
     //     //거리에 따라 사라지게 하는 기능
@@ -270,7 +272,7 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
         _Global_FogHeightNoiseScale,
         uv);
 
-    color.a = saturate( diffuseAlpha.a * _BaseColor.a);
+    color.a = saturate(diffuseAlpha.a * _BaseColor.a);
 
     return color;
 }

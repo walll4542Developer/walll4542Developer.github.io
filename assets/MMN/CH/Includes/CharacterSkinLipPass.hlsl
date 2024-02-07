@@ -13,30 +13,31 @@
 #include "CharacterApplyFx.hlsl"
 #include "CharacterApplyFog.hlsl"
 #include "CharacterApplyFresnel.hlsl"
+#include "CharacterApplyDissolve.hlsl"
 #include "CharacterDebugging.hlsl"
 
 
-float4 BasePassFragment(Varyings input) : SV_Target
+half4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    float3 baseColor = baseMap.rgb;
-    float alpha = 1.0;
+    half3 baseColor = baseMap.rgb;
+    half alpha = 1.0;
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY)
         alpha = baseMap.a * _AlphaOverride;
     #endif
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    float3 dyedBaseColor = baseColor;
+    half3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
-            ApplyDyeColor(dyedBaseColor, _DyeColor2, float4(1, 1, 1, 1), float4(1, 1, 1, 1));
+            ApplyDyeColor(dyedBaseColor, _DyeColor2, half4(1, 1, 1, 1), half4(1, 1, 1, 1));
             dyedBaseColor = ApplySkinColor(dyedBaseColor, _DyeColor1.rgb);
         }
         else
@@ -69,25 +70,46 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, SKIN_SHADING, _SilhouetteOff, _SilhouetteTintColor);
+        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        float3 outlineColor = OnePassOutline(SKIN_SHADING, inputData, mainLight.direction, _OutlineColorMode);
+        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = float3(1, 1, 1);
+            outlineColor = half3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
+    #endif
+
+    #ifdef _DISSOLVE_FEATURE
+        DissolveInput dissolveInput;
+        dissolveInput.range = _DissolveRange;
+        dissolveInput.notUseDirection = _NotUseDirection;
+        dissolveInput.direction = _DissolveDirection.xyz;
+        dissolveInput.panningSpeed = _DissolvePanningSpeed;
+        dissolveInput.dissolveMap = _DissolveMap;
+        dissolveInput.dissolveMapSampler = sampler_DissolveMap;
+        dissolveInput.dissolveMapST = _DissolveMap_ST;
+        dissolveInput.useCutoff = _DissolveCutoff;
+        dissolveInput.mainColor = _DissolveColor;
+        dissolveInput.mainWidth = _DissolveWidth;
+        dissolveInput.edgeColor = _DissolveEdgeColor;
+        dissolveInput.edgeWidth = _DissolveEdgeWidth;
+        dissolveInput.positionWS = inputData.positionWS;
+        dissolveInput.positionOS = input.positionOS;
+        dissolveInput.normalWS = inputData.normalWS;
+        dissolveInput.characterData = characterData;
+        resultColor.rgb = ApplyDissolve(resultColor.rgb, _DissolveAmount, dissolveInput);
     #endif
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
@@ -109,7 +131,7 @@ float4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

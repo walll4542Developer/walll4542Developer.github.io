@@ -17,13 +17,10 @@ Shader "MMN/BG/DetailNormal"
         _AlbedoTintStrength ("Albedo Tint Strength 베이스맵 틴트 강도", Range(-1.0, 1.0)) = 0.0
         _VertexColorWeight ("버텍스 칼라 영향력 가중치", Range(0, 1)) = 1
         [Toggle]_ShowVertexColor ("Show Vertex Color(확인용)", float) = 0
-         _RampY ("RampY", Range(0, 1)) = 0.5
+        _RampY ("RampY", Range(0, 1)) = 0.5
         _halfLambertWeight ("halfLambertWeight", Range(0, 1)) = 0
 
         [MainTexture] _BaseMap ("Base Map (RGB) SpecularMask (A)", 2D) = "white" { }
-        // //임시로 만든 베이스맵 2
-        // _BaseMap2 ("BaseMap2", 2D) = "white" { }
-        // _BaseMap2BlendWeight ("베이스맵 2 경계선 부드럽기", Range(1, 30)) = 1
         //디테일맵. 돌산의 퇴적 줄무늬를 만들때 사용한다
         _DetailMap ("DetailMap (RGB) Blending (A)", 2D) = "black" { }
         [Toggle]_DetailMapYenable ("DetailMapYenable", float) = 0
@@ -31,19 +28,10 @@ Shader "MMN/BG/DetailNormal"
         [HDR]_SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 0.5)
         [PowerSlider(3)]_Glossiness ("Glossiness", Range(0.01, 10)) = 0.8
 
-        // _BumpMap ("Normal Map", 2D) = "bump" { }
-        // _DetailBumpMap ("Detail Normal Map", 2D) = "bump" { }
-        // _DetailBumpScale ("Detail Normal Scale", Range(0, 2)) = 1.0
-
         [HDR] _EmissionColor ("Emission Color", Color) = (0, 0, 0)
         [NoScaleOffset]_EmissionMap ("Emission Map", 2D) = "white" { }
 
-        //2nd Normal
-        // [Space(10)]
-        // [Header(SecondMap    ____________________________________________________________________)]
-        // [Space(10)]
         [Toggle] _SECONDMAP ("UseSecondMap (WorldNormal Y)", float) = 0
-        // [Toggle] _VERTEXCOL ("UseSecondMap (VC R)", float) = 0
         _SecondMap ("SecondMap", 2D) = "white" { }
         _SecondMapOffset ("SecondMapOffset", float) = 0
         _SecondMapScale ("SecondMapScale", Range(0, 1)) = 1
@@ -72,6 +60,7 @@ Shader "MMN/BG/DetailNormal"
         [HideInInspector] _SpecSource ("SpecularHighlights", Float) = 0.0
     }
 
+    //LOD300
     SubShader
     {
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
@@ -107,7 +96,8 @@ Shader "MMN/BG/DetailNormal"
             #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
             #pragma multi_compile_local_fragment _ _SECONDMAP_ON
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
@@ -119,6 +109,7 @@ Shader "MMN/BG/DetailNormal"
 
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple
@@ -213,6 +204,118 @@ Shader "MMN/BG/DetailNormal"
             #include "MMN_DetailNormal_Input.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/SimpleLitMetaPass.hlsl"
 
+            ENDHLSL
+        }
+    }
+
+    //LOD100
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
+        LOD 100
+
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "BG" }
+
+            // Use same blending / depth states as Standard shader
+            Blend[_SrcBlend][_DstBlend]
+            // ZWrite[_ZWrite]
+            ZWrite On
+            Cull[_Cull]
+
+            HLSLPROGRAM
+
+            #pragma exclude_renderers gles gles3 glcore d3d9
+            #pragma target 4.5
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
+            #pragma multi_compile_local_fragment _ _SECONDMAP_ON
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
+            #pragma multi_compile _ _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+
+            #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile_fog
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+
+            #pragma vertex LitPassVertexSimple
+            #pragma fragment LitPassFragmentSimple
+            #define BUMP_SCALE_NOT_SUPPORTED 1
+            #define LIGHT_SPECULAR 1
+
+            // #include "Assets/PatchableAssets/Shaders/MMN/BG/MMN_DetailNormal_Input.hlsl"
+            #include "MMN_DetailNormal_Input.hlsl"
+            #include "MMN_DetailNormal_ForwardPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+
+            #pragma vertex ShadowPassVertex
+            #pragma fragment ShadowPassFragment
+
+            #include "MMN_DetailNormal_Input.hlsl"
+            #include "MMN_DetailNormal_ShadowCaterPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+
+            ZWrite On
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+
+            //--------------------------------------
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
+
+            #define VERTEX_CAMERA_DEPEND_BENDING 1
+            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0
+            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0
+            #define RAYCAST 1
+            #define LODFADE 1
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            #include "MMN_DetailNormal_Input.hlsl"
+            #include "MMN_DepthOnlyPass.hlsl"
             ENDHLSL
         }
     }

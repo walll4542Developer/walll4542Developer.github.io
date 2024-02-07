@@ -15,13 +15,13 @@ Shader "MMN/FX/FX_Monster_GiantTree"
 		_RandomSeed("Jitter Random Seed", Range(0, 1)) = 0.254
 		_Speed("Jitter Speed", Range(0, 1)) = 0.1
 
-		// NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들.
+        // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
         // 반드시 수정/추가가 필요할 때 MM_DECLARE_PROPERTIES_FROM_SCRIPT 매크로도 같이 수정해야 합니다!
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
-		[HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
+        [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
         [HideInInspector] _HalftoneClip ("_HalftoneClip", Float) = 0.0
@@ -40,6 +40,9 @@ Shader "MMN/FX/FX_Monster_GiantTree"
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
 	}
 
 	SubShader

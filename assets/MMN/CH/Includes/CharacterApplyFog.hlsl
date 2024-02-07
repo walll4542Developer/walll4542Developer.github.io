@@ -5,7 +5,7 @@
 #include "CharacterLighting.hlsl"
 
 
-float4 ApplyFog(in float4 resultColor, float3 positionWS, float3 normalWS, float4 fogCoord)
+half4 ApplyFog(in half4 resultColor, float3 positionWS, half3 normalWS, half4 fogCoord)
 {
     if (_CustomLightMode == 1)
     {

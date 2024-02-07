@@ -14,37 +14,36 @@ TEXTURE2D(_SecondTex);
 SAMPLER(sampler_SecondTex);
 
 CBUFFER_START(UnityPerMaterial)
-    float _ShadingType;
-
     float4 _BaseMap_ST;
 
 #ifdef _DYE_FEATURE
-    float _IsDyable;
-    float4 _DyeColor1;
-    float4 _DyeColor2;
-    float4 _DyeColor3;
+    half _IsDyable;
+    half4 _DyeColor1;
+    half4 _DyeColor2;
+    half4 _DyeColor3;
 #endif
 
 #ifdef _SILHOUETTE_FEATURE
-    float _SilhouetteOff;
-    float4 _SilhouetteTintColor;
+    half _SilhouetteOff;
+    half4 _SilhouetteTintColor;
 #endif
 
-    float4 _OutlineColor;
-    float _OutlineColorMode;
-    float _OutlineWidth;
+    half4 _OutlineColor;
+    half _OutlineColorMode;
+    // half _OutlineWidth;
 
     float4 _NoiseTex_ST;
     float4 _SecondTex_ST;
-    float _Cutoff;
-    float _SecondTexPower;
+    half _Cutoff;
+    half _SecondTexPower;
 
-    float _GradientRange;
-    float _AlphaTestRange;
-    float _BendRange;
+    half _uvGradient;
+    half _GradientRange;
+    half _AlphaTestRange;
+    half _BendRange;
 
-    float4 _ColorA;
-    float4 _ColorB;
+    half4 _ColorA;
+    half4 _ColorB;
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)
     // 반드시 수정/추가가 필요할 때 관련된 모든 셰이더의 Property {} 에도 동일하게 넣어줘야 한다!
@@ -53,48 +52,58 @@ CBUFFER_START(UnityPerMaterial)
 CBUFFER_END
 
 
-float4 ProcessNoiseAlphaTest(float4 resultColor, float2 uv)
+half4 ProcessNoiseAlphaTest(half4 resultColor, float2 uv, half uvGradientDirection)
 {
     // 노이즈 알파테스트 연산
     float2 flowDirection;
-    #ifdef _UVGRADIENT_U
+    if (uvGradientDirection == 1.0)
+    {
         flowDirection = float2(_Time.x, 0.0);
-    #elif defined(_UVGRADIENT_V)
+    }
+    else if (uvGradientDirection == 2.0)
+    {
         flowDirection = float2(0.0, _Time.x);
-    #else
+    }
+    else
+    {
         flowDirection = float2(_Time.x, _Time.x);
-    #endif
+    }
 
     float2 noiseUV = TRANSFORM_TEX(uv.xy, _NoiseTex);
-    float noise0 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV).r;
-    float noise1 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV * 2.0).r;
+    half noise0 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV).r;
+    half noise1 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV * 2.0).r;
 
     float2 secondNoiseUV = TRANSFORM_TEX(uv.xy, _SecondTex);
-    float secondNoise = SAMPLE_TEXTURE2D(_SecondTex, sampler_SecondTex, secondNoiseUV + flowDirection).r;
+    half secondNoise = SAMPLE_TEXTURE2D(_SecondTex, sampler_SecondTex, secondNoiseUV + flowDirection).r;
     secondNoise *= _SecondTexPower;
 
     noise0 = saturate(noise0 + secondNoise);
     noise1 = saturate(noise1 + secondNoise);
 
-    float uvGradient;
-    #ifdef _UVGRADIENT_U
+    half uvGradient;
+    if (uvGradientDirection == 1.0)
+    {
         uvGradient = noiseUV.x;
-    #elif defined(_UVGRADIENT_V)
+    }
+    else if (uvGradientDirection == 2.0)
+    {
         uvGradient = noiseUV.y;
-    #else
+    }
+    else
+    {
         uvGradient = 1;
-    #endif
+    }
 
     uvGradient = saturate(uvGradient + _GradientRange);
     noise0 *= uvGradient;
 
-    float stepNoise = step(_Cutoff, noise0);
-    float3 noiseAlphaTest = lerp(resultColor.rgb * 0.3, resultColor.rgb, stepNoise);
-    
-    float stepValue = (1.0 - step(_Cutoff, noise0)) * saturate(step(_Cutoff, noise0 + _BendRange));
-    
+    half stepNoise = step(_Cutoff, noise0);
+    half3 noiseAlphaTest = lerp(resultColor.rgb * 0.3, resultColor.rgb, stepNoise);
+
+    half stepValue = (1.0 - step(_Cutoff, noise0)) * saturate(step(_Cutoff, noise0 + _BendRange));
+
     // 색을 floor 사용하여 5단계로(floor * 5 * 0.2) 끊어서 섞어줌
-    float3 color = lerp(_ColorA.rgb, _ColorB.rgb, floor(noise1 * 5.0) * 0.2);
+    half3 color = lerp(_ColorA.rgb, _ColorB.rgb, floor(noise1 * 5.0) * 0.2);
 
     resultColor.rgb = lerp(noiseAlphaTest, color, stepValue);
     resultColor.a = noise0 + _AlphaTestRange;

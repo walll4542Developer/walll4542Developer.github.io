@@ -4,7 +4,7 @@ Shader "MMN/CutScene/Standard_LerpTex"
 {
     Properties
     {
-        [Enum(Standard, 0, Monster, 1)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [KeywordEnum(Standard, Monster)] _ShadingType ("셰딩 타입", Float) = 0.0
 
         [Header(Texture)]
         [Space(10)]
@@ -23,14 +23,16 @@ Shader "MMN/CutScene/Standard_LerpTex"
         [ToggleOff(_OUTLINE_FEATURE)] _OutlineOff ("아웃라인 끄기", Float) = 0.0
         _OutlineColor ("아웃라인 색상", Color) = (1.0, 1.0, 1.0, 1.0)
         [Enum(Multiply, 0, Override, 1)] _OutlineColorMode ("아웃라인 색상 적용 방식", Float) = 0.0
-        _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
+        // _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
 
-        // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들.
+        [HideInInspector] _StencilValue ("_StencilValue", Integer) = 0
+
+        // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
         // 반드시 수정/추가가 필요할 때 MM_DECLARE_PROPERTIES_FROM_SCRIPT 매크로도 같이 수정해야 합니다!
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -50,14 +52,15 @@ Shader "MMN/CutScene/Standard_LerpTex"
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
-        [HideInInspector] _MotionBlurLerpValue("_MotionBlurLerpValue", Float) = 0.0
-        [HideInInspector] _VertexBufferLength("_VertexBufferLength", Integer) = 0
-        
-        [HideInInspector] _StencilValue("_StencilValue", Integer) = 0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
     }
 
-    Subshader
+    SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Opaque"
@@ -103,7 +106,8 @@ Shader "MMN/CutScene/Standard_LerpTex"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
@@ -174,10 +178,10 @@ Shader "MMN/CutScene/Standard_LerpTex"
                 float4 resultColor;
                 resultColor.rgb = ProcessCharacterColor(inputData,
                     mainLight, lightingData, characterData,
-                    baseColor, _ShadingType, _SilhouetteOff, _SilhouetteTintColor);
+                    baseColor, _SilhouetteOff, _SilhouetteTintColor);
 
                 #if defined(_OUTLINE_FEATURE)
-                    float3 outlineColor = OnePassOutline(_ShadingType, inputData, mainLight.direction, _OutlineColorMode);
+                    float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
                     resultColor.rgb *= outlineColor;
                 #endif
 

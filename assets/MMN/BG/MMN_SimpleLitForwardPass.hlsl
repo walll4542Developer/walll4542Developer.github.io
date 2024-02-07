@@ -10,12 +10,12 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
+    half4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
     // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-    float4 color : COLOR;
+    half4 color : COLOR;
     // UNITY_VERTEX_INPUT_INSTANCE_ID
 
 };
@@ -46,7 +46,7 @@ struct Varyings
     float cameraDistance : TEXCOORD6; //이걸 나중에 positionWS 의 알파로 빼는걸 생각해 봅시다.
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
     float4 positionOS : TEXCOORD8;
-    float4 color : COLOR;
+    half4 color : COLOR;
     float4 positionCS : SV_POSITION;
     // UNITY_VERTEX_INPUT_INSTANCE_ID
     // UNITY_VERTEX_OUTPUT_STEREO
@@ -285,7 +285,7 @@ half4 LitPassFragmentSimple(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FAC
     //컨텍트 셰도우 연산
     color *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
 
-    //지형과 가까울수록 음영을 넣는 기능 
+    //지형과 가까울수록 음영을 넣는 기능
     // half3 posObjectNormal = (input.positionOS.rgb - half3(0, _CenterPointHeight, 0));
     // half heightDarkGradiation = distance(input.positionOS.rgb , half3(0, _CenterPointHeight, 0));
     // innerAO = saturate(pow(max(0, innerAO / _AOarea), _AOintensity));

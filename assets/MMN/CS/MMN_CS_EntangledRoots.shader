@@ -79,6 +79,8 @@ Shader "MMN/CutScene/Entangled Roots"
 
     SubShader
     {
+        LOD 100
+
         // NOTE @wooyoung : https://deskcat.io/d/N28009/MM-미술-검은-나오존-흰-나오존-로딩없는-전환처리-연구
         Tags
         {
@@ -89,7 +91,6 @@ Shader "MMN/CutScene/Entangled Roots"
             "IgnoreProjector" = "True"
             "ShaderModel" = "4.5"
         }
-        LOD 300
 
         Pass
         {
@@ -137,6 +138,7 @@ Shader "MMN/CutScene/Entangled Roots"
             // Unity defined keywords
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             //--------------------------------------

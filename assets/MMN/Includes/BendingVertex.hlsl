@@ -59,7 +59,7 @@ float3 vertexVendingByCamera(float3 positionVS, float4 vertexbending, float came
 {
     float3 cameraForwardVector = mul((float3x3)unity_CameraToWorld, float3(0, 0, 1));
     vertexbending.y += cameraForwardVector.y * cameraForwardDirMul;
-    
+
     //휘어지기
     float zOffset = positionVS.z / (vertexbending.a + 0.000001);//0으로 나누는 사태를 방지하기 위해
     positionVS += float3(vertexbending.xy, 0) * zOffset ;// * zOffset * zOffset ; //커브가 너무 심해서 줄임
@@ -128,6 +128,49 @@ VertexPositionInputs GetVertexPositionInputs4treeShake(float3 positionOS, float4
     //버텍스 포지션 메트릭스 연산 벤딩 * 카메라 상하 가중치
     input.positionVS = TransformWorldToView(input.positionWS);
     // input.positionVS = vertexVendingByCamera(input.positionVS, vertexbending, cameraForwardDirMul);
+    input.positionCS = TransformWViewToHClip(input.positionVS);
+
+    float4 ndc = input.positionCS * 0.5f;
+    input.positionNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
+    input.positionNDC.zw = input.positionCS.zw;
+
+    return input;
+}
+
+// 땅 밑으로 적절하게 내립니다.
+VertexPositionInputs GetVertexPositionInputsGrassVisualRange(
+    float3 positionOS, float4 maskingColor,
+    float windMultiply, float windSpeedMultiply, float grassPushPower, half vertexAniOn,
+    half grassVisualRange, half visualRangeFactor, half grassVisualActionToggle)
+{
+    VertexPositionInputs input;
+
+    input.positionWS = TransformObjectToWorld(positionOS);
+
+    // 비율을 구한다음 조건에 따라 풀을 월드 y축으로 내립니다.
+    // TODO @박대명 : 여기 아래에 _Global_pos 변수를 작업하신 변수로 바꿔주세요.
+    half3 distanceVector = _Global_pos.xyz - input.positionWS.xyz;
+    half distanceSquared = dot(distanceVector, distanceVector);
+    half visualRangeSquared = (grassVisualRange * grassVisualRange) * visualRangeFactor; // [ + ]
+
+    const half offsetMin = 0.0;
+    const half offsetMax = -3.0;
+    const half offsetSpeed = 0.5;
+    half offset = clamp((distanceSquared - visualRangeSquared) / visualRangeSquared, 0, 1);
+    input.positionWS.y += (lerp(offsetMin, offsetMax, offset) * offsetSpeed * grassVisualActionToggle) * _Global_pos.w;
+    // 현재 _Global_pos.xyz에 0 값이 들어가 에디터에서 무조건 이 기능이 가동되므로 일단 끕니다.
+
+    if (vertexAniOn == 1)
+    {
+        // 바람에 흔들리는 나뭇잎
+        input.positionWS = positionByWind(input.positionWS, windMultiply, windSpeedMultiply, maskingColor.r);
+
+        // 사람에 닿으면 밀려나는 인터렉션이 일어나게 해 봅시다.
+        input.positionWS += InterectionGrass(input.positionWS, grassPushPower, maskingColor);
+    }
+
+    //버텍스 포지션 메트릭스 연산 벤딩 * 카메라 상하 가중치
+    input.positionVS = TransformWorldToView(input.positionWS);
     input.positionCS = TransformWViewToHClip(input.positionVS);
 
     float4 ndc = input.positionCS * 0.5f;

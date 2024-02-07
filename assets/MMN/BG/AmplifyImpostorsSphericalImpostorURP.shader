@@ -41,7 +41,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
         struct SurfaceOutputSimpleLit
         {
             half3 Albedo;
-            float3 Normal;
+            half3 Normal;
             half Alpha;
         };
 
@@ -78,6 +78,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             // #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             // #pragma multi_compile_fragment _ DEBUG_DISPLAY
             // #pragma multi_compile_instancing
             // #pragma multi_compile _ _DIM_FOG_ON
@@ -104,10 +105,10 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                float4 tangent : TANGENT;
+                half3 normal : NORMAL;
+                half3 tangent : TANGENT;
                 //float4 texcoord  : TEXCOORD0;
-                float4 texcoord1 : TEXCOORD1;
+                float2 texcoord1 : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -138,7 +139,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 // 카메라 바라보는 각도에 따라 버텍스 휘어짐
                 VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(v.vertex.xyz);
 
-                OUTPUT_LIGHTMAP_UV(v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
+                OUTPUT_LIGHTMAP_UV(v.texcoord1.xyxx, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
                 OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH.xyz);
 
                 half3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
@@ -233,7 +234,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             #ifndef UNITY_PASS_SHADOWCASTER
                 #define UNITY_PASS_SHADOWCASTER
             #endif
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -249,7 +250,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
+                half3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -306,7 +307,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
 
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -322,7 +323,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
+                half3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -380,7 +381,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
 
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -480,7 +481,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
+                half3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 float2 uvLM : TEXCOORD1;
                 float2 uvDLM : TEXCOORD2;

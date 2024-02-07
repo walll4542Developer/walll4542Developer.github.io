@@ -120,6 +120,7 @@ Shader "MMN/BG/Baked/DetailNormalBaked"
             #define LIGHTMAP_ON 1
             #define HALF_SUBTRACTIVE_LIGHTMAP_ON 1
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple

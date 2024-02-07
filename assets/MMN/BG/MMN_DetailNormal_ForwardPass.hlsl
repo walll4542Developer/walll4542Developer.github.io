@@ -9,12 +9,12 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
+    half4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
-    // float2 dynamicLightmapUV : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-    float4 color : COLOR;
+    // float2 dynamicLightmapUV : TEXCOORD2; //리얼타임 라이 트맵 안씁니다!
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -288,10 +288,12 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
         if (unity_LODFade.x > 0)
         {
             fadeValue = clamp(unity_LODFade.x + unity_LODFade.x, 0, 1) ; //나타날때 빠르게 나타나게 한다
+
         }
         else
         {
-            fadeValue = saturate(1.5 + unity_LODFade.x); //사라질때 1.5만큼 더 늦게 사라지게 한다 
+            fadeValue = saturate(1.5 + unity_LODFade.x); //사라질때 1.5만큼 더 늦게 사라지게 한다
+
         }
         Unity_Dither_linear(fadeValue, input.screenPos, lodFade);
         clip(lodFade);
@@ -300,7 +302,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     {
         fadeValue = 1;
     }
- 
+    
 
     //눈내리는 텍스쳐 전환
     diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);

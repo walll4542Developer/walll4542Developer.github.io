@@ -11,10 +11,11 @@
 #include "CharacterDithering.hlsl"
 #include "CharacterApplyFx.hlsl"
 #include "CharacterApplyFog.hlsl"
+#include "CharacterApplyDissolve.hlsl"
 #include "CharacterDebugging.hlsl"
 
 
-float4 BasePassFragment(Varyings input) : SV_Target
+half4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Initialize data
@@ -27,19 +28,14 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
-    float3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, inputData.normalWS, inputData.viewDirectionWS);
-    float2 pupilParallaxOffset = GetParallaxOffset1Step(0, _PupilDepth, viewDirTS);
-
-    _BaseMapScalePosition.zw -= pupilParallaxOffset * float2(10.0, 5.0);
-
     float2 uv = ConvertToAtlasUV(_BaseMapAtlasSize.xy, _BaseMapAtlasSize.z, _BaseMapScalePosition, _BaseMapAtlasSize.w, input.uv.xy);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    float3 baseColor = baseMap.rgb;
-    float alpha = baseMap.a * _AlphaOverride;
+    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    half3 baseColor = baseMap.rgb;
+    half alpha = baseMap.a * _AlphaOverride;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    float3 dyedBaseColor = baseColor;
+    half3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -61,10 +57,31 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         dyedBaseColor);
+
+    #ifdef _DISSOLVE_FEATURE
+        DissolveInput dissolveInput;
+        dissolveInput.range = _DissolveRange;
+        dissolveInput.notUseDirection = _NotUseDirection;
+        dissolveInput.direction = _DissolveDirection.xyz;
+        dissolveInput.panningSpeed = _DissolvePanningSpeed;
+        dissolveInput.dissolveMap = _DissolveMap;
+        dissolveInput.dissolveMapSampler = sampler_DissolveMap;
+        dissolveInput.dissolveMapST = _DissolveMap_ST;
+        dissolveInput.useCutoff = _DissolveCutoff;
+        dissolveInput.mainColor = _DissolveColor;
+        dissolveInput.mainWidth = _DissolveWidth;
+        dissolveInput.edgeColor = _DissolveEdgeColor;
+        dissolveInput.edgeWidth = _DissolveEdgeWidth;
+        dissolveInput.positionWS = inputData.positionWS;
+        dissolveInput.positionOS = input.positionOS;
+        dissolveInput.normalWS = inputData.normalWS;
+        dissolveInput.characterData = characterData;
+        resultColor.rgb = ApplyDissolve(resultColor.rgb, _DissolveAmount, dissolveInput);
+    #endif
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
     resultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
@@ -81,7 +98,7 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

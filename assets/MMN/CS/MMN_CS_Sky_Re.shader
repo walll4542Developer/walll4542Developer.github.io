@@ -20,6 +20,8 @@ Shader "MMN/CutScene/Sky_Re"
 
     SubShader
     {
+        LOD 100
+
         Tags
         {
             "RenderType" = "Background"
@@ -77,7 +79,7 @@ Shader "MMN/CutScene/Sky_Re"
 				float4 _SkyColorTop;
 				float4 _SkyColorMiddle;
 				float4 _SkyColorBottom;
-				
+
 				float _SkyPosition1;
 				float _SkyPosition2;
 				float _SkyPosition3;
@@ -86,7 +88,7 @@ Shader "MMN/CutScene/Sky_Re"
 				half _SunDisk;
 				half _SunGlowDisk;
                 float4 _SunGlowColor;
-               
+
             CBUFFER_END
 
             TEXTURE2D(_MainTex);
@@ -131,17 +133,17 @@ Shader "MMN/CutScene/Sky_Re"
 				output.positionCS = TransformObjectToHClip(input.positionOS.rgb);
                 output.positionCS.z = 0;
                 output.uv = input.positionOS.xyz;
-                
-                // 카메라 룩 방향에 따라 배경이 휘어지는데, 스카이도 어느 정도 영향받게 한다. 
+
+                // 카메라 룩 방향에 따라 배경이 휘어지는데, 스카이도 어느 정도 영향받게 한다.
                 float3 cameraForwardVector = mul((float3x3)unity_CameraToWorld, float3(0,0,1));
-				output.uv.y += cameraForwardVector.y * _Global_VertexPositionOffset.z*0.05; 
+				output.uv.y += cameraForwardVector.y * _Global_VertexPositionOffset.z*0.05;
 
                 output.fogCoord.x = ComputeFogFactor(output.positionCS.z);
-				output.positionWS = TransformObjectToWorld(input.positionOS.rgb); // 사실 OS로 해도 되지만 또 사람 마음이 정석을 추구하는지라 
+				output.positionWS = TransformObjectToWorld(input.positionOS.rgb); // 사실 OS로 해도 되지만 또 사람 마음이 정석을 추구하는지라
                 return output;
             }
 
-			// Calculates the sun shape. 태양 디스크 연산. 레거시에서 이식해 온걸 개조함 
+			// Calculates the sun shape. 태양 디스크 연산. 레거시에서 이식해 온걸 개조함
 			half3 calcSunAttenuation(half3 lightPos, half3 ray, half3 lightcolor)
 			{
 				half3 delta = lightPos - ray;
@@ -153,16 +155,16 @@ Shader "MMN/CutScene/Sky_Re"
 
             half4 frag(Varyings input) : SV_Target
             {
-				//sky Color Calc				
+				//sky Color Calc
 				float skyColormask1 = smoothstep(_SkyPosition3, _SkyPosition4, input.uv.y);
 				float skyColormask2 = smoothstep(_SkyPosition1, _SkyPosition2, input.uv.y);
 				float4 skyGradColor = lerp(_SkyColorMiddle, _SkyColorTop, skyColormask1 * skyColormask1);
                 skyGradColor = lerp(_SkyColorBottom, skyGradColor, skyColormask2);
-   
+
 				//sundisk draw
 				Light light = GetMainLight();
 				half3 direction = light.direction;
-				half3 ray = normalize(input.positionWS.xyz);		
+				half3 ray = normalize(input.positionWS.xyz);
 				half3 sundirection = normalize(direction);
 				half3 sundisk = calcSunAttenuation(sundirection, ray , light.color) ;
 

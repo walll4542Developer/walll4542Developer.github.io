@@ -13,7 +13,7 @@ Shader "MMN/BG/TerrainLit"
         _V_T2M_Splat1_uvScale ("Layer 1 UV Scale", Float) = 1.000000
         [NoScaleOffset]  _V_T2M_Splat1_mask ("SpecMasking", 2D) = "white" { }
 
-        
+
         _V_T2M_Splat2_uvScale ("Layer 2 UV Scale", Float) = 1.000000
         [NoScaleOffset]  _V_T2M_Splat2_mask ("SpecMasking", 2D) = "white" { }
         _V_T2M_Splat2_Vector1 ("Float", Range(-0.9, 2.9)) = 1
@@ -111,10 +111,11 @@ Shader "MMN/BG/TerrainLit"
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
-            #pragma multi_compile_instancing
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
             #pragma multi_compile _ _DIM_FOG_ON
             #pragma multi_compile _ _DIM_FOG_ARRAY_ON
-            #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
 
             #pragma shader_feature_local_fragment _TERRAIN_BLEND_HEIGHT
             #pragma shader_feature_local _NORMALMAP
@@ -230,8 +231,8 @@ Shader "MMN/BG/TerrainLit"
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
 
-            #pragma multi_compile_instancing
-            #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
 
             #include "MMN_TerrainLitInput.hlsl"
             // #include "Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainLitPasses.hlsl"
@@ -275,8 +276,8 @@ Shader "MMN/BG/TerrainLit"
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
 
-            #pragma multi_compile_instancing
-            #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
+            // #pragma multi_compile_instancing
+            // #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap
 
             #define SCENESELECTIONPASS
             #include "MMN_TerrainLitInput.hlsl"
@@ -292,7 +293,7 @@ Shader "MMN/BG/TerrainLit"
     Dependency "BaseMapShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)"
     Dependency "BaseMapGenShader" = "Hidden/Universal Render Pipeline/Terrain/Lit (Basemap Gen)"
 
-    
+
 
     // Fallback  "Hidden/Universal Render Pipeline/FallbackError"
     Fallback off

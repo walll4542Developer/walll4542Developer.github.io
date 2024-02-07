@@ -17,17 +17,8 @@ Shader "MMN/BG/Water"
         _Turbidity ("Turbidity", Range(0, 1)) = 0.5
         _DepthScale ("Depth Scale", float) = 1
 
-
         _FresnelColor ("Fresnel Color", Color) = (0.5764706, 0.6980392, 0.8000001, 1)
-
         _DistortionTexture ("DistortionTexture", 2D) = "black" { }
-        // [Space 50]
-        // [Header(NormalMap)]
-        // [Space 50]
-
-        // [Space 50]
-        // [Header(Form)]
-        // [Space 50]
 
         _FoamColor ("Foam Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _FoamOpacity ("Foam Opacity", Range(0, 1)) = 1
@@ -46,15 +37,16 @@ Shader "MMN/BG/Water"
         // [Header(Specular Control)]
         // [Space 50]
         [HDR]_SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 0.5)
-        _SpecualrNormalMulti ("SpecularNormalMultiply", Range(1,10) ) = 1
+        _SpecualrNormalMulti ("SpecularNormalMultiply", Range(1, 10)) = 1
         [PowerSlider(5.0)]_Glossiness ("Glossiness", Range(1, 256)) = 128
     }
 
+    //LOD300
     SubShader
     {
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent-200" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" "PreviewType" = "Plane" "ShaderModel" = "4.5" }
         LOD 200
-        
+
         Pass
         {
             Name "Base"
@@ -74,6 +66,7 @@ Shader "MMN/BG/Water"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
             //--------------------------------------
 
@@ -87,10 +80,10 @@ Shader "MMN/BG/Water"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                half3 normalOS : NORMAL;
+                half4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
-                real4 color : COLOR;
+                half4 color : COLOR;
             };
 
             struct Varyings
@@ -107,7 +100,7 @@ Shader "MMN/BG/Water"
                 float4 shadowCoord : TEXCOORD7;
                 float4 screenPos : TEXCOORD8;
 
-                real4 color : COLOR0;               // low-precision, 0–1 range data
+                half4 color : COLOR0;               // low-precision, 0–1 range data
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
             };
@@ -206,7 +199,7 @@ Shader "MMN/BG/Water"
                 reflectance = saturate(reflectance);
 
                 //스페큘러
-                half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti,1,_SpecualrNormalMulti));
+                half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti, 1, _SpecualrNormalMulti));
                 Light mainLight = GetMainLight(input.shadowCoord);
                 half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
                 half3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS4Specular, viewDirWS, 0.5, _Glossiness * 50);
@@ -302,11 +295,7 @@ Shader "MMN/BG/Water"
     }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//LOD100 최저사양 물
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    
+    //LOD100
     SubShader
     {
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent-200" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" "PreviewType" = "Plane" "ShaderModel" = "4.5" }
@@ -327,6 +316,7 @@ Shader "MMN/BG/Water"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex vert
@@ -351,6 +341,7 @@ Shader "MMN/BG/Water"
                 float fogFactor : TEXCOORD6;          // x: fogFactor
                 float4 screenPos : TEXCOORD8;
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
+
             };
 
             float4 _FresnelColorGlobal;
@@ -415,7 +406,7 @@ Shader "MMN/BG/Water"
                 float depthCoeff = 1.0 - pow(abs(_Turbidity), scaledDepth);
 
                 //3층 칼라 계산하기
-                float3 scatterColor1 = saturate(_ScatterColor1.rgb + (0.5 * _FoamColor)); //경계에 흰 무늬 생기게 가장 얕은 곳에 경계칼라 0.5를 더한다 
+                float3 scatterColor1 = saturate(_ScatterColor1.rgb + (0.5 * _FoamColor.rgb)); //경계에 흰 무늬 생기게 가장 얕은 곳에 경계칼라 0.5를 더한다
                 float3 scatterColor = lerp(scatterColor1, _ScatterColor2.rgb, saturate(scaledDepth / _ScatterDepth2));
                 scatterColor = lerp(scatterColor.rgb, _ScatterColor3.rgb, clamp((scaledDepth - _ScatterDepth2) / (_ScatterDepth3 - _ScatterDepth2), 0.0, 1.0));
 
@@ -446,7 +437,7 @@ Shader "MMN/BG/Water"
                     _Global_FogHeightNoiseScale,
                     input.uv);
 
-                float4 finalRGBA = real4(color.rgb, saturate(opacity + 0.1)); //물을 조금 불투명하게 해서 허전함을 속인다 
+                float4 finalRGBA = real4(color.rgb, saturate(opacity + 0.1)); //물을 조금 불투명하게 해서 허전함을 속인다
 
                 return finalRGBA;
             }

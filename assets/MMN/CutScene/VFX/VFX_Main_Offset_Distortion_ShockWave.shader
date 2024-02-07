@@ -1,5 +1,5 @@
 // Made with Amplify Shader Editor v1.9.2.2
-// Available at the Unity Asset Store - http://u3d.as/y3X 
+// Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 {
 	Properties
@@ -43,7 +43,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 	{
 		LOD 0
 
-		
+
 
 		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" }
 
@@ -51,32 +51,33 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 		#pragma target 4.5
 		ENDHLSL
 
-		
+
 		Pass
 		{
 			Name "Unlit"
-			
+
 
 			Cull [_CullMode]
 			Blend [_BlendSrc] [_BlendDst]
 			ZTest [_ZTest]
 			ZWrite Off
 			ColorMask RGBA
-			
+
 
 			HLSLPROGRAM
 			#define ASE_SRP_VERSION 120110
 
-			#pragma exclude_renderers glcore gles gles3 
+			#pragma exclude_renderers glcore gles gles3
 
 			// GPU Instancing
-			
+
 			// Material Keywords
 			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
 			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
             // Unity defined keywords
 			#pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
 			// #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -84,7 +85,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
             // #pragma multi_compile_fragment _ _SHADOWS_SOFT
             // #pragma multi_compile_fragment _ _LIGHT_LAYERS
             // #pragma multi_compile_fragment _ _LIGHT_COOKIES
-			
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -143,7 +144,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream 
+				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
 				half4 uv1 : TEXCOORD1; 				// xyzw : custom data
 				half4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
 				half3 positionWS : TEXCOORD11;
@@ -155,7 +156,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 				float4 ase_texcoord4 : TEXCOORD4;
 			};
 
-						
+
 			Varyings vert(Attributes input)
 			{
 				Varyings output = (Varyings)0;
@@ -163,7 +164,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 				float4 ase_clipPos = TransformObjectToHClip((input.positionOS).xyz);
 				float4 screenPos = ComputeScreenPos(ase_clipPos);
 				output.ase_texcoord4 = screenPos;
-				
+
 				output.ase_texcoord3 = input.ase_texcoord1;
 				output.ase_color = input.color;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -244,7 +245,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 				ApplySoftParticle( finalColor80_g36 , near80_g36 , far80_g36 , fadeOutRange80_g36 , positionNDC80_g36 );
 				float4 break64_g36 = finalColor80_g36;
 				float3 appendResult76_g36 = (float3(break64_g36.x , break64_g36.y , break64_g36.z));
-				
+
 				float3 Color = appendResult76_g36;
 				float Alpha = break64_g36.w;
 
@@ -266,7 +267,7 @@ Shader "MMN/CutScene/VFX/VFX_Main_Offset_Distortion_ShockWave"
 	}
 	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI"
 	FallBack Off
-	
+
 	Fallback Off
 }
 /*ASEBEGIN

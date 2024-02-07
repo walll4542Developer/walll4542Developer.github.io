@@ -13,15 +13,15 @@
 #include "CharacterDebugging.hlsl"
 
 
-float4 BasePassFragment(Varyings input) : SV_Target
+half4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    float3 baseColor = baseMap.rgb;
-    float alpha = baseMap.a;
+    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    half3 baseColor = baseMap.rgb;
+    half alpha = baseMap.a;
 
     #ifndef _TRANSPARENCY
         alpha = 1.0;
@@ -29,7 +29,7 @@ float4 BasePassFragment(Varyings input) : SV_Target
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    float3 dyedBaseColor = baseColor;
+    half3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -56,23 +56,23 @@ float4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _ShadingType, _SilhouetteOff, _SilhouetteTintColor);
+        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        float3 outlineColor = OnePassOutline(_ShadingType, inputData, mainLight.direction, _OutlineColorMode);
+        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = float3(1, 1, 1);
+            outlineColor = half3(1.0, 1.0, 1.0);
         #endif
 
         resultColor.rgb *= outlineColor;
     #endif
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
-    resultColor = ProcessNoiseAlphaTest(resultColor, input.uv.xy);
+    resultColor = ProcessNoiseAlphaTest(resultColor, input.uv.xy, _uvGradient);
     resultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
     ApplyFx_AfterFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
 
@@ -91,7 +91,7 @@ float4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

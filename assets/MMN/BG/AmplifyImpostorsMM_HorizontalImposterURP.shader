@@ -19,7 +19,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
         [HideInInspector]_FramesY ("Frames Y", Float) = 16
         [HideInInspector]_DepthSize ("DepthSize", Float) = 1
         [HideInInspector]_ImpostorSize ("Impostor Size", Vector) = (1, 1, 1, 1)
-        [HideInInspector]_Offset ("Offset", Vector) = (0, 0, 0, 0)
+        _Offset ("Offset", Vector) = (0, 0, 0, 0)
         [HideInInspector]_AI_SizeOffset ("Size & Offset", Vector) = (0, 0, 0, 0)
         [HideInInspector][Toggle(EFFECT_HUE_VARIATION)] _Hue ("Use SpeedTree Hue", Float) = 0
         [HideInInspector]_HueVariation ("Hue Variation", Color) = (0, 0, 0, 0)
@@ -28,8 +28,8 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
         _ReceiveShadowStrength ("리시브 셰도우 강도", Range(0, 1)) = 0.5
         _ShadingPow ("음영 날카롭기 조정", Range(0.01, 3)) = 1
         _GIStrength ("음영 밝게하기)", Range(0, 1)) = 0
-        _TintColor("틴트칼라", color) = (1,1,1,1)
-        _TintStr("틴트 적용 강도", float) = 0
+        _TintColor ("틴트칼라", color) = (1, 1, 1, 1)
+        _TintStr ("틴트 적용 강도", float) = 0
     }
 
     SubShader
@@ -47,7 +47,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
         struct SurfaceOutputSimpleLit
         {
             half3 Albedo;
-            float3 Normal;
+            half3 Normal;
             half Alpha;
         };
 
@@ -63,27 +63,26 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             ZTest LEqual
             Offset 0, 0
             ColorMask RGBA
-            
+
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 
             #pragma vertex vert
             #pragma fragment frag
 
-            #define _SPECULAR_SETUP 1
+            #define _SPECULAR_SETUP 0
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "../Includes/EnvironmentHelper.hlsl"
-            #include "../Includes/BendingVertex.hlsl"
             #include "../Includes/CustomLighting.hlsl"
             #include "../Includes/BlendingHelper.hlsl"
 
             #define AI_RENDERPIPELINE
-            
+
             #include "AmplifyImpostors.cginc"
 
             #pragma shader_feature EFFECT_HUE_VARIATION
@@ -91,10 +90,10 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                float4 tangent : TANGENT;
+                half3 normal : NORMAL;
+                half4 tangent : TANGENT;
                 //float4 texcoord  : TEXCOORD0;
-                float4 texcoord1 : TEXCOORD1;
+                float2 texcoord1 : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -124,10 +123,8 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 float3 lwWNormal = TransformObjectToWorldNormal(v.normal);
 
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
-                // 카메라 바라보는 각도에 따라 버텍스 휘어짐
-                // VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(v.vertex.xyz);
-                
-                OUTPUT_LIGHTMAP_UV(v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
+
+                OUTPUT_LIGHTMAP_UV(v.texcoord1.xyxx, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
                 OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH.xyz);
 
                 half3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
@@ -146,7 +143,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
-                
+
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
                 float4 clipPos = 0;
                 float3 worldPos = 0;
@@ -162,14 +159,6 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 inputData.normalWS = o.Normal ;
                 inputData.viewDirectionWS = WorldSpaceViewDirection;
 
-                // #ifdef _MAIN_LIGHT_SHADOWS
-                //     #if SHADOWS_SCREEN
-                //     #else
-                //         IN.shadowCoord = TransformWorldToShadowCoord(worldPos);
-                //     #endif
-                // #endif
-
-                // inputData.shadowCoord = IN.shadowCoord;
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), IN.fogFactorAndVertexLight.x);
                 inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
                 OUTPUT_SH(inputData.normalWS, IN.lightmapUVOrVertexSH.xyz);
@@ -205,19 +194,19 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
 
 
                 //비가 왔을때 체크
-                color.rgb = lerp(o.Albedo, ((o.Albedo * o.Albedo) + o.Albedo) / 2, _Global_Raining);
-                
+                color.rgb = lerp(o.Albedo, ((o.Albedo * o.Albedo) + o.Albedo) / 2, saturate(_Global_Raining));
+
                 //눈이 왔을때 체크
-                float snowCheck = saturate(dot(IN.positionOS.rgb, half3(0, 0.1, 0)));
-                snowCheck = step(0.4, snowCheck * inputData.normalWS.y * _Global_Snow);
-                color.rgb = lerp(color.rgb, 0.7, snowCheck);
+                float snowCheck = saturate(dot(IN.positionOS.rgb, half3(0, 1, 0)));
+                snowCheck = step(0.1, snowCheck * inputData.normalWS.y * _Global_Snow);
+                color.rgb = lerp(color.rgb, 0.8, snowCheck);
 
                 //라이팅
                 color.rgb *= UniversalFragmentTreeLeavesImposter(inputData, _ShadingPow, _ReceiveShadowStrength, _GIStrength);
 
                 //틴트적용
                 color.rgb = TextureTintBlend(color.rgb, _TintColor.rgb, _TintStr);
-                
+
                 // 글로벌 텍스쳐를 통한 하이트 포그 연산
                 color = MMN_GlobalTex_HeightFog(
                     color,
@@ -231,7 +220,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
 
                 //원본 포그 연산
                 //color.rgb =  MixFog(color.rgb, inputData.fogCoord);
-                color.a = 1; // iOS 에서 깜빡거리는 것을 강제로 안정화 시키기 위한 코드 . Clip으로 자르고 있기 때문에 문제없다. 
+                color.a = 1; // iOS 에서 깜빡거리는 것을 강제로 안정화 시키기 위한 코드 . Clip으로 자르고 있기 때문에 문제없다.
 
 
                 return saturate(color);
@@ -239,113 +228,6 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
 
             ENDHLSL
         }
-
-        // Pass
-        // {
-
-        //     Name "ShadowCaster"
-        //     Tags { "LightMode" = "ShadowCaster" }
-
-        //     ZWrite On
-        //     ZTest LEqual
-
-        //     HLSLPROGRAM
-        //     #pragma prefer_hlslcc gles
-        //     #pragma exclude_renderers d3d11_9x
-        //     #pragma target 2.0
-
-        //     #ifndef UNITY_PASS_SHADOWCASTER
-        //         #define UNITY_PASS_SHADOWCASTER
-        //     #endif
-        //     // #pragma multi_compile_instancing
-
-        //     #pragma vertex vert
-        //     #pragma fragment frag
-
-        //     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-        //     #include "../Includes/CustomLighting.hlsl"
-        //     #include "../Includes/EnvironmentHelper.hlsl"
-
-        //     #define AI_RENDERPIPELINE
-
-        //     #include "AmplifyImpostors.cginc"
-
-        //     #pragma shader_feature EFFECT_HUE_VARIATION
-
-        //     struct VertexInput
-        //     {
-        //         float4 vertex : POSITION;
-        //         float3 normal : NORMAL;
-        //         //float4 texcoord : TEXCOORD0;
-        //         UNITY_VERTEX_INPUT_INSTANCE_ID
-        //     };
-
-        //     struct VertexOutput
-        //     {
-        //         float4 clipPos : SV_POSITION;
-        //         float4 frameUVs : TEXCOORD3;
-        //         float4 viewPos : TEXCOORD4;
-        //         float4 screenPos : TEXCOORD5;
-        //         UNITY_VERTEX_INPUT_INSTANCE_ID
-        //         UNITY_VERTEX_OUTPUT_STEREO
-        //     };
-
-
-        //     VertexOutput vert(VertexInput v)
-        //     {
-        //         VertexOutput o = (VertexOutput)0;
-        //         UNITY_SETUP_INSTANCE_ID(v);
-        //         UNITY_TRANSFER_INSTANCE_ID(v, o);
-        //         UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
-
-        //         HorizontalImpostorVertex(v.vertex, v.normal, o.frameUVs, o.viewPos);
-
-
-        //         o.clipPos = TransformObjectToHClip(v.vertex.xyz);
-        //         o.screenPos = ComputeScreenPos(o.clipPos);
-
-        //         return o;
-        //     }
-
-        //     half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
-        //     {
-        //         UNITY_SETUP_INSTANCE_ID(IN);
-        //         SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
-        //         float4 clipPos = 0;
-        //         float3 worldPos = 0;
-        //         HorizontalImpostorFragment(o, clipPos, worldPos, IN.frameUVs, IN.viewPos);
-        //         IN.clipPos.zw = clipPos.zw;
-
-        //         //LOD 디더링 기능
-        //         float fadeValue;
-        //         float lodFade;
-        //         if (unity_LODFade.x != 0)
-        //         {
-        //             if (unity_LODFade.x > 0)
-        //             {
-        //                 fadeValue = unity_LODFade.x ;
-        //             }
-        //             else
-        //             {
-        //                 fadeValue = 1 + unity_LODFade.x;
-        //             }
-
-        //             // return fadeValue;
-
-        //             Unity_Dither_linear(fadeValue, IN.screenPos, lodFade, 0.5);
-        //             clip(lodFade);
-        //         }
-        //         else
-        //         {
-        //             fadeValue = 1;
-        //         }
-
-        //         outDepth = clipPos.z ;
-        //         return 0;
-        //     }
-        //     ENDHLSL
-        // }
 
         Pass
         {
@@ -360,7 +242,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
 
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -377,7 +259,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
+                half3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -403,7 +285,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 HorizontalImpostorVertex(v.vertex, v.normal, o.frameUVs, o.viewPos);
 
                 o.clipPos = TransformObjectToHClip(v.vertex.xyz);
-                
+
                 return o;
             }
 
@@ -427,46 +309,6 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
 
 
 
-        // Pass
-        // {
-        //     Name "DepthOnly"
-        //     Tags { "LightMode" = "DepthOnly" }
-
-        //     ZWrite On
-        //     ColorMask 0
-        //     Cull[_Cull]
-
-        //     HLSLPROGRAM
-        //     #pragma exclude_renderers gles gles3 glcore
-        //     #pragma target 4.5
-
-        //     #pragma vertex DepthOnlyVertex
-        //     #pragma fragment DepthOnlyFragment
-
-        //     // -------------------------------------
-        //     // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-        //     // #pragma shader_feature_local_fragment _GLOSSINESS_FROM_BASE_ALPHA
-        //     // 에디터에서 니어 클리핑을 잠시 안보게 할 수 있는 기능. 에디터 한정이라 셰이더 피쳐로 올립니다
-        //     #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
-
-        //     //--------------------------------------
-        //     // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
-        //     // GPU Instancing
-        //     #pragma multi_compile_instancing
-        //     #pragma multi_compile _ DOTS_INSTANCING_ON
-        //     #pragma multi_compile _ALPHATEST_ON _ALPHATEST_OFF
-        //     #pragma multi_compile _ _NEARHALFTONECLIP_ON
-        //     // #pragma multi_compile _ _GLOBAL_NEARHALFTONECLIP_ON
-        //     #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
-        //     #define RAYCAST 1
-        //     #define LODFADE 1
-
-
-        //     #include "MMN_SimpleLitInput.hlsl"
-        //     #include "MMN_DepthOnlyPass.hlsl"
-        //     ENDHLSL
-        // }
-
         Pass
         {
             Name "SceneSelectionPass"
@@ -480,7 +322,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
 
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -492,7 +334,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             #include "AmplifyImpostors.cginc"
 
             #pragma shader_feature EFFECT_HUE_VARIATION
-            
+
             int _ObjectId;
             int _PassValue;
 

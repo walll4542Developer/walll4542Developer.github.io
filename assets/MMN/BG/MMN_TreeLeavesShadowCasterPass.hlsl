@@ -15,9 +15,9 @@ float3 _LightPosition;
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
+    half3 normalOS : NORMAL;
     float2 texcoord : TEXCOORD0;
-    float4 color : COLOR;
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 

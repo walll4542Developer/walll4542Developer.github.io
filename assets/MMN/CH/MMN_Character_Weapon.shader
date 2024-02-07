@@ -2,7 +2,7 @@ Shader "MMN/CH/Weapon"
 {
     Properties
     {
-        [Enum(Standard, 0, Monster, 1, Deep, 3)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -31,12 +31,11 @@ Shader "MMN/CH/Weapon"
         [ToggleOff(_OUTLINE_FEATURE)] _OutlineOff ("아웃라인 끄기", Float) = 0.0
         _OutlineColor ("아웃라인 색상", Color) = (1.0, 1.0, 1.0, 1.0)
         [Enum(Multiply, 0, Override, 1)] _OutlineColorMode ("아웃라인 색상 적용 방식", Float) = 0.0
-        _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
-        
+        // _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
 
         [Header(Metal)]
         [Space(10)]
-        [Toggle] _IsMetal ("메탈 재질?", Float) = 0.0
+        [Toggle(_METAL_FEATURE)] _IsMetal ("메탈 재질?", Float) = 0.0
         [HDR] _MetalTintColor ("메탈 틴트 컬러", Color) = (1.0, 1.0, 1.0, 1.0)
         _Smoothness ("매끈한 정도", Range(0.01, 1.0)) = 1.0
         _SpecularStrength ("스펙큘러 세기", Range(0.0, 1.0)) = 0.5
@@ -58,6 +57,8 @@ Shader "MMN/CH/Weapon"
         [PowerSlider(2)] _FresnelPower ("프레넬 파워", Range(0.0, 20.0)) = 10.0
 
         [HideInInspector] _RenderMode ("렌더링 모드", Float) = 0.0
+        [HideInInspector] _StencilValue("_StencilValue", Integer) = 0
+
         [HideInInspector] _WeaponGradeColor ("무기 등급과 색상", Color) = (1.0, 1.0, 1.0, 0.0)
 
         // NOTE @jihun.song : 로직 스크립트에서 넘어오는 값들.
@@ -65,7 +66,8 @@ Shader "MMN/CH/Weapon"
         // 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
-        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (1.0, 0.0, 0.0, 0.0)
+        [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
+        [HideInInspector] _CharacterHeadDirection ("xyz: direction, w: height", Vector) = (0.0, 0.0, 1.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -77,22 +79,43 @@ Shader "MMN/CH/Weapon"
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
-        [HideInInspector] _InflateWidth ("_InflateWidth", Float) = 0.0
-        [HideInInspector] _InflateColor ("_InflateColor", Color) = (0.0, 0.0, 0.0, 0.0)
-
         [HideInInspector] _InnerGlow ("_InnerGlow", Float) = 0.0
         [HideInInspector] _InnerGlowPower ("_InnerGlowPower", Float) = 0.0
         [HideInInspector] _InnerGlowColor ("_InnerGlowColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
-        [HideInInspector] _EffectAlphaValue("_EffectAlphaValue", Float) = 0.0
-        [HideInInspector] _MotionBlurLerpValue("_MotionBlurLerpValue", Float) = 0.0
-        [HideInInspector] _VertexBufferLength("_VertexBufferLength", Integer) = 0
-        
-        [HideInInspector] _StencilValue("_StencilValue", Integer) = 0
+        [HideInInspector] _EffectAlphaValue ("_EffectAlphaValue", Float) = 0.0
+        [HideInInspector] _MotionBlurLerpValue ("_MotionBlurLerpValue", Float) = 0.0
+        [HideInInspector] _VertexBufferLength ("_VertexBufferLength", Integer) = 0
+        //--------------------------------------------------------------------------------
     }
 
-    Subshader
+    HLSLINCLUDE
+        #pragma exclude_renderers gles gles3 glcore
+        #pragma target 4.5
+
+        // 기능 분류를 위한 디파인
+        #undef _ALPHA_TEST
+        #undef _IS_SKIN
+
+        // Input 최적화를 위한 디파인
+        #define _DYE_FEATURE
+        #define _SILHOUETTE_FEATURE
+        #define _TINTCOLOR_FEATURE
+        #define _TWO_SIDE_FEATURE
+        #define _EMISSION_FEATURE
+        #define _FRESNEL_FEATURE
+        #define _ALPHA_OVERRIDE_FEATURE
+        #define _GRADIENT_ALPHA_FEATURE
+        #define _WEAPON_GRADE_FEATURE
+        #undef _DISSOLVE_FEATURE
+
+        #include "MMN_Character_Standard_Input.hlsl"
+    ENDHLSL
+
+    SubShader
     {
+        LOD 300
+
         Tags
         {
             "RenderType" = "Opaque"
@@ -101,29 +124,6 @@ Shader "MMN/CH/Weapon"
             "IgnoreProjector" = "True"
             "ShaderModel" = "4.5"
         }
-
-        HLSLINCLUDE
-            #pragma exclude_renderers gles gles3 glcore
-            #pragma target 4.5
-
-            // 기능 분류를 위한 디파인
-            #undef _ALPHA_TEST
-            #undef _IS_SKIN
-
-            // Input 최적화를 위한 디파인
-            #define _DYE_FEATURE
-            #define _SILHOUETTE_FEATURE
-            #define _TINTCOLOR_FEATURE
-            #define _TWO_SIDE_FEATURE
-            #define _EMISSION_FEATURE
-            #define _FRESNEL_FEATURE
-            #define _ALPHA_OVERRIDE_FEATURE
-            #define _GRADIENT_ALPHA_FEATURE
-            #define _WEAPON_GRADE_FEATURE
-            #undef _DISSOLVE_FEATURE
-
-            #include "MMN_Character_Standard_Input.hlsl"
-        ENDHLSL
 
         Pass
         {
@@ -148,14 +148,16 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -205,14 +207,16 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -327,12 +331,16 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
+            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -355,5 +363,253 @@ Shader "MMN/CH/Weapon"
         }
     }
 
-    CustomEditor "MM.Client.Editor.ShaderGUI.CharacterTransparentModeShaderGUI"
+    SubShader
+    {
+        LOD 100
+
+        Tags
+        {
+            "RenderType" = "Opaque"
+            "Queue" = "Geometry"
+            "RenderPipeline" = "UniversalPipeline"
+            "IgnoreProjector" = "True"
+            "ShaderModel" = "4.5"
+        }
+
+        Pass
+        {
+            Name "Base"
+            Tags { "LightMode" = "UniversalForward" }
+
+            Stencil
+            {
+                // NOTE @jihun.song : 일반적으로 캐릭터가 사용하는 마스크 범위는 [16 ~ 255] 까지 사용 한다.
+                // StencilIdAllocator 스크립트에서 해당 범위의 값을 할당해준다.
+                Ref [_StencilValue]
+                Comp Always
+                Pass Replace
+                Fail Keep
+                ZFail Keep
+            }
+
+            ZWrite On
+            ZTest LEqual
+            Cull [_CullType]
+
+            HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
+            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ DEBUG_SHADING_OFF
+            #pragma multi_compile_fragment _ DEBUG_OUTLINE_OFF
+
+            // -------------------------------------
+            // 작업 공정의 편의를 위한 Keywords
+
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex BasePassVertex
+            #pragma fragment BasePassFragment
+
+            #undef _TRANSPARENCY
+
+            #include "Includes/CharacterWeaponPass.hlsl"
+            ENDHLSL
+        }
+
+        // NOTE @jihun.song : 이 패스는 ShaderGUI에 의해 자동으로 켜지고 꺼진다.
+        // 반투명 캐릭터에서만 사용하는 패스이고 BeforeRenderingTransparents 이벤트게 그려야한다.
+        Pass
+        {
+            Name "Base_TransparentRenderObject"
+            Tags { "LightMode" = "TransparentRenderObject" }
+
+            Stencil
+            {
+                // NOTE @jihun.song : 일반적으로 캐릭터가 사용하는 마스크 범위는 [16 ~ 255] 까지 사용 한다.
+                // StencilIdAllocator 스크립트에서 해당 범위의 값을 할당해준다.
+                Ref [_StencilValue]
+                Comp Always
+                Pass Replace
+                Fail Keep
+                ZFail Keep
+            }
+
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite On
+            ZTest LEqual
+            Cull [_CullType]
+
+            HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
+            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ DEBUG_SHADING_OFF
+            #pragma multi_compile_fragment _ DEBUG_OUTLINE_OFF
+
+            // -------------------------------------
+            // 작업 공정의 편의를 위한 Keywords
+
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex BasePassVertex
+            #pragma fragment BasePassFragment
+
+            #define _TRANSPARENCY
+
+            #include "Includes/CharacterWeaponPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+
+            ZWrite On
+            ZTest LEqual
+            Cull [_CullType]
+            ColorMask 0
+
+            HLSLPROGRAM
+            //--------------------------------------
+            // Universal Pipeline keywords
+
+            // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex ShadowPassVertex
+            #pragma fragment ShadowPassFragment
+
+            #include "Includes/CharacterShadowCasterPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+
+            Cull [_CullType]
+            ColorMask 0
+
+            HLSLPROGRAM
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex DepthPassVertex
+            #pragma fragment DepthPassFragment
+
+            #include "Includes/CharacterDepthOnlyPass.hlsl"
+            ENDHLSL
+        }
+
+        //--------------------------------------
+        // FX
+        //--------------------------------------
+        Pass
+        {
+            Name "ThiefHideWriteZ"
+            Tags { "LightMode" = "ThiefHideWriteZ" }
+
+            ZWrite On // NOTE: Depth를 쓰기 위해 무조건 On으로 한다.
+            ZTest LEqual
+            Cull [_CullType]
+            ColorMask 0
+
+            HLSLPROGRAM
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex DepthPassVertex
+            #pragma fragment DepthPassFragment
+
+            #include "Includes/CharacterDepthOnlyPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ThiefHide"
+            Tags { "LightMode" = "ThiefHide" }
+
+            Stencil
+            {
+                // NOTE @jihun.song : 일반적으로 캐릭터가 사용하는 마스크 범위는 [16 ~ 255] 까지 사용 한다.
+                // StencilIdAllocator 스크립트에서 해당 범위의 값을 할당해준다.
+                Ref [_StencilValue]
+                Comp Always
+                Pass Replace
+                Fail Keep
+                ZFail Keep
+            }
+
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
+            ZTest LEqual
+            Cull [_CullType]
+
+            HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
+            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_fragment _ _METAL_FEATURE
+            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+
+            // -------------------------------------
+            // 작업 공정의 편의를 위한 Keywords
+
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex BasePassVertex
+            #pragma fragment BasePassFragment
+
+            #define _THIEF_HIDE
+
+            #include "Includes/CharacterWeaponPass.hlsl"
+            ENDHLSL
+        }
+    }
+
+    CustomEditor "MM.Client.Editor.ShaderGUI.CharacterCommonShaderGUI"
 }

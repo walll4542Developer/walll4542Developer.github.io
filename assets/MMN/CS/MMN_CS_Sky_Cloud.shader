@@ -6,8 +6,7 @@ Shader "MMN/CutScene/Sky_Clouds"
         _MaskMap ("Mask Map", 2D) = "black" { }
         _DistortionSpeedMultix ("스피드 멀티플라이x. ", float) = 0
         _DistortionSpeedMultiy ("스피드 멀티플라이y. ", float) = 0
-        
-        
+
         [Space(30)]
         // [HDR]_MainColor ("BaseTexColor", Color) = (1, 1, 1, 1)
         [MainTex] _BaseTex ("BaseTex", 2D) = "black" { }
@@ -35,19 +34,21 @@ Shader "MMN/CutScene/Sky_Clouds"
         _BaseTex4SpeedMultix ("스피드 멀티플라이x. ", float) = 0
         _BaseTex4SpeedMultiy ("스피드 멀티플라이y. ", float) = 0
         _Distortion4 ("디스토션4", float) = 0.1
-        
+
         [HideInInspector] _Blend ("__blend", Float) = 0.0
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
         [HideInInspector] _ZWrite ("__zw", Float) = 1.0
+        [HideInInspector] _Color ("Alpha", Color) = (1, 1, 1, 1)
         // Editmode props
         [HideInInspector]_QueueOffset ("Queue offset", Float) = 0.0
     }
 
     SubShader
     {
+        LOD 100
+
         Tags { "Queue" = "Transparent-395" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
-        LOD 300
         ZClip False
 
         Pass
@@ -59,7 +60,7 @@ Shader "MMN/CutScene/Sky_Clouds"
             // Blend[_SrcBlend][_DstBlend]
             Blend SrcAlpha OneMinusSrcAlpha
             // Blend One Zero
-            
+
             // Blend one OneMinusSrcAlpha
             // Blend One OneMinusSrcAlpha, SrcAlpha One
             // Blend One Zero, One One
@@ -72,7 +73,7 @@ Shader "MMN/CutScene/Sky_Clouds"
                 Comp Equal
                 Pass Keep
             }
-            
+
             ZWrite Off
             Cull[_Cull]
 
@@ -98,10 +99,10 @@ Shader "MMN/CutScene/Sky_Clouds"
                 float _Distortion2;
                 float _Distortion3;
                 float _Distortion4;
-                
+
                 float _DistortionSpeedMultix;
                 float _DistortionSpeedMultiy;
-                
+
                 float _BaseTexSpeedMultix;
                 float _BaseTexSpeedMultiy;
                 float _BaseTex2SpeedMultix;
@@ -110,6 +111,8 @@ Shader "MMN/CutScene/Sky_Clouds"
                 float _BaseTex3SpeedMultiy;
                 float _BaseTex4SpeedMultix;
                 float _BaseTex4SpeedMultiy;
+
+                float4 _Color;
             CBUFFER_END
 
             //Global Property
@@ -117,7 +120,7 @@ Shader "MMN/CutScene/Sky_Clouds"
             half4 _Global_CloudColor2;
             half4 _Global_CloudColor3;
             half4 _Global_CloudColor4;
-            
+
             // half _Global_CloudDensity;
             // half _Global_CloudSpeed;
             // half _Global_CloudScale;
@@ -186,7 +189,7 @@ Shader "MMN/CutScene/Sky_Clouds"
                 InitializeGlobalValue();
                 return uv + frac(_Global_WindUV * float2(x, y) * speedmul * 2);
             }
-            
+
             // Used for StandardSimpleLighting shader
             half4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
@@ -207,7 +210,7 @@ Shader "MMN/CutScene/Sky_Clouds"
                 _BaseTex4SpeedMultiy = round(_BaseTex4SpeedMultiy);
 
                 float2 uv = input.uv;
-                
+
                 float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
                 half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, maskMapUV);
 
@@ -216,10 +219,10 @@ Shader "MMN/CutScene/Sky_Clouds"
 
                 float2 basemap2UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex2SpeedMultix, _BaseTex2SpeedMultiy, 0.01), _BaseTex2);
                 half4 basemap2 = SAMPLE_TEXTURE2D(_BaseTex2, sampler_BaseTex2, basemap2UV + maskMap.r * _Distortion2 * 0.001) * _Global_CloudColor2;
-                
+
                 float2 basemap3UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex3SpeedMultix, _BaseTex3SpeedMultiy, 0.01), _BaseTex3);
                 half4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, basemap3UV + maskMap.r * _Distortion3 * 0.001) * _Global_CloudColor3;
-                
+
                 float2 basemap4UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex4SpeedMultix, _BaseTex4SpeedMultiy, 0.01), _BaseTex4);
                 half4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) * _Global_CloudColor4;
 
@@ -230,8 +233,8 @@ Shader "MMN/CutScene/Sky_Clouds"
                 // basemap2.rgb += (1-basemap2.a) * preAddInvAlpha;
                 // basemap3.rgb += (1-basemap3.a) * preAddInvAlpha;
                 // basemap4.rgb += (1-basemap4.a) * preAddInvAlpha;
-                
-                
+
+
                 ///////////////Light 연산
                 Light light = GetMainLight();
                 float3 bakedGI = SampleSHPixel(input.vertexSH, normalize(input.normalWS)) * _Global_GILightMulti.rgb  ;
@@ -245,7 +248,7 @@ Shader "MMN/CutScene/Sky_Clouds"
                 basemap.rgb = lerp(basemap2.rgb, basemap.rgb, basemap.a);
 
                 half4 color ;
-                
+
                 //구름 알파 연산
                 //현재 두 방식의 차이는 없다
                 // color.a =  saturate(basemap3.a + basemap4.a + basemap2.a +  basemap.a) ;
@@ -257,11 +260,13 @@ Shader "MMN/CutScene/Sky_Clouds"
                 // color.rgb =  basemap.rgb ;
                 // color.rgb = bakedGI.rgb* _Global_GILightMulti.rgb  ;
 
+                color.a = color.a * _Color.a;
+
                 if (unity_OrthoParams.w == 1) //Ortho에서는 사라지게 한다
                     return 0;
                 else
                     return color;
-                
+
             };
             ENDHLSL
         }

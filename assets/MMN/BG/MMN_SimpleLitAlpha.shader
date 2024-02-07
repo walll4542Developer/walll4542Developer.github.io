@@ -68,6 +68,7 @@ Shader "MMN/BG/SimpleLitAlphaBlend"
 
     }
 
+    //LOD 300
     SubShader
     {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
@@ -102,11 +103,66 @@ Shader "MMN/BG/SimpleLitAlphaBlend"
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+
+            #pragma vertex LitPassVertexSimple
+            #pragma fragment LitPassFragmentSimple
+
+            #include "MMN_SimpleLitAlphaInput.hlsl"
+            #include "MMN_SimpleLitAlphaForwardPass.hlsl"
+            ENDHLSL
+        }
+    }
+
+    //LOD 100
+    SubShader
+    {
+        Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
+        LOD 100
+
+        Pass
+        {
+            Name "ForwardLit"
+            Tags { "LightMode" = "UniversalForward" }
+
+            // Use same blending / depth states as Standard shader
+            // Blend[_SrcBlend][_DstBlend]
+            Blend SrcAlpha OneMinusSrcAlpha
+            // ZWrite[_ZWrite]
+            ZWrite Off
+            Cull[_Cull]
+
+            HLSLPROGRAM
+
+            #pragma exclude_renderers gles gles3 glcore
+            #pragma target 4.5
+
+            // -------------------------------------
+            // Material Keywords
+
+            #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
+            #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
+            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
+            #pragma shader_feature_local _SHOWVERTEXALPHA_ON
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
+            #pragma multi_compile _ _LIGHT_LAYERS
 
             // -------------------------------------
             // Unity defined keywords

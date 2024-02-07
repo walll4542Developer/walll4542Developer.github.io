@@ -3,7 +3,7 @@
 
 #ifdef _ARBALEST_FEATURE
 
-void ApplyArbalestMagazine(inout float4 resultColor, in float remainedMagazine, in float magazineNumber)
+void ApplyArbalestMagazine(inout half4 resultColor, in half remainedMagazine, in half magazineNumber)
 {
     if (remainedMagazine < magazineNumber)
     {

@@ -149,6 +149,7 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
             #pragma multi_compile _ LIGHTMAP_ON
             #define HALF_SUBTRACTIVE_LIGHTMAP_ON 0
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             //--------------------------------------

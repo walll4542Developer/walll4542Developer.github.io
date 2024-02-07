@@ -66,7 +66,6 @@ inline float MMN_RecieveContactShadow(float3 positionWS, float4 shadowCoord)
 }
 
 
-
 // 라이트맵이 이미 구워진 상태에서 리얼타임 라이트와 셰도우를 받을 수 있게 처리한다. 셰도우 캐스팅은 하지 않고 리시브만 하는 것이다
 // 리얼타임 그림자는 Environment 리얼타임 셰도우 칼라 조절값을 받아와 처리도 한다
 float3 MMN_SubtractDirectMainLightFromLightmap(Light mainLight, float3 normalWS, float3 bakedGI)
@@ -305,10 +304,17 @@ float3 MM_VertexLighting(float3 positionWS, float3 normalWS)
         {
             float3 lightColor = light.color * light.distanceAttenuation  ;
             vertexLightColor += pow(saturate(dot(normalWS, light.direction)), 0.45) * lightColor * 0.45;
-            // vertexLightColor += pow(saturate(dot(normalWS, light.direction)), 1) * lightColor * 1;
-
         }
         LIGHT_LOOP_END
+
+
+        //거리가 멀어지면 버텍스 라이트가 점점 없어지는 처리
+        // float3 diff = ((_Global_pos.rgb - positionWS) / 10) ;
+        // float diffRange = 1 - saturate(dot(diff, diff));
+        // diffRange = diffRange * diffRange * diffRange * diffRange;
+        // vertexLightColor *= saturate(diffRange + (1- _Global_pos.w));
+
+
     #endif
 
     return vertexLightColor ;
@@ -436,12 +442,16 @@ float4 UniversalFragmentLightCustomLOD(InputData inputData, SurfaceData surfaceD
     inputData.bakedGI *= _Global_GILightMulti.rgb;
     inputData.bakedGI *= surfaceData.albedo;
 
+    // 가짜 GI 트릭. 카메라를 내리면 GI가 푸른빛이 돌게 된다.
+    // 이전 공식이 옆면까지 이 계산이 들어가서 Y 각도에만 반응하게 만들었으며, 어두워지지 않도록 휴리스틱하게 색상을 추가 조절하였다
+    float3 fakeGIcolorTrick = saturate(_Global_SkyColorTop.rgb * saturate(1 - dot(inputData.viewDirectionWS, float3(0, 1, 0)))) * inputData.bakedGI;
+    fakeGIcolorTrick *= _Global_SkyColorTop.rgb * _Global_SkyColorTop.rgb * _Global_SkyColorTop.rgb;
+    inputData.bakedGI += saturate(fakeGIcolorTrick) + 0.01 ; //휴리스틱 수치 + 0.01
+
     LightingData lightingData = CreateLightingData(inputData, surfaceData);
     lightingData.mainLightColor += CalculateLightingCustom(mainLight, inputData, surfaceData, MMN_GlobalTex_CloudShadows(inputData.positionWS).r, /* shadowDimming */0, /* halfLambertWeight */0);
     return CalculateFinalColorCustom(lightingData, surfaceData.alpha);
 }
-
-
 
 // 유니티 2021.2.3 용 신형 라이트 함수
 float4 UniversalFragmentLightCustom(InputData inputData, SurfaceData surfaceData, float shadowDimming, float halfLambertWeight, float _BackfaceReceiveShadowOff, FRONT_FACE_TYPE isFacing, float BackFaceNormalturn)

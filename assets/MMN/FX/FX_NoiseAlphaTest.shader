@@ -78,6 +78,7 @@ Shader "MMN/FX/NoiseAlphaTest"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 
             //--------------------------------------
             // GPU Instancing
@@ -141,7 +142,7 @@ Shader "MMN/FX/NoiseAlphaTest"
                 finalColor.rgb *= lerp(real3(1.0, 1.0, 1.0), mainLight.color.rgb, _LightReceive);
 
                 // TriplanarNoise Test
-                // finalColor.rgb = TriplanarNoise(input.positionWS, input.normalWS, _Time.y * _Speed, _NoiseTex, sampler_NoiseTex, _NoiseTex_ST); 
+                // finalColor.rgb = TriplanarNoise(input.positionWS, input.normalWS, _Time.y * _Speed, _NoiseTex, sampler_NoiseTex, _NoiseTex_ST);
 
                 // MathNoise Test
                 // finalColor.rgb = FractalNoise(input.positionWS, 6, 1);
@@ -168,7 +169,7 @@ Shader "MMN/FX/NoiseAlphaTest"
                     //     _Global_FogHeightNoiseSpeed,
                     //     _Global_FogHeightNoiseScale,
                     //     float2(0,0));
-                    
+
                     //하이트 포그  연산 Multi
                     // finalColor= MMN_GlobalTex_HeightFogMulti(
                     //     finalColor,
@@ -221,7 +222,7 @@ Shader "MMN/FX/NoiseAlphaTest"
 
             #include "includes/FX_NoiseAlphaTestInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
-            
+
             // Shadow Casting Light geometric parameters. These variables are used when applying the shadow Normal Bias and are set by UnityEngine.Rendering.Universal.ShadowUtils.SetupShadowCasterConstantBuffer in com.unity.render-pipelines.universal/Runtime/ShadowUtils.cs
             // For Directional lights, _LightDirection is used when applying shadow Normal Bias.
             // For Spot lights and Point lights, _LightPosition is used to compute the actual light direction because it is different at each shadow caster geometry vertex.
@@ -236,7 +237,7 @@ Shader "MMN/FX/NoiseAlphaTest"
 
                 output.uv.xy = TRANSFORM_TEX(input.texcoord.xy, _MainTex);
                 output.uv.zw = input.texcoord.zw;
-                
+
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 input.positionOS.xyz += input.normalOS * TriplanarNoise(positionWS, output.normalWS) * _Power * input.color.r; // TriplanarNoise

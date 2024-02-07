@@ -9,37 +9,60 @@ SAMPLER(sampler_BaseMap);
 float4 _BaseMap_TexelSize;
 float4 _BaseMap_MipInfo;
 
+#ifdef _DISSOLVE_FEATURE
+    TEXTURE2D(_DissolveMap);
+    SAMPLER(sampler_DissolveMap);
+#endif
+
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
 
 #ifdef _ALPHA_OVERRIDE_FEATURE
-    float _AlphaOverride;
+    half _AlphaOverride;
 #endif
 
 #ifdef _TINTCOLOR_FEATURE
-    float4 _TintColor;
+    half4 _TintColor;
 #endif
 
 #ifdef _DYE_FEATURE
-    float _IsDyable;
-    float4 _DyeColor1;
-    float4 _DyeColor2;
-    float4 _DyeColor3;
+    half _IsDyable;
+    half4 _DyeColor1;
+    half4 _DyeColor2;
+    half4 _DyeColor3;
 #endif
 
 #ifdef _SILHOUETTE_FEATURE
-    float _SilhouetteOff;
-    float4 _SilhouetteTintColor;
+    half _SilhouetteOff;
+    half4 _SilhouetteTintColor;
 #endif
 
-    float4 _OutlineColor;
-    float _OutlineColorMode;
-    float _OutlineWidth;
+    half4 _OutlineColor;
+    half _OutlineColorMode;
+    // half _OutlineWidth;
 
 #ifdef _FRESNEL_FEATURE
-    float4 _FresnelColor;
-    float _FresnelRange;
-    float _FresnelPower;
+    half4 _FresnelColor;
+    half _FresnelRange;
+    half _FresnelPower;
+#endif
+
+#ifdef _DISSOLVE_FEATURE
+    half _DissolveAmount;
+
+    half4 _DissolveRange;
+    half _NotUseDirection;
+    half3 _DissolveDirection;
+
+    half _DissolvePanningSpeed;
+    half4 _DissolveMap_ST;
+
+    half _DissolveCutoff;
+
+    half4 _DissolveColor;
+    half _DissolveWidth;
+    half4 _DissolveEdgeColor;
+    half _DissolveEdgeWidth;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

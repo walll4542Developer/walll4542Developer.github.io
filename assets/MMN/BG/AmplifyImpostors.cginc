@@ -650,7 +650,7 @@ inline void HorizontalImpostorVertex(inout float4 vertex, inout float3 normal, i
     float cosY = cos(yRot);
     float sinY = sin(yRot);
     // float2 uvRotator = mul( uvExpansion, float2x2( cosY, -sinY, sinY, cosY ) );
-    float3 uvRotator = mul(uvExpansion.xyz,
+    float3 uvRotator = mul(uvExpansion.xyz + _Offset.xyz,
     float3x3(
         1, 0, 0,
         0, cosY, -sinY,
@@ -659,13 +659,14 @@ inline void HorizontalImpostorVertex(inout float4 vertex, inout float3 normal, i
     ); // Y 축으로만의 회전행렬 . 왜 빌보드용 버텍스 행렬인데 이름이 UV 로테이터죠?
 
     // Billboard
-    float3 billboard = objectHorizontalVector * uvRotator.x + objectVerticalVector * uvRotator.y + _Offset.xyz;
+    // float3 billboard = objectHorizontalVector + objectVerticalVector + _Offset.xyz;
+    float3 billboard = objectHorizontalVector * uvRotator.x + objectVerticalVector * uvRotator.y ;
 
     // Frame coords
     float2 relativeCoords = float2(floor(verticalAngle), floor(HorizontalAngle)) ; //세로 UV 연산 부분을 날리고, 새로 만들었습니다.
     float2 frameUV = ((uvExpansion.xy * fractionsUVscale.xy + 0.5) + relativeCoords) * sizeFraction;
 
-    frameUVs.xy = frameUV - uvOffset; //엥 uvOffset에 _AI_SizeOffset.zw;으로 되어있어, 이걸 삭제하면 1*1일때 작은 오브젝트의 경우 UV가 살짝 밀려난다 
+    frameUVs.xy = frameUV - uvOffset; //엥 uvOffset에 _AI_SizeOffset.zw;으로 되어있어, 이걸 삭제하면 1*1일때 작은 오브젝트의 경우 UV가 살짝 밀려난다
 
     
     // Parallax

@@ -21,7 +21,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 		{
 			"RenderPipeline" = "UniversalPipeline"
 			"RenderType"="Opaque"
-			"Queue"="Geometry" 
+			"Queue"="Geometry"
 		}
 
 		Cull Back
@@ -63,7 +63,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 			ColorMask RGBA
             /*ase_stencil*/
         	HLSLPROGRAM
-            
+
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
 
@@ -75,16 +75,17 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-            
+
         	// -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 
             //--------------------------------------
             // GPU Instancing
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
         	#pragma fragment frag
@@ -122,7 +123,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             };
 
 			/*ase_globals*/
-			
+
 			/*ase_funcs*/
 
             GraphVertexOutput vert (GraphVertexInput v/*ase_vert_input*/)
@@ -139,7 +140,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
                 float3 lwWNormal = TransformObjectToWorldNormal(v.normal );
 
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
-                
+
          		// We either sample GI from lightmap or SH.
         	    // Lightmap UV and vertex SH coefficients use the same interpolator ("float2 lightmapUV" for lightmap or "half3 vertexSH" for SH)
                 // see DECLARE_LIGHTMAP_OR_SH macro.
@@ -161,13 +162,13 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	half4 frag (GraphVertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_Target
             {
             	UNITY_SETUP_INSTANCE_ID(IN);
-				
+
 				SurfaceOutput o = (SurfaceOutput)0;
 				float4 clipPos = 0;
 				float3 worldPos = 0;
 
 				/*ase_frag_code:IN=GraphVertexOutput*/
-				
+
 		        float3 Albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/float3(0.5, 0.5, 0.5)/*end*/;
 				float3 Normal = /*ase_frag_out:World Normal;Float3;1*/float3(0, 0, 1)/*end*/;
 				float3 Emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/0/*end*/;
@@ -217,13 +218,13 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 				#endif
 
         		half4 color = UniversalFragmentPBR(
-        			inputData, 
-        			Albedo, 
-        			Metallic, 
-        			Specular, 
-        			Smoothness, 
-        			Occlusion, 
-        			Emission, 
+        			inputData,
+        			Albedo,
+        			Metallic,
+        			Specular,
+        			Smoothness,
+        			Occlusion,
+        			Emission,
         			Alpha);
 
 				#ifdef TERRAIN_SPLAT_ADDPASS
@@ -260,14 +261,14 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
-            
+
 			#ifndef UNITY_PASS_SHADOWCASTER
 			#define UNITY_PASS_SHADOWCASTER
 			#endif
 
             //--------------------------------------
             // GPU Instancing
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
@@ -299,7 +300,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             float3 _LightDirection;
 
 			/*ase_globals*/
-			
+
 			/*ase_funcs*/
 
             VertexOutput ShadowPassVertex(GraphVertexInput v/*ase_vert_input*/)
@@ -367,7 +368,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 
             //--------------------------------------
             // GPU Instancing
-            #pragma multi_compile_instancing
+            // #pragma multi_compile_instancing
 
             #pragma vertex vert
             #pragma fragment frag
@@ -378,7 +379,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-           
+
             struct GraphVertexInput
             {
                 float4 vertex : POSITION;
@@ -398,7 +399,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	};
 
 			/*ase_globals*/
-			
+
 			/*ase_funcs*/
 
             VertexOutput vert(GraphVertexInput v/*ase_vert_input*/)
@@ -456,7 +457,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 			#pragma prefer_hlslcc gles
 			#pragma exclude_renderers d3d11_9x
 
-			#pragma multi_compile_instancing
+			// #pragma multi_compile_instancing
 
 			#pragma vertex vert
 			#pragma fragment frag
@@ -545,7 +546,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
-            
+
 
             #pragma vertex vert
             #pragma fragment frag
@@ -583,7 +584,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	};
 
 			/*ase_globals*/
-			
+
 			/*ase_funcs*/
 
             VertexOutput vert(GraphVertexInput v/*ase_vert_input*/)
@@ -602,8 +603,8 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 				#endif
 
 				v.normal = /*ase_vert_out:Vertex Normal;Float3;5;-1;_Normal*/ v.normal /*end*/;
-				
-#if !defined( ASE_SRP_VERSION ) || ASE_SRP_VERSION  > 51300                
+
+#if !defined( ASE_SRP_VERSION ) || ASE_SRP_VERSION  > 51300
 				o.clipPos = MetaVertexPosition( v.vertex, v.texcoord1.xy, v.texcoord1.xy, unity_LightmapST, unity_DynamicLightmapST );
 #else
 				o.clipPos = MetaVertexPosition( v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST );
@@ -631,7 +632,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
                 MetaInput metaInput = (MetaInput)0;
                 metaInput.Albedo = Albedo;
                 metaInput.Emission = Emission;
-                
+
                 return MetaFragment(metaInput);
             }
             ENDHLSL

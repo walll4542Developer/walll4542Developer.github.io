@@ -2,6 +2,8 @@ Shader "MMN/CH/System_ShadowQuery"
 {
     SubShader
     {
+        LOD 100
+
         Cull Off
         ZWrite Off
         ZTest Always
@@ -56,10 +58,10 @@ Shader "MMN/CH/System_ShadowQuery"
                 return output;
             }
 
-            float4 frag(Varyings input) : SV_Target
+            half4 frag(Varyings input) : SV_Target
             {
-                float attenuation = float(SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, input.shadowCoord.xyz));
-                return float4(attenuation.xxx, 1.0);
+                half attenuation = half(SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, input.shadowCoord.xyz));
+                return half4(attenuation.xxx, 1.0);
             }
 
             ENDHLSL

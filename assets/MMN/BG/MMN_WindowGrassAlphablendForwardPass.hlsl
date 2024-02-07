@@ -6,10 +6,10 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
+    half3 normalOS : NORMAL;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
-    float4 color : COLOR;
+    half4 color : COLOR;
 };
 
 struct Varyings
@@ -21,7 +21,7 @@ struct Varyings
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
     float4 screenPos : TEXCOORD8;
     float cameraDistance : TEXCOORD9; //이걸 나중에 positionWS 의 알파로 빼는걸 생각해 봅시다.
-    float4 color : COLOR;
+    half4 color : COLOR;
     float4 positionCS : SV_POSITION;
 };
 
@@ -41,7 +41,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.vertexLighting = half3(0, 0, 0);
 
     #if defined(DEBUG_DISPLAY)
-            inputData.vertexSH = input.vertexSH;
+        inputData.vertexSH = input.vertexSH;
     #endif
 }
 
@@ -93,12 +93,12 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     float3 reflectVec = reflect(-inputData.viewDirectionWS, inputData.normalWS);
     float3 Reflectionprobe = DecodeHDREnvironment(SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectVec, (1 - _Gloss) * 3), unity_SpecCube0_HDR);
     
-    float rim = (dot(inputData.normalWS , inputData.viewDirectionWS));
-    rim = 1-(saturate(rim));
+    float rim = (dot(inputData.normalWS, inputData.viewDirectionWS));
+    rim = 1 - (saturate(rim));
     rim = rim * rim * rim;
 
     half4 color;
-    color = half4(Reflectionprobe * _Global_GILightMulti.rgb * _EmissionColorBright.rgb , saturate(rim + 0.05));
+    color = half4(Reflectionprobe * _Global_GILightMulti.rgb * _EmissionColorBright.rgb, saturate(rim + 0.05));
 
     //하이트 포그  연산
     color = MMN_GlobalTex_HeightFog(

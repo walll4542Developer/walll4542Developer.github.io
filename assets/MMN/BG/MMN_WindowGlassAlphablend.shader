@@ -28,7 +28,7 @@ Shader "MMN/BG/WindowGlassAlphablend"
 
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
-            
+
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON //글로벌이라서 로컬로 하면 곤란
@@ -36,6 +36,7 @@ Shader "MMN/BG/WindowGlassAlphablend"
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
 
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple

@@ -59,6 +59,7 @@ Shader "MMN/BG/Sky_Clouds"
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
         [HideInInspector] _ZWrite ("__zw", Float) = 1.0
+        [HideInInspector] _Color ("Alpha", Color) = (1, 1, 1, 1)
         // Editmode props
         [HideInInspector]_QueueOffset ("Queue offset", Float) = 0.0
     }
@@ -134,6 +135,8 @@ Shader "MMN/BG/Sky_Clouds"
                 float _YTiling4;
 
                 float4 _StarColor;
+
+                float4 _Color;
             CBUFFER_END
 
             //Global Property
@@ -161,10 +164,10 @@ Shader "MMN/BG/Sky_Clouds"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
+                half3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
-                float4 color : COLOR;
+                half4 color : COLOR;
                 float2 staticLightmapUV : TEXCOORD1;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -175,8 +178,8 @@ Shader "MMN/BG/Sky_Clouds"
                 float2 uv : TEXCOORD0;
                 float2 uv2 : TEXCOORD1;
                 float3 positionWS : TEXCOORD2;    // xyz: posWS
-                half3 normalWS : TEXCOORD3;
-                float4 color : COLOR;
+                half3 normalWS : NORMAL;
+                half4 color : COLOR;
                 float4 positionCS : SV_POSITION;
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 4);
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -307,6 +310,7 @@ Shader "MMN/BG/Sky_Clouds"
                 starColor = starColor * saturate(1 - staraDimmer);
                 color += starColor;
 
+                color.a = color.a * _Color.a;
 
                 if (unity_OrthoParams.w == 1) //Ortho에서는 사라지게 한다
                 return 0;

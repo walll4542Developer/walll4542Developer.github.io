@@ -1,4 +1,4 @@
-// Shader targeted for low end devices. Single Pass Forward Rendering.
+// L2 큰 나무의 LOD를 위한 스페셜 셰이더
 Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
 {
     // Keep properties of StandardSpecular shader for upgrade reasons.
@@ -54,7 +54,7 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
 
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
-            
+
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
@@ -62,6 +62,7 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
             // Unity defined keywords
             // #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
 
             #pragma vertex LitPassVertexSimple
@@ -85,12 +86,12 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                half3 normalOS : NORMAL;
+                half4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
                 float2 staticLightmapUV : TEXCOORD1;
                 // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-                float4 color : COLOR;
+                half4 color : COLOR;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
             };
@@ -99,14 +100,14 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
             {
                 float2 uv : TEXCOORD0;
 
-                float3 positionWS                   : TEXCOORD1;    // xyz: posWS
-                half3 normalWS                      : TEXCOORD2;
-                    half fogFactor : TEXCOORD3;
+                float3 positionWS : TEXCOORD1;    // xyz: posWS
+                half3 normalWS : TEXCOORD2;
+                half fogFactor : TEXCOORD3;
 
                 // #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
                 //     float4 shadowCoord : TEXCOORD4;
                 // #endif
-                
+
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
 
                 float4 screenPos : TEXCOORD5;
@@ -120,7 +121,7 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                 inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
 
-                inputData.normalWS = half3(0,1,0); //이 나무의 조명은 강제로 위로 보도록
+                inputData.normalWS = half3(0, 1, 0); //이 나무의 조명은 강제로 위로 보도록
                 inputData.shadowCoord = float4(0, 0, 0, 0);
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
                 inputData.vertexLighting = half3(0, 0, 0);
@@ -129,7 +130,7 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                 inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
 
                 #if defined(DEBUG_DISPLAY)
-                        inputData.vertexSH = input.vertexSH;
+                    inputData.vertexSH = input.vertexSH;
                 #endif
             }
 
@@ -173,13 +174,13 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
             {
                 float2 uv = input.uv;
                 half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                
+
                 //틴트칼라와 버텍스 칼라
                 float3 tintProp = _BaseColor.rgb;
                 half tintStrengthProp = _AlbedoTintStrength;
                 float3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
                 half alpha = diffuseAlpha.a;
- 
+
                 InputData inputData;
                 InitializeInputData(input, inputData);
                 SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
@@ -228,9 +229,9 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                     _Global_FogHeightNoiseScale,
                     uv);
 
-                //기울어졌을때 알파가 빠지도록 만들자 
+                //기울어졌을때 알파가 빠지도록 만들자
                 input.camForward_n = NormalizeNormalPerPixel(input.camForward_n);
-                half tiltAlpha = abs(dot( input.normalWS, input.camForward_n));
+                half tiltAlpha = abs(dot(input.normalWS, input.camForward_n));
                 // tiltAlpha = saturate(tiltAlpha * tiltAlpha);
 
                 color.a = saturate(alpha * _BaseColor.a * tiltAlpha);
@@ -242,4 +243,5 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
     // Fallback  "Hidden/Universal Render Pipeline/FallbackError"
     Fallback off
     // CustomEditor "MM.Client.Editor.ShaderGUI.MMN_SimpleLitAlphaGUI"
+
 }

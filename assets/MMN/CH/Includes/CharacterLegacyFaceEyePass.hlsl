@@ -4,7 +4,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-#include "../Includes/BendingVertex.hlsl"
+// #include "../Includes/BendingVertex.hlsl"
 
 #include "Includes/CharacterLighting.hlsl"
 #include "Includes/CharacterAtlas.hlsl"
@@ -17,8 +17,7 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
+    half3 normalOS : NORMAL;
 
     float2 texcoord : TEXCOORD0;
 };
@@ -32,13 +31,12 @@ struct Varyings
     float4 pupilClipRect : TEXCOORD2;
 
     float4 positionWS : TEXCOORD3;  // xyz: position, w: camera distance
-    float4 normalWS : TEXCOORD4;     // xyz: normal, w: viewDir.x
-    float4 tangentWS : TEXCOORD5;    // xyz: tangent, w: viewDir.y
-    float4 bitangentWS : TEXCOORD6;  // xy1z: bitangent, w: viewDir.z
+    half3 normalWS : TEXCOORD4;     // xyz: normal
+    half3 viewDirWS : TEXCOORD5;
 
-    float4 fogCoord : TEXCOORD7;     // x: fogFactor, yzw: vertexLighting
+    half4 fogCoord : TEXCOORD6;     // x: fogFactor, yzw: vertexLighting
 
-    float4 positionNDC : TEXCOORD8;
+    float4 positionNDC : TEXCOORD7;
 };
 
 
@@ -58,8 +56,8 @@ Varyings vert(Attributes input)
     Varyings output = (Varyings)0;
 
     float2 pupilUvOffset, pupilUvScale;
-    CalcUvOffsetScale_Legacy((float)_PupilTextureColNum, (float)_PupilTextureRowNum,
-        (float)(_PupilIndexFromOne - 1), pupilUvOffset, pupilUvScale);
+    CalcUvOffsetScale_Legacy((half)_PupilTextureColNum, (half)_PupilTextureRowNum,
+        (half)(_PupilIndexFromOne - 1), pupilUvOffset, pupilUvScale);
 
     output.texcoord = input.texcoord;
 
@@ -100,23 +98,21 @@ Varyings vert(Attributes input)
     output.pupilClipRect.xy = TRANSFORM_TEX(float2(0.0, 0.0), _PupilTexture) * pupilUvScale + pupilUvOffset;
     output.pupilClipRect.zw = TRANSFORM_TEX(float2(1.0, 1.0), _PupilTexture) * pupilUvScale + pupilUvOffset;
 
-    VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
 
     output.positionWS.xyz = vertexInput.positionWS;
     output.positionCS = vertexInput.positionCS;
 
-    VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
-    output.normalWS = float4(normalInput.normalWS, viewDirWS.x);
-    output.tangentWS = float4(normalInput.tangentWS, viewDirWS.y);
-    output.bitangentWS = float4(normalInput.bitangentWS, viewDirWS.z);
+    VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
+    output.normalWS = half3(normalInput.normalWS);
+    output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
-    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        float3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
-        output.fogCoord = float4(fogFactor, vertexLight); //fogFactorAndVertexLight
+        half3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
+        output.fogCoord = half4(fogFactor, vertexLight); //fogFactorAndVertexLight
     #else
-        output.fogCoord = float4(fogFactor, 0.0, 0.0, 0.0);
+        output.fogCoord = half4(fogFactor, 0.0, 0.0, 0.0);
     #endif
 
     output.positionNDC = ComputeScreenPos(output.positionCS);
@@ -130,34 +126,31 @@ void InitializeCharacterInputData(Varyings input, out InputData inputData)
     inputData = (InputData)0;
     inputData.positionWS = input.positionWS.xyz;
 
-    float3 viewDirWS = float3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
-    viewDirWS = SafeNormalize(viewDirWS);
-    inputData.viewDirectionWS = viewDirWS;
+    inputData.viewDirectionWS = SafeNormalize(input.viewDirWS);
 
-    inputData.tangentToWorld = float3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
     inputData.normalWS.xyz = input.normalWS.xyz;
 
-    inputData.shadowCoord = float4(0, 0, 0, 0);
+    inputData.shadowCoord = half4(0, 0, 0, 0);
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
         inputData.vertexLighting = input.fogCoord.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
-        inputData.vertexLighting = float3(0, 0, 0);
+        inputData.vertexLighting = half3(0, 0, 0);
     #endif
 
     inputData.bakedGI = 1.0; //음영을 사용 안하도록
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    inputData.shadowMask = float4(1, 1, 1, 1);
+    inputData.shadowMask = half4(1, 1, 1, 1);
 }
 
-float4 frag(Varyings input) : SV_Target
+half4 frag(Varyings input) : SV_Target
 {
     float2 eyeballUvOffset, eyeballUvScale;
-    CalcUvOffsetScale_Legacy((float)_EyeballTextureColNum, (float)_EyeballTextureRowNum,
-        (float)(_EyeballIndexFromOne - 1), eyeballUvOffset, eyeballUvScale);
+    CalcUvOffsetScale_Legacy((half)_EyeballTextureColNum, (half)_EyeballTextureRowNum,
+        (half)(_EyeballIndexFromOne - 1), eyeballUvOffset, eyeballUvScale);
 
     float2 eyeballTexcoord;
     float2 clampedUVEyeball;
@@ -193,7 +186,7 @@ float4 frag(Varyings input) : SV_Target
         clampedUVEyeball = clamp(eyeballTexcoord, eyeballClipRect50, eyeballClipRect11);
     }
 
-    float4 eyeballColor = SAMPLE_TEXTURE2D(_EyeballTexture, sampler_EyeballTexture, clampedUVEyeball);
+    half4 eyeballColor = SAMPLE_TEXTURE2D(_EyeballTexture, sampler_EyeballTexture, clampedUVEyeball);
     if (eyeballColor.a < 0.01)
     {
         discard;
@@ -201,9 +194,9 @@ float4 frag(Varyings input) : SV_Target
 
     float2 clampedUVLeft = clamp(input.pupilTexcoord.xy, input.pupilClipRect.xy, input.pupilClipRect.zw);
     float2 clampedUVRight = clamp(input.pupilTexcoord.zw, input.pupilClipRect.xy, input.pupilClipRect.zw);
-    float4 leftPupilColor = SAMPLE_TEXTURE2D_BIAS(_PupilTexture, sampler_PupilTexture, clampedUVLeft, -1.2);
-    float4 rightPupilColor = SAMPLE_TEXTURE2D_BIAS(_PupilTexture, sampler_PupilTexture, clampedUVRight, -1.2);
-    float4 pupilColor = float4(lerp(leftPupilColor.rgb, float3(1.0, 0.0, 0.0), _Pupil_Position_Debug) * leftPupilColor.a + lerp(rightPupilColor.rgb, float3(0.0, 0.0, 1.0), _Pupil_Position_Debug) * rightPupilColor.a, leftPupilColor.a + rightPupilColor.a);
+    half4 leftPupilColor = SAMPLE_TEXTURE2D_BIAS(_PupilTexture, sampler_PupilTexture, clampedUVLeft, -1.2);
+    half4 rightPupilColor = SAMPLE_TEXTURE2D_BIAS(_PupilTexture, sampler_PupilTexture, clampedUVRight, -1.2);
+    half4 pupilColor = half4(lerp(leftPupilColor.rgb, half3(1.0, 0.0, 0.0), _Pupil_Position_Debug) * leftPupilColor.a + lerp(rightPupilColor.rgb, half3(0.0, 0.0, 1.0), _Pupil_Position_Debug) * rightPupilColor.a, leftPupilColor.a + rightPupilColor.a);
 
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
@@ -212,17 +205,17 @@ float4 frag(Varyings input) : SV_Target
         }
     #endif
 
-    float eyeballColorMin = min(eyeballColor.r, min(eyeballColor.g, eyeballColor.b));
-    float eyeballColorMask = smoothstep(_PupilMaskThresholdMin, _PupilMaskThresholdMax, eyeballColorMin * eyeballColor.a);
-    float4 maskedPupilColor = eyeballColorMask * pupilColor;
+    half eyeballColorMin = min(eyeballColor.r, min(eyeballColor.g, eyeballColor.b));
+    half eyeballColorMask = smoothstep(_PupilMaskThresholdMin, _PupilMaskThresholdMax, eyeballColorMin * eyeballColor.a);
+    half4 maskedPupilColor = eyeballColorMask * pupilColor;
     #if _MASK_ON
-        float4 maskTextureMask = SAMPLE_TEXTURE2D_BIAS(_EyeballPupilMaskTexture, sampler_EyeballPupilMaskTexture, clampedUVEyeball, -1.2);
+        half4 maskTextureMask = SAMPLE_TEXTURE2D_BIAS(_EyeballPupilMaskTexture, sampler_EyeballPupilMaskTexture, clampedUVEyeball, -1.2);
         maskedPupilColor = maskTextureMask * pupilColor;
     #endif
-    float3 maskedColor = maskedPupilColor.rgb * maskedPupilColor.a + eyeballColor.rgb * (1 - maskedPupilColor.a);
+    half3 maskedColor = maskedPupilColor.rgb * maskedPupilColor.a + eyeballColor.rgb * (1 - maskedPupilColor.a);
 
-    float3 dyedBaseColor = maskedColor;
-    float alpha = eyeballColor.a * _Alpha;
+    half3 dyedBaseColor = maskedColor;
+    half alpha = eyeballColor.a * _Alpha;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -245,7 +238,7 @@ float4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    float4 resultColor;
+    half4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         dyedBaseColor);
@@ -265,7 +258,7 @@ float4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return float4(dyedBaseColor, resultColor.a);
+        return half4(dyedBaseColor, resultColor.a);
     }
     #endif
 

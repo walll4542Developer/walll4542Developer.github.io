@@ -1,15 +1,15 @@
 #ifndef MMN_CHARACTER_APPLY_FRESNEL_INCLUDED
 #define MMN_CHARACTER_APPLY_FRESNEL_INCLUDED
 
-float3 ApplyFresnel(float3 dyedBaseColor, float3 mainLightColor, float3 giColor,
-    float3 normalWS, float3 viewDirectionWS,
-    float3 fresnelColor, float fresnelRange, float fresnelPower)
+half3 ApplyFresnel(half3 dyedBaseColor, half3 mainLightColor, half3 giColor,
+    half3 normalWS, half3 viewDirectionWS,
+    half3 fresnelColor, half fresnelRange, half fresnelPower)
 {
-    float3 lightColor = saturate(mainLightColor + giColor);
+    half3 lightColor = saturate(mainLightColor + giColor);
 
-    float nDotV = dot(normalWS, viewDirectionWS);
-    float fresnelValue = saturate(pow(abs(1.0 - nDotV), fresnelRange));
-    float3 fresnelResult = dyedBaseColor * lightColor * fresnelColor * fresnelValue * fresnelPower;
+    half nDotV = dot(normalWS, viewDirectionWS);
+    half fresnelValue = saturate(pow(abs(1.0 - nDotV), fresnelRange));
+    half3 fresnelResult = dyedBaseColor * lightColor * fresnelColor * fresnelValue * fresnelPower;
     return fresnelResult;
 }
 

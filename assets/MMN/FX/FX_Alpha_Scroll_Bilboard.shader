@@ -46,6 +46,7 @@ Shader "MM/FX/Alpha_Scroll_Billboard"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
 
             //--------------------------------------
             // GPU Instancing
