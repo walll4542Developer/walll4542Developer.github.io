@@ -1,12 +1,12 @@
 ---
 title: "후디니 입문 01 - 인터페이스"
-excerpt: 인터페이스 / 작업 환경을 설정합니다.
+excerpt: 후디니는 작업 환경을 커스텀 할 수 있습니다. 인터페이스 / 작업 환경을 설정하고 저장과 불러오기 하는 방법을 배웁니다.
 date: 2024-02-01 00:00:00 -0000
 categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo.png
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-01.png
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
