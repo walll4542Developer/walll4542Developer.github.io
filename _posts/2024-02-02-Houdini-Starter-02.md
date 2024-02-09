@@ -42,3 +42,5 @@ mantra 렌더러에 카메라의 주소를 입력하는 부분이 있습니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/017.png){: .align-left}
 또한 mantra 렌더러에서 Objects 탭을 선택하면 렌더링 하거나 하지 않을 오브젝트의 주소를 입력해서 직접 필터링 할 수도 있습니다.
+
+
