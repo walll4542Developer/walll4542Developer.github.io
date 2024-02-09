@@ -28,19 +28,39 @@ toc_sticky: true
 - 렌더러는 /out 하위에 있어야 합니다.
 - 메테리얼은 /mat 하위에 있어야 합니다.
 
-오브젝트에는 카메라와 라이트도 포함됩니다.{: .text-justify}
+오브젝트에는 카메라와 라이트도 포함됩니다.
+{: .notice--info}
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/014.png){: .align-left}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/014.png){: .align-center}
 
 예를 들어 렌더링을 하기 위해서는 렌더러와 카메라가 필요하기 때문에 /out 하위에서 mantra 렌더러 노드를 생성 했습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/016.png){: .align-left}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/016.png){: .align-center}
+
 같은 방식으로 /obj 하위에서 카메라 노드를 생성하였습니다. 이름은 'cam1'입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/015.png){: .align-left}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/015.png){: .align-center}
+
 mantra 렌더러에 카메라의 주소를 입력하는 부분이 있습니다. 이전에 /obj 하위에 만든 카메라를 사용하려면 '/obj/cam1' 라는 주소를 입력해야 합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/017.png){: .align-left}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/017.png){: .align-center}
+
 또한 mantra 렌더러에서 Objects 탭을 선택하면 렌더링 하거나 하지 않을 오브젝트의 주소를 입력해서 직접 필터링 할 수도 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/018.png){: .align-center}
+
+입력창에 '*' 기호가 있는 것을 보실 수 있는데요. 이는 존재하는 모든 오브젝트를 사용하겠다는 뜻입니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/019.png){: .align-center}
+
+/obj 하위에서 각각 세 개의 박스와 라이트를 생성하고 위와 같이 이름을 지어줬습니다.
+
+- light는 l_a, l_b, l_c
+- box는 box_a, box_b, box_c
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/020.png){: .align-center}
+'*' 기호를 모두 지우고 Force Objects 탭과 Force Lights 탭에 이전에 생성한 오브젝트와 라이트 노드의 이름을 입력했습니다. 
+
+Force~ 는 강제로 렌더링 할 오브젝트를 지정하는 기능입니다.
 
 
