@@ -28,6 +28,9 @@ toc_sticky: true
 - 렌더러는 /out 하위에 있어야 합니다.
 - 메테리얼은 /mat 하위에 있어야 합니다.
 
-오브젝트에는 카메라와 라이트도 포함됩니다.{: .text-justify}
+오브젝트에는 카메라와 라이트도 포함됩니다.
+{: .notice--info}
+{: .text-justify}
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/014.png){: .align-left}
+
