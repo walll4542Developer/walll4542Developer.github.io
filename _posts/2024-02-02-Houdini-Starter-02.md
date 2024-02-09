@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 02 - 주소 개념과 카메라, 라이트, 렌더러"
+title: "후디니 입문 02 - 주소 개념과 카메라, 라이트, 렌더러, 메테리얼"
 excerpt: 인터페이스 / 작업 환경을 설정합니다.
 date: 2024-02-02 00:00:00 -0000
 categories: Houdini
@@ -53,14 +53,51 @@ mantra 렌더러에 카메라의 주소를 입력하는 부분이 있습니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/019.png){: .align-center}
 
-/obj 하위에서 각각 세 개의 박스와 라이트를 생성하고 위와 같이 이름을 지어줬습니다.
-
 - light는 l_a, l_b, l_c
 - box는 box_a, box_b, box_c
 
+/obj 하위에서 각각 세 개의 박스와 라이트를 생성하고 위와 같이 이름을 지어줬습니다.
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/020.png){: .align-center}
+
 '*' 기호를 모두 지우고 Force Objects 탭과 Force Lights 탭에 이전에 생성한 오브젝트와 라이트 노드의 이름을 입력했습니다. 
 
 Force~ 는 강제로 렌더링 할 오브젝트를 지정하는 기능입니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/021.png){: .align-center}
+
+mantra 렌더러의 Rendering 탭에서 Rendering Engine을 PBR으로 선택하고 렌더링 해보겠습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/022.png){: .align-center}
+
+Render View 탭에서 렌더링에 사용할 카메라를 설정할 수 있습니다. 
+이전에 생성했던 카메라인 '/obj/cam1' 이 등록되어있는것을 확인할 수 있습니다. '/obj/cam1' 을 선택합니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/024.png){: .align-center}
+
+Render 버튼을 누르면 약간의 시간이 지난 후에 렌더링이 되는 것을 확인할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/023.png){: .align-center}
+
+아까 사용했던 '${*}$' 기호를 사용해서 위와 같은 방식으로 설정해 줄 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/025.png){: .align-center}
+
+꼭 a, b, c 일 필요 없이 위처럼 1, 2, 3 같은 숫자 형식도 ${*}$ 을 사용하면 렌더러에서 인식할 수 있습니다.
+l_ box_ 로 시작하는 모든 오브젝트와 라이트의 주소를 찾는 것이기 떄문입니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/029.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/026.png){: .align-center}
+
+다음은 재질 설정입니다. /mat 하위에 Principled Shader 노드를 생성합니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/030.png){: .align-center}
+
+이름을 red로 바꾸고 색상도 빨간색으로 바꿔줍시다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/031.png){: .align-center}
+
+모든 박스를 드래그 선택하고 Parameter View에서 Render 탭을 열어줍니다. 
+
+Material 주소를 입력하는 공간이 있습니다. 이전에 만들었던 빨간색 재질의 주소 '/mat/red'를 입력해줍시다.
 

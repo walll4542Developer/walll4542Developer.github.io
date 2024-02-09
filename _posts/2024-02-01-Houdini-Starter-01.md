@@ -39,9 +39,15 @@ toc_sticky: true
 이 버튼을 클릭하면 창이 좌우 또는 상하로 분리됩니다. 이를 이용하여 원하는 대로 탭을 분할하고 배치할 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/001.gif){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/007.png){: .align-center}
 
 Parameter View는 Network View에 마우스를 올려두고 P 키를 누르면 Network View 내부에서 끄고 켤 수 있습니다.
 또한 마우스로 드래그하여 축소 또는 확장이 가능합니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/027.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/028.png){: .align-center}
+ 
+Network View에 마우스를 올려두고 C 키를 누르면 노드 색상을 변경할 수 있는 팔레트가 오른쪽 아래에 열립니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/009.png){: .align-center}
 
