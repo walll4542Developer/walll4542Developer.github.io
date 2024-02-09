@@ -57,12 +57,12 @@ plugins:
 author:
   name   : "최우영"
   avatar : "/assets/images/Portrait/watchman.png"
-  bio    : "Junior Technical Artist / 3d WEEABOO
+  bio    : "Junior Technical Artist / 3d WEEABOO /
 This blog use personal issue only."
   links:
     - label: "Seoul, KR"
       icon: "fas fa-fw fa-map-marker"
-    - label: "Blog"
+    - label: "Other Blog"
       icon: "fas fa-fw fa-link"
       url: "https://walll4542.wixsite.com/watchthis"
     - label: "Email"
