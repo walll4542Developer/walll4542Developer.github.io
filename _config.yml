@@ -88,7 +88,7 @@ footer:
 highlighter: rouge
 
 # 발췌 부분 뽑아내는 기준을 어떻게 정할건지
-excerpt_separator: "\n\n"
+# excerpt_separator: "\n\n"
 
 defaults:
   # _posts
