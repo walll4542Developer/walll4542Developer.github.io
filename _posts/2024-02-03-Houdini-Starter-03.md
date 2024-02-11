@@ -6,7 +6,7 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-03.png
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-03.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
@@ -17,7 +17,9 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-## Add 노드 사용하기
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo.png){: .align-center}
+
+## Add
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/035.png){: .align-center}
 
@@ -85,6 +87,8 @@ add1 노드와 add2 노드의 순서를 바꿔서 포인트 인덱스를 변경 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/008.gif){: .align-center}
 
 merge 노드 내부에서 생성 순서를 **시계방향**으로 변경하면 생성된 면의 색상이 회색으로 변하는 것을 확인하실 수 있습니다.
+
+## Bound
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/049.png){: .align-center}
 
