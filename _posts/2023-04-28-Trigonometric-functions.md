@@ -39,7 +39,9 @@ $$
 밑변의 길이를 a, 높이를 b, 빗변의 길이를 c, 빗변과 밑변과의 사잇 각을 ${\theta}$라고 할 때, 각 삼각비의 관계는 위와 같이 분수식으로 표현할 수 있습니다.
 
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/circle_cos_sin.webp){: .align-center}
-직각 삼각형에서 측정할 수 있는 사잇각은 0도 보다 크거나 90도 보다 작아야 합니다. 이때 위 이미지와 같이 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 **삼각함수(Trigonometric function)**라고 합니다.
+
+직각 삼각형에서 측정할 수 있는 사잇각은 0도 보다 크거나 90도 보다 작아야 합니다. \\
+이때 위 이미지와 같이 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 **삼각함수(Trigonometric function)**라고 합니다.
 
 ![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/001.png){: .align-center}
 
@@ -107,21 +109,27 @@ $$
 이런 값의 변화는 ${[-1,1]}$ 범위 내에서 360도 마다 반복되는데, 변화값의 범위를 **진폭(Amplitude)**, 반복되는 각도를 **주기(Period)**라고 합니다.
 
 360도 마다 이 패턴이 반복되므로 
+
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/007.png){: .align-center}
 cos함수에 대응하는 vx값의 그래프는 
+
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/007.png){: .align-center}
 sin 함수에 대응하는 vy값의 그래프는
 의 형태를 가집니다.
 
 1. sin 함수와 cos 함수는 항상 -1 에서 1 사이를 일정하게 반복하는 패턴을 띱니다.
 2. sin 함수와 cos 함수의 값은 360도 주기로 반복됩니다.
 3. y축을 기준으로 좌우를 접어 포갰을 때 cos 함수 그래프는 데칼코마니 처럼 좌우 대칭인 반면, sin 함수 그래프는 상하가 반전된 원점 대칭의 형태를 띕니다. \\
-cos 함수와 같이 좌우 대칭의 성질을 가진 함수를 **짝함수(Even function)** 또는 우함수라고 부르며, sin 함수와 같이 원점 대칭의 성질을 가진 함수를 **홀함수(Odd function)** 또는 기함수라고 부릅니다.
+cos 함수와 같이 좌우 대칭의 성질을 가진 함수를 **짝함수(Even function)** 또는 우함수라고 부르며, \\
+sin 함수와 같이 원점 대칭의 성질을 가진 함수를 **홀함수(Odd function)** 또는 기함수라고 부릅니다.
 
 $$
 cos(-\theta) = cos(\theta) \\
 sin(-\theta) = sin(\theta)
 $$
 
-특히 3번에서 언급한 sin함수와 cos함수 그래프가 지니는 홀함수와 짝함수의 성질은 위의 식으로 정리할 수 있습니다. 이 역시 향후 회전에 관련된 계산에 유용하게 사용되므로 숙지해둡시다.
+특히 3번에서 언급한 sin함수와 cos함수 그래프가 지니는 홀함수와 짝함수의 성질은 위의 식으로 정리할 수 있습니다. \\
+이 역시 향후 회전에 관련된 계산에 유용하게 사용되므로 숙지해둡시다.
 
 $$
 tan \theta = \frac{b}{a}
