@@ -23,7 +23,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/000.png){: .align-center}
 
-후디니를 처음 실행한 화면입니다. 최초 작업 환경은 위와 같이 'Scene View', 'Parameter View', 'Network View'로 구성되어 있습니다.\\
+후디니를 처음 실행한 화면입니다. 최초 작업 환경은 위와 같이 'Scene View', 'Parameter View', 'Network View'로 구성되어 있습니다. \\
 작업 환경을 본인에게 알맞게 커스텀 하기 위해서 모든 탭을 제거하고 처음부터 추가해보겠습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/003.gif){: .align-center}
@@ -65,8 +65,8 @@ BackGround 탭에서 Scene View의 색상을 설정해 줄 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/004.gif){: .align-center}
 
-구성한 인터페이스에서 Scene View와 Network View 그리고 'Geometry SpreadSheet' 는 연동이 되어 있지 않습니다.\\
-우리가 설정한 인터페이스들이 같은 정보를 연동하려면 위와 같이 **링크**를 설정해야 합니다.\\
+구성한 인터페이스에서 Scene View와 Network View 그리고 'Geometry SpreadSheet' 는 연동이 되어 있지 않습니다. \\
+우리가 설정한 인터페이스들이 같은 정보를 연동하려면 위와 같이 **링크**를 설정해야 합니다. \\
 저는 모든 탭의 링크를 1번으로 지정했습니다.
 
 ### 작업 환경 프리셋 저장 / 로드하기

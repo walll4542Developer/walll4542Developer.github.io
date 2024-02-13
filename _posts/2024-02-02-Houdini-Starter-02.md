@@ -19,7 +19,7 @@ toc_sticky: true
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/013.png){: .align-center}
 
 ## 주소 개념
-후디니의 Network View에서 사용하는 모든 노드에는 고유한 주소가 존재합니다.\\
+후디니의 Network View에서 사용하는 모든 노드에는 고유한 주소가 존재합니다. \\
 후디니는 모든 네트워크 간의 연결을 주소 입력을 바탕으로 하며, 주소 개념이 후디니 설계 철학입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/012.png){: .align-center}
