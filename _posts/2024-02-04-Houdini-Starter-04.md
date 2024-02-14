@@ -23,18 +23,18 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/053.png){: .align-center}
 
-예를 들어 Add 노드로 생성한 포인트 두 개가 있을 때, 위 이미지 처럼 한 쪽에만 컬러(Color) 노드를 연결하는 경우 경고 표시가 나옵니다.
+예를 들어 더하기(Add) 노드로 생성한 포인트 두 개가 있을 때, 위 이미지 처럼 한 쪽에만 컬러(Color) 노드를 연결하는 경우 경고 표시가 나옵니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/054.png){: .align-center}
 
 한 쪽 포인트에는 컬러 데이터인 **cd 값**이 들어있는데, 다른 쪽 포인트에는 없어서 그렇습니다. \\
-merge로 합쳤는데 두 포인트가 가진 데이터 타입이 일치하지 않기 떄문입니다.
+머지 노드로 합쳤는데 두 포인트가 가진 데이터 타입이 일치하지 않기 떄문입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/055.png){: .align-center}
 
 양쪽 모두 컬러 노드를 연결해서 cd 값이 있으면 경고 표시는 사라집니다.
 
-## Group 노드
+## 그룹(Group) 노드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/057.png){: .align-center}
 
@@ -62,7 +62,7 @@ Group name 에서 그룹의 이름을 지정할 수 있으며, Group Type에서 
 
 인포(Info) 창에서 정보를 확인하면 2개의 포인트 그룹이 있으며, 각각 이름은 **A**와 **B**라고 쓰여있는 것을 확인 할 수 있습니다.
 
-## Blast 노드
+## 블라스트(Blast) 노드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/013.gif){: .align-center} 
 
@@ -136,11 +136,11 @@ Vertices와 Polygons에 대한 설명은 지금 시점에서는 다루지 않겠
 
 위 움짤처럼 그룹 노드를 생성한다음 데이터 타입을 primitives 로 정하고 Base Group 탭에서 그룹으로 묶어줄 primitives 의 범위를 설정할 수 있습니다. 단일 오브젝트인 박스 내부에서도 박스를 구성하는 요소들 끼리 그룹을 분류할 수 있는 것입니다.
 
-### 그룹 Select 모드
+### 그룹 셀렉트(Select) 모드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/021.gif){: .align-center} 
 
-Base Group 에서 입력하지 않고 Scene View 에서 마우스로 원하는 primitives 를 직접 선택하는 **Select 모드**를 사용할 수 있습니다. 
+Base Group 에서 입력하지 않고 Scene View 에서 마우스로 원하는 primitives 를 직접 선택하는 **셀렉트(Select) 모드**를 사용할 수 있습니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/069.png){: .align-center} 
 
