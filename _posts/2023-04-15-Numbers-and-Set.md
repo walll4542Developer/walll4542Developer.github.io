@@ -6,7 +6,7 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Numbers%20and%20Set/Numbers%20and%20Set.png
+  teaser: /assets/images/Docs/Thumbnails/math.png
   overlay_image: /assets/images/Docs/Numbers%20and%20Set/Numbers%20and%20Set.png
   overlay_filter: 0.5
 

@@ -6,7 +6,7 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Trigonometric%20functions/001.png
+  teaser: /assets/images/Docs/Thumbnails/math.png
   overlay_image: /assets/images/Docs/Trigonometric%20functions/001.png
   overlay_filter: 0.5
 

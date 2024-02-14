@@ -6,7 +6,7 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Vector%20Combination/image%20(2).png
+  teaser: /assets/images/Docs/Thumbnails/math.png
   overlay_image: /assets/images/Docs/Vector%20Combination/image%20(2).png
   overlay_filter: 0.5
 
