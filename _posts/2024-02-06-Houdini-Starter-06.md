@@ -1,7 +1,7 @@
 ---
 title: "후디니 입문 06 - 절차생성(Procedural) 모델링"
 excerpt: "후디니를 이용한 절차 생성 모델링의 기본기에 대해서 배워보겠습니다."
-date: 2024-02-05 00:00:00 -0000
+date: 2024-02-06 00:00:00 -0000
 categories: Houdini
 tag: Research
 

@@ -27,12 +27,12 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/054.png){: .align-center}
 
-한 쪽 포인트에는 컬러 데이터인 **cd 값**이 들어있는데, 다른 쪽 포인트에는 없어서 그렇습니다. \\
+한 쪽 포인트에는 컬러 데이터인 **Cd 값**이 들어있는데, 다른 쪽 포인트에는 없어서 그렇습니다. \\
 머지 노드로 합쳤는데 두 포인트가 가진 데이터 타입이 일치하지 않기 떄문입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/055.png){: .align-center}
 
-양쪽 모두 컬러 노드를 연결해서 cd 값이 있으면 경고 표시는 사라집니다.
+양쪽 모두 컬러 노드를 연결해서 Cd 값이 있으면 경고 표시는 사라집니다.
 
 ## 그룹(Group) 노드
 
@@ -100,7 +100,6 @@ Group name 에서 그룹의 이름을 지정할 수 있으며, Group Type에서 
 - points
 - Edges
 - Vertices
-\\
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/064.png){: .align-center} 
 
@@ -134,7 +133,8 @@ Vertices와 Polygons에 대한 설명은 지금 시점에서는 다루지 않겠
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/020.gif){: .align-center} 
 
-위 움짤처럼 그룹 노드를 생성한다음 데이터 타입을 primitives 로 정하고 Base Group 탭에서 그룹으로 묶어줄 primitives 의 범위를 설정할 수 있습니다. 단일 오브젝트인 박스 내부에서도 박스를 구성하는 요소들 끼리 그룹을 분류할 수 있는 것입니다.
+위 움짤처럼 그룹 노드를 생성한다음 데이터 타입을 primitives 로 정하고 Base Group 탭에서 그룹으로 묶어줄 primitives 의 범위를 설정할 수 있습니다. \\
+단일 오브젝트인 박스 내부에서도 박스를 구성하는 요소들 끼리 그룹을 분류할 수 있는 것입니다.
 
 ### 그룹 셀렉트(Select) 모드
 
@@ -145,7 +145,7 @@ Base Group 에서 입력하지 않고 Scene View 에서 마우스로 원하는 p
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/069.png){: .align-center} 
 
 Base Group 또는 Scene View 의 마우스 아이콘을 누르면 셀렉트(Select) 모드를 사용 가능합니다. \\
-혹은 Scene View 위에 마우스를 두고 **S** 키를 눌러도 셀렉트 모드가 됩니다. \\
+혹은 Scene View 위에 마우스를 두고 **S** 키를 눌러도 셀렉트 모드가 됩니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/022.gif){: .align-center} 
 
