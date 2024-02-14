@@ -10,7 +10,21 @@ header:
   overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
   overlay_filter: 0.5
 
-gallery1:
+gallery:
+  - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
+    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
+    alt: Image 1
+    caption: This is image 1
+  - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+    alt: Image 2
+    caption: This is image 2
+  - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif
+    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif
+    alt: Image 3
+    caption: This is image 3
+
+gallery0:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     alt: Image 1
@@ -31,9 +45,11 @@ toc_icon: "bars" # 아이콘 설정
 toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 ---
 
-{% include gallery gallery=page.gallery1 %}
+{% include gallery gallery=page.gallery %}
 
 UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
+
+{% include gallery gallery=page.gallery0 %}
 
 ![33](/assets/images/Docs/Super%20Hexagon%20Shader/image%20(33).png){: .align-center}
 ```hlsl
