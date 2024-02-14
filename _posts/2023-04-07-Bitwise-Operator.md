@@ -7,7 +7,7 @@ tag: Script
 
 header:
   teaser: /assets/images/Docs/Thumbnails/code.png
-  overlay_image: /assets/images/Docs/Bitwise%20Operator/image%20(6).png
+  overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.5
 
 # table of contents

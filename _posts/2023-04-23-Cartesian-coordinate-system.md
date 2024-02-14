@@ -7,7 +7,7 @@ tag: Algebra
 
 header:
   teaser: /assets/images/Docs/Thumbnails/math.png
-  overlay_image: /assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png
+  overlay_image: /assets/images/Docs/Thumbnails/math.png
   overlay_filter: 0.5
 
 # table of contents
