@@ -18,8 +18,8 @@ toc_sticky: true
 ---
 
 ## 절차생성(Procedural) 모델링
-
 이번에는 후디니를 이용한 절차생성(Procedural) 모델링의 기본기에 대해서 배워보겠습니다.
+
 
 
 ## 레퍼런스(Reference)

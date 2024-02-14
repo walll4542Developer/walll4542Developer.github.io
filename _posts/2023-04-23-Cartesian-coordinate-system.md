@@ -1,5 +1,5 @@
 ---
-title: "데카르트 좌표계(Cartesian coordinate system)"
+title: "게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)"
 excerpt: 실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다.
 date: 2023-04-23 00:00:00 -0000
 categories: Math

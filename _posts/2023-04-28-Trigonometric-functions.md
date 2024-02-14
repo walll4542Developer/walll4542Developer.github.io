@@ -1,5 +1,5 @@
 ---
-title: "삼각함수(Trigonometric function)"
+title: "게임 수학 입문 06 - 삼각함수(Trigonometric function)"
 excerpt: 직각 삼각형을 데카르트 좌표계 상에 배치하고 사잇각의 범위를 실수 전체로 확장한 대응 관계를 삼각함수(Trigonometric function)라고 합니다.
 date: 2023-04-28 00:00:00 -0000
 categories: Math
@@ -110,16 +110,16 @@ $$
 
 360도 마다 이 패턴이 반복되므로 
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/007.png){: .align-center}
-cos함수에 대응하는 vx값의 그래프는 
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
+cos함수에 대응하는 ${v_{x}}$값의 그래프는 위의 형태를 가집니다.
 
-![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/007.png){: .align-center}
-sin 함수에 대응하는 vy값의 그래프는
-의 형태를 가집니다.
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
+sin 함수에 대응하는 ${v_{y}}$값의 그래프는 위의 형태를 가집니다.
 
 1. sin 함수와 cos 함수는 항상 -1 에서 1 사이를 일정하게 반복하는 패턴을 띱니다.
 2. sin 함수와 cos 함수의 값은 360도 주기로 반복됩니다.
-3. y축을 기준으로 좌우를 접어 포갰을 때 cos 함수 그래프는 데칼코마니 처럼 좌우 대칭인 반면, sin 함수 그래프는 상하가 반전된 원점 대칭의 형태를 띕니다. \\
+3. y축을 기준으로 좌우를 접어 포갰을 때 cos 함수 그래프는 데칼코마니 처럼 좌우 대칭인 반면, sin 함수 그래프는 상하가 반전된 원점 대칭의 형태를 띕니다.
+
 cos 함수와 같이 좌우 대칭의 성질을 가진 함수를 **짝함수(Even function)** 또는 우함수라고 부르며, \\
 sin 함수와 같이 원점 대칭의 성질을 가진 함수를 **홀함수(Odd function)** 또는 기함수라고 부릅니다.
 
@@ -128,7 +128,7 @@ cos(-\theta) = cos(\theta) \\
 sin(-\theta) = sin(\theta)
 $$
 
-특히 3번에서 언급한 sin함수와 cos함수 그래프가 지니는 홀함수와 짝함수의 성질은 위의 식으로 정리할 수 있습니다. \\
+특히 3번에서 언급한 sin 함수와 cos 함수 그래프가 지니는 홀함수와 짝함수의 성질은 위의 식으로 정리할 수 있습니다. \\
 이 역시 향후 회전에 관련된 계산에 유용하게 사용되므로 숙지해둡시다.
 
 $$
@@ -144,6 +144,8 @@ $$
 분자와 분모를 모두 빗변 값으로 각각 나누면 위와 같이 cos와 sin으로 tan을 표현할 수 있습니다. \\
 분모의 값은 0이 될 수 없기 때문에 분모에 해당하는 cos 함수 값이 0이 되는 90도에서는 tan 값이 존재하지 않습니다. \\
 이는 270도인 경우에도 동일하고, -90. -270도인 경우에도 마찬가지입니다. 그렇기 때문에 tan 함수의 정의역에는 해당 구간이 포함되지 않습니다.
+
+![Cartesian coordinate system](/assets/images/Docs/Trigonometric%20functions/000.png){: .align-center}
 
 위 이미지는 tan 함수의 그래프이며 sin 함수와 동일하게 홀함수의 성질을 지님을 알 수 있습니다.
 

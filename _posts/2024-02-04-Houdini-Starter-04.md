@@ -16,9 +16,7 @@ toc_label: "목차"
 toc_icon: "bars"
 toc_sticky: true
 ---
-
 ## 데이터 타입
-
 노드로 생성한 데이터들을 머지(Merge) 노드를 사용해서 하나로 합쳐줄 때, **노드가 가지고 있는 데이터 타입이 모두 동일**해야 합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/053.png){: .align-center}

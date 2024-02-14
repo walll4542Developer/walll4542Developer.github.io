@@ -16,9 +16,10 @@ toc_label: "목차"
 toc_icon: "bars"
 toc_sticky: true
 ---
+## 작업 환경 커스터마이징
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo.png){: .align-center}
 
-## 작업 환경 커스터마이징
 후디니는 작업 환경을 커스텀 할 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/000.png){: .align-center}

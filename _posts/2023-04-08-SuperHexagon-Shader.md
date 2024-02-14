@@ -10,7 +10,7 @@ header:
   overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
   overlay_filter: 0.5
 
-gallery:
+gallery1:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     alt: Image 1
@@ -31,7 +31,7 @@ toc_icon: "bars" # 아이콘 설정
 toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 ---
 
-{% include gallery gallery=page.gallery %}
+{% include gallery gallery=page.gallery1 %}
 
 UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 
@@ -169,7 +169,7 @@ col.rgb = float3(a, 0);
 
 ```hlsl
 float2 uv = (i.uv - 0.5) * _Tile;
-float2 A =frac(uv -0.5) -0.5;
+float2 A = frac(uv - 0.5) - 0.5;
 col.rgb = float3(b, 0);
 ```
 
@@ -188,7 +188,7 @@ length()함수로 원점(0,0)에서 거리를 재면 위와 같은 데이터를 
 이렇게 얻어진 거리 값을 아래와 같은 조건문으로 비교를 하면?
 
 ```hlsl
- if(length(a) < length(b))
+ if (length(a) < length(b))
      result = a;
  else
      result = b;
@@ -196,7 +196,9 @@ length()함수로 원점(0,0)에서 거리를 재면 위와 같은 데이터를 
 
 픽셀 단위로 비교해서, a의 값이 더 작으면 a를 반환하고, 그렇지 않으면 b를 반환합니다. \\
 타일링이 잘 되는 것을 확인 할 수 있습니다. 같은 방법으로 정육각형도 처리하면 됩니다. \\
-(셰이더 연산 부하를 줄이기 위해 삼항연산자로 if를 쓰지 않고 더 줄일 수도 있습니다만, 가독성을 위해서 이렇게 처리하고 넘어가겠습니다.) 
+
+셰이더 연산 부하를 줄이기 위해 삼항연산자로 if를 쓰지 않고 더 줄일 수도 있습니다만, 가독성을 위해서 이렇게 처리하고 넘어가겠습니다.
+{: .notice--info}
 
 정사각형과 같은 아이디어로, UV를 정사각형에서 변경하여 직사각형으로 만들고, \\
 uv A와 uv B를 위와 같은 식으로 배치하면 타일링이 될 것입니다. 
@@ -248,28 +250,28 @@ float2 uv = (i.uv + 0.5) * _Tile; // 음수 제거
 ```hlsl
 float2 uv = (i.uv + 0.5) * _Tile;
 
- float2 ratio = normalize(float2(sqrt(3), 1));
- float2 halfRatio = ratio * 0.5;
+float2 ratio = normalize(float2(sqrt(3), 1));
+float2 halfRatio = ratio * 0.5;
 
- float2 b = fmod(uv, ratio) - halfRatio;
+float2 b = fmod(uv, ratio) - halfRatio;
 ```
 
 수직,수평 이동해야할 직사각형의 비율을 설정해줍시다. \\
 1만큼 수직, 루트 3만큼 수평 이동한 벡터를 fmod로 연산합시다.
 
 ```hlsl
- float2 uv = (i.uv + 0.5) * _Tile;
+float2 uv = (i.uv + 0.5) * _Tile;
 
- float2 ratio = normalize(float2(sqrt(3), 1));
- float2 halfRatio = ratio * 0.5;
+float2 ratio = normalize(float2(sqrt(3), 1));
+float2 halfRatio = ratio * 0.5;
 
- float2 a = fmod(uv - halfRatio, ratio) - halfRatio;
- float2 b = fmod(uv, ratio) - halfRatio;
+float2 a = fmod(uv - halfRatio, ratio) - halfRatio;
+float2 b = fmod(uv, ratio) - halfRatio;
 
- if(length(a) < length(b))
-     result = a;
- else
-     result = b;
+if(length(a) < length(b))
+    result = a;
+else
+    result = b;
 ```
 
 같은 방식으로 절반의 비율 만큼 이동한 uv를 만들어주고 조건문으로 합쳐주면 잘 작동합니다. \\
@@ -287,7 +289,8 @@ float HexaDistance(float2 uv)
 }
 ```
 
-아까 정육각형의 디스턴스 필드를 출력했던 부분을 함수로 분리합시다. UV가 회전 되어 있긴 하지만 정육각형의 중심에 원점이 있으니 그대로 사용해도 작동할 것입니다.
+아까 정육각형의 디스턴스 필드를 출력했던 부분을 함수로 분리합시다. \\
+UV가 회전 되어 있긴 하지만 정육각형의 중심에 원점이 있으니 그대로 사용해도 작동할 것입니다.
 
 ```hlsl
  float distanceField = HexaDistance(result);

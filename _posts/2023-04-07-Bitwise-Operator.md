@@ -20,13 +20,14 @@ toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 
 ![6](/assets/images/Docs/Bitwise%20Operator/image%20(6).png){: .align-center}
 
-비트 단위 연산자(Bitwise Operator)는 컴퓨터에서 비트(bit) 단위로 데이터를 처리할 때 사용되는 연산자입니다. 비트는 컴퓨터에서 정보의 최소 단위이며, 2진수이기 때문에 0 또는 1의 값을 가집니다. 
+비트 단위 연산자(Bitwise Operator)는 컴퓨터에서 비트(bit) 단위로 데이터를 처리할 때 사용되는 연산자입니다. 
+
+비트는 컴퓨터에서 정보의 최소 단위이며, 2진수이기 때문에 0 또는 1의 값을 가집니다. \\
 이러한 비트를 조작하는 연산을 비트 연산이라고 합니다. 대표적으로 다음과 같은 비트 연산자가 있습니다.
 
 ## 비트 단위 연산자의 종류
 
 ### AND (&)
-
 두 개의 비트가 모두 1일 경우 1을 반환하고, 그 외의 경우에는 0을 반환합니다.
 
 ```csharp
@@ -50,7 +51,6 @@ public class BitwiseOperator : MonoBehaviour
 ![7](/assets/images/Docs/Bitwise%20Operator/image%20(7).png){: .align-center}
 
 ### OR
-
 두 개의 비트 중 하나 이상이 1일 경우 1을 반환하고, 그 외의 경우에는 0을 반환합니다.
 
 ```csharp
@@ -63,7 +63,6 @@ n = 5 | 3;
 ![1](/assets/images/Docs/Bitwise%20Operator/image%20(1).png){: .align-center}
 
 ### XOR (^)
-
 두 개의 비트가 서로 다른 경우 1을 반환하고, 그 외의 경우에는 0을 반환합니다.
 
 ```csharp
@@ -76,7 +75,6 @@ n = 5 ^ 3;
 ![9](/assets/images/Docs/Bitwise%20Operator/image%20(9).png){: .align-center}
 
 ### NOT (~)
-
 비트를 반전시키는 연산자입니다. 1은 0으로, 0은 1로 바꿉니다. 이 연산자는 부호 비트도 반전시켜 양수를 음수로, 음수를 양수로 만듭니다. 음수부를 가지고 있지 않은 자료형에서는 당연히 음수가 되지 않습니다.
 
 ```csharp
@@ -88,7 +86,6 @@ n = ~5;
 ![3](/assets/images/Docs/Bitwise%20Operator/image%20(3).png){: .align-center}
 
 ### Shift (<<, >>) 연산자
-
 비트를 왼쪽이나 오른쪽으로 이동시키는 연산자입니다. 이 연산자는 주로 2의 거듭제곱 수를 곱하거나 나눌 때 사용됩니다. 이동한 오른쪽 비트는 0으로 채워지며, 왼쪽 끝 비트는 잘리게 됩니다.
 
 ```csharp
@@ -147,7 +144,6 @@ ${16*16 = 2^8}$ 이기 때문에 16진수 숫자 2개로 1바이트를 완벽히
 1바이트는 8개의 플래그를 가지고 있으니 ${2^8}$개의 조합을 표현 할 수 있으며 그것보다 더 많은 조합이 필요할 경우 비트 숫자를 늘려서 16비트, 32비트 등등을 사용하면 됩니다.
 
 ## 비트 마스크(Bit Mask)
-
 이렇게 만든 비트 플래그를 위에서 배운 비트 단위 연산자를 응용하여 플래그를 제어하는 것이 가능하며 이러한 방식을 **비트 마스크**라고 합니다.
 
 예를 들어 UnityEngine.Rendering의 이넘(enum) 중에는 ColorWriteMask 라는 이넘이 있습니다.
@@ -186,10 +182,12 @@ namespace UnityEngine.Rendering
 ```
 
 ([https://docs.unity3d.com/ScriptReference/Rendering.ColorWriteMask.html](https://docs.unity3d.com/ScriptReference/Rendering.ColorWriteMask.html))
+{: .text-center}
 
 ![4](/assets/images/Docs/Bitwise%20Operator/image%20(4).png){: .align-center}
 
 ([https://docs.unity3d.com/kr/2021.3/Manual/SL-ColorMask.html](https://docs.unity3d.com/kr/2021.3/Manual/SL-ColorMask.html))
+{: .text-center}
 
 ColorWriteMask 이넘은 유니티의 ShaderLab에서 ColorMask 를 정의 해줄 때 사용하는 이넘 값으로서, 셰이더의 특정 컬러 채널의 렌더링을 활성화 또는 비활성화 하여 채널 별로 Output을 제어하는 커맨드입니다.
 
