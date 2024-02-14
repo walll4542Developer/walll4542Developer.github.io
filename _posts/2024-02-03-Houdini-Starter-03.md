@@ -111,3 +111,6 @@ bound1에서 Lower/Upper Padding 값을 이용하여 포인트를 기준으로 0
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/010.gif){: .align-center}
 
 두 개 이상의 포인트를 가지고 포인트의 위치를 변경하여 직육면체를 생성할 수도 있습니다.
+
+## 레퍼런스(Reference)
+- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))

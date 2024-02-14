@@ -100,6 +100,7 @@ Blast 노드는 input으로 들어온 그룹 데이터 타입을 Guess from Grou
 - points
 - Edges
 - Vertices
+\\
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/064.png){: .align-center} 
 
@@ -164,3 +165,5 @@ Select 모드에서 Edges 를 선택하는 방법도 동일합니다. 더블 클
 
 Select 모드에서 먼저 선택을 하고 Blast 하는 것도 가능합니다.
 
+## 레퍼런스(Reference)
+- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
