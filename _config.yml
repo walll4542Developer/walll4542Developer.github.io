@@ -14,7 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: 낭낭하게 개발하기
-email:
+email: walll454@gmail.com
 description: "Techblog for Technical Artist"
 twitter_username: dPv79Noe77Xze92
 github_username: walll4542Developer
@@ -26,7 +26,7 @@ markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
 # Outputting
 permalink: /:categories/:title/
-paginate: 15 # amount of posts to show
+paginate: 10 # amount of posts to show
 paginate_path: /page:num/
 timezone: KR # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
