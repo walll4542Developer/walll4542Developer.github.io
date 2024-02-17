@@ -65,7 +65,7 @@ toc_sticky: true
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/041.gif){: .align-center}
 
 바운드 노드로 묶으면 상판이 만들어지고, Upper Padding 값을 조절하면 상판의 두께를 제어할 수 있습니다. \\
-지금 제작한 노드의 기능을 파라미터와 연결해서 다시 제작 해보겠습니다.
+지금 제작한 바운드 노드의 기능을 컨트롤러 노드에 파라미터 추가한 다음 트랜스폼 노드와 연결해서 다시 제작 해보겠습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/080.png){: .align-center}
 
@@ -73,8 +73,10 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/081.png){: .align-center}
 
-이전에 제작했던 컨트롤러 노드의 'Edit Parameter Interface...' 메뉴로 진입해서 위와 같이 파라미터를 작성합니다. \\
-이름(name)은 파라미터의 **변수 이름**이며 라벨(Label)은 파라미터 윈도우에 표시되는 이름입니다. *둘은 엄연히 다릅니다!* \\
+이전에 제작했던 컨트롤러 노드의 'Edit Parameter Interface...' 메뉴로 진입해서 위와 같이 파라미터를 작성합니다.
+
+이름(name)은 파라미터의 **변수 이름**이며 라벨(Label)은 파라미터 윈도우에 표시되는 이름입니다. *둘은 엄연히 다릅니다!*
+
 또한 파라미터의 범위(Range)를 제한 해줄 수 있습니다. 상판의 x축 크기를 결정하는 파라미터인 SizeX의 값은 최소 0이며 최대 5로 설정했습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/082.png){: .align-center}
@@ -82,10 +84,35 @@ toc_sticky: true
 폴더를 제작할 때는 'End Tab Group' 옵션을 활성화 해서 폴더가 파라미터를 담는 끝 부분이 있도록 합니다. \\
 활성화 하지 않으면 이후에 추가되는 파라미터들도 따로 폴더를 설정하지 않을 경우엔 모두 해당 폴더에 추가됩니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/043.gif){: .align-center}
+
+Edit Parameter Interface 창에서 파라미터를 선택하고 컨트롤 C, V로 복사 붙혀넣기도 가능합니다.
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.png){: .align-center}
 
+컨트롤러 노드에 SizeX 와 SizeY 파라미터가 추가된 것을 확인 하실 수 있습니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/042.gif)
 
+다음은 컨트롤러 노드의 파라미터와 트랜스폼 노드의 파라미터를 연결할 것입니다.
+
+복사하길 원하는 파라미터에 마우스 우클릭을 하면 위와 같이 여러가지 메뉴가 나옵니다. \\
+여기서 **'Copy Parameter'** 를 클릭해서 파라미터를 복사합니다.
+
+다음은 연결 해야하는 transform1 노드의 'scale x' 파라미터에 마우스를 가져다 대고 우클릭 후 \\
+**'Paste Relative References'** 버튼을 누르면 파라미터가 초록색으로 변하며 연결 됩니다. \\
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/044.gif)
+
+초록색으로 표시된 파라미터와 연결되어 포인트가 스케일 되어 위치가 변하는 것을 확인 하실 수 있습니다. \\
+이는 파라미터 값을 일종의 수식과 함수로 연결한 것이며, 이를 직접 입력해서 수정하거나 변경할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/045.gif)
+
+파라미터의 라벨을 클릭하면 파라미터를 수식이 아닌 실제로 계산하는 수치 값을 확인 할 수 있습니다. \\
+예를 들어 수식의 제일 앞 부분에 음수 부호 '${-}$' 를 입력한다면 파라미터로 들어오는 수치 값을 음수로 받을 수 있습니다.
+
+위 이미지에서 파라미터가 음수가 되게 하였을 때 포인트의 위치가 음수 값의 좌표로 이동하는 것을 확인 하실 수 있습니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
