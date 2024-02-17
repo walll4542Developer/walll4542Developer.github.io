@@ -6,7 +6,7 @@ categories: Math
 tag: Algebra
 
 header:
-  teaser: /assets/images/Docs/Thumbnails/math.png
+  teaser: /assets/images/Docs/Thumbnails/GameMath-01.png
   overlay_image: /assets/images/Docs/Thumbnails/math.png
   overlay_filter: 0.5
 
