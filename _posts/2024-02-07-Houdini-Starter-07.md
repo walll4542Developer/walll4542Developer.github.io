@@ -18,8 +18,10 @@ toc_sticky: true
 ---
 
 ## Vex 언어
-Vex 언어는 후디니에서 커스텀 노드와 셰이더를 작성하기 위해 설계된 고성능 표현 언어(high-performance expression language)입니다. \\
+Vex 언어는 후디니에서 커스텀 노드와 셰이더를 작성하기 위해 설계된 고성능 표현 언어(high-performance expression language)입니다.
+
 Vex 는 C언어를 기반으로 동작 하지만 C++ 과 RenderMan 셰이딩 언어에서도 영감을 받아 제작되었습니다. (의역)
+
 - Vex : [https://www.sidefx.com/docs/houdini/vex/index.html](https://www.sidefx.com/docs/houdini/vex/index.html)
 
 ### Vex 데이터 타입
@@ -90,7 +92,7 @@ f@a;
 f@b;
 ```
 
-초기값을 설정하지 않으면 값은 자동으로 ${(0, 0)}$이 됩니다.
+초기값을 설정하지 않으면 값은 자동으로 ${0.0}$이 됩니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/091.png){: .align-center}
 
