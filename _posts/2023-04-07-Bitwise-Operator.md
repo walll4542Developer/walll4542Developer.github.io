@@ -6,7 +6,7 @@ categories: CSharp Unity
 tag: Script
 
 header:
-  teaser: /assets/images/Docs/Thumbnails/code.png
+  teaser: /assets/images/Docs/Thumbnails/Programming-01.png
   overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.5
 

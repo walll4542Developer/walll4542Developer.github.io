@@ -92,9 +92,16 @@ f@b;
 
 초기값을 설정하지 않으면 값은 자동으로 ${(0, 0)}$이 됩니다.
 
-변수의 경우는 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/091.png){: .align-center}
 
+```hlsl
+float a = 0;
+float b = 1;
+```
 
+변수의 경우 Vex 에서 선언하더라도 지오메트리 스프레드 시트에서 값을 볼 수 없습니다.
+
+즉 아웃풋으로 사용하고자 하는 값은 반드시 어트리뷰트로 선언해야 합니다.
 
 
 ## 레퍼런스(Reference)
