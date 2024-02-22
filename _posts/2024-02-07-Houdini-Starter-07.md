@@ -105,6 +105,54 @@ float b = 1;
 
 즉 아웃풋으로 사용하고자 하는 값은 반드시 어트리뷰트로 선언해야 합니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/094.png){: .align-center}
+
+```hlsl
+float a,b;
+
+a = 0;
+b = 1;
+```
+
+콤마 ${,}$ 기호를 사용해서 동시에 여러 변수를 선언 할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/050.gif){: .align-center}
+
+```
+float a,b = 0;
+
+a,b = 1;
+```
+
+그러나 동시에 변수를 정의 할 수는 없습니다.
+
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/092.png){: .align-center}
+
+```hlsl
+int a = 1;
+int b = 2;
+
+i@c = a + b;
+```
+
+`attributewrangle1` 노드의 `i@c` 값은 ${3}$ 입니다. 
+
+그럼 이 값을 `attributewrangle2` 의 인풋으로 받은 다음 다시 연산을 해주면 어떻게 될까요?
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/093.png){: .align-center}
+
+```hlsl
+int a = -3;
+
+i@c = @c + a;
+```
+
+지오메트리 스프레드 시트의 값을 보니 `i@c` 값이 ${0}$ 이 되었습니다.
+
+Vex 문법에서 이전의 이전 노드에서 `i@c`로 데이터 타입을 선언을 했더라도 다음 노드에서 인풋 값을 최초로 받아올 때는 `@c`가 아닌 `i@c`로 데이터 타입을 표기 하는 것이 권장됩니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/095.png){: .align-center}
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
