@@ -180,22 +180,22 @@ vector b = {4, 5, 6};
 
 #### 괄호(Braket) 표기하기
 - 소괄호(Parentheses) ${()}$
-- 중괄호(Curly Braket) ${\{\}}$
+- 중괄호(Curly Braket) ${\big\{ \big\}}$
 - 대괄호(Square Braket) ${[]}$
 
-벡터(Vector)는 우리가 익히 알던 HLSL 또는 C 계열 언어와 규칙이 같으면서도 살짝 다릅니다. Vex 언어에서 벡터를 표기할 때는 소괄호 ${()}$ 가 아닌 중괄호 ${\{\}}$ 를 사용해야 합니다.
+벡터(Vector)는 우리가 익히 알던 HLSL 또는 C 계열 언어와 규칙이 같으면서도 살짝 다릅니다. Vex 언어에서 벡터를 표기할 때는 소괄호 ${()}$ 가 아닌 중괄호 ${\big\{ \big\}}$ 를 사용해야 합니다.
 
 벡터는 항상 ${(x, y, z)}$ 값이 필요하며 ${(x, y, z)}$ 의 각 성분은 모두 `float` 입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/097.png){: .align-center}
 
-지오메트리 스프레드 시트에서 add 노드로 생성한 포인트의 어트리뷰트(Attribute) `P` 정보를 보면 ${(0, 0, 0)}$ 에 위치 하고 있는 것을 알 수 있습니다. 
+지오메트리 스프레드 시트에서 더하기(add) 노드로 생성한 포인트의 어트리뷰트(Attribute) `P` 정보를 보면 ${(0, 0, 0)}$ 에 위치 하고 있는 것을 알 수 있습니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/051.gif){: .align-center}
 
 어트리뷰트 `P` 는 포인트의 벡터3 좌표 값으로 인포(info)에서 확인한 정보는 **P 3 flt (Pos)**라고 표기하고 있습니다. 이때 `Pos`는 포지션의 약어입니다.
 
-이 벡터를 가지고 add 노드로 생성한 포인트의 위치를 이동시킬 수 있습니다.
+이 벡터를 가지고 더하기(add) 노드로 생성한 포인트의 위치를 이동시킬 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/098.png){: .align-center}
 
@@ -221,7 +221,7 @@ vector move = {a, b, c};
 @P += move;
 ```
 
-벡터의 각 성분들은 분명히 `float`입니다. 그러나 벡터의 중괄호 ${\{\}}$ 안에 `float` 변수를 넣어주는 것은 틀린 문법입니다.
+벡터의 각 성분들은 분명히 `float`입니다. 그러나 벡터의 중괄호 ${\big\{ \big\}}$ 안에 `float` 변수를 넣어주는 것은 틀린 문법입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/100.png){: .align-center}
 
@@ -272,8 +272,6 @@ Vex 언어는 C 계열 언어 처럼 스트링 데이터 끼리 연산할 수도
 
 ${+}$ 연산을 해서 `@a` 와 `@b` 를 더하면 두 스트링이 하나로 합쳐진 결과 `@c`를 확인 할 수 있습니다. \\
 물론 연산 순서를 바꾸면 계산 결과도 달라집니다.
-
-
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
