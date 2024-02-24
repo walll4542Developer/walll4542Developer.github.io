@@ -6,7 +6,7 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-06.gif
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-07.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
@@ -20,20 +20,20 @@ toc_sticky: true
 ## Vex 언어
 Vex 언어는 후디니에서 커스텀 노드와 셰이더를 작성하기 위해 설계된 고성능 표현 언어(high-performance expression language)입니다.
 
-Vex 는 C언어를 기반으로 동작 하지만 C++ 과 RenderMan 셰이딩 언어에서도 영감을 받아 제작되었습니다. (의역)
+Vex 는 C언어를 기반으로 동작 하지만 C++ 과 RenderMan 셰이딩 언어에서도 영감을 받아 제작되었습니다. *의역입니다.*
 
 - Vex : [https://www.sidefx.com/docs/houdini/vex/index.html](https://www.sidefx.com/docs/houdini/vex/index.html)
 
 ### Vex 데이터 타입
 자주 사용하게 될 데이터(Data) 타입은 다음과 같습니다.
 
-- ``float``
-- ``int``
-- ``vector``
-- ``string``
+- `float`
+- `int`
+- `vector`
+- `string`
 
 Vex 언어의 데이터는 **변수(variable)와 어트리뷰트(Attribute)**로 구분합니다. \\
-Vex 에서 정보를 담는 변수 ``a``를 선언한다면 다음과 같이 작성할 수 있습니다.
+Vex 에서 정보를 담는 변수 `a`를 선언한다면 다음과 같이 작성할 수 있습니다.
 
 ```hlsl
 float a;
@@ -51,7 +51,7 @@ v@a;
 s@a;
 ```
 
-어트리뷰트나 변수를 선언할 때 데이터 타입을 작성하기 떄문에, 계산할 때는 다음과 같이 ``@a``와 ``@b``의 데이터 타입을 생략할 수 있습니다.
+어트리뷰트나 변수를 선언할 때 데이터 타입을 작성하기 떄문에, 계산할 때는 다음과 같이 `@a`와 `@b`의 데이터 타입을 생략할 수 있습니다.
 
 ```hlsl
 i@a = 3;
@@ -84,7 +84,7 @@ f@b = 0.2;
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/089.png){: .align-center}
 
-어트리뷰트 랭글 노드의 인포(info)와 지오메트리 스프레드 시트(Geomatry Spread Sheet)를 확인하면 위와 같이 ``float`` 데이터 타입 ``a`` 와 ``b`` 변수가 추가된 것을 확인하실 수 있습니다.
+어트리뷰트 랭글 노드의 인포(info)와 지오메트리 스프레드 시트(Geomatry Spread Sheet)를 확인하면 위와 같이 `float` 데이터 타입 `a` 와 `b` 변수가 추가된 것을 확인하실 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/090.png){: .align-center}
 
@@ -101,8 +101,8 @@ f@b;
 #### 변수 선언하기
 
 ```hlsl
-float a = 0;
-float b = 1;
+float a = 0.0;
+float b = 1.0;
 ```
 
 변수의 경우 Vex 에서 선언하더라도 지오메트리 스프레드 시트에서 값을 볼 수 없습니다.
@@ -114,8 +114,8 @@ float b = 1;
 ```hlsl
 float a,b;
 
-a = 0;
-b = 1;
+a = 0.0;
+b = 1.0;
 ```
 
 콤마 '${,}$' 기호를 사용해서 동시에 여러 변수를 선언 할 수 있습니다.
@@ -123,9 +123,9 @@ b = 1;
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/050.gif){: .align-center}
 
 ```
-float a,b = 0;
+float a,b = 0.0;
 
-a,b = 1;
+a,b = 1.0;
 ```
 
 그러나 동시에 변수를 정의 할 수는 없으며 변수에 값을 대입하는 것 또한 불가합니다. 
@@ -167,22 +167,101 @@ int a = -3;
 i@c += a;
 ```
 
-`+=` 로 한 번에 계산하는 것이 가능합니다. 이를 *업데이트* 라고 표현하기도 합니다.
+${+=}$ 로 한 번에 계산하는 것이 가능합니다. 이를 *업데이트* 라고 표현하기도 합니다.
 
 ### 벡터(Vector) 데이터 타입
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/095.png){: .align-center}
 
 ```hlsl
-v@a = (1, 2, 3);
-vector b = (4, 5, 6);
+v@a = {1, 2, 3};
+vector b = {4, 5, 6};
 ```
 
-벡터(Vector)는 우리가 익히 알던 HLSL 또는 C 계열 언어와 살짝 규칙이 다릅니다. 
+#### 괄호(Braket) 표기하기
+- 소괄호(Parentheses) ${()}$
+- 중괄호(Curly Braket) ${\{\}}$
+- 대괄호(Square Braket) ${[]}$
 
-항상 ${(x,y,z)}$ 값이 필요하며 ${(x,y,z)}$ 의 각 성분은 모두 `float` 입니다.
+벡터(Vector)는 우리가 익히 알던 HLSL 또는 C 계열 언어와 규칙이 같으면서도 살짝 다릅니다. Vex 언어에서 벡터를 표기할 때는 소괄호 ${()}$ 가 아닌 중괄호 ${\{\}}$ 를 사용해야 합니다.
 
+벡터는 항상 ${(x, y, z)}$ 값이 필요하며 ${(x, y, z)}$ 의 각 성분은 모두 `float` 입니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/097.png){: .align-center}
+
+지오메트리 스프레드 시트에서 add 노드로 생성한 포인트의 어트리뷰트(Attribute) `P` 정보를 보면 ${(0, 0, 0)}$ 에 위치 하고 있는 것을 알 수 있습니다. 
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/051.gif){: .align-center}
+
+어트리뷰트 `P` 는 포인트의 벡터3 좌표 값으로 인포(info)에서 확인한 정보는 **P 3 flt (Pos)**라고 표기하고 있습니다. 이때 `Pos`는 포지션의 약어입니다.
+
+이 벡터를 가지고 add 노드로 생성한 포인트의 위치를 이동시킬 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/098.png){: .align-center}
+
+```hlsl
+vector move = {1, 0, 0};
+
+@P += move;
+```
+
+어트리뷰트 `P` 는 이미 인풋으로 들어와 있기에 `@P` 로 사용할 수 있습니다.
+
+`move` 값을 더해서 ${x}$축 방향으로 ${1}$만큼 이동하도록 업데이트 했더니 실제로 포인트의 위치가 ${(1, 0, 0)}$ 으로 이동한 것을 확인하실 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/099.png){: .align-center}
+
+```hlsl
+float a = 0.1;
+float b = 0.2;
+float c = 0.3;
+
+vector move = {a, b, c};
+
+@P += move;
+```
+
+벡터의 각 성분들은 분명히 `float`입니다. 그러나 벡터의 중괄호 ${\{\}}$ 안에 `float` 변수를 넣어주는 것은 틀린 문법입니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/100.png){: .align-center}
+
+```hlsl
+float a = 0.1;
+float b = 0.2;
+float c = 0.3;
+
+vector move = set(a, b, c);
+
+@P += move;
+```
+
+대신 위와 같이 `set(,,)` 이라는 함수를 사용해서 벡터에 값을 대입해줄 수 있습니다. `@P` 의 값이 ${(0.1, 0.2, 0.3)}$ 으로 변경 되었습니다.
+
+#### 컬러 정보(Cd) 사용하기
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/101.png){: .align-center}
+
+```hlsl
+v@Cd = {1, 0, 0};
+```
+
+`@Cd` 는 포인트의 컬러 값입니다. ${(1, 0, 0)}$ 이면 빨강색이기 때문에, 씬 뷰(Scene View)에서도 포인트가 빨강색으로 변했습니다.
+
+이처럼 `@Cd` 와 `@P` 등 후디니에 의해서 미리 예약된 어트리뷰트들이 여러가지가 있어서 이를 피해서 사용해야 합니다.
+
+### 스트링(String) 데이터 타입
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/102.png){: .align-center}
+
+```hlsl
+s@a = "Developer";
+```
+
+스트링(String) 데이터 타입은 위와 같이 따옴표 ${""}$ 기호를 사용합니다. 
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/103.png){: .align-center}
+
+C 계열 언어 처럼 스트링 데이터 끼리 연산할 수도 있습니다. 
 
 
 ## 레퍼런스(Reference)
