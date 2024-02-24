@@ -261,7 +261,18 @@ s@a = "Developer";
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/103.png){: .align-center}
 
-C 계열 언어 처럼 스트링 데이터 끼리 연산할 수도 있습니다. 
+```hlsl
+s@a = "Developer";
+s@b = "Game";
+
+s@c = @b + @a;
+```
+
+Vex 언어는 C 계열 언어 처럼 스트링 데이터 끼리 연산할 수도 있습니다.
+
+${+}$ 연산을 해서 `@a` 와 `@b` 를 더하면 두 스트링이 하나로 합쳐진 결과 `@c`를 확인 할 수 있습니다. \\
+물론 연산 순서를 바꾸면 계산 결과도 달라집니다.
+
 
 
 ## 레퍼런스(Reference)
