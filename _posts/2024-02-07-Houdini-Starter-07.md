@@ -257,7 +257,7 @@ v@Cd = {1, 0, 0};
 s@a = "Developer";
 ```
 
-스트링(String) 데이터 타입은 위와 같이 따옴표 ${""}$ 기호를 사용합니다. 
+스트링(String) 또는 문자열 데이터 타입은 위와 같이 큰 따옴표 ${""}$ 기호를 사용합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/103.png){: .align-center}
 
@@ -268,10 +268,22 @@ s@b = "Game";
 s@c = @b + @a;
 ```
 
-Vex 언어는 C 계열 언어 처럼 스트링 데이터 끼리 연산할 수도 있습니다.
+Vex 언어는 C 계열 언어 처럼 문자열 데이터 끼리 연산할 수도 있습니다.
 
-'${+}$' 연산을 해서 `@a` 와 `@b` 를 더하면 두 스트링이 하나로 합쳐진 결과 `@c`를 확인 할 수 있습니다. \\
+'${+}$' 연산을 해서 `@a` 와 `@b` 를 더하면 두 문자열이 하나로 합쳐진 결과 `@c`를 확인 할 수 있습니다. \\
 물론 연산 순서를 바꾸면 계산 결과도 달라집니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/104.png){: .align-center}
+
+```hlsl
+string a = "Developer";
+string b = "Game";
+
+s@c = b + "_" + a;
+```
+
+연산 사이에 큰 따옴표 ${""}$ 기호를 직접 입력하여 문자열을 수정할 수도 있습니다.
+
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
