@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 07 - Vex 언어 : 데이터 타입과 입력"
+title: "후디니 입문 07 - Vex 언어 - 데이터 타입과 입력"
 excerpt: "Vex 언어는 후디니에서 커스텀 노드와 셰이더를 작성하기 위해 설계된 고성능 표현 언어(high-performance expression language)입니다. "
 date: 2024-02-07 00:00:00 -0000
 categories: Houdini
