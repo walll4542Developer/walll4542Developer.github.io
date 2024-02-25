@@ -23,6 +23,8 @@ toc_sticky: true
 
 이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-08/) 에서 배웠던 Vex 와 Vop 을 복습하는 차원에서 후디니에서 간단한 시계 애니메이션을 구현해보고자 합니다.
 
+### 시계 외형 만들기
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/058.gif){: .align-center}
 
 먼저 **서클(Circle) 노드**를 준비합니다. 첫번째 서클은 파라미터(Parameter)에서 디비전스(Divisions)  값을 ${12}$로 설정합니다. 왜냐하면 시계에서 표현하는 시간 단위가 ${12}$시간이기 때문입니다.
@@ -41,9 +43,115 @@ toc_sticky: true
 
 'Copy to points' 노드를 사용하여 시간 단위를 표현하는 포인트들의 위치에 구(Sphere)를 복제하여 배치해줍니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/121.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/122.png){: .align-center}
 
-같은 방식으로 분 단위도 노드를 정리해줍니다. 
+박스(Box) 노드를 사용하여 시계의 시침을 만들었습니다. 같은 방식으로 분침과 초침을 만들고 트랜스폼(Transform) 노드와 연결해서 시, 분, 초침이 시간에 따라 회전하도록 만들 계획입니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/062.gif){: .align-center}
+
+트랜스폼의 로테이션(Rotation) 에서 `Z`값을 가지고 회전하면 됩니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/123.png){: .align-center}
+
+같은 방식으로 분침과 초침을 만들어 주고 적당히 사이즈를 조절합니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/124.png){: .align-center}
+
+역할을 담당하는 노드를 널(Null) 노드로 묶어줍니다. 
+
+이름은 역할에 맞춰서 `Clock_Point` 와 `Clock_Stick` 으로 지정했습니다.
+
+### 시계 로직 구성하기
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/125.png){: .align-center}
+
+다음은 우리가 시간을 지정하면 시계가 정확한 시, 분, 초침의 위치를 맞춰서 움직이는 부분을 만들 것입니다. 포인트 노드 하나와 어트리뷰트 랭글(Attribute Wrangle)노드를 준비합니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/127.png){: .align-center}
+
+```hlsl
+float totalRotation = 360.0;
+int oneSecondFrame = 24;
+int secondDividision = 60;
+int minuteDividision = 60;
+int hourDivision = 12;
+```
+
+시계를 구성하는 요소들을 변수로 선언하는 것 부터 시작합니다. 
+
+- 모든 침이 한 바퀴 회전하는 각도는 ${360˚}$
+- 애니메이션의 속도는 ${24}$ frame per second
+- 초침은 ${60}$
+- 분침은 ${60}$ 
+- 시침은 ${12}$ 
+
+#### 채널(Channel) 함수
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/063.gif){: .align-center}
+
+```hlsl
+f@a = ch("a");
+```
+
+각 변수들을 파라미터에서 손쉽게 제어할 수 있도록 파라미터와 변수를 직접 연결해주는 **채널(Channel) 함수**를 사용할 것입니다. 
+
+위와 같이 `ch()` 로 사용하고 큰 따옴표 ${""}$ 사이에 파라미터의 이름을 지정할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/126.png){: .align-left}
+버튼을 누르면 파라미터 `A` 가 생성된 것을 확인 할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/064.gif){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/128.png){: .align-center}
+
+필요 없는 파라미터는 'Edit Parameter Interface' 를 눌러 직접 제거해줄 수 있습니다.
+
+```hlsl
+int setSecond = chi("setSecond");
+int setMinute = chi("setMinute");
+int setHour = chi("setHour");
+```
+
+- `chf()`
+- `chi()`
+- `chv()`
+
+위와 같은 방식으로 파라미터가 어떤 데이터 타입을 가지는 변수인지 미리 지정할 수도 있습니다.
+
+```hlsl
+f@secondRotation;
+f@minuteRotation;
+f@hourRotation;
+```
+
+이제 시, 분, 초침은 ${1}$초에 몇 도(˚)만큼 회전하는지를 생각해봅시다. 각도 값이기 때문에 어트리뷰트를 `float`으로 선언 했습니다.
+
+```hlsl
+f@secondRotation = (totalRotation / secondDividision) * setSecond;
+f@minuteRotation = f@secondRotation / minuteDividision;
+f@hourRotation = f@minuteRotation / hourDivision;
+```
+
+- 초침은 ${1}$초에 ${360 / 60 = 6˚}$ 만큼 회전 해야합니다. 
+- 분침은 ${1}$초에 ${6 / 60 = 0.1˚}$ 만큼 회전 해야합니다. 
+- 시침은 ${1}$초에 ${0.1 / 12 = 0.008333˚}$ 만큼 회전 해야합니다. 
+
+### 포인트(point) 함수
+
+이제 시침을 회전 시키려면 트랜스폼의 로테이션(Rotation) 에서 `Z`값을 조절해야 합니다.
+파라미터에 로테이션 값을 전달하기 위해서 `point(,,,)`함수를 사용할 것입니다.
+
+```hlsl
+point("주소", "포인트 인덱스", "어트리뷰트 이름", "어트리뷰트 주소");
+```
+
+포인트 함수에 필요한 변수 구성은 위와 같습니다.
+
+예를 들어 어트리뷰트 `P` 인 포지션의 `P[z]`값을 가져오고 싶다면 다음과 같이 작성하면 됩니다.
+
+```hlsl
+point(/obj/Clock/Info, 0, P, 3);
+```
+
 
 
 
