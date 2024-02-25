@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 09 - Vex 언어 - 시계 애니메이션 만들기"
-excerpt: "Vex 와 Vop 을 복습하는 차원에서 후디니에서 시계 시스템을 구현해보고자 합니다."
+excerpt: "Vex 와 Vop 을 복습하는 차원으로 후디니에서 시계 시스템을 구현해보고자 합니다."
 date: 2024-02-09 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -21,7 +21,7 @@ toc_sticky: true
 
 ## 시계 애니메이션 만들기
 
-이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-08/) 에서 배웠던 Vex 와 Vop 을 복습하는 차원에서 후디니에서 간단한 시계 애니메이션을 구현해보고자 합니다.
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-08/) 에서 배웠던 Vex 와 Vop 을 복습하는 차원으로 후디니에서 간단한 시계 애니메이션을 구현해보고자 합니다.
 
 ### 시계 외형 만들기
 
@@ -101,6 +101,7 @@ f@a = ch("a");
 버튼을 누르면 파라미터 `A` 가 생성된 것을 확인 할 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/064.gif){: .align-center}
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/128.png){: .align-center}
 
 필요 없는 파라미터는 'Edit Parameter Interface' 를 눌러 직접 제거해줄 수 있습니다.
