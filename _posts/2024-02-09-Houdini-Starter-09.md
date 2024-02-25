@@ -146,8 +146,8 @@ f@hourRotation = setHour * (totalRotation / hourDivision)
     + ((f@secondRotation / secondDividision) / minuteDividision);
 ```
 
-초침이 회전할 때 분침은 초침이 움직인 값 만큼 더 회전해야 합니다.
-분침이 회전할 때 시침은 분침이 움직인 값 만큼 더 회전해야 합니다. 
+- 초침이 회전할 때 분침은 초침이 움직인 값 만큼 더 회전해야 합니다.
+- 분침이 회전할 때 시침은 분침이 움직인 값 만큼 더 회전해야 합니다. 
 
 따라서 위와 같이 필요한 회전 값을 정리해줄 수 있습니다.
 
