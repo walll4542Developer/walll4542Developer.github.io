@@ -6,7 +6,7 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-09.png
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-09.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
@@ -57,7 +57,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/124.png){: .align-center}
 
-역할을 담당하는 노드를 널(Null) 노드로 묶어줍니다. 
+시계를 구성하는 노드를 역할 별로 구분하여 널(Null) 노드로 묶어줍니다. 
 
 이름은 역할에 맞춰서 `Clock_Point` 와 `Clock_Stick` 으로 지정했습니다.
 
@@ -125,35 +125,70 @@ f@hourRotation;
 
 이제 시, 분, 초침은 ${1}$초에 몇 도(˚)만큼 회전하는지를 생각해봅시다. 각도 값이기 때문에 어트리뷰트를 `float`으로 선언 했습니다.
 
-```hlsl
-f@secondRotation = (totalRotation / secondDividision) * setSecond;
-f@minuteRotation = f@secondRotation / minuteDividision;
-f@hourRotation = f@minuteRotation / hourDivision;
-```
-
 - 초침은 ${1}$초에 ${360 / 60 = 6˚}$ 만큼 회전 해야합니다. 
 - 분침은 ${1}$초에 ${6 / 60 = 0.1˚}$ 만큼 회전 해야합니다. 
 - 시침은 ${1}$초에 ${0.1 / 12 = 0.008333˚}$ 만큼 회전 해야합니다. 
 
-### 포인트(point) 함수
+```hlsl
+f@secondRotation = setSecond * (totalRotation / secondDividision);
+f@minuteRotation = setMinute * (totalRotation / minuteDividision);
+f@hourRotation = setHour * (totalRotation / hourDivision); 
+```
 
-이제 시침을 회전 시키려면 트랜스폼의 로테이션(Rotation) 에서 `Z`값을 조절해야 합니다.
+수식을 코드로 변환하면 위와 같이 정리할 수 있습니다. 그런데 위 코드는 초, 분, 시침 간의 관계를 고려하고 있지 않습니다.
+
+```hlsl
+f@secondRotation = setSecond * (totalRotation / secondDividision);
+f@minuteRotation = setMinute * (totalRotation / minuteDividision)
+    + (f@secondRotation / secondDividision);
+f@hourRotation = setHour * (totalRotation / hourDivision) 
+    + (f@minuteRotation / minuteDividision) 
+    + ((f@secondRotation / secondDividision) / minuteDividision);
+```
+
+초침이 회전할 때 분침은 초침이 움직인 값 만큼 더 회전해야 합니다.
+분침이 회전할 때 시침은 분침이 움직인 값 만큼 더 회전해야 합니다. 
+
+따라서 위와 같이 필요한 회전 값을 정리해줄 수 있습니다.
+
+#### 포인트(point) 함수
+
+이제 초침을 회전 시키려면 초침의 트랜스폼의 로테이션(Rotation) 에서 `Z`값을 조절해야 합니다.
 파라미터에 로테이션 값을 전달하기 위해서 `point(,,,)`함수를 사용할 것입니다.
 
 ```hlsl
-point("주소", "포인트 인덱스", "어트리뷰트 이름", "어트리뷰트 주소");
+point("주소", '포인트 인덱스', '어트리뷰트 이름', '어트리뷰트 주소');
 ```
 
-포인트 함수에 필요한 변수 구성은 위와 같습니다.
+포인트 함수에 필요한 인자는 네 가지 입니다. 구성은 위와 같습니다.
 
-예를 들어 어트리뷰트 `P` 인 포지션의 `P[z]`값을 가져오고 싶다면 다음과 같이 작성하면 됩니다.
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/130.png){: .align-center}
+
+주소를 사용하기 쉽게 하기 위해서 먼저 어트리뷰트 랭글 노드의 이름을 `Info`로 변경했습니다.
 
 ```hlsl
 point(/obj/Clock/Info, 0, P, 3);
 ```
 
+예를 들어 어트리뷰트 `P` 인 포지션의 `P[z]`값을 파라미터로 가져오고 싶다면 위와 같이 작성하면 됩니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.png){: .align-center}
 
+```hlsl
+-point("/obj/Clock/Info", 0, secondRotation, 0)
+```
+
+초침의 트랜스폼의 로테이션(Rotation) 파라미터의 `Z`값에 포인트 함수를 사용하여 `secondRotation` 의 회전 값을 입력했습니다. 
+
+`secondRotation` 은 단일 `float` 이기 때문에 어트리뷰트 주소는 0입니다.
+
+시계방향으로 회전해야 하기 때문에 함수 앞에 음수 기호 '${-}$'를 넣었습니다.
+
+파라미터에 입력하는 값은 Vex와 다르게 세미콜론 ${;}$ 이 필요없음에 유의하세요.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/065.gif){: .align-center}
+
+초침이 회전하면 분침과 초침도 따라 회전하는 것을 확인 할 수 있습니다.
 
 
 ## 레퍼런스(Reference)
