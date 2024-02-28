@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 09 - Vex 언어 - 시계 애니메이션 만들기"
+title: "후디니 입문 09 - Vex 언어 : 시계 애니메이션 만들기"
 excerpt: "Vex 와 Vop 을 복습하는 차원으로 후디니에서 시계 시스템을 구현해보고자 합니다."
 date: 2024-02-09 00:00:00 -0000
 categories: Houdini
@@ -81,7 +81,7 @@ int hourDivision = 12;
 
 - 모든 침이 한 바퀴 회전하는 각도는 ${360˚}$
 - 애니메이션의 속도는 ${24}$ frame per second
-- 초침은 ${60}$
+- 초침은 ${60}$ 초
 - 분침은 ${60}$ 
 - 시침은 ${12}$ 
 
@@ -181,7 +181,7 @@ point(/obj/Clock/Info, 0, P, 3);
 
 초침의 트랜스폼의 로테이션(Rotation) 파라미터의 `Z`값에 포인트 함수를 사용하여 `secondRotation` 의 회전 값을 입력했습니다. 
 
-`secondRotation` 은 단일 `float` 이기 때문에 어트리뷰트 주소는 0입니다.
+`secondRotation` 은 단일 `float` 이기 때문에 어트리뷰트 주소는 ${0}$입니다.
 
 시계방향으로 회전해야 하기 때문에 함수 앞에 음수 기호 '${-}$'를 넣었습니다.
 
@@ -190,6 +190,29 @@ point(/obj/Clock/Info, 0, P, 3);
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/065.gif){: .align-center}
 
 초침이 회전하면 분침과 초침도 따라 회전하는 것을 확인 할 수 있습니다.
+
+#### @Frame
+
+다음은 시간의 흐름이 시계에 적용되어 시계가 알아서 움직이도록 애니메이션 할 것입니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/131.png){: .align-center}
+
+(VOP 노드 인풋에도 포함되어 있습니다)
+{: .text-center}
+
+후디니에서 시간 값을 가져오려면 프레임 값인 `@Frame` 어트리뷰트를 사용해야 합니다. 대소문자에 유의하세요.
+
+```hlsl
+int oneSecondFrame = 24;
+f@fps = (totalRotation / secondDividision) / oneSecondFrame * @Frame;
+f@secondRotation = setSecond * (totalRotation / secondDividision) * f@fps;
+```
+
+`f@fps`로 초당 프레임을 정의해줍시다. 애니메이션에서 흔히 사용하는 ${24}$ fps 정도가 좋을 것 같습니다. `oneSecondFrame` 값을 ${24}$ 로 정의해줍니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/066.gif){: .align-center}
+
+`(totalRotation / secondDividision)` 를 ${24}$ fps 로 나눠주면 ${1}$ 초에 ${6˚}$ 를 회전하는 ${24}$ fps 시계 애니메이션이 완성됩니다.
 
 
 ## 레퍼런스(Reference)
