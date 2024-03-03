@@ -1,6 +1,6 @@
 ---
-title: "후디니 입문 10 - 데이터 처리 : Point & if"
-excerpt: "다수의 포인트와 프리미티브 데이터를 다루는 여러가지 방법에 대해서 소개합니다."
+title: "후디니 입문 10 - Vex 함수 : Point & if"
+excerpt: "다수의 포인트와 프리미티브 데이터를 다루는 여러가지 함수들에 대해서 소개합니다."
 date: 2024-02-10 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -17,14 +17,34 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-## 데이터 처리하기
+## 포인트(Point) 함수
 
-지금까지는 한 두개의 포인트 데이터만 다뤘다면 이번 포스트부터는 다수의 포인트와 프리미티브 데이터를 다루는 여러가지 방법에 대해서 소개합니다.
+지금까지는 한 두개의 포인트 데이터만 다뤘다면 이번 포스트부터는 다수의 포인트와 프리미티브 데이터를 다루는 여러가지 함수들에 대해서 소개합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
 
+함수를 소개한 예제를 준비 할 것입니다.
 
+서클(Circle)노드와 더하기(Add) 노드를 연결한 다음 'Delete Geometry But Keep the Points' 옵션으로 포인트만 남겨서 ${13 - 23 - 37}$ 형태로 포인트를 배치합니다.
 
+또한 더하기(Add) 노드로 단일 포인트 세 개를 각각 ${(2, 0, 0) (2, 1, 0) (2, 2, 0)}$ 에 배치합니다.
+
+그리고 어트리뷰트 랭글 노드를 연결해서 위와 같이 만들어주시면 준비가 끝납니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.png){: .align-center}
+
+```hlsl
+-point("/obj/Clock/Info", 0, secondRotation, 0)
+```
+
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-09/)에서는 포인트(Point) 함수를 파라미터(Parameter)에서 입력하는 방식을 배웠는데요, 이것은 Vex가 아니라 **hscript** 라고 부릅니다.
+
+Vex 에서의 포인트 함수와 hscript 의 포인트 함수는 문법이 다릅니다.
+
+```hlsl
+Point(,,) // Vex
+Point("주소", '포인트 인덱스', "어트리뷰트 이름", '어트리뷰트 주소'); // hscript
+```
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
