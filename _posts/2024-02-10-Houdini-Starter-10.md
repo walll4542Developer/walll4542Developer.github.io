@@ -79,6 +79,8 @@ else
 
 Vex의 조건문은 c계열 언어에서 사용하는 조건문과 완전히 동일한 문법 구성을 가집니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+
 ```hlsl
 if(@P.x < -1)
 {
