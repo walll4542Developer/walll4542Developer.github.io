@@ -29,7 +29,7 @@ toc_sticky: true
 
 또한 더하기(Add) 노드로 단일 포인트 세 개를 각각 ${(2, 0, 0) (2, 1, 0) (2, 2, 0)}$ 에 배치합니다.
 
-그리고 어트리뷰트 랭글 노드를 연결해서 위와 같이 만들어주시면 준비가 끝납니다.
+그리고 어트리뷰트 랭글(Attribute Wrangle) 노드를 연결해서 위와 같이 만들어주시면 준비가 끝납니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.png){: .align-center}
 
@@ -39,12 +39,63 @@ toc_sticky: true
 
 이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-09/)에서는 포인트(Point) 함수를 파라미터(Parameter)에서 입력하는 방식을 배웠는데요, 이것은 Vex가 아니라 **hscript** 라고 부릅니다.
 
-Vex 에서의 포인트 함수와 hscript 의 포인트 함수는 문법이 다릅니다.
+Vex 에서의 포인트 함수와 hscript 의 포인트 함수는 문법이 약간 다릅니다.
 
 ```hlsl
-Point(,,) // Vex
-Point("주소", '포인트 인덱스', "어트리뷰트 이름", '어트리뷰트 주소'); // hscript
+point("주소","어트리뷰트 이름",'포인트 인덱스') // Vex
+point("주소", '포인트 인덱스', "어트리뷰트 이름", '어트리뷰트 주소'); // hscript
 ```
+
+Vex의 경우는 포인트 함수에서 벡터(Vector)와 배열(Array) 정보도 다룰 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+
+```hlsl
+vector pos = point(1, "P", 0);
+@p = pos;
+vector k = point(2, "P", 0); 
+v@k = k;
+vector a = point(3, "Cd", 0);
+@Cd = a;
+```
+
+어트리뷰트(Attribute) 노드의 인풋 주소는 왼쪽에서 부터 ${0, 1, 2, 3}$ 입니다. \\
+위와 같이 포인트 함수로 포지션, 컬러, 어트리뷰트를 설정 해줄 수 있습니다.
+
+## 조건문(if)
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+
+```hlsl
+if(@P.x > 0)
+{
+  @Cd = {1, 0, 0};
+}
+else
+{
+  @Cd = {0, 0, 1};
+}
+```
+
+Vex의 조건문은 c계열 언어에서 사용하는 조건문과 완전히 동일한 문법 구성을 가집니다.
+
+```hlsl
+if(@P.x < -1)
+{
+  @Cd = {1, 0, 0};
+}
+else if((@P.x < -1) && (@P.x < 1))
+{
+  @Cd = {0, 1, 0};
+}
+else
+{
+  @Cd = {0, 0, 1};
+}
+```
+
+다중 조건문도 가능합니다.
+
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
