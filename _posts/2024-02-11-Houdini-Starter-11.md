@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 11 - Vex 함수 : 삼각함수"
-excerpt: "다수의 포인트와 프리미티브 데이터를 다루는 여러가지 함수들에 대해서 소개합니다."
+excerpt: "후디니에서 삼각함수를 사용하는 방법에 대해 소개합니다."
 date: 2024-02-11 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -19,11 +19,7 @@ toc_sticky: true
 
 ## 개요
 
-후디니에서 삼각함수를 사용하는 방법에 대해 배웁니다.
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
-
-함수를 소개한 예제를 준비 할 것입니다.
+후디니에서 삼각함수를 사용하는 방법에 대해 소개합니다. 함수를 소개하기 위한 예제를 준비 할 것입니다.
 
 ### addpoint 함수
 
