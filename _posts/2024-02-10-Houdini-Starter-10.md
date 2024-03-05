@@ -17,7 +17,7 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-## 포인트(Point) 함수
+## 개요
 
 지금까지는 한 두개의 포인트 데이터만 다뤘다면 이번 포스트부터는 다수의 포인트와 프리미티브 데이터를 다루는 여러가지 함수들에 대해서 소개합니다.
 
@@ -30,6 +30,8 @@ toc_sticky: true
 또한 더하기(Add) 노드로 단일 포인트 세 개를 각각 ${(2, 0, 0) (2, 1, 0) (2, 2, 0)}$ 에 배치합니다.
 
 그리고 어트리뷰트 랭글(Attribute Wrangle) 노드를 연결해서 위와 같이 만들어주시면 준비가 끝납니다.
+
+## 포인트(Point) 함수
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.png){: .align-center}
 
