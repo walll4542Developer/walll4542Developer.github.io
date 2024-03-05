@@ -23,7 +23,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
 
-함수를 소개한 예제를 준비 할 것입니다.
+함수를 소개하기 위한 예제를 준비 할 것입니다.
 
 서클(Circle)노드와 더하기(Add) 노드를 연결한 다음 'Delete Geometry But Keep the Points' 옵션으로 포인트만 남겨서 ${13 - 23 - 37}$ 형태로 포인트를 배치합니다.
 
@@ -65,7 +65,7 @@ vector a = point(3, "Cd", 0);
 @Cd = a;
 ```
 
-위와 같이 포인트 함수로 포지션, 컬러, 어트리뷰트를 인풋으로 받아와서 설정 해줄 수 있습니다.
+위와 같이 포인트 함수로 다른 노드의 포지션, 컬러, 어트리뷰트를 인풋으로 받아온 다음 다시 변수와 어트리뷰트로 설정 해줄 수 있습니다.
 
 ## 조건문(if)
 
