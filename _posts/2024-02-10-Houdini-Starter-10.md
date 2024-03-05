@@ -6,7 +6,7 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-09.gif
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-10.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
@@ -43,14 +43,18 @@ toc_sticky: true
 
 Vex 에서의 포인트 함수와 hscript 의 포인트 함수는 문법이 약간 다릅니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/133.png){: .align-center}
+
 ```hlsl
 point("주소","어트리뷰트 이름",'포인트 인덱스') // Vex
 point("주소", '포인트 인덱스', "어트리뷰트 이름", '어트리뷰트 주소'); // hscript
 ```
+어트리뷰트(Attribute) 노드가 가진 인풋(input)의 주소는 왼쪽에서부터 ${0, 1, 2, 3}$ 입니다.
 
 Vex의 경우는 포인트 함수에서 벡터(Vector)와 배열(Array) 정보도 다룰 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/134.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/135.png){: .align-center}
 
 ```hlsl
 vector pos = point(1, "P", 0);
@@ -61,12 +65,11 @@ vector a = point(3, "Cd", 0);
 @Cd = a;
 ```
 
-어트리뷰트(Attribute) 노드의 인풋 주소는 왼쪽에서 부터 ${0, 1, 2, 3}$ 입니다. \\
-위와 같이 포인트 함수로 포지션, 컬러, 어트리뷰트를 설정 해줄 수 있습니다.
+위와 같이 포인트 함수로 포지션, 컬러, 어트리뷰트를 인풋으로 받아와서 설정 해줄 수 있습니다.
 
 ## 조건문(if)
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/136.png){: .align-center}
 
 ```hlsl
 if(@P.x > 0)
@@ -81,14 +84,14 @@ else
 
 Vex의 조건문은 c계열 언어에서 사용하는 조건문과 완전히 동일한 문법 구성을 가집니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/132.png){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/137.png){: .align-center}
 
 ```hlsl
 if(@P.x < -1)
 {
   @Cd = {1, 0, 0};
 }
-else if((@P.x > -1) && (@P.x < 1))
+else if(@P.x > -1 && @P.x < 1)
 {
   @Cd = {0, 1, 0};
 }
