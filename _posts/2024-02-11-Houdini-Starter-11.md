@@ -116,8 +116,8 @@ $$
 - ${\delta}$(델타)는 그래프를 수직이동 합니다.
 
 삼각함수 그래프의 수식을 Vex로 변환해봅시다. \\
-\\
-\\
+ \\
+ \\
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/070.gif){: .align-center}
 
@@ -183,7 +183,9 @@ $$
 y = sin(\theta * |\beta| + \gamma) * \alpha + \delta
 $$
 
-${\gamma}$에 음수 부호르 붙인 이유는 삼각함수의 그래프의 ${-\gamma}$ 는 수평, ${\delta}$는 수직 좌표와 연동되어 움직여야 하기 때문입니다.
+${\gamma}$에 음수 부호를 붙인 이유는 삼각함수의 그래프의 ${-\gamma}$ 는 수평, ${\delta}$는 수직 좌표와 연동되어 움직여야 하기 때문입니다.
+
+
 
 
 ## 레퍼런스(Reference)
