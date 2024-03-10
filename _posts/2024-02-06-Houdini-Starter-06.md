@@ -149,4 +149,4 @@ toc_sticky: true
 ``ch("../Controller/LegThick")`` 가 아닌 ``ch("minpadx")`` 로 연결된 것을 확인 할 수 있습니다.
 
 ## 레퍼런스(Reference)
-- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
+- TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)

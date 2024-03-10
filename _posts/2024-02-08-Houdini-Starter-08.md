@@ -146,5 +146,5 @@ Vop 노드 내부에서 값을 읽고 쓰기 위해서 먼저 **상수(Constant)
 
 
 ## 레퍼런스(Reference)
-- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
+- TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
 - Vex : [https://www.sidefx.com/docs/houdini/vex/index.html](https://www.sidefx.com/docs/houdini/vex/index.html)

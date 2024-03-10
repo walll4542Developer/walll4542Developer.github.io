@@ -98,6 +98,8 @@ for(int i = 0; i < k; i++)
 
 삼각함수에 대한 자세한 설명은 위 링크를 참고해주세요.
 
+### 사인(sine) 함수 그래프
+
 삼각함수중에서 가장 쉬운 **사인(sine) 함수** 그래프 부터 그려보도록 하겠습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/143.png){: .align-center}
@@ -130,10 +132,10 @@ float delta = chf("Delta");
 f@alpha = alpha;
 f@beta = beta;
 f@gamma = gamma;
-f@delta = delta;
+f@delta = delta; 
 
 float x = @P.x;
-float y = sin(x * beta + gamma) * alpha + delta;
+float y = sin(x * abs(beta) + gamma) * alpha + delta;
 
 @P = set(x, y, 0);
 ```
@@ -185,11 +187,42 @@ $$
 
 ${\gamma}$에 음수 부호를 붙인 이유는 삼각함수의 그래프의 ${-\gamma}$ 는 수평, ${\delta}$는 수직 좌표와 연동되어 움직여야 하기 때문입니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/073.gif){: .align-center}
 
+${\beta}$에 절대값 기호${|\beta|}$를 붙인 이유는 ${\beta}$가 음수가 될 경우 그래프의 ${y}$축이 반전되기 때문입니다.
 
+### 코사인(cosine) 함수 그래프
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/074.gif){: .align-center}
+
+```hlsl
+float x = @P.x;
+float y = cos(x * abs(beta) + gamma) * alpha + delta;
+
+@P = set(x, y, 0);
+```
+
+간단합니다. 사인 함수를 코사인 함수로 바꿔주면 됩니다.
+
+### 노이즈(noise) 함수 그래프
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/075.gif){: .align-center}
+
+```hlsl
+float x = @P.x;
+float y = noise(x * abs(beta) + gamma) * alpha + delta;
+
+@P = set(x, y, 0);
+```
+
+같은 방식으로 **노이즈(noise) 함수**로 바꿀 수도 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/076.gif){: .align-center}
+
+`noise()` 함수로 변경할 경우 위 이미지 처럼 랜덤한 곡선 패턴이 나타납니다. 이는 후디니에서 제공하는 난수로 만든 그래프입니다.
 
 ## 레퍼런스(Reference)
-- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
-- 게임 수학 입문 - 삼각함수 : ([https://walll4542developer.github.io/math/Trigonometric-functions](https://walll4542developer.github.io/math/Trigonometric-functions))
+- TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
+- 게임 수학 입문 - 삼각함수 : [https://walll4542developer.github.io/math/Trigonometric-functions](https://walll4542developer.github.io/math/Trigonometric-functions)
 - Vex : [https://www.sidefx.com/docs/houdini/vex/index.html](https://www.sidefx.com/docs/houdini/vex/index.html)
-- 나무위키/파동 : ([https://namu.wiki/w/%ED%8C%8C%EB%8F%99](https://namu.wiki/w/%ED%8C%8C%EB%8F%99)) 
+- 나무위키/파동 : [https://namu.wiki/w/%ED%8C%8C%EB%8F%99](https://namu.wiki/w/%ED%8C%8C%EB%8F%99)

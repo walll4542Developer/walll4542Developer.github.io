@@ -164,4 +164,4 @@ Base Group 또는 Scene View 의 마우스 아이콘을 누르면 셀렉트(Sele
 셀렉트 모드에서 먼저 선택을 하고 블라스트 하는 것도 가능합니다.
 
 ## 레퍼런스(Reference)
-- TWA 후디니의 정석 : ([https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI))
+- TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
