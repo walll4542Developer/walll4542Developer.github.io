@@ -62,7 +62,7 @@ col.rgb = float3(uv, 0);
 ```hlsl
 float2 uv = abs(i.uv - 0.5);
 ```
-색을 눈으로 디버깅 할 수 있게 절대값 함수로 음수를 제거하여 대칭 하였습니다.
+색을 눈으로 디버깅 할 수 있게 절댓값 함수로 음수를 제거하여 대칭 하였습니다.
 
 ![9](/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).png){: .align-center}
 

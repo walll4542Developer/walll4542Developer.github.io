@@ -119,7 +119,6 @@ $$
 
 삼각함수 그래프의 수식을 Vex로 변환해봅시다. \\
  \\
- \\
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/070.gif){: .align-center}
 
@@ -189,7 +188,7 @@ ${\gamma}$에 음수 부호를 붙인 이유는 삼각함수의 그래프의 ${-
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/073.gif){: .align-center}
 
-${\beta}$에 절대값 기호${|\beta|}$를 붙인 이유는 ${\beta}$가 음수가 될 경우 그래프의 ${y}$축이 반전되기 때문입니다.
+${\beta}$에 절댓값 기호${\mid\mid}$를 붙인 이유는 ${\beta}$가 음수가 될 경우 그래프의 ${y}$축이 반전되기 때문입니다.
 
 ### 코사인(cosine) 함수 그래프
 
