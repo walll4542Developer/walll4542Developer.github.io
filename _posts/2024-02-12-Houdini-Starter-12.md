@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 12 - Vex 함수 : 노이즈"
-excerpt: "후디니에서 삼각함수를 사용하는 방법에 대해 소개합니다. 함수를 소개하기 위해 삼각함수를 시각화 하여 여러개의 포인트를 이어 그래프를 그릴 수 있도록 할 것입니다."
+excerpt: "노이즈 함수의 시작점이 항상 ${0}$에서 시작하도록 보정합니다. 이를 영점 중앙 노이즈(Zero-Centered noise)라고 합니다."
 date: 2024-02-12 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -17,6 +17,19 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
+
+노이즈 함수의 시작점이 항상 ${0}$에서 시작하도록 보정합니다. 이를 **영점 중앙 노이즈(Zero-Centered noise)**라고 합니다.
+
+```hlsl
+float x = @P.x;
+// float y = noise(x * abs(beta) + gamma) * alpha + delta;
+float y = noise((x * abs(beta) + gamma) * alpha) + delta;
+@P = set(x, y, 0);
+```
+
+${\delta}$ ${0.5}$로 설정
+
+노이즈 함수에 ${\alpha}$ 를 포함
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
