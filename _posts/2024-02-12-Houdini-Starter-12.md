@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 12 - Vex 함수 : 파동함수의 합성"
+title: "후디니 입문 12 - Vex 함수 : 파동 함수의 합성"
 excerpt: "sin(), cos(), noise() 같은 파동 함수들을 간단히 덧셈으로 합성해줄 수 있습니다."
 date: 2024-02-12 00:00:00 -0000
 categories: Houdini
@@ -76,7 +76,43 @@ float y = a + b;
 
 두 파동 함수의 합성된 결과를 확인하실 수 있습니다.
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/078.gif){: .align-center}
 
+```hlsl
+float a = point(0, "y", @ptnum);
+float b = point(1, "y", @ptnum);
+
+float alpha = chf("Alpha");
+float beta = chf("Beta");
+
+float x = @P.x;
+float y = a * alpha + b * beta;
+
+@P = set(x, y, 0);
+```
+
+`alpha` 와 `beta`를 추가해서 파동 함수가 얼마나 강하고 약하게 반영될 것인지 조절 할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/079.gif){: .align-center}
+
+$$
+y = sin(\theta * |\beta| + \gamma) * \alpha + \delta
+$$
+
+```hlsl
+float alpha = chf("Alpha");
+float beta = chf("Beta");
+// float gamma = chf("Gamma");
+float gamma = @Frame * 0.01;
+float delta = chf("Delta");
+```
+
+- ${\alpha}$(알파)는 진폭을 조절 합니다.
+- ${\beta}$(베타)는 파장을 조절 합니다.
+- ${\gamma}$(감마)는 그래프를 수평이동 합니다.
+- ${\delta}$(델타)는 그래프를 수직이동 합니다.
+
+`@Frame` 값을 사용하여 파동 함수 그래프가 시간의 흐름에 따라 값이 변화하도록 제어할 수도 있습니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
