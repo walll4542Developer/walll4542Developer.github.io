@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 13 - Vex 함수 : Clamp Fit"
+title: "후디니 입문 13 - Vex 함수 : Clamp 와 Fit"
 excerpt: "삼각함수가 그리는 파동의 진폭을 제어하는 두 가지 함수 clamp와 fit에 대해서 소개하고자 합니다."
 date: 2024-02-13 00:00:00 -0000
 categories: Houdini
