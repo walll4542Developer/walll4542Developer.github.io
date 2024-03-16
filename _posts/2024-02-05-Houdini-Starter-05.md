@@ -17,7 +17,7 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 ## 별 만들기
-지난 시간에 배웠던 Add, Group, Blast 노드를 사용하여 선을 그려 5각형의 별을 그려볼 것입니다.
+이전 포스트에서 배웠던 Add, Group, Blast 노드를 사용하여 선을 그려 5각형의 별을 그려볼 것입니다.
 
 ### 서클(Circle) 노드
 

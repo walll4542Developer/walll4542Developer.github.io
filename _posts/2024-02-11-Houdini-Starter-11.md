@@ -94,6 +94,8 @@ for(int i = 0; i < k; i++)
 
 ## 삼각함수(trigonometric functions)
 
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/Circle_cos_sin.gif){: .align-center}
+
 - 게임 수학 입문 - 삼각함수 : ([https://walll4542developer.github.io/math/Trigonometric-functions](https://walll4542developer.github.io/math/Trigonometric-functions))
 
 삼각함수에 대한 자세한 설명은 위 링크를 참고해주세요.
@@ -128,16 +130,13 @@ float beta = chf("Beta");
 float gamma = chf("Gamma");
 float delta = chf("Delta");
 
-f@alpha = alpha;
-f@beta = beta;
-f@gamma = gamma;
-f@delta = delta; 
-
 float x = @P.x;
 float y = sin(x * abs(beta) + gamma) * alpha + delta;
 
 @P = set(x, y, 0);
 ```
+
+삼각함수의 ${\theta}$ 값이 곧 `@P.x`의 ${x}$ 값 입니다.
 
 위 이미지 처럼 사인 함수의 주기를 모두 표현 하고 싶습니다.
 
@@ -218,7 +217,7 @@ float y = noise(x * abs(beta) + gamma) * alpha + delta;
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/076.gif){: .align-center}
 
-`noise()` 함수로 변경할 경우 위 이미지 처럼 랜덤한 곡선 패턴이 나타납니다. 이는 후디니에서 제공하는 난수로 만든 그래프입니다.
+`noise()` 함수로 변경할 경우 위 이미지 처럼 랜덤한 곡선 패턴이 나타납니다. 이는 후디니에서 제공하는 난수로 만들어진 **파동** 그래프입니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)

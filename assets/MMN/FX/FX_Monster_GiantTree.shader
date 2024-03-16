@@ -200,7 +200,7 @@ Shader "MMN/FX/FX_Monster_GiantTree"
 				dataTex.rgb = smoothstep(0.45, 0.55, dataTex.rgb);
 
 				_Cutoff = lerp(_Cutoff, saturate(_Cutoff + (1 - dataTex.b)), _Jittering); // 눈 깜빡이기
-				_Cutoff += 0.1; // 컷오프의 최소값 유지
+				_Cutoff += 0.1; // 컷오프의 최솟값 유지
 
 				dataTex.rga = dataTex.rga * 2 - 1; // -1 ~ 1 범위 확장
 
