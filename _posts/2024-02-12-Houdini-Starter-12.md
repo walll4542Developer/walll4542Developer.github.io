@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 12 - Vex 함수 : 파동의 합성"
-excerpt: "sin(), cos()는 삼각 함수이며 위 처럼 진동하고 일정한 주기를 가지는 파동의 형태를 가지고 있습니다."
+excerpt: "sin(), cos()는 삼각 함수이며 위 처럼 진동하고 일정한 주기를 가지는 파동의 형태를 가지고 있습니다. noise() 함수는 사실 위 이미지 처럼 여러 개의 삼각함수가 만드는 파동의 합성으로 이루어져 있습니다."
 date: 2024-02-12 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -25,7 +25,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/080.gif){: .align-center}
 
-이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-11/)에서 배웠던 `noise()` 함수는 사실 위 이미지 처럼 여러개의 삼각함수가 만드는 **파동의 합성**으로 이루어져 있습니다.
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-11/)에서 배웠던 `noise()` 함수는 사실 위 이미지 처럼 여러 개의 삼각함수가 만드는 **파동의 합성**으로 이루어져 있습니다.
 
 반대로 모든 파동은 여러가지 파동으로 분해 할 수 있습니다. 이를 **푸리에 변환(fourier transform)** 이라고 하는데 나중에 다루도록 하겠습니다.
 
