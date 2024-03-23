@@ -19,7 +19,9 @@ toc_sticky: true
 
 ## 채널 램프(Chramp) 함수
 
-이번에는 채널 램프(Chramp) 함수에 대해서 배워보겠습니다. `Chramp(,)` 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 **직접 그래프를 제어**하여 묘사할 수 있는 함수입니다.
+이번에는 채널 램프(Chramp) 함수에 대해서 배워보겠습니다.
+
+`Chramp(,)` 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 **직접 그래프를 제어**하여 묘사할 수 있는 함수입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/087.gif){: .align-center}
 
@@ -30,11 +32,11 @@ toc_sticky: true
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/147.png){: .align-center}
 
 ```hlsl
-Chramp("램프 이름", input)
+Chramp("램프 이름", 'input')
 ```
 위와 같은 용법으로 사용합니다.
 - "램프 이름"은 `Chramp(,)` 으로 생성되는 램프의 이름을 지정할 수 있습니다.
-- `input`은 `Chramp(,)` 가 받아들일 데이터이며 그래프의 가로축에 대응 됩니다. 
+- `input`은 `Chramp(,)` 가 받아들일 데이터이며 그래프의 가로축에 대응 됩니다. \\
 \\
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/088.gif){: .align-center}
@@ -77,7 +79,7 @@ VEX 언어에는 소수부가 반복되게 하는 hlsl 언어의 `frac()`같은 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/093.gif){: .align-center}
 
-제작한 패턴이 ${0}$ 에서 시작해서 ${1}$ 으로 끝나기 때문에, 값이 이어지도록 끝 값을 ${0}$ 으로 바꾸는 처리를 할 수 있습니다.
+제작한 패턴이 ${0}$ 에서 시작해서 ${1}$ 으로 끝나기 때문에, 패턴이 끊김없이 이어지도록 끝 값을 ${0}$ 으로 바꾸는 처리를 해줄 수도 있습니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
