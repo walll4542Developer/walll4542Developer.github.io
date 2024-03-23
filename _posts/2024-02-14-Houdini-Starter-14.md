@@ -1,12 +1,12 @@
 ---
-title: "후디니 입문 13 - Vex 함수 : Clamp 와 Fit"
-excerpt: "삼각함수가 그리는 파동의 진폭을 제어하는 두 가지 함수 clamp와 fit에 대해서 소개하고자 합니다."
-date: 2024-02-13 00:00:00 -0000
+title: "후디니 입문 14 - Vex 함수 : Chramp"
+excerpt: "채널 램프(Chramp) 함수에 대해서 배워보겠습니다. `Chramp(,)` 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 직접 그래프를 제어하여 묘사할 수 있는 함수입니다."
+date: 2024-02-14 00:00:00 -0000
 categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-13.gif
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-14.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
@@ -17,110 +17,68 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-## 개요
+## 채널 램프(Chramp) 함수
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/081.gif){: .align-center}
+이번에는 채널 램프(Chramp) 함수에 대해서 배워보겠습니다. `Chramp(,)` 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 **직접 그래프를 제어**하여 묘사할 수 있는 함수입니다.
 
-```hlsl
-float x = @P.x;
-float y = sin(x * abs(beta) + gamma) * alpha + delta;
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/087.gif){: .align-center}
 
-@P = set(x, y, 0);
-```
+함수를 사용하기 위해 준비가 필요합니다. 먼저 위 처럼 포인트 두 개를 생성하고 'By Group'으로 묶어서 선을 만들어주세요. 
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/142.png){: .align-center}
+`Length` 값은 ${0.02}$ 정도로 아주 촘촘하게 포인트가 생성되도록 제어해주세요.
 
-- ${\alpha}$(알파)는 진폭을 조절 합니다.
-- ${\beta}$(베타)는 파장을 조절 합니다.
-- ${\gamma}$(감마)는 그래프를 수평이동 합니다.
-- ${\delta}$(델타)는 그래프를 수직이동 합니다.
-
-삼각함수가 그리는 파동의 **진폭**을 제어하는 두 가지 함수 `clamp(,,)`와 `fit(,,,,)` 에 대해서 소개하고자 합니다.
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/147.png){: .align-center}
 
 ```hlsl
-clamp(y, 'y의 최솟값', 'y의 최대값');
-fit(y, 'y의 최솟값', 'y의 최대값', 'y의 진폭 최솟값', 'y의 진폭 최대값')
+Chramp("램프 이름", input)
 ```
+위와 같은 용법으로 사용합니다.
+- "램프 이름"은 `Chramp(,)` 으로 생성되는 램프의 이름을 지정할 수 있습니다.
+- `input`은 `Chramp(,)` 가 받아들일 데이터이며 그래프의 가로축에 대응 됩니다. 
+\\
 
-### 클램프(clamp) 함수
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/082.gif){: .align-center}
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/088.gif){: .align-center}
 
 ```hlsl
-float a = point(0, "y", @ptnum); // "y"는 sin 그래프
-
-float min = chf("min");
-float max = chf("max");
-
-float x = @P.x;
-float y = clamp(a, min, max);
-
-@P = set(x, y, 0);
+@P.y = chramp("ramp", @P.y);
 ```
 
-`clamp(,,)` 함수는 `min`을 ${y}$의 최솟값으로, `max`를 ${y}$의 최대값으로 잘라내는 함수입니다.
+인풋(input)으로 `@P.y`를 사용하면 ${0}$ 에서 ${1}$ 사이의 값을 가진 포지션 y축의 그래프를 제어하는 것과 같습니다. 
 
-### 핏(fit) 함수
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/089.gif){: .align-center}
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.gif){: .align-center}
+그래프에 마우스 커서를 올리고 좌클릭을 하면 그래프의 포인트(Point)가 생성됩니다. 
+또한 'Delete' 키를 눌러서 포인트를 제거할 수 있습니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/090.gif){: .align-center}
+
+포인트와 포인트 사이를 **보간(Interpolation)하는 방식을 변경**할 수 있습니다.
+
+포인트를 선택하고 'Interpolation' 파라미터(Parameter) 값을 베지어(Bezier), 컨스턴트(Constant) 등으로 바꾸면 선택된 포인트의 보간 방식이 해당 값으로 바뀝니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/091.gif){: .align-center}
+
+`@P.y` 값을 ${2}$ 로 설정해보면 그래프가 ${1}$ 이 넘는 값을 표현하지 못하고 끊어지는 것을 확인 할 수 있습니다. 
+
+대신 `@P.x`를 ${2}$ 로 설정하면 전체 그래프가 ${x}$ 축 방향으로 두 배 늘어나게 됩니다.
+
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/092.gif){: .align-center}
 
 ```hlsl
-float a = point(0, "y", @ptnum);
-
-float min = chf("min");
-float max = chf("max");
-float outMin = chf("outMin");
-float outMax = chf("outMax");
-
-float x = @P.x;
-float y = fit(a, min, max, outMin, outMax);
-
-@P = set(x, y, 0);
+float input = @P.x - int(@P.x);
+@P.y = chramp("ramp", input);
 ```
 
-`fit(,,,,)` 함수는 `min`을 ${y}$의 최솟값으로, `max`를 ${y}$의 최대값으로 잘라낸 다음 `outMin` 과 `outMax` 값에 맞춰 진폭을 늘리고 줄이는 함수입니다.
+그래프가 늘어나지 않고 ${0}$ 에서 ${1}$ 사이의 패턴을 늘어난 만큼 반복하려면 `@P.x`의 소수점 이하 부분이 반복되도록 구현해야합니다.
 
-연산 순서가 중요한데요, `min`, `max`가 먼저 적용되고 난 다음에 `outMin` 과 `outMax`가 적용됩니다.
+VEX 언어에는 소수부가 반복되게 하는 hlsl 언어의 `frac()`같은 함수가 없기 때문에 직접 만들어줘야 합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/084.gif){: .align-center}
+`int()`로 형변환 해서 소수점 부분을 버린 `int(@P.x)`를 원본 `@P.x`에서 뺄셈하면 소수부만 남도록 구현 할 수 있습니다.
 
-`outMin` 과 `outMax` 값에 맞춰 진폭을 늘리고 줄이기 때문에, `outMax` 값이 `outMin` 값보다 작아지는 경우에는 그래프가 ${y}$축 방향으로 **반전**됩니다.
+![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/093.gif){: .align-center}
 
-### 응용하기
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/085.gif){: .align-center}
-
-```hlsl
-float x = @P.x;
-float y = noise(x * abs(beta) + gamma) * alpha + delta;
-
-@P = set(x, y, 0);
-f@y = y;
-@Cd = {0, 0, 1};
-```
-
-눈으로 보기 편하도록 `noise()` 함수에 포인트 컬러 어트리뷰트(attribute)를 추가해서 파란색으로 출력 하고 `clamp(,,)` 와 `fit(,,,,)` 는 빨간색으로 출력해서 겹쳐놓고 비교해봅니다.
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/086.gif){: .align-center}
-
-```hlsl
-float x = @P.x;
-float a = point(0, "y", @ptnum);
-
-float min = chf("min");
-float max = chf("max");
-float outMin = chf("outMin");
-float outMax = chf("outMax");
-
-float y = fit(a, min, max, outMin, outMax);
-// float y = clamp(a, min, max);
-
-@P = set(x, y, 0);
-@Cd = {1, 0, 0};
-```
+제작한 패턴이 ${0}$ 에서 시작해서 ${1}$ 으로 끝나기 때문에, 값이 이어지도록 끝 값을 ${0}$ 으로 바꾸는 처리를 할 수 있습니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
-- 게임 수학 입문 - 삼각함수 : [https://walll4542developer.github.io/math/Trigonometric-functions](https://walll4542developer.github.io/math/Trigonometric-functions)
 - Vex : [https://www.sidefx.com/docs/houdini/vex/index.html](https://www.sidefx.com/docs/houdini/vex/index.html)
-- 나무위키/파동 : [https://namu.wiki/w/%ED%8C%8C%EB%8F%99](https://namu.wiki/w/%ED%8C%8C%EB%8F%99)
