@@ -101,7 +101,7 @@ toc_sticky: true
 복사하길 원하는 파라미터에 마우스 우클릭을 하면 위와 같이 여러가지 메뉴가 나옵니다. \\
 여기서 **'Copy Parameter'** 를 클릭해서 파라미터를 복사합니다.
 
-다음은 연결 해야하는 transform1 노드의 scale의 X 값 파라미터에 마우스를 가져다 대고 우클릭 후 **'Paste Relative References'** 버튼을 누르면 파라미터가 초록색으로 변하며 연결 됩니다.
+다음은 연결 해야하는 'transform1' 노드의 `scale` ${x}$값 파라미터에 마우스를 가져다 대고 우클릭 후 **'Paste Relative References'** 버튼을 누르면 파라미터가 초록색으로 변하며 연결 됩니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/044.gif)
 
@@ -125,7 +125,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/047.gif)
 
-같은 방식으로 컨트롤러에 테이블탑의 두께를 조절할 프로퍼티를 넣어줍니다. 저는 TopThick 이라는 이름으로 정했습니다.
+같은 방식으로 컨트롤러에 테이블탑의 두께를 조절할 프로퍼티를 넣어줍니다. 저는 'TopThick' 이라는 이름으로 정했습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/048.gif)
 

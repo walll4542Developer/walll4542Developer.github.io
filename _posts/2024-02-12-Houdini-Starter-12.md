@@ -70,7 +70,7 @@ point("주소","어트리뷰트 이름",'포인트 인덱스') // Vex
 point("주소", '포인트 인덱스', "어트리뷰트 이름", '어트리뷰트 주소'); // hscript
 ```
 
-`point(,,)` 함수에서 '포인트 인덱스' 자리에 `@ptnum` 을 사용하면 `y`의 포인트 인덱스와 값을 그대로 가져올 수 있습니다.
+`point(,,)` 함수에서 '포인트 인덱스' 자리에 `@ptnum` 을 사용하면 `y`의 **모든 포인트 인덱스와 값을 그대로 가져올 수 있습니다.**
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/077.gif){: .align-center}
 
