@@ -6,7 +6,7 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-14.gif
+  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-15.gif
   overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
