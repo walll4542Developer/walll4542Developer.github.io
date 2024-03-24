@@ -21,9 +21,7 @@ toc_sticky: true
 
 후디니에서 두 벡터 사이의 **거리(Distance) 값**을 측정하고 다루는 함수들을 소개하고자 합니다.
 
-- `Length()`
-- `Distance(,)`
-- `nearpoint(,)`
+Length 와 Distance nearpoint
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/094.gif){: .align-center}
 
@@ -58,9 +56,7 @@ float d = distance(vector, vector);
 
 Vex의 `length`, `distance` 는 hlsl 문법과 동일하게 동작합니다.
 
-## 응용하기
-
-### 길이(Length), 거리(Distance) 함수
+### 응용하기
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/095.gif){: .align-center}
 
@@ -104,40 +100,7 @@ if(f@dist < chf("limit"))
 }
 ```
 
-`limit` 값보다 `f@dist`가 더 작으면 해당하는 모든 포인트를 제거하도록 코드를 작성했습니다. //
-`f@dist` 값의 응용은 무궁무진하여 `@Cd` 등의 포인트 컬러 값으로 사용할 수도 있을 것입니다.
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/097.gif){: .align-center}
-
-`f@dist` 값을 사용해서 `a` 와 가장 가까운 포인트를 찾아낸 다음 가장 가까운 포인트의 인덱스 넘버가 ${0}$이 되도록 정렬할 수 있습니다.
-
-if문을 제거한 다음, 소트(Sort) 노드를 추가합니다. 노드의 'Point Sort' 파라미터 값을 **By attribute** 로 설정하고 `dist` 값을 받아옵니다.
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/098.gif){: .align-center}
-
-`dist` 값이 가장 작은 순서대로 포인트 인덱스가 새롭게 정렬됩니다. 그래서 가장 가까운 포인트의 인덱스는 항상 ${0}$이 됩니다.
-
-블라스트(blast) 노드를 사용하여 가장 가까운 포인트 인덱스 ${0}$번을 떼낸 다음 'By Group'으로 선으로 이어주면 위와 같은 연출을 만들 수 있습니다.
-
-### 니어 포인트(nearPoint) 함수
-
-```hlsl
-nearpoint("주소", '포인트 포지션')
-```
-
-앞서 가장 가까운 포인트를 소트(Sort) 노드를 응용하여 찾아봤습니다. 그런데 Vex의 내장 함수중에 같은 기능을 하는 `nearpoint(,)` 함수가 있습니다.
-
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/099.gif){: .align-center}
-
-```hlsl
-int pointNumber = nearpoint(1, @P);
-vector pos = point(1, "P", pointNumber);
-
-addpoint(0, pos);
-```
-
-`nearpoint(,)` 함수는 `@P`의 위치와 가장 가까운 포인트의 포인트 넘버를 반환합니다. 
-
+`limit` 값보다 `f@dist`가 더 작으면 해당하는 모든 포인트를 제거하도록 코드를 작성했습니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
