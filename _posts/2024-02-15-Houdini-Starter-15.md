@@ -27,16 +27,16 @@ Length 와 Distance nearpoint
 
 함수를 사용하기 위해 준비가 필요합니다. 원점을 중심으로 회전 운동을 하는 포인트를 만들어줄 것입니다.
 
-```h
+```hlsl
+// hscript 방식
 cos($FF), 0, sin($FF);
 ```
-hscript 방식
 
 ```hlsl
+// Vex 방식
 float speed = @Frame * 0.1; // 원하는 만큼 속도를 조절할 것
 @P = set(cos(speed), 0, sin(speed));
 ```
-Vex 방식
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/148.png){: .align-center}
 
