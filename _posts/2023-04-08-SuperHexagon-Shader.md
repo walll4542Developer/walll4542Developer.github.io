@@ -1,6 +1,6 @@
 ---
 title: "슈퍼 헥사곤 UV 셰이더(Super Hexagon UV Shader)"
-excerpt: UV로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
+excerpt: uv로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 date: 2023-04-08 00:00:00 -0000
 categories: HLSL Unity
 tag: Shader
@@ -27,32 +27,32 @@ gallery:
 gallery1:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/000.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/000.webp
-    alt: Image 1
-    caption: This is image 1
+    alt: float2 A = frac(uv - 0.5) - 0.5;
+    caption: frac(uv - 0.5)
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/001.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/001.webp
-    alt: Image 2
-    caption: This is image 2
+    alt: float2 B = frac(uv) - 0.5;
+    caption: frac(uv)
 
 gallery2:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/002.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/003.webp
-    alt: Image 1
-    caption: This is image 1
+    alt: length(A)
+    caption: length(A)
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/003.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/004.webp
-    alt: Image 2
-    caption: This is image 2
+    alt: length(B)
+    caption: length(B)
 
 gallery3:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/004.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/004.webp
-    alt: Image 1
-    caption: This is image 1
+    alt: fmod(,)
+    caption: fmod(,)
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/005.webp
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/005.webp
-    alt: Image 2
-    caption: This is image 2
+    alt: frac()
+    caption: frac()
 
 gallery4:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/000.png
@@ -70,6 +70,8 @@ toc_label: "목차" # toc 이름 설정
 toc_icon: "bars" # 아이콘 설정
 toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 ---
+
+## 개요
 
 {% include gallery gallery=page.gallery %}
 
@@ -104,7 +106,7 @@ float2 uv = abs(i.uv - 0.5);
 
 더 작게 나눠서 생각해보면, 정삼각형 안에는 직삼각형이 들어있습니다.
 
-## 피타고라스 정리
+### 피타고라스 정리
 
 ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/image%20(25).png){: .align-center}
 
@@ -130,7 +132,7 @@ float2 uv = abs(i.uv - 0.5);
 
 피타고라스 정리에 의해서, ${y}$의 값은 ${\sqrt{3}}$입니다.
 
-## 회전 행렬
+### 회전 행렬
 ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/image%20(2).gif){: .align-center}
 
 ```hlsl
@@ -235,7 +237,7 @@ col.rgb = float3(a, 0);
 
 <!-- ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/001.webp){: .align-center} -->
 
-(float2 A = **frac(uv - 0.5)** - 0.5; / float2 B = **frac(uv)** - 0.5;)
+(`float2 A = frac(uv - 0.5) - 0.5;` / `float2 B = frac(uv) - 0.5;`)
 {: .text-center}
 
 ```hlsl
@@ -375,7 +377,7 @@ else
 
 제가 만든 방식은 `uv`가 ${180˚}$ 회전 되어 있긴 한데 큰 문제는 아니니 필요하시면 수정해서 사용해주세요.
 
-## Hexagon Effect
+## 헥사곤 이펙트(Hexagon Effect)
 
 ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/017.webp){: .align-center}
 
