@@ -68,7 +68,7 @@ f@follow = chramp("follow", @play);
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/100.gif){: .align-center}
 
-```
+```hlsl
 v@Cd = chramp("color", @curveu);
 ```
 
