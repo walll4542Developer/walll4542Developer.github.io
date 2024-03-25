@@ -62,6 +62,9 @@ float y = clamp(a, min, max);
 
 `clamp(,,)` 함수는 `min`을 ${y}$의 최솟값으로, `max`를 ${y}$의 최대값으로 잘라내는 함수입니다.
 
+Vex 언어에서는 hlsl 처럼 `saturate()` 함수가 없어서 대신 `clamp(,,)`를 사용해야 합니다.
+{: .notice--info}
+
 ### 핏(fit) 함수
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.gif){: .align-center}
