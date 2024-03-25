@@ -36,11 +36,11 @@ gallery1:
 
 gallery2:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/002.webp
-    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/003.webp
+    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/002.webp
     alt: length(A)
     caption: length(A)
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/003.webp
-    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/004.webp
+    image_path: /assets/images/Docs/Super%20Hexagon%20Shader/003.webp
     alt: length(B)
     caption: length(B)
 
