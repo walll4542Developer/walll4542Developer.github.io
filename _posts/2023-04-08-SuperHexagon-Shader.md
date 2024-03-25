@@ -10,7 +10,7 @@ header:
   overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
   overlay_filter: 0.5
 
-gallery:
+gallery0:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     alt: Image 1
@@ -73,7 +73,7 @@ toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 
 ## 개요
 
-{% include gallery gallery=page.gallery %}
+{% include gallery id="gallery0" %}
 
 `uv`로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 
@@ -231,7 +231,7 @@ col.rgb = float3(a, 0);
 
 단순히 `frac()`함수를 통해서 ${0}$에서 ${1}$사이의 `uv`값이 반복되게 처리했습니다.
 
-{% include gallery gallery=page.gallery1 %}
+{% include gallery id="gallery1" %}
 
 <!-- ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/000.webp){: .align-center} -->
 
@@ -252,7 +252,7 @@ col.rgb = float3(b, 0);
 
 ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/008.webp){: .align-center}
 
-{% include gallery gallery=page.gallery2 %}
+{% include gallery id="gallery2" %}
 
 <!-- ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/002.webp){: .align-center}
 
@@ -315,7 +315,7 @@ b = fmod(uv, 1) - 0.5;
 
 생각해봅시다. `frac()`은 ${1}$ 미만의 값을 끊어주니까, 사실상 `uv`를 ${1}$으로 나눈 나머지 값을 반환하는 것과 같습니다. 정확히 `fmod(n, 1)`과 같은 결과를 반환 해야합니다.
 
-{% include gallery gallery=page.gallery3 %}
+{% include gallery id="gallery3" %}
 
 <!-- ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/004.webp){: .align-center}
 
@@ -332,7 +332,7 @@ float2 uv = (i.uv + 0.5) * _Tile; // 음수 제거
 
 따라서 음수부분을 없애주기 위해서, '${uv - 0.5}$' 가 아닌 '${uv + 0.5}$'로 고쳐줘야 합니다.
 
-{% include gallery gallery=page.gallery4 %}
+{% include gallery id="gallery4" %}
 
 <!-- ![SuperHexagonShader](/assets/images/Docs/Super%20Hexagon%20Shader/000.png){: .align-center}
 
@@ -406,6 +406,6 @@ float HexaDistance(float2 uv)
 
 이렇게 만들어진 디스턴스 필드에 프랙탈 노이즈(Fractal Noise) 텍스쳐를 사용하거나 다른 방법으로 랜덤성을 부여해서, 여러가지 효과의 셰이더를 작성 할 수 있습니다.
 
-{% include gallery gallery=page.gallery %}
+{% include gallery id="gallery0" %}
 
 끝까지 읽어주셔서 감사합니다. 여러분의 관심이 제게 큰 도움이 됩니다.
