@@ -10,7 +10,7 @@ header:
   overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
   overlay_filter: 0.5
 
-gallery0:
+gallery:
   - url: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     image_path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif
     alt: Image 1
@@ -71,7 +71,7 @@ toc_icon: "bars" # 아이콘 설정
 toc_sticky: true # 마우스 스크롤과 함께 내려갈 것인지 설정
 ---
 
-{% include gallery gallery=page.gallery0 %}
+{% include gallery gallery=page.gallery %}
 
 `uv`로 기본도형인 정육각형을 작도하는 기본기에 대한 포스팅입니다. 그리고 이를 응용하여 타일링하는 방법에 대해 배워보도록 하겠습니다.
 
@@ -404,6 +404,6 @@ float HexaDistance(float2 uv)
 
 이렇게 만들어진 디스턴스 필드에 프랙탈 노이즈(Fractal Noise) 텍스쳐를 사용하거나 다른 방법으로 랜덤성을 부여해서, 여러가지 효과의 셰이더를 작성 할 수 있습니다.
 
-{% include gallery gallery=page.gallery0 %}
+{% include gallery gallery=page.gallery %}
 
 끝까지 읽어주셔서 감사합니다. 여러분의 관심이 제게 큰 도움이 됩니다.
