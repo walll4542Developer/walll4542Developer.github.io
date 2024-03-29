@@ -28,25 +28,27 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/075.png){: .align-center}
 
-먼저 우리는 오직 다른 기능은 없이 파라미터들만 제어하기 위한 노드가 필요합니다. \\
+먼저 우리는 오직 다른 기능은 없이 파라미터들만 제어하기 위한 노드가 필요합니다.
+
 그래서 비어있는 **Null 노드**를 생성합니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/076.png){: .align-center}
 
-이 노드는 제어하는 역할을 담당할 것이기 때문에 노드의 이름을 컨트롤러(Controller) 라고 정했습니다. \\
+이 노드는 제어하는 역할을 담당할 것이기 때문에 노드의 이름을 컨트롤러(Controller) 라고 정했습니다.
+
 컨트롤러 노드는 위 이미지와 같이 어떤 파라미터도 가지고 있지 않지만, 여기에 우리가 필요한 여러가지 커스텀 파라미터(Custom Parameter)를 추가할 것입니다.
 
 ### 파라미터(parameter) 설정하기
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/077.png){: .align-center}
 
-톱니바퀴 모양 아이콘을 클릭하면 'Edit Parameter Interface...' 라는 메뉴가 나옵니다.
+톱니바퀴 모양 아이콘을 클릭하면 **'Edit Parameter Interface...'** 라는 메뉴가 나옵니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/040.gif){: .align-center}
 
-이를 클릭하면 여러가지 파라미터를 선택 하고 생성할 수 있는 창으로 연결됩니다. \\
-왼쪽에서 드래그 앤 드랍을 통해 오른쪽으로 원하는 파라미터를 옮겨 올 수 있습니다. \\
-여러가지 파라미터를 정리할 수 있도록 폴더 기능도 제공합니다.
+이를 클릭하면 여러가지 파라미터를 선택 하고 생성할 수 있는 창으로 연결됩니다.
+
+왼쪽에서 드래그 앤 드랍을 통해 오른쪽으로 원하는 파라미터를 옮겨 올 수 있습니다. 여러가지 파라미터를 정리할 수 있도록 폴더 기능도 제공합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/078.png){: .align-center}
 
@@ -58,8 +60,9 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/079.png){: .align-center}
 
-먼저 상판의 형태와 크기를 결정하고자 합니다. \\
-포인트를 하나 생성하고 트랜스폼(Transform) 노드로 4개로 복제한 다음, 하나의 바운드(Bound) 노드로 묶어서 상판을 제작하겠습니다. \\
+먼저 상판의 형태와 크기를 결정하고자 합니다.
+
+포인트를 하나 생성하고 트랜스폼(Transform) 노드로 4개로 복제한 다음, 하나의 바운드(Bound) 노드로 묶어서 상판을 제작하겠습니다. 
 
 이때 상판의 중앙 좌표는 ${(0, 0, 0)}$ 에 있는 것이 계산하기 편하므로 각 포인트의 위치 좌표는 위 이미지와 같습니다.
 
@@ -78,7 +81,7 @@ toc_sticky: true
 
 이름(name)은 파라미터의 **변수 이름**이며 라벨(Label)은 파라미터 윈도우에 표시되는 이름입니다. *둘은 엄연히 다릅니다!*
 
-또한 파라미터의 범위(Range)를 제한 해줄 수 있습니다. 상판의 x축 크기를 결정하는 파라미터인 `SizeX`의 값은 최소 0이며 최대 5로 설정했습니다.
+또한 파라미터의 범위(Range)를 제한 해줄 수 있습니다. 상판의 ${x}$축 크기를 결정하는 파라미터인 `SizeX`의 값은 최소 0이며 최대 5로 설정했습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/082.png){: .align-center}
 
@@ -88,7 +91,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/043.gif){: .align-center}
 
-'Edit Parameter Interface' 창에서 파라미터를 선택하고 컨트롤 C, V로 복사 붙혀넣기도 가능합니다.
+'Edit Parameter Interface' 창에서 파라미터를 선택하고 Ctrl + C, V로 복사 후 붙혀넣기도 가능합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.png){: .align-center}
 
@@ -98,8 +101,7 @@ toc_sticky: true
 
 다음은 컨트롤러 노드의 파라미터와 트랜스폼 노드의 파라미터를 연결할 것입니다.
 
-복사하길 원하는 파라미터에 마우스 우클릭을 하면 위와 같이 여러가지 메뉴가 나옵니다. \\
-여기서 **'Copy Parameter'** 를 클릭해서 파라미터를 복사합니다.
+복사하길 원하는 파라미터에 마우스 우클릭을 하면 위와 같이 여러가지 메뉴가 나옵니다. 여기서 **'Copy Parameter'** 를 클릭해서 파라미터를 복사합니다.
 
 다음은 연결 해야하는 'transform1' 노드의 `scale` ${x}$값 파라미터에 마우스를 가져다 대고 우클릭 후 **'Paste Relative References'** 버튼을 누르면 파라미터가 초록색으로 변하며 연결 됩니다.
 
@@ -145,8 +147,9 @@ toc_sticky: true
 
 컨트롤러의 `LegThick` 값을 'Lower Padding' 의 `x` 파라미터에 연결했습니다.
 
-그 다음 다시 'Lower Padding' 의 `x` 파라미터를 복사 해서 `z` 파라미터에 연결했으나 \\
-``ch("../Controller/LegThick")`` 가 아닌 ``ch("minpadx")`` 로 연결된 것을 확인 할 수 있습니다.
+그 다음 다시 'Lower Padding' 의 `x` 파라미터를 복사 해서 `z` 파라미터에 연결했으나 `ch("../Controller/LegThick")` 가 아닌 `ch("minpadx")` 로 연결된 것을 확인 할 수 있습니다.
+
+
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
