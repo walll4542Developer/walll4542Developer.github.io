@@ -91,7 +91,7 @@ float y = fit(a, min, max, outMin, outMax);
 
 `outMin` 과 `outMax` 값에 맞춰 진폭을 늘리고 줄이기 때문에, `outMax` 값이 `outMin` 값보다 작아지는 경우에는 그래프가 ${y}$축 방향으로 **반전**됩니다.
 
-### 응용하기
+## 응용하기
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/085.gif){: .align-center}
 

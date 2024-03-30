@@ -24,7 +24,7 @@ toc_sticky: true
 - `vector`
 - `string`
 
-이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-07/) 에서 후디니에서 주로 사용되는 위의 네 가지 데이터 타입이 있다는 것을 배웠습니다.
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-07-Vex-DataType) 에서 후디니에서 주로 사용되는 위의 네 가지 데이터 타입이 있다는 것을 배웠습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/109.png){: .align-center}
 
@@ -139,7 +139,7 @@ Vop 노드 내부에서 값을 읽고 쓰기 위해서 먼저 **상수(Constant)
 
 `GeometryVopGlobal` 노드의 값을 자세히 보시면 데이터 마다 색상이 다릅니다. 데이터 타입을 컬러로 표현하여 보기 쉽게 처리한 것입니다.
 
-## Vex / Vop 의 차이점
+### Vex / Vop 의 차이점
 앞서 알아보았듯이 Vex가 할 수 있는 모든 작업을 Vop에서도 할 수 있으며 그 역(Converse)도 마찬가지입니다.
 
 결국 둘은 본질적으로 같습니다. 같은 계산을 노드로 표현하느냐, 코드로 표현하느냐에서 발생하는 표현 방식의 차이가 필연적으로 **연산 순서의 차이**로 나타나게 되는 것입니다.

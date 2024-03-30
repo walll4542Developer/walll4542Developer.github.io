@@ -36,6 +36,8 @@ f@follow = chramp("follow", @play);
 
 지금까지 공부한 여러 함수들을 응용하여 위와 같은 간단한 라인 애니메이션을 제작해보고자 합니다.
 
+### 라인 애니메이션 제작
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/102.gif){: .align-center}
 
 먼저 라인이 애니메이션될 경로를 서클(circle) 노드를 여러개 만들어줍니다. 
@@ -56,11 +58,13 @@ f@follow = chramp("follow", @play);
 
 결과물을 'by Group'을 사용하여 라인으로 이어줍니다. 이어준 라인을 서브디바이드(subdivide) 노드와 리샘플(resample) 노드를 사용하여 일정한 간격을 유지하도록 재배열합니다.
 
+### @curveu
+
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/149.png){: .align-center}
 
-리샘플(resample) 노드에서 'curve U Attribute'를 체크하면 `@curveU` 어트리뷰트를 만들수 있습니다.
+리샘플(resample) 노드에서 'curve U Attribute'를 체크하면 `@curveu` 어트리뷰트를 만들수 있습니다.
 
-`@curveU`는 커브의 시작과 끝 길이를 ${0}$과 ${1}$사이로 정규화한 값을 반환합니다.
+`@curveu`는 커브의 시작과 끝 길이를 ${0}$과 ${1}$사이로 정규화한 값을 반환합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/150.png){: .align-center}
 
@@ -72,7 +76,7 @@ f@follow = chramp("follow", @play);
 v@Cd = chramp("color", @curveu);
 ```
 
-`@curveU` 값을 컬러 램프의 값으로 지정하고 이를 포인트 컬러 `@Cd` 로 사용하면 라인에 색상을 입힐 수 있습니다.
+`@curveu` 값을 컬러 램프의 값으로 지정하고 이를 포인트 컬러 `@Cd` 로 사용하면 라인에 색상을 입힐 수 있습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/108.gif){: .align-center}
 

@@ -31,7 +31,7 @@ toc_sticky: true
 
 그리고 어트리뷰트 랭글(Attribute Wrangle) 노드를 연결해서 위와 같이 만들어주시면 준비가 끝납니다.
 
-## 포인트(Point) 함수
+### 포인트(Point) 함수
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.png){: .align-center}
 
@@ -39,7 +39,7 @@ toc_sticky: true
 -point("/obj/Clock/Info", 0, secondRotation, 0)
 ```
 
-이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-09/)에서는 포인트(Point) 함수를 파라미터(Parameter)에서 입력하는 방식을 배웠는데요, 이것은 Vex가 아니라 **hscript** 라고 부릅니다.
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-09-Vex-ClockAnimation)에서는 포인트(Point) 함수를 파라미터(Parameter)에서 입력하는 방식을 배웠는데요, 이것은 Vex가 아니라 **hscript** 라고 부릅니다.
 
 Vex 에서의 포인트 함수와 hscript 의 포인트 함수는 문법이 약간 다릅니다.
 
@@ -67,7 +67,7 @@ vector a = point(3, "Cd", 0);
 
 위와 같이 포인트 함수로 다른 노드의 포지션, 컬러, 어트리뷰트를 인풋으로 받아온 다음 다시 변수와 어트리뷰트로 설정 해줄 수 있습니다.
 
-## 조건문(if)
+### 조건문(if)
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/136.png){: .align-center}
 

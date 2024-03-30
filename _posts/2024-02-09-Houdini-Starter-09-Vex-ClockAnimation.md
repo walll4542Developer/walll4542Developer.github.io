@@ -21,7 +21,7 @@ toc_sticky: true
 
 ## 시계 애니메이션 만들기
 
-이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-08/) 에서 배웠던 Vex 와 Vop 을 복습하는 차원으로 후디니에서 간단한 시계 애니메이션을 구현해보고자 합니다.
+이전 포스트[(링크)](https://walll4542developer.github.io/houdini/Houdini-Starter-08-Vex-Vop) 에서 배웠던 Vex 와 Vop 을 복습하는 차원으로 후디니에서 간단한 시계 애니메이션을 구현해보고자 합니다.
 
 ### 시계 외형 만들기
 

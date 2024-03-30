@@ -36,10 +36,9 @@ Chramp("램프 이름", 'input')
 ```
 위와 같은 용법으로 사용합니다.
 - "램프 이름"은 `Chramp(,)` 으로 생성되는 램프의 이름을 지정할 수 있습니다.
-- `input`은 `Chramp(,)` 가 받아들일 데이터이며 그래프의 가로축에 대응 됩니다. \\
-\\
+- `input`은 `Chramp(,)` 가 받아들일 데이터이며 그래프의 가로축에 대응 됩니다.
 
-### 응용하기
+## 응용하기
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/088.gif){: .align-center}
 

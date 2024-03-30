@@ -33,7 +33,7 @@ toc_sticky: true
 
 양쪽 모두 컬러 노드를 연결해서 Cd 값이 있으면 경고 표시는 사라집니다.
 
-## 그룹(Group) 노드
+### 그룹(Group) 노드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/057.png){: .align-center}
 
@@ -63,7 +63,7 @@ toc_sticky: true
 
 인포(Info) 창에서 정보를 확인하면 2개의 포인트 그룹이 있으며, 각각 이름은 **A**와 **B**라고 쓰여있는 것을 확인 할 수 있습니다.
 
-## 블라스트(Blast) 노드
+### 블라스트(Blast) 노드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/013.gif){: .align-center} 
 
