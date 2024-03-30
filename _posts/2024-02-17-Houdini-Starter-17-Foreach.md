@@ -207,11 +207,10 @@ point("../y",0,"y",0)
 포인트 숫자는 'Force Total Count' 로 조절 할 수 있습니다. \\
 서클의 'Uniform Scale' 값을 키워서 풀이 자라는 영역을 조절 할 수 있습니다.
 
-
-
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/123.gif){: .align-center}
 
-완성입니다. 
+절차생성 모델링으로 잔디를 완성했습니다. 끝까지 읽어주셔서 감사합니다. \\
+여러분의 관심이 제게 큰 도움이 됩니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
