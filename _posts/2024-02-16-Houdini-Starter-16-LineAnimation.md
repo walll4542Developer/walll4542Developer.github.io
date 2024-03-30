@@ -98,7 +98,7 @@ v@Cd = chramp("color", @curveu);
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/109.gif){: .align-center}
 
-라인 애니메이션의 완성입니다. 끝까지 읽어주셔서 감사합니다. 여러분의 관심이 제게 큰 도움이 됩니다.
+라인 애니메이션을 완성했습니다. 끝까지 읽어주셔서 감사합니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)

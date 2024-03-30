@@ -196,6 +196,10 @@ point("../y",0,"y",0)
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/161.png){: .align-center}
 
+```hlsl
+f@seed = random(@ptnum);
+```
+
 이 포인트들을 **잔디가 위치할 포인트로 사용**합니다. 지금까지 작업한 내용을 `foreach` 블록 내부로 옮깁니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/162.png){: .align-center}
@@ -209,8 +213,7 @@ point("../y",0,"y",0)
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/123.gif){: .align-center}
 
-절차생성 모델링으로 잔디를 완성했습니다. 끝까지 읽어주셔서 감사합니다. \\
-여러분의 관심이 제게 큰 도움이 됩니다.
+절차생성 모델링으로 잔디를 완성했습니다. 끝까지 읽어주셔서 감사합니다.
 
 ## 레퍼런스(Reference)
 - TWA 후디니의 정석 : [https://www.youtube.com/@TWAHOUDINI](https://www.youtube.com/@TWAHOUDINI)
