@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 17 - Foreach 반복문"
-excerpt: "후디니에서 노드로 `foreach` 반복문을 사용하는 방법에 대해서 알아보겠습니다."
+excerpt: "후디니에서 노드로 foreach 반복문을 사용하는 방법에 대해서 알아보겠습니다."
 date: 2024-02-17 00:00:00 -0000
 categories: Houdini
 tag: Research
