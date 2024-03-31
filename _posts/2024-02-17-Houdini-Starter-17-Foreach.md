@@ -150,7 +150,7 @@ f@y = fit(seedY, 0, 1, chf("min"), 1);
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/158.png){: .align-center}
 
 ```hlsl
-point("../y",0,"y",0)
+point("../y", 0, "y", 0)
 ```
 
 `f@y`를 카브 노드의 'SecondU' 값으로 사용합니다.
