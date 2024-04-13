@@ -8,7 +8,7 @@ tag: Script
 header:
   teaser: /assets/images/Docs/Thumbnails/Programming-01.png
   overlay_image: /assets/images/Docs/Thumbnails/code.png
-  overlay_filter: 0.5
+  overlay_filter: 0.2
 
 # table of contents
 toc: true # 오른쪽 부분에 목차를 자동 생성해준다.

@@ -7,7 +7,7 @@ tag: Shader
 
 header:
   teaser: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
-  overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+  overlay_image: /assets/images/Docs/Super%20Hexagon%20Shader/009.gif
   overlay_filter: 0.5
 
 gallery0:
