@@ -122,7 +122,7 @@ $FF % 10 == 3 // hscript
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/135.gif){: .align-center}
 
-```
+```hlsl
 $FF % 4 == 1 // hscript
 ```
 
