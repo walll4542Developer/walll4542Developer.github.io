@@ -7,8 +7,8 @@ tag: Research
 
 header:
   teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-20.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
-  overlay_filter: 0.5
+  overlay_image: /assets/images/Docs/Thumbnails/code.png
+  overlay_filter: 0.8
 
 # table of contents
 toc: true
