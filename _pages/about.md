@@ -2,6 +2,12 @@
 permalink: /about/
 title: "About"
 sitemap: false
+
+# table of contents
+# toc: true
+# toc_label: "목차"
+# toc_icon: "bars"
+# toc_sticky: true
 ---
 
 ## 최우영 – @walll4542Developer
