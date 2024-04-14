@@ -19,6 +19,31 @@ sitemap: false
 - [Nexon Devcat / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)
   - 12.2020 ~ Present
 
+### 기술 스택(Tech stack)
+#### Professional Level
+- 3D art modeling skill set
+  - ![Maya](/assets/images/Icon/Maya_Mini.png) Maya / ![3dsMax](/assets/images/Icon/3dsMax_Mini.png) 3DS MAX / ![Blender](/assets/images/Icon/Blender_Mini.png) Blender / ![Zbrush](/assets/images/Icon/Zbrush_Mini.png) Zbrush
+  -  ![Mari](/assets/images/Icon/Mari_Mini.png) Mari / ![Substance](/assets/images/Icon/Substance_Mini.png) Substance Series
+- Shader Langauges
+  - HLSL / GLSL / ShaderLab / node based shader editors
+- Game engine graphic rendering pipeline
+  - ![Unity](/assets/images/Icon/Unity_Mini.png) Unity URP & SRP
+
+#### Basic Level
+- 2D art design skill set
+  - ![Photoshop](/assets/images/Icon/Photoshop_Mini.png) Photoshop / ![Illustrator](/assets/images/Icon/Illustrator_Mini.png) Illustrator
+- Project Communication
+  - ${10}$명 이하의 소규모 프로젝트에서의 커뮤니케이션 경험
+  - ${200}$명 이상의 대규모 프로젝트에서의 커뮤니케이션 경험
+- Procedural art resource production 
+  - ![Houdini](/assets/images/Icon/Houdini_Mini.png) Houdini
+- Game engine graphic rendering pipeline
+  - ![Unreal](/assets/images/Icon/Unreal_Mini.png) Unreal
+- Scripting
+  - ![C#](/assets/images/Icon/Csharp_Mini.png) C#
+- Profiling 
+  - ![Unity](/assets/images/Icon/Unity_Mini.png) Unity Profiler
+
 ### 연락처(Contact)
 - Mail: walll4542@gmail.com
 - X : [최우영](https://twitter.com/dPv79Noe77Xze92)
