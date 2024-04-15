@@ -1,19 +1,19 @@
 #ifndef MMN_CHARACTER_ATLAS_HELPER_INCLUDED
 #define MMN_CHARACTER_ATLAS_HELPER_INCLUDED
 
-float2 ConvertToAtlasUV(half2 atlasSize, half atlasIndexFromOne, half4 scalePosition, half rotation, float2 originUV)
+float2 ConvertToAtlasUV(float2 atlasSize, float atlasIndexFromOne, float4 scalePosition, float rotation, float2 originUV)
 {
-    half atlasColNum = atlasSize.x;
-    half atlasRowNum = atlasSize.y;
-    half atlasIndex = (atlasIndexFromOne - 1.0) + 0.001;
+    float atlasColNum = atlasSize.x;
+    float atlasRowNum = atlasSize.y;
+    float atlasIndex = (atlasIndexFromOne - 1.0) + 0.001;
 
-    half2 offsetScale = scalePosition.xy;
-    half2 offsetScaleInv = 1.0 / scalePosition.xy;
-    half2 offsetPosition = scalePosition.zw * 0.1;
+    float2 offsetScale = scalePosition.xy;
+    float2 offsetScaleInv = 1.0 / scalePosition.xy;
+    float2 offsetPosition = scalePosition.zw * 0.1;
 
-    half2 atlasScale = half2(1.0 / atlasColNum, 1.0 / atlasRowNum);
-    half2 atlasIndex2D = half2(floor(atlasIndex) - atlasColNum * floor(atlasIndex / atlasColNum), floor(atlasIndex / atlasColNum));
-    half2 atlasOffset = atlasScale * atlasIndex2D;
+    float2 atlasScale = float2(1.0 / atlasColNum, 1.0 / atlasRowNum);
+    float2 atlasIndex2D = float2(floor(atlasIndex) - atlasColNum * floor(atlasIndex / atlasColNum), floor(atlasIndex / atlasColNum));
+    float2 atlasOffset = atlasScale * atlasIndex2D;
 
     // 기본 크기 및 오프셋 위치 적용함.
     float2 convertedUV = originUV * offsetScaleInv;
@@ -39,11 +39,11 @@ float2 ConvertToAtlasUV(half2 atlasSize, half atlasIndexFromOne, half4 scalePosi
     return convertedUV;
 }
 
-float2 TransformUV(half4 scalePosition, half rotation, float2 originUV)
+float2 TransformUV(float4 scalePosition, float rotation, float2 originUV)
 {
-    half2 offsetScale = scalePosition.xy;
-    half2 offsetScaleInv = 1.0 / scalePosition.xy;
-    half2 offsetPosition = scalePosition.zw * 0.1;
+    float2 offsetScale = scalePosition.xy;
+    float2 offsetScaleInv = 1.0 / scalePosition.xy;
+    float2 offsetPosition = scalePosition.zw * 0.1;
 
     // 기본 크기 및 오프셋 위치 적용함.
     float2 convertedUV = originUV * offsetScaleInv;
@@ -62,7 +62,7 @@ float2 TransformUV(half4 scalePosition, half rotation, float2 originUV)
 }
 
 // 레거시 방식의 눈에서 사용하고 있어서 일단 유지함.
-void CalcUvOffsetScale_Legacy(half colNum, half rowNum, half index, out float2 uvOffset, out float2 uvScale)
+void CalcUvOffsetScale_Legacy(float colNum, float rowNum, float index, out float2 uvOffset, out float2 uvScale)
 {
     uvScale = float2(1.0 / colNum, 1.0 / rowNum);
     index = index + 0.1;

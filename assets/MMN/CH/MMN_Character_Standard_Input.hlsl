@@ -25,91 +25,93 @@ float4 _BaseMap_MipInfo;
 #endif
 
 CBUFFER_START(UnityPerMaterial)
+    float _ShadingType;
+
     float4 _BaseMap_ST;
 
 #ifdef _ALPHA_OVERRIDE_FEATURE
-    half _AlphaOverride;
-    half _AlphaScaleMin;
-    half _AlphaScaleMax;
+    float _AlphaOverride;
+    float _AlphaScaleMin;
+    float _AlphaScaleMax;
     #ifdef _GRADIENT_ALPHA_FEATURE
-        half _IsGradientAlpha;
-        half _GradientAlphaHeight;
+        float _IsGradientAlpha;
+        float _GradientAlphaHeight;
     #endif
 #endif
 
 #ifdef _TINTCOLOR_FEATURE
-    half4 _TintColor;
+    float4 _TintColor;
 #endif
 
 #ifdef _TWO_SIDE_FEATURE
-    half _BackFaceDarkenAmount;
+    float _BackFaceDarkenAmount;
 #endif
 
 #ifdef _TEXTURE_LERP_FEATURE
-    half _LerpTex;
+    float _LerpTex;
 #endif
 
 #ifdef _DYE_FEATURE
-    half _IsDyable;
-    half4 _DyeColor1;
-    half4 _DyeColor2;
-    half4 _DyeColor3;
+    float _IsDyable;
+    float4 _DyeColor1;
+    float4 _DyeColor2;
+    float4 _DyeColor3;
 #endif
 
 #ifdef _SILHOUETTE_FEATURE
-    half _SilhouetteOff;
-    half4 _SilhouetteTintColor;
+    float _SilhouetteOff;
+    float4 _SilhouetteTintColor;
 #endif
 
-    half4 _OutlineColor;
-    half _OutlineColorMode;
-    // half _OutlineWidth;
+    float4 _OutlineColor;
+    float _OutlineColorMode;
+    // float _OutlineWidth;
 
-    half _IsMetal;
-    half4 _MetalTintColor;
-    half _Smoothness;
-    half _SpecularStrength;
+    float _IsMetal;
+    float4 _MetalTintColor;
+    float _Smoothness;
+    float _SpecularStrength;
 
 #ifdef _EMISSION_FEATURE
-    half3 _EmissionColor;
-    half _IsApplyFogToEmission;
-    half _ApplyFogToEmissionFactor;
-    half _IsEnableEmissionAtNight;
-    half _IsBreathingEmissionMode;
-    half _BreathingEmissionModePeriod;
+    float3 _EmissionColor;
+    float _IsApplyFogToEmission;
+    float _ApplyFogToEmissionFactor;
+    float _IsEnableEmissionAtNight;
+    float _IsBreathingEmissionMode;
+    float _BreathingEmissionModePeriod;
 #endif
 
 #ifdef _FRESNEL_FEATURE
-    half4 _FresnelColor;
-    half _FresnelRange;
-    half _FresnelPower;
+    float4 _FresnelColor;
+    float _FresnelRange;
+    float _FresnelPower;
 #endif
 
 #ifdef _DISSOLVE_FEATURE
-    half _DissolveAmount;
+    float _DissolveAmount;
 
-    half4 _DissolveRange;
-    half _NotUseDirection;
-    half3 _DissolveDirection;
+    float4 _DissolveRange;
+    float _NotUseDirection;
+    float3 _DissolveDirection;
 
-    half _DissolvePanningSpeed;
-    half4 _DissolveMap_ST;
+    float _DissolvePanningSpeed;
+    float4 _DissolveMap_ST;
 
-    half _DissolveCutoff;
+    float _DissolveCutoff;
 
-    half4 _DissolveColor;
-    half _DissolveWidth;
-    half4 _DissolveEdgeColor;
-    half _DissolveEdgeWidth;
+    float4 _DissolveColor;
+    float _DissolveWidth;
+    float4 _DissolveEdgeColor;
+    float _DissolveEdgeWidth;
 #endif
 
 #ifdef _ARBALEST_FEATURE
-    half _RemainedMagazine;
-    half _MagazineNumber;
+    float _RemainedMagazine;
+    float _MagazineNumber;
 #endif
 
 #ifdef _WEAPON_GRADE_FEATURE
-    half4 _WeaponGradeColor;
+    float4 _WeaponGradeColor;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

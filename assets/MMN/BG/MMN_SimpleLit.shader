@@ -26,9 +26,6 @@ Shader "MMN/BG/SimpleLit"
         _SmoothnessSource ("Smoothness Source", Float) = 0.0
         _SpecularHighlights ("Specular Highlights", Float) = 1.0
 
-        // [HideInInspector] _BumpScale ("Scale", Float) = 1.0
-        // [NoScaleOffset] _BumpMap ("Normal Map", 2D) = "bump" { }
-
         [HDR] _EmissionColor ("Emission Color", Color) = (0, 0, 0)
         [NoScaleOffset]_EmissionMap ("Emission Map", 2D) = "white" { }
         [Enum(Always, 0, NightOnly, 1, DayOnly, 2)] _Night2DayEnum ("언제 Emission이 켜지게 할까요", float) = 0
@@ -39,15 +36,6 @@ Shader "MMN/BG/SimpleLit"
         _CenterPointHeight ("Center Position Height", float) = 0
         _GroundAOarea ("AOarea", Range(0, 20)) = 2
         _GroundAOintensity ("AOintensity", float) = 0
-
-        // Blending state
-        [HideInInspector] _Surface ("__surface", Float) = 0.0
-        [HideInInspector] _Blend ("__blend", Float) = 0.0
-        [HideInInspector] _AlphaClip ("__clip", Float) = 0
-        [HideInInspector] _SrcBlend ("__src", Float) = 1.0
-        [HideInInspector] _DstBlend ("__dst", Float) = 0.0
-        // [HideInInspector] _ZWrite ("__zw", Float) = 1.0
-        // [HideInInspector] _Cull ("__cull", Float) = 2.0
 
         [ToggleUI] _ReceiveShadows ("Receive Shadows", Float) = 1.0
 
@@ -65,6 +53,9 @@ Shader "MMN/BG/SimpleLit"
         [HideInInspector][NoScaleOffset]unity_LightmapsInd ("unity_LightmapsInd", 2DArray) = "" { }
         [HideInInspector][NoScaleOffset]unity_ShadowMasks ("unity_ShadowMasks", 2DArray) = "" { }
 
+        //날씨
+        [Toggle]_IsRaindrop ("빗방울이 떨어질까요?/ 눈이 쌓일까요?", float) = 1
+
 
         //흔들리기. 버텍스 알파에 대응한다.
         [Toggle]_VertexAniOn ("버텍스 애니를 켠다", float) = 1
@@ -72,10 +63,6 @@ Shader "MMN/BG/SimpleLit"
         _WindSpeedMultiply ("Wind Speed Multiply(바람 속도 가중치)", Range(0, 40)) = 7 //빠르게 흔들리게 됩니다.
         [Toggle]_ShowVertexAlpha ("Show Vertex Alpha(확인용)", float) = 0
         [Toggle]_UseVertexAnimation ("버텍스 애니 기능 통채로 끄기", float) = 0 //GUI에서만 쓰는 기능이라 프로퍼티에서만 유지합니다.
-
-
-
-
 
 
         [Header(Stencil Options)]
@@ -106,19 +93,20 @@ Shader "MMN/BG/SimpleLit"
             }
 
             // Use same blending / depth states as Standard shader
-            Blend[_SrcBlend][_DstBlend]
+            Blend One Zero
             // ZWrite[_ZWrite]
             ZWrite On
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma exclude_renderers gles gles3 glcore
+            #pragma exclude_renderers gles gles3 glcore d3d9
             #pragma target 4.5
 
             // -------------------------------------
             // Material Keywords
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
@@ -127,7 +115,8 @@ Shader "MMN/BG/SimpleLit"
             // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
             // Universal Pipeline keywords
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             //#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
@@ -136,7 +125,7 @@ Shader "MMN/BG/SimpleLit"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             #pragma multi_compile _ LIGHTMAP_ON
             #define HALF_SUBTRACTIVE_LIGHTMAP_ON 0
@@ -194,11 +183,13 @@ Shader "MMN/BG/SimpleLit"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #define VERTEX_CAMERA_DEPEND_BENDING 0
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0
@@ -257,7 +248,7 @@ Shader "MMN/BG/SimpleLit"
                 ZFail Keep
             }
 
-            Blend[_SrcBlend][_DstBlend]
+            Blend One Zero
             ZWrite On
             Cull[_Cull]
 
@@ -268,7 +259,8 @@ Shader "MMN/BG/SimpleLit"
             // -------------------------------------
             // Material Keywords
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // //#pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             // #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             // #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
             // #pragma shader_feature_local _SHOWVERTEXALPHA_ON
@@ -277,13 +269,15 @@ Shader "MMN/BG/SimpleLit"
             // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
             // Universal Pipeline keywords
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE 
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             #pragma multi_compile _ LIGHTMAP_ON
             #define HALF_SUBTRACTIVE_LIGHTMAP_ON 0
@@ -340,11 +334,13 @@ Shader "MMN/BG/SimpleLit"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #define VERTEX_CAMERA_DEPEND_BENDING 0
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0

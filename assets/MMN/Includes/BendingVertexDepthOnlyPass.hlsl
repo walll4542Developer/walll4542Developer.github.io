@@ -56,13 +56,13 @@ Varyings DepthOnlyVertex(Attributes input)
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     output.screenPos = ComputeScreenPos(output.positionCS);
-    half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+    float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
     output.viewDir = viewDirWS;
     output.positionCS = vertexInput.positionCS;
     return output;
 }
 
-half4 DepthOnlyFragment(Varyings input) : SV_TARGET
+float4 DepthOnlyFragment(Varyings input) : SV_TARGET
 {
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 

@@ -116,6 +116,7 @@ Shader "MMN/CH/Skin_Face"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -145,7 +146,7 @@ Shader "MMN/CH/Skin_Face"
         #define _FRESNEL_FEATURE
         #define _ALPHA_OVERRIDE_FEATURE
 
-        // 멀티 컴파일 키워드 중, 멀티 컴파일 하지 않고 고정해두는 디파인
+        // 셰딩 타입의 큰 카테고리
         #define _SHADINGTYPE_SKINFACE
 
         #include "MMN_Character_Skin_Face_Input.hlsl"
@@ -190,7 +191,7 @@ Shader "MMN/CH/Skin_Face"
             #define _HIGH_QUALITY
             #define _MOUTHPUSH_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -249,7 +250,7 @@ Shader "MMN/CH/Skin_Face"
             #define _HIGH_QUALITY
             #define _MOUTHPUSH_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -319,6 +320,7 @@ Shader "MMN/CH/Skin_Face"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -344,6 +346,7 @@ Shader "MMN/CH/Skin_Face"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -381,7 +384,7 @@ Shader "MMN/CH/Skin_Face"
             #define _HIGH_QUALITY
             #undef _MOUTHPUSH_FEATURE // NOTE @jihun.song : 전투 중에 입 밀어넣기는 무의미해서 하지 않음.
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -448,7 +451,7 @@ Shader "MMN/CH/Skin_Face"
             // Material Keywords
             #undef _MOUTHPUSH_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -505,7 +508,7 @@ Shader "MMN/CH/Skin_Face"
             // Material Keywords
             #undef _MOUTHPUSH_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -574,6 +577,7 @@ Shader "MMN/CH/Skin_Face"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -599,6 +603,7 @@ Shader "MMN/CH/Skin_Face"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -635,7 +640,7 @@ Shader "MMN/CH/Skin_Face"
             // Material Keywords
             #undef _MOUTHPUSH_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMN_CS_Sky_LitCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 8ad04147de3c9f44f97a4f8295b5c691, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13

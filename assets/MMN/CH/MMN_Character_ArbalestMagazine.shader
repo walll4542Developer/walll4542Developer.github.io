@@ -2,7 +2,7 @@ Shader "MMN/CH/ArbalestMagazine"
 {
     Properties
     {
-        [HideInInspector] [KeywordEnum(Standard)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [HideInInspector] [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
         [HideInInspector] [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -77,6 +77,7 @@ Shader "MMN/CH/ArbalestMagazine"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -109,7 +110,7 @@ Shader "MMN/CH/ArbalestMagazine"
         #undef _GRADIENT_ALPHA_FEATURE
         #define _ARBALEST_FEATURE
 
-        // 멀티 컴파일 키워드 중, 멀티 컴파일 하지 않고 고정해두는 디파인
+        // 셰딩 타입의 큰 카테고리
         #define _SHADINGTYPE_STANDARD
 
         #include "MMN_Character_Standard_Input.hlsl"
@@ -154,7 +155,7 @@ Shader "MMN/CH/ArbalestMagazine"
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -228,6 +229,7 @@ Shader "MMN/CH/ArbalestMagazine"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -278,7 +280,7 @@ Shader "MMN/CH/ArbalestMagazine"
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -351,6 +353,7 @@ Shader "MMN/CH/ArbalestMagazine"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment

@@ -70,7 +70,8 @@ Shader "Hidden/MMN/BG/TerrainLit(Add Pass)"
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
+            
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED

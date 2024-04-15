@@ -30,14 +30,14 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
 
 		struct SurfaceOutput
 		{
-			half3 Albedo;
-			half3 Specular;
-			half Metallic;
+			float3 Albedo;
+			float3 Specular;
+			float Metallic;
 			float3 Normal;
-			half3 Emission;
-			half Smoothness;
-			half Occlusion;
-			half Alpha;
+			float3 Emission;
+			float Smoothness;
+			float Occlusion;
+			float Alpha;
 		};
 
 		#define AI_RENDERPIPELINE
@@ -113,7 +113,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
             {
                 float4 clipPos                : SV_POSITION;
                 float4 lightmapUVOrVertexSH	  : TEXCOORD0;
-        		half4 fogFactorAndVertexLight : TEXCOORD1; // x: fogFactor, yzw: vertex light
+        		float4 fogFactorAndVertexLight : TEXCOORD1; // x: fogFactor, yzw: vertex light
 				//#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
             	//float4 shadowCoord            : TEXCOORD2;
 				//#endif
@@ -142,15 +142,15 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
 
          		// We either sample GI from lightmap or SH.
-        	    // Lightmap UV and vertex SH coefficients use the same interpolator ("float2 lightmapUV" for lightmap or "half3 vertexSH" for SH)
+        	    // Lightmap UV and vertex SH coefficients use the same interpolator ("float2 lightmapUV" for lightmap or "float3 vertexSH" for SH)
                 // see DECLARE_LIGHTMAP_OR_SH macro.
         	    // The following funcions initialize the correct variable with correct data
         	    OUTPUT_LIGHTMAP_UV(v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
         	    OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH.xyz);
 
-        	    half3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
-        	    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
-        	    o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+        	    float3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
+        	    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+        	    o.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
         	    o.clipPos = vertexInput.positionCS;
 
 				//#if defined( REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR )
@@ -159,7 +159,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         		return o;
         	}
 
-        	half4 frag (GraphVertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_Target
+        	float4 frag (GraphVertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_Target
             {
             	UNITY_SETUP_INSTANCE_ID(IN);
 
@@ -210,14 +210,14 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	    inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
 
 				#if defined(CUSTOM_BAKED_GI)
-					half4 decodeInstructions = half4( LIGHTMAP_HDR_MULTIPLIER, LIGHTMAP_HDR_EXPONENT, 0.0h, 0.0h );
+					float4 decodeInstructions = float4( LIGHTMAP_HDR_MULTIPLIER, LIGHTMAP_HDR_EXPONENT, 0.0h, 0.0h );
 					inputData.bakedGI = UnpackLightmapRGBM( bakedGI, decodeInstructions ) * EMISSIVE_RGBM_SCALE;
 				#else
                     OUTPUT_SH(inputData.normalWS, IN.lightmapUVOrVertexSH.xyz);
 					inputData.bakedGI = SAMPLE_GI(IN.lightmapUVOrVertexSH.xy, IN.lightmapUVOrVertexSH.xyz, inputData.normalWS);
 				#endif
 
-        		half4 color = UniversalFragmentPBR(
+        		float4 color = UniversalFragmentPBR(
         			inputData,
         			Albedo,
         			Metallic,
@@ -228,7 +228,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         			Alpha);
 
 				#ifdef TERRAIN_SPLAT_ADDPASS
-					color.rgb = MixFogColor(color.rgb, half3( 0, 0, 0 ), IN.fogFactorAndVertexLight.x );
+					color.rgb = MixFogColor(color.rgb, float3( 0, 0, 0 ), IN.fogFactorAndVertexLight.x );
 				#else
 					color.rgb = MixFog(color.rgb, IN.fogFactorAndVertexLight.x);
 				#endif
@@ -329,7 +329,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	    return o;
         	}
 
-            half4 ShadowPassFragment(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
+            float4 ShadowPassFragment(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 				SurfaceOutput o = (SurfaceOutput)0;
@@ -423,7 +423,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	    return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 				SurfaceOutput o = (SurfaceOutput)0;
@@ -512,7 +512,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	    return o;
             }
 
-			half4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
+			float4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 				SurfaceOutput o = (SurfaceOutput)0;
@@ -612,7 +612,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Universal PBR" /*end*/
         	    return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth /*ase_frag_input*/) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 				SurfaceOutput o = (SurfaceOutput)0;

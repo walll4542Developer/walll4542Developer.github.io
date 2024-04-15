@@ -16,23 +16,23 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    half3 baseColor = baseMap.rgb;
-    half alpha = 1.0;
+    float3 baseColor = baseMap.rgb;
+    float alpha = 1.0;
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY)
         alpha = baseMap.a * _AlphaOverride;
     #endif
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -64,8 +64,8 @@ half4 BasePassFragment(Varyings input) : SV_Target
     // 문신 / 횽터
     //-----------------------------------------------------------------------------
     float2 tattooUV = TransformUV(_TattooMapScalePosition, _TattooMapRotation, input.uv.xy);
-    half4 tattooMap = SAMPLE_TEXTURE2D(_TattooMap, sampler_TattooMap, tattooUV);
-    half3 tattooColor = tattooMap.rgb;
+    float4 tattooMap = SAMPLE_TEXTURE2D(_TattooMap, sampler_TattooMap, tattooUV);
+    float3 tattooColor = tattooMap.rgb;
 
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
@@ -85,23 +85,23 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor, _FlatShadingOff);
+        _SHADINGTYPE_SKINBODY_VALUE, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor, _FlatShadingOff);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _SHADINGTYPE_SKINBODY_VALUE);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1, 1, 1);
+            outlineColor = float3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
     #endif
@@ -136,8 +136,8 @@ half4 BasePassFragment(Varyings input) : SV_Target
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY) && defined(_GRADIENT_ALPHA_FEATURE)
         if (IS_TRUE(_IsGradientAlpha))
         {
-            half visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
-            half gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
+            float visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
+            float gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
             resultColor.a *= saturate(max(gradientAlpha, 0.1));
         }
     #endif
@@ -155,7 +155,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

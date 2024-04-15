@@ -17,27 +17,27 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    half3 baseColor = baseMap.rgb;
-    half alpha = 1.0;
+    float3 baseColor = baseMap.rgb;
+    float alpha = 1.0;
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY)
         alpha = baseMap.a * _AlphaOverride;
     #endif
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
-            ApplyDyeColor(dyedBaseColor, _DyeColor2, half4(1, 1, 1, 1), half4(1, 1, 1, 1));
+            ApplyDyeColor(dyedBaseColor, _DyeColor2, float4(1, 1, 1, 1), float4(1, 1, 1, 1));
             dyedBaseColor = ApplySkinColor(dyedBaseColor, _DyeColor1.rgb);
         }
         else
@@ -70,23 +70,23 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
+        _SHADINGTYPE_SKINFACE_VALUE, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _SHADINGTYPE_SKINFACE_VALUE);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1, 1, 1);
+            outlineColor = float3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
     #endif
@@ -131,7 +131,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

@@ -6,7 +6,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-bool CalculateColorForDebugMaterial_Character(in InputData inputData, in SurfaceData surfaceData, inout half4 debugColor)
+bool CalculateColorForDebugMaterial_Character(in InputData inputData, in SurfaceData surfaceData, inout float4 debugColor)
 {
     // Debug materials...
     switch(_DebugMaterialMode)
@@ -15,39 +15,39 @@ bool CalculateColorForDebugMaterial_Character(in InputData inputData, in Surface
             return false;
 
         case DEBUGMATERIALMODE_ALBEDO:
-            debugColor = half4(surfaceData.albedo, 1);
+            debugColor = float4(surfaceData.albedo, 1);
             return true;
 
         case DEBUGMATERIALMODE_SPECULAR:
-            debugColor = half4(surfaceData.albedo * surfaceData.emission, 1);
+            debugColor = float4(surfaceData.albedo * surfaceData.emission, 1);
             return true;
 
         case DEBUGMATERIALMODE_ALPHA:
-            debugColor = half4(surfaceData.alpha.rrr, 1);
+            debugColor = float4(surfaceData.alpha.rrr, 1);
             return true;
 
         case DEBUGMATERIALMODE_SMOOTHNESS:
-            debugColor = half4(surfaceData.smoothness.rrr, 1);
+            debugColor = float4(surfaceData.smoothness.rrr, 1);
             return true;
 
         case DEBUGMATERIALMODE_AMBIENT_OCCLUSION:
-            debugColor = half4(surfaceData.occlusion.rrr, 1);
+            debugColor = float4(surfaceData.occlusion.rrr, 1);
             return true;
 
         case DEBUGMATERIALMODE_EMISSION:
-            debugColor = half4(surfaceData.albedo + surfaceData.specular, 1);
+            debugColor = float4(surfaceData.albedo + surfaceData.specular, 1);
             return true;
 
         case DEBUGMATERIALMODE_NORMAL_WORLD_SPACE:
-            debugColor = half4(inputData.normalWS.xyz * 0.5 + 0.5, 1);
+            debugColor = float4(inputData.normalWS.xyz * 0.5 + 0.5, 1);
             return true;
 
         case DEBUGMATERIALMODE_NORMAL_TANGENT_SPACE:
-            debugColor = half4(surfaceData.normalTS.xyz * 0.5 + 0.5, 1);
+            debugColor = float4(surfaceData.normalTS.xyz * 0.5 + 0.5, 1);
             return true;
 
         case DEBUGMATERIALMODE_METALLIC:
-            debugColor = half4(surfaceData.metallic.rrr, 1);
+            debugColor = float4(surfaceData.metallic.rrr, 1);
             return true;
 
         default:
@@ -55,7 +55,7 @@ bool CalculateColorForDebugMaterial_Character(in InputData inputData, in Surface
     }
 }
 
-bool CalculateColorForDebug_Character(in InputData inputData, in SurfaceData surfaceData, inout half4 debugColor)
+bool CalculateColorForDebug_Character(in InputData inputData, in SurfaceData surfaceData, inout float4 debugColor)
 {
     if (CalculateColorForDebugSceneOverride(debugColor))
     {
@@ -75,10 +75,10 @@ bool CalculateColorForDebug_Character(in InputData inputData, in SurfaceData sur
     }
 }
 
-half4 CharacterDebuggingColor(InputData inputData, Light mainLight, LightingData lightingData,
-    CharacterData characterData, half3 dyedBaseColor, half alpha)
+float4 CharacterDebuggingColor(InputData inputData, Light mainLight, LightingData lightingData,
+    CharacterData characterData, float3 dyedBaseColor, float alpha)
 {
-    half4 debugColor = half4(0, 0, 0, 0);
+    float4 debugColor = float4(0, 0, 0, 0);
 
     SurfaceData surfaceData = (SurfaceData)0;
     surfaceData.albedo = dyedBaseColor;
@@ -86,7 +86,7 @@ half4 CharacterDebuggingColor(InputData inputData, Light mainLight, LightingData
 
     surfaceData.smoothness = abs(distance(characterData.characterPos, inputData.positionWS.xyz));
 
-    half receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
+    float receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
         characterData.characterCenterPos, characterData.visualHeight,
         characterData.topShadow, characterData.bottomShadow);
     surfaceData.occlusion = receivedShadow;
@@ -117,7 +117,7 @@ half4 CharacterDebuggingColor(InputData inputData, Light mainLight, LightingData
     // TODO: 아래는 커스텀해서 사용하자.
     // if (IsOnlyAOLightingFeatureEnabled())
     // {
-    //     return half4(lightColor, 1);
+    //     return float4(lightColor, 1);
     // }
 
     debugColor.rgb *= dyedBaseColor;

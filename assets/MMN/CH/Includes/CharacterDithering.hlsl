@@ -3,9 +3,9 @@
 
 #include "../../Includes/EnvironmentHelper.hlsl"
 
-void HalftoneAlphaClip(half clipStrength, float4 positionNDC)
+void HalftoneAlphaClip(float clipStrength, float4 positionNDC)
 {
-    half halftoneAlpha = 1.0;
+    float halftoneAlpha = 1.0;
     clipStrength = 2.0 - clipStrength;
     Unity_Dither_linear(clipStrength, positionNDC, halftoneAlpha);
 

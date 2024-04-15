@@ -13,15 +13,15 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    half3 baseColor = baseMap.rgb;
-    half alpha = baseMap.a;
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float3 baseColor = baseMap.rgb;
+    float alpha = baseMap.a;
 
     #ifndef _TRANSPARENCY
         alpha = 1.0;
@@ -29,7 +29,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -56,16 +56,16 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
+        _SHADINGTYPE_STANDARD_VALUE, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _SHADINGTYPE_STANDARD_VALUE);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1.0, 1.0, 1.0);
+            outlineColor = float3(1.0, 1.0, 1.0);
         #endif
 
         resultColor.rgb *= outlineColor;
@@ -91,7 +91,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

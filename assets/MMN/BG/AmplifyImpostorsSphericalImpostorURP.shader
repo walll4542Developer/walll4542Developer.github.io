@@ -40,16 +40,16 @@ Shader "Amplify Impostors/Spherical Impostor URP"
 
         struct SurfaceOutputSimpleLit
         {
-            half3 Albedo;
-            half3 Normal;
-            half Alpha;
+            float3 Albedo;
+            float3 Normal;
+            float Alpha;
         };
 
         //GlobalVariables
-        // half _Global_CloudDensity;
-        // half _Global_CloudSpeed;
-        // half _Global_CloudScale;
-        // half _Global_CloudEdgeHardness;
+        // float _Global_CloudDensity;
+        // float _Global_CloudSpeed;
+        // float _Global_CloudScale;
+        // float _Global_CloudEdgeHardness;
 
 
         ENDHLSL
@@ -74,6 +74,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
             // #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
             // #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
@@ -105,8 +106,8 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
-                half3 tangent : TANGENT;
+                float3 normal : NORMAL;
+                float3 tangent : TANGENT;
                 //float4 texcoord  : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -116,7 +117,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             {
                 float4 clipPos : SV_POSITION;
                 float4 lightmapUVOrVertexSH : TEXCOORD0;
-                half4 fogFactorAndVertexLight : TEXCOORD1;
+                float4 fogFactorAndVertexLight : TEXCOORD1;
                 float4 shadowCoord : TEXCOORD2;
                 float4 frameUVs : TEXCOORD3;
                 float4 viewPos : TEXCOORD4;
@@ -142,9 +143,9 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 OUTPUT_LIGHTMAP_UV(v.texcoord1.xyxx, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
                 OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH.xyz);
 
-                half3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
-                half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
-                o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+                float3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
+                float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                o.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
                 o.clipPos = vertexInput.positionCS;
 
                 #ifdef _MAIN_LIGHT_SHADOWS
@@ -153,7 +154,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_Target
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 
@@ -184,7 +185,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 OUTPUT_SH(inputData.normalWS, IN.lightmapUVOrVertexSH.xyz);
                 inputData.bakedGI = SAMPLE_GI(IN.lightmapUVOrVertexSH.xy, IN.lightmapUVOrVertexSH.xyz, inputData.normalWS);
 
-                // half4 color = UniversalFragmentPBR(
+                // float4 color = UniversalFragmentPBR(
                 // 	inputData,
                 // 	o.Albedo,
                 // 	0,
@@ -194,7 +195,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 // 	0,
                 // 	o.Alpha);
 
-                half4 color = UniversalFragmentLightCustom(inputData, o.Albedo, 0/*specular*/, 0/*smoothness*/, 0/*emission*/, o.Alpha, /* normalTS */ float3(0, 0, 1), /* shadowDimming */ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
+                float4 color = UniversalFragmentLightCustom(inputData, o.Albedo, 0/*specular*/, 0/*smoothness*/, 0/*emission*/, o.Alpha, /* normalTS */ float3(0, 0, 1), /* shadowDimming */ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
 
                 // 글로벌 텍스쳐를 통한 하이트 포그 연산
                 color = MMN_GlobalTex_HeightFog(
@@ -250,7 +251,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
+                float3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -278,7 +279,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
@@ -323,7 +324,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
+                float3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -351,7 +352,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
@@ -428,7 +429,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
@@ -481,7 +482,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
+                float3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 float2 uvLM : TEXCOORD1;
                 float2 uvDLM : TEXCOORD2;
@@ -514,7 +515,7 @@ Shader "Amplify Impostors/Spherical Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;

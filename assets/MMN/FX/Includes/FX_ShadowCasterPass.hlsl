@@ -14,23 +14,19 @@ struct Attributes
 {
     float4 positionOS : POSITION;
     float3 normalOS : NORMAL;
-    float2 texcoord : TEXCOORD0;
-
-    UNITY_VERTEX_INPUT_INSTANCE_ID
+    float4 tangentOS : TANGENT;
 };
 
 struct Varyings
 {
-    float2 uv : TEXCOORD0;
     float4 positionCS : SV_POSITION;
-
-    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 float4 GetShadowPositionHClip(Attributes input)
 {
     float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
-    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
+
+    VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
 #if _CASTING_PUNCTUAL_LIGHT_SHADOW
     float3 lightDirectionWS = normalize(_LightPosition - positionWS);
@@ -38,7 +34,7 @@ float4 GetShadowPositionHClip(Attributes input)
     float3 lightDirectionWS = _LightDirection;
 #endif
 
-    float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
+    float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalInput.normalWS, lightDirectionWS));
 
 #if UNITY_REVERSED_Z
     positionCS.z = min(positionCS.z, UNITY_NEAR_CLIP_VALUE);
@@ -53,7 +49,6 @@ Varyings ShadowPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;
 
-    // output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     output.positionCS = GetShadowPositionHClip(input);
 
     return output;
@@ -61,12 +56,6 @@ Varyings ShadowPassVertex(Attributes input)
 
 float4 ShadowPassFragment(Varyings input) : SV_TARGET
 {
-    // float alpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).a;
-
-    // #ifdef _ALPHA_TEST
-    //     clip(alpha - _Cutoff);
-    // #endif
-    
     return 0;
 }
 

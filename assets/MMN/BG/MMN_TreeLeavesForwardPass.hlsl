@@ -9,12 +9,12 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
-    half4 tangentOS : TANGENT;
+    float3 normalOS : NORMAL;
+    float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
     // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-    half4 color : COLOR;
+    float4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -26,12 +26,12 @@ struct Varyings
     float3 positionWS : TEXCOORD2;    // xyz: posWS
     float3 normalWS : TEXCOORD3;
     float3 viewDir : TEXCOORD4;
-    
-    
+
+
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
+        float4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
     #else
-        half fogFactor : TEXCOORD5;
+        float fogFactor : TEXCOORD5;
     #endif
 
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
@@ -42,20 +42,20 @@ struct Varyings
 
     float4 screenPos : TEXCOORD8;
     float cameraDistance : TEXCOORD9;
-    half4 color : COLOR;
+    float4 color : COLOR;
     float4 positionCS : SV_POSITION;
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
-void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
+void InitializeInputData(Varyings input, float3 normalTS, out InputData inputData)
 {
     inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
 
-    
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
+
+    float3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
     inputData.normalWS = input.normalWS;
 
     inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
@@ -76,7 +76,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
         inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-        inputData.vertexLighting = half3(0, 0, 0);
+        inputData.vertexLighting = float3(0, 0, 0);
     #endif
 
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
@@ -112,7 +112,7 @@ Varyings LitPassVertexSimple(Attributes input)
     VertexPositionInputs vertexInput = GetVertexPositionInputs4treeShake(input.positionOS.xyz, _Global_VertexPositionOffset, _Global_VertexPositionOffset.z, input.color, _WindMultiply, _WindSpeedMultiply, _GrassPushPower, /* _VertexAniOn */ 1);
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
-    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     output.positionWS.xyz = vertexInput.positionWS;
     output.positionCS = vertexInput.positionCS;
@@ -123,13 +123,13 @@ Varyings LitPassVertexSimple(Attributes input)
     output.color = input.color;
     output.screenPos = ComputeScreenPos(output.positionCS);
     output.cameraDistance = distance(GetCameraPositionWS(), vertexInput.positionWS);
-    
+
     OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
     OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
 
     //Additional Light를 위한 Vertex Light 연산
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        float3 posObjectNormal = (input.positionOS.rgb - half3(0, _CenterPointHeight, 0));
+        float3 posObjectNormal = (input.positionOS.rgb - float3(0, _CenterPointHeight, 0));
         float3 posWorldNormal = TransformObjectToWorldDir(posObjectNormal);
         posWorldNormal = normalize(posWorldNormal);
         normalInput.normalWS = lerp(normalInput.normalWS, posWorldNormal.rgb, _NormalLerp);
@@ -142,29 +142,30 @@ Varyings LitPassVertexSimple(Attributes input)
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
         output.shadowCoord = GetShadowCoord(vertexInput);
     #endif
-    
+
     return output;
 }
 
 
 // Used for StandardSimpleLighting shader
-half4 LitPassFragmentSimple(Varyings input) : SV_Target
+float4 LitPassFragmentSimple(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
     float2 uv = input.uv;
-    half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-    half3 diffuse = diffuseAlpha.rgb * _BaseColor.rgb;
-    half alpha = diffuseAlpha.a * _BaseColor.a;
+    float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+    float3 diffuse = diffuseAlpha.rgb * _BaseColor.rgb;
+    float alpha = diffuseAlpha.a * _BaseColor.a;
 
     //가까워지면 하프톤으로 사라지게 하는 기능
-    #if defined(_GLOBAL_NEARHALFTONECLIP_ON)
-        half halftoneAlpha;
-        float cameraDistance = input.cameraDistance;
-        NearHarftoneAlphaTesting(cameraDistance, input.screenPos, 0.5, halftoneAlpha);
-        clip(halftoneAlpha);
-    #endif
+    // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+    // #if defined(_GLOBAL_NEARHALFTONECLIP_ON)
+    //     float halftoneAlpha;
+    //     float cameraDistance = input.cameraDistance;
+    //     NearHarftoneAlphaTesting(cameraDistance, input.screenPos, 0.5, halftoneAlpha);
+    //     clip(halftoneAlpha);
+    // #endif
 
     float modifiedCutoff = 1;
     //거리가 멀어질수록 알파테스팅이 덜되게 한다. 나뭇잎의 경우 멀어지면 알파 테스팅으로 가루처럼 잎이 보이게 되는 것을 방지한다
@@ -184,14 +185,14 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     clip(alpha - modifiedCutoff);
 
     //레이케스트 되면 사라지는 기능
-    half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+    float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
     clip(RaycasthalftoneAlpha - 0.1);
 
     // // ===============================================================================
     // // ==                            Color Calc                                     ==
     // // ===============================================================================
-    half4 color = half4(0, 0, 0, 0);
-    half3 posObjectNormal = (input.positionOS.rgb - half3(0, _CenterPointHeight, 0));
+    float4 color = float4(0, 0, 0, 0);
+    float3 posObjectNormal = (input.positionOS.rgb - float3(0, _CenterPointHeight, 0));
 
     //센터포지션 임시확인기능 . 모든 둥근 모양의 활엽수는 센터 포지션을 나무 중앙에 두어야 합니다.
     #ifdef _SHOWCENTERPOSITION_ON
@@ -207,28 +208,28 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
 
     //diffuse
-    half3 diffuseLightColor = UniversalFragmentTreeLeaves2(
+    float3 diffuseLightColor = UniversalFragmentTreeLeaves2(
         inputData, diffuse, posObjectNormal, _NormalLerp, _ShadingPow, _ReceiveShadowStrength, _GIStrength);
 
     //innerAO
-    half innerAO = UniversalFragmentTreeLeavesInnerAO(input.positionOS, _CenterPointHeight, _AOarea, _AOintensity, _AOVertical);
+    float innerAO = UniversalFragmentTreeLeavesInnerAO(input.positionOS, _CenterPointHeight, _AOarea, _AOintensity, _AOVertical);
     #ifdef _SHOWAO_ON
         return float4(saturate(innerAO.rrr), 1);
     #endif
 
     //ambinent top light
-    half3 topLight = UniversalFragmentTreeLeavesTopLight(posObjectNormal, _TopLightThickness, /* _TopLightColor */1) * inputData.bakedGI;
+    float3 topLight = UniversalFragmentTreeLeavesTopLight(posObjectNormal, _TopLightThickness, /* _TopLightColor */1) * inputData.bakedGI;
     #ifdef _TOPLIGHT_ON
         return float4(saturate(topLight), 1);
     #endif
 
     //rim
-    half innerAOinvRim = UniversalFragmentTreeLeavesInnerAO(input.positionOS, _CenterPointHeight, _RimArea, _RimRange);
-    half3 RimColor = innerAOinvRim * _RimColor.rgb * MMN_GlobalTex_CloudShadows(inputData.positionWS).r * saturate(posObjectNormal.y) * diffuseLightColor * inputData.bakedGI;
-    
+    float innerAOinvRim = UniversalFragmentTreeLeavesInnerAO(input.positionOS, _CenterPointHeight, _RimArea, _RimRange);
+    float3 RimColor = innerAOinvRim * _RimColor.rgb * MMN_GlobalTex_CloudShadows(inputData.positionWS).r * saturate(posObjectNormal.y) * diffuseLightColor * inputData.bakedGI;
+
     //어두워질때 채도빼는 기능 .2022.3.2 봉인
     // RimColor =  DesaturationByLighting (RimColor , mainLight.color);
-    
+
     #ifdef _RIMPREVIEW_ON
         return float4(saturate(RimColor.rgb), 1);
     #endif
@@ -237,11 +238,11 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     //float3 previewInterection = InterectionGrass (inputData.positionWS, _GrassPushPower, input.color);
     //return float4(previewInterection,1);
 
-    
+
     //눈내리는 텍스쳐 전환
-    half snowMask = 1;
+    float snowMask = 1;
     snowTreeTextureLerp(input.positionWS, diffuse.rgb, inputData.normalWS * 0.5 + 0.5, snowMask);
-    
+
     //포그 전에 마지막으로 모든 결과를 합친다.
     //이 부분 때문에 라이팅 디버그에서 결과가 정확하기 나오진 않지만 이 부분을 다 뜯으려면 너무 커서 일단 여기서 정리합니다.
     color.rgb = diffuseLightColor * diffuse * innerAO + topLight * diffuse + RimColor ;
@@ -249,7 +250,7 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     color.rgb = lerp(color.rgb, diffuseLightColor * diffuse, snowMask);
 
     #if defined(DEBUG_DISPLAY) //디버그 디스플레이용
-        half4 debugColor;
+        float4 debugColor;
 
         SurfaceData surfaceData;
         surfaceData.albedo = diffuse;
@@ -295,8 +296,8 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
     //컨텍트 셰도우 연산
-    color *= MMN_RecieveContactShadow(input.positionWS);
-    
+    color.rgb *= MMN_RecieveContactShadow(input.positionWS);
+
     //하이트 포그  연산
     color = MMN_GlobalTex_HeightFog(
         color,

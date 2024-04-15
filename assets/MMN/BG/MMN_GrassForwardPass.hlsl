@@ -9,11 +9,11 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
-    half4 tangentOS : TANGENT;
+    float3 normalOS : NORMAL;
+    float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
-    half4 color : COLOR;
+    float4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -25,9 +25,9 @@ struct Varyings
     float3 viewDir : TEXCOORD3;
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half4 fogFactorAndVertexLight : TEXCOORD4; // x: fogFactor, yzw: vertex light
+        float4 fogFactorAndVertexLight : TEXCOORD4; // x: fogFactor, yzw: vertex light
     #else
-        half fogFactor : TEXCOORD4;
+        float fogFactor : TEXCOORD4;
     #endif
 
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
@@ -64,7 +64,7 @@ void InitializeInputData(Varyings input, out InputData inputData)
         inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-        inputData.vertexLighting = half3(0, 0, 0);
+        inputData.vertexLighting = float3(0, 0, 0);
     #endif
 
     // inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
@@ -87,7 +87,6 @@ void InitializeInputData(Varyings input, out InputData inputData)
 ///////////////////////////////////////////////////////////////////////////////
 //                  Vertex and Fragment functions                            //
 ///////////////////////////////////////////////////////////////////////////////
-static const half defaultVisualRange = 20.0;
 
 // Used in Standard (Simple Lighting) shader
 Varyings LitPassVertexSimple(Attributes input)
@@ -97,16 +96,12 @@ Varyings LitPassVertexSimple(Attributes input)
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
     // UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+    input.positionOS.xyz = GrassHeightMovementByDistance(input.positionOS.xyz, _GrassVisualRange, defaultVisualRange, _Global_Grass_VisualRangeFactor, _GrassVisualActionToggle);
 
-    half visualRange = _GrassVisualRange + defaultVisualRange;
-
-    VertexPositionInputs vertexInput = GetVertexPositionInputsGrassVisualRange(
-        input.positionOS.xyz, input.color,
-        _WindMultiply, _WindSpeedMultiply, _GrassPushPower, 1,
-        visualRange, _Global_Grass_VisualRangeFactor, _GrassVisualActionToggle);
+    VertexPositionInputs vertexInput = GetVertexPositionInputs4treeShake(input.positionOS.xyz, input.color, _WindMultiply, _WindSpeedMultiply, _GrassPushPower);
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
-    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     output.positionWS.xyz = vertexInput.positionWS;
@@ -121,8 +116,8 @@ Varyings LitPassVertexSimple(Attributes input)
     OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
-        output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+        float3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+        output.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
     #else
         output.fogFactor = fogFactor;
     #endif
@@ -168,22 +163,23 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     clip(alpha - _Cutoff);
     alpha = 1;
 
-    half3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb * _EmissionColor.rgb;
+    float3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb * _EmissionColor.rgb;
     float4 specular = _SpecColor * input.color.g ;
     float smoothness = _Glossiness ;
 
     InputData inputData;
     InitializeInputData(input, inputData);
 
-    #if defined(_NEARHALFTONECLIP_ON) && (_GLOBAL_NEARHALFTONECLIP_ON)
-        //거리에 따라 하프톤으로 사라지게 하는 기능. 니어클리핑
-        half halftoneAlpha;
-        NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
-        clip(halftoneAlpha);
-    #endif
+    // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+    // #if defined(_NEARHALFTONECLIP_ON) && (_GLOBAL_NEARHALFTONECLIP_ON)
+    //     //거리에 따라 하프톤으로 사라지게 하는 기능. 니어클리핑
+    //     float halftoneAlpha;
+    //     NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
+    //     clip(halftoneAlpha);
+    // #endif
 
     //레이케스트 되면 사라지는 기능
-    half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+    float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
     clip(RaycasthalftoneAlpha - 0.1);
 
     inputData.bakedGI = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _InstancingColor).rgb;
@@ -240,7 +236,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
     //컨텍트 셰도우 연산
-    color *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
+    color.rgb *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
 
     // ===============================================================================
     // ==                            Fog & CloudShadow Calc                         ==

@@ -66,7 +66,10 @@ Shader "MMN/PP/AmbientGradient"
                 // float _DarkSideInvDarkArea;
             CBUFFER_END
 
-            half _Global_Night2Day;
+            // @myeongsoo.jeong 2024-04-11 [NOTE]
+            // AmbientGradientSetter.cs 참고
+			float _Global_AmbientGradientAmount;
+            float _Global_Night2Day;
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
@@ -83,7 +86,7 @@ Shader "MMN/PP/AmbientGradient"
 
             //Linear Gradient https://www.shadertoy.com/view/MtlBWX 대명님이 알려주심
             //두 점 사이의 그라디언트를 그린다. b는 태양과의 거리. a 는 0.5인데 반대로 밀 수 있게 해 놓음
-            half LinearGradient(float3 sundir, float2 screenPos, float power, float invBrightArea, float invDarkArea)
+            float LinearGradient(float3 sundir, float2 screenPos, float power, float invBrightArea, float invDarkArea)
             {
                 float2 b = sundir.xy * invBrightArea; // 클수록 밝은쪽이 밀려간다
                 float2 a = float2(0.5, 0.5) - sundir.xy * invDarkArea; //클수록 어두운쪽이 밀려난다(좁아진다)
@@ -100,7 +103,7 @@ Shader "MMN/PP/AmbientGradient"
                 return gradientcolor;
             }
 
-            half SimpleRadialGradient(float3 sundir, float2 screenPos, float invBrightArea, float invDarkArea)
+            float SimpleRadialGradient(float3 sundir, float2 screenPos, float invBrightArea, float invDarkArea)
             {
                 float2 sunPosRel = sundir.xy - float2(0.5, 0.5);
                 float2 sunPos = sunPosRel * invBrightArea;
@@ -123,17 +126,17 @@ Shader "MMN/PP/AmbientGradient"
 
             struct MMLight
             {
-                half3 direction;
-                half4 color;
-                half distanceAttenuation;
-                half shadowAttenuation;
+                float3 direction;
+                float4 color;
+                float distanceAttenuation;
+                float shadowAttenuation;
                 uint layerMask;
             };
 
             MMLight MMGetMainLight()
             {
                 MMLight light;
-                light.direction = half3(_MainLightPosition.xyz);
+                light.direction = float3(_MainLightPosition.xyz);
                 #if USE_CLUSTERED_LIGHTING
                     light.distanceAttenuation = 1.0;
                 #else
@@ -165,7 +168,7 @@ Shader "MMN/PP/AmbientGradient"
             static const float _DarkSidePreviewToggle = 0; //어두운 부분만 미리보기
 
 
-            half4 frag(Varyings IN) : SV_Target
+            float4 frag(Varyings IN) : SV_Target
             {
 
                 MMLight light = MMGetMainLight();
@@ -173,7 +176,7 @@ Shader "MMN/PP/AmbientGradient"
                 float3 lightDir = normalize(light.direction);
                 float3 cameraDir = normalize(IN.cameraDir);
 
-                half4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.screenPos.xy);
+                float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.screenPos.xy);
 
 
                 float3 delta = lightDir - abs(cameraDir);
@@ -195,8 +198,8 @@ Shader "MMN/PP/AmbientGradient"
 
                 //최종연산하기
                 float4 fragcolor = float4(1, 1, 1, 1);
-                float3 brightGradientColor = (dayGradient * light.color.rgb * spot * _DayLightSideColor * 2.0);
-                float3 darkGradientColor = saturate(nightGradient + _DayDarkSideColor);
+                float3 brightGradientColor = (dayGradient * light.color.rgb * spot * _DayLightSideColor.rgb * 2.0);
+                float3 darkGradientColor = saturate(nightGradient + _DayDarkSideColor.rgb);
 
                 // fragcolor.rgb = brightGradientColor + color.rgb  ;
                 fragcolor.rgb = brightGradientColor + color.rgb * darkGradientColor;
@@ -221,7 +224,7 @@ Shader "MMN/PP/AmbientGradient"
                     return float4(darkGradientColor, 1);
                 }
 
-                return fragcolor;
+                return lerp(color, fragcolor, _Global_AmbientGradientAmount);
             }
             ENDHLSL
         }

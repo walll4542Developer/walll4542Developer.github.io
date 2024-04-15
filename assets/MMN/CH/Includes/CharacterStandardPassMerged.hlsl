@@ -16,18 +16,85 @@
 #include "CharacterApplyArbalestMagazine.hlsl"
 #include "CharacterDebugging.hlsl"
 
-half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEMANTIC) : SV_Target
+float4 GetColorByIndex(int index)
 {
+    // 24는 와이어링이 존재하지 않는 버텍스
+    // 마젠타로 설정하지만 실제로는 텍스처에 기록된 고유 색이 나와야 한다
+    // 마젠타가 노출되는 경우 텍스처에는 염색이 할당되어 있는데 와이어링이 안된 경우이다.
+    return index < 12 ? 
+                index < 6 ? 
+                    index < 3 ? 
+                        index < 2 ? 
+                            index == 0 ? _DyeColor1 : _DyeColor2 :
+                            _DyeColor3 :
+                        index < 5 ? 
+                            index < 4 ? _DyeColor4 : _DyeColor5 :
+                            _DyeColor6 :
+                    index < 9 ?
+                        index < 8 ? 
+                            index == 6 ? _DyeColor7 : _DyeColor8 :
+                        _DyeColor9 :
+                    index < 11 ?
+                        index < 10 ? _DyeColor10 : _DyeColor11 :
+                        _DyeColor12 :
+                index < 18 ?
+                    index < 15 ? 
+                        index < 14 ? 
+                            index == 12 ? _DyeColor13 : _DyeColor14 :
+                            _DyeColor15 :
+                        index < 17 ? 
+                            index == 15 ? _DyeColor16 : _DyeColor17 :
+                            _DyeColor18 :
+                    index < 21 ?
+                        index < 20 ? 
+                            index == 18 ? _DyeColor19 : _DyeColor20 :
+                            _DyeColor21 :
+                        index < 23 ? 
+                            index == 21 ? _DyeColor22 : _DyeColor23 :
+                            index == 23 ? _DyeColor24 : float4(1, 0, 1, 1);
+}
+
+float4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEMANTIC) : SV_Target
+{
+    //-----------------------------------------------------------------------------
+    // 병합 머티리얼 연산
+    //-----------------------------------------------------------------------------
+    int uvIntegralPartX = 0;
+    int uvIntegralPartY = 0;
+    
+    // 텍스처 UV는 UV 소수부 사용
+    float uvFractionalPartX = modf(input.uv.x, uvIntegralPartX);
+	float uvFractionalPartY = modf(input.uv.y, uvIntegralPartY);
+    input.uv.xy = float2(uvFractionalPartX, uvFractionalPartY);
+
+    // 염색 슬롯 및 텍스처 인덱스는 UV 정수부 사용
+    int dyeIndex1 = int(uvIntegralPartX/25) % 25;
+    int dyeIndex2 = uvIntegralPartX % 25;
+    int dyeIndex3 = uvIntegralPartY % 25;
+    int textureIndex = int(uvIntegralPartY/25) % 25;
+
+    float2 mergedUV = input.uv.xy;
+    mergedUV.x = input.uv.x * _UVXOffset[textureIndex];
+    if(textureIndex == 0)
+    {
+        mergedUV.y = input.uv.y * _UVYOffset[0];
+    }
+    else
+    {
+        mergedUV.y = input.uv.y * (_UVYOffset[textureIndex] - _UVYOffset[textureIndex - 1]) + _UVYOffset[textureIndex - 1];
+    }
+	mergedUV = TRANSFORM_TEX(mergedUV, _BaseMap);
+    
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    half3 baseColor = baseMap.rgb;
-    half alpha = baseMap.a;
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, mergedUV);
+    float3 baseColor = baseMap.rgb;
+    float alpha = baseMap.a;
 
     #ifdef _TEXTURE_LERP_FEATURE
-        half4 baseMap2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, uv);
+        float4 baseMap2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, mergedUV);
         baseColor = lerp(baseColor, baseMap2.rgb, _LerpTex);
     #endif
 
@@ -49,61 +116,16 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
-    half4 _useDyeColor1;
-    half4 _useDyeColor2;
-    half4 _useDyeColor3;
+    float3 dyedBaseColor = baseColor;
+    float4 _useDyeColor1;
+    float4 _useDyeColor2;
+    float4 _useDyeColor3;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
-            if(input.uv.y < _UVOffset2)
-            {
-                _useDyeColor1 = _DyeColor1;
-                _useDyeColor2 = _DyeColor2;
-                _useDyeColor3 = _DyeColor3;
-            }
-            else if(input.uv.y < _UVOffset3)
-            {
-                _useDyeColor1 = _DyeColor4;
-                _useDyeColor2 = _DyeColor5;
-                _useDyeColor3 = _DyeColor6;
-            }
-            else if(input.uv.y < _UVOffset4)
-            {
-                _useDyeColor1 = _DyeColor7;
-                _useDyeColor2 = _DyeColor8;
-                _useDyeColor3 = _DyeColor9;
-            }
-            else if(input.uv.y < _UVOffset5)
-            {
-                _useDyeColor1 = _DyeColor10;
-                _useDyeColor2 = _DyeColor11;
-                _useDyeColor3 = _DyeColor12;
-            }
-            else if(input.uv.y < _UVOffset6)
-            {
-                _useDyeColor1 = _DyeColor13;
-                _useDyeColor2 = _DyeColor14;
-                _useDyeColor3 = _DyeColor15;
-            }
-            else if(input.uv.y < _UVOffset7)
-            {
-                _useDyeColor1 = _DyeColor16;
-                _useDyeColor2 = _DyeColor17;
-                _useDyeColor3 = _DyeColor18;
-            }
-            else if(input.uv.y < _UVOffset8)
-            {
-                _useDyeColor1 = _DyeColor19;
-                _useDyeColor2 = _DyeColor20;
-                _useDyeColor3 = _DyeColor21;
-            }
-            else if(input.uv.y < 1)
-            {
-                _useDyeColor1 = _DyeColor22;
-                _useDyeColor2 = _DyeColor23;
-                _useDyeColor3 = _DyeColor24;
-            }
+            _useDyeColor1 = GetColorByIndex(dyeIndex1);
+            _useDyeColor2 = GetColorByIndex(dyeIndex2);
+            _useDyeColor3 = GetColorByIndex(dyeIndex3);
             ApplyDyeColor(dyedBaseColor, _useDyeColor1, _useDyeColor2, _useDyeColor3);
         }
     #endif
@@ -112,7 +134,7 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
         dyedBaseColor *= _TintColor.rgb;
     #endif
 
-    half backFaceDarkenAmount = 1.0;
+    float backFaceDarkenAmount = 1.0;
     #ifdef _TWO_SIDE_FEATURE
         backFaceDarkenAmount = _BackFaceDarkenAmount;
     #endif
@@ -136,17 +158,17 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColorFull(inputData,
         mainLight, lightingData, characterData, isFacing, backFaceDarkenAmount,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor,
+        _ShadingType, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor,
         _IsMetal, _Smoothness, alpha, _SpecularStrength, _MetalTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _ShadingType);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1, 1, 1);
+            outlineColor = float3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
@@ -157,14 +179,14 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
     #endif
 
     #ifdef _EMISSION_FEATURE
-        half3 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb;
-        half3 emissionResult = ApplyEmissionColor(emissionMap, _EmissionColor,
+        float3 emissionMap = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb;
+        float3 emissionResult = ApplyEmissionColor(emissionMap, _EmissionColor,
             _IsEnableEmissionAtNight, _IsBreathingEmissionMode, _BreathingEmissionModePeriod);
         resultColor.rgb += emissionResult;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
     #endif
@@ -192,9 +214,9 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
 
     ApplyFx_BeforeFog(resultColor.rgb, inputData.viewDirectionWS, inputData.normalWS);
 
-    half4 appliedFogResultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
+    float4 appliedFogResultColor = ApplyFog(resultColor, inputData.positionWS.xyz, inputData.normalWS, inputData.fogCoord);
     #ifdef _EMISSION_FEATURE
-        half3 noFogResultColorWithEmissionMask = (resultColor.rgb * emissionMap) + (appliedFogResultColor.rgb * (1.0 - emissionMap));
+        float3 noFogResultColorWithEmissionMask = (resultColor.rgb * emissionMap) + (appliedFogResultColor.rgb * (1.0 - emissionMap));
         resultColor.rgb = lerp(noFogResultColorWithEmissionMask.rgb, appliedFogResultColor.rgb, _IsApplyFogToEmission * _ApplyFogToEmissionFactor);
     #else
         resultColor.rgb = appliedFogResultColor.rgb;
@@ -207,8 +229,8 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY) && defined(_GRADIENT_ALPHA_FEATURE)
         if (IS_TRUE(_IsGradientAlpha))
         {
-            half visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
-            half gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
+            float visualHeight = (_GradientAlphaHeight <= 0.001) ? characterData.visualHeight : _GradientAlphaHeight;
+            float gradientAlpha = (inputData.positionWS.y - characterData.characterPos.y) / max(visualHeight, 0.001);
             resultColor.a *= saturate(max(gradientAlpha, 0.1));
         }
     #endif
@@ -226,7 +248,7 @@ half4 BasePassFragment(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEM
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

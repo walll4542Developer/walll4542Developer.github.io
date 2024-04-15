@@ -214,7 +214,7 @@ float RaycastingHalftoneAlphaBlend(float4 InputscreenUV, float4 InputScreenPos, 
     // dist += 1.5 - (raycastHarftoneClip * 1.5); //범위를 확장하면 평소에 조금씩 뚫리는걸 막을 수 있습니다.
     // dist *= (1 - (InputscreenUV.y * InputscreenUV.y)); //절반이상의 상부를 모두 날려버립니다.
     
-    half dist = lerp(1, 0, raycastHarftoneClip); // 원형 마스킹을 제거했습니다.
+    float dist = lerp(1, 0, raycastHarftoneClip); // 원형 마스킹을 제거했습니다.
     dist = max(raycastMinimumAlpha, dist); // 알파의 최솟값을 결정합니다.
 
     return dist;
@@ -241,9 +241,9 @@ float RaycastingHalftoneAlphaBlend(float4 InputscreenUV, float4 InputScreenPos, 
 //     Unity_SimpleNoise_float(positionWS.xz + _Time.y * _Global_FogHeightNoiseSpeed , _Global_FogHeightNoiseScale, noisevalue);
 //     //y is height
 //     float y = saturate(positionWS.y/100 - _Global_FogHeightOffset - noisevalue* _Global_FogHeightNoiseValue);
-//     half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-//     half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-//     half fogHeight = max(fogHeightBottom, fogHeightTop);
+//     float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+//     float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+//     float fogHeight = max(fogHeightBottom, fogHeightTop);
 //     withFogColor = MixFog(color.rgb, fogCoord.r);
 //     //float cloudShadow  = saturate(1- fogCoord.r +noisevalue); //구름 그림자가 거리가 멀어지면 안보이게 합니다
 //     color.rgb = lerp(withFogColor,color.rgb  ,fogHeight);
@@ -353,51 +353,71 @@ inline float4 MMN_GlobalTex_HeightFog(
     InitializeGlobalValue();
     float2 worldUV = positionWS.xz * _Global_FogHeightNoiseScale * 0.01 + _Global_WindUV * _Global_FogHeightNoiseSpeed * 0.01;
     float4 GlobalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV);
+        
+    // 최저사양에서 포그 처리
+    #if defined(_GLOBAL_OPTION_VERY_LOW)
 
-    //y is height
-    float y = saturate(positionWS.y / 100 - _Global_FogHeightOffset -GlobalTexture.r * _Global_FogHeightNoiseValue);
-    half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-    half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-    half fogHeight = max(fogHeightBottom, fogHeightTop);
+        float DimFogRange = 0;
+        float3 diff = _Global_pos.rgb - positionWS;
+        float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range));
+        diffRange = smoothstep(0.3, 1, diffRange);
+
+        float DimFogLight = 1;
+        DimFogRange = 1 - PositivePow(diffRange * DimFogLight, _Global_DimFog_Power);
+        fogCoord.r = saturate(DimFogRange * fogCoord.r);
+
+        //Final Fog Mixing
+        withFogColor = MixFogColor(color, unity_FogColor.rgb, fogCoord.r);
+        color.rgb = withFogColor;
+        
+    #else
+        
+        //y is height
+        float y = saturate(positionWS.y / 100 - _Global_FogHeightOffset -GlobalTexture.r * _Global_FogHeightNoiseValue);
+        float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+        float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+        float fogHeight = max(fogHeightBottom, fogHeightTop);
+        
+        // //딤포그 어레이 버전
+        // // #if defined(_DIM_FOG_ON)
+        //     float DimFogRange = 0;
+        //     // #if defined (_DIM_FOG_ARRAY_ON)
+        //     //     for(uint i = 0 ; i < 4; i++ )
+        //     //     {
+        //     //         float3 diff = _Global_pos[i].rgb - positionWS ;
+        //     //         float diffRange = saturate(dot(diff, diff)/_Global_DimFog_Range); //올리면 멀어짐
+        //     //         DimFogRange += 1-pow(diffRange,_Global_DimFog_Power);//올리면 경계가 날카로와짐
+        //     //     }
+        //     // #else
+        //     float3 diff = _Global_pos.rgb - positionWS ;
+        //     float diffRange = saturate(dot(diff, diff)/_Global_DimFog_Range); //올리면 멀어짐
+        //     DimFogRange = 1-pow(diffRange,_Global_DimFog_Power);//올리면 경계가 날카로와짐
+        //     // #endif
+        //     fogCoord.r = saturate(DimFogRange * fogCoord.r);
+        // // #endif
+
+
+        //딤포그 단일 버전
+        // _Global_DimFog_Range *= 0.8; // 이 값 조정은 볼륨에 저장된 값을 수정하지 않고 적용하려고 하는 것이다.
+        // _Global_DimFog_Power *= 1.0;
+        float DimFogRange = 0;
+        float3 diff = _Global_pos.rgb - positionWS ;
+        float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range)); //올리면 멀어짐
+        float DimFogLight = lerp(1.0, 0.75  *(1.0 - dot(normalize(_Global_pos.rgb - float3(0, -1, 0) - positionWS), normalWS)),0.5);
+        DimFogLight = max(0.0, DimFogLight);
+        DimFogRange = 1 - pow(diffRange * DimFogLight, _Global_DimFog_Power);//올리면 경계가 날카로와짐
+        fogCoord.r = saturate(DimFogRange * fogCoord.r);
+
+        //Final Fog Mixing
+        withFogColor = MM_MixFog(color.rgb, fogCoord.r);
+        color.rgb = lerp(withFogColor, color.rgb, fogHeight);
+        // color.rgb = diffRange * DimFogLight;
+        // color.rgb = saturate(DimFogRange * fogCoord.r);
+        // color.rgb = diffRange * DimFogLight;
+
+    #endif
     
-    // //딤포그 어레이 버전
-    // // #if defined(_DIM_FOG_ON)
-    //     float DimFogRange = 0;
-    //     // #if defined (_DIM_FOG_ARRAY_ON)
-    //     //     for(uint i = 0 ; i < 4; i++ )
-    //     //     {
-    //     //         float3 diff = _Global_pos[i].rgb - positionWS ;
-    //     //         float diffRange = saturate(dot(diff, diff)/_Global_DimFog_Range); //올리면 멀어짐
-    //     //         DimFogRange += 1-pow(diffRange,_Global_DimFog_Power);//올리면 경계가 날카로와짐
-    //     //     }
-    //     // #else
-    //     float3 diff = _Global_pos.rgb - positionWS ;
-    //     float diffRange = saturate(dot(diff, diff)/_Global_DimFog_Range); //올리면 멀어짐
-    //     DimFogRange = 1-pow(diffRange,_Global_DimFog_Power);//올리면 경계가 날카로와짐
-    //     // #endif
-    //     fogCoord.r = saturate(DimFogRange * fogCoord.r);
-    // // #endif
-
-
-    //딤포그 단일 버전
-    // _Global_DimFog_Range *= 0.8; // 이 값 조정은 볼륨에 저장된 값을 수정하지 않고 적용하려고 하는 것이다.
-    // _Global_DimFog_Power *= 1.0;
-    float DimFogRange = 0;
-    float3 diff = _Global_pos.rgb - positionWS ;
-    float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range)); //올리면 멀어짐
-    float DimFogLight = lerp(1.0, 0.75  *(1.0 - dot(normalize(_Global_pos.rgb - half3(0, -1, 0) - positionWS), normalWS)),0.5);
-    DimFogLight = max(0.0, DimFogLight);
-    DimFogRange = 1 - pow(diffRange * DimFogLight, _Global_DimFog_Power);//올리면 경계가 날카로와짐
-    fogCoord.r = saturate(DimFogRange * fogCoord.r);
-
-    //Final Fog Mixing
-    withFogColor = MM_MixFog(color.rgb, fogCoord.r);
-    color.rgb = lerp(withFogColor, color.rgb, fogHeight);
-    // color.rgb = diffRange * DimFogLight;
-    // color.rgb = saturate(DimFogRange * fogCoord.r);
-    // color.rgb = diffRange * DimFogLight;
-
-    return color ;
+    return color;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -405,13 +425,13 @@ inline float4 MMN_GlobalTex_HeightFog(
 ///////////////////////////////////////////////////////////////////////////////
 
 
-float MMN_GlobalTex_RaindropCalc(float3 positionWS, half3 normalWS, float timing)
+float MMN_GlobalTex_RaindropCalc(float3 positionWS, float3 normalWS, float timing)
 {
     float2 worldUV = positionWS.xz * 0.35 ;
-    half4 GlobalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV);
+    float4 GlobalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV);
     
     float GlobalTextureBpow = pow(saturate(GlobalTexture.b), 0.45); //노이즈의 흰 부분을 넓힌다
-    half4 GlobalTextureScroll = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, (worldUV.yx + GlobalTextureBpow * 0.2 + frac((_Time.x * 5) + timing)));
+    float4 GlobalTextureScroll = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, (worldUV.yx + GlobalTextureBpow * 0.2 + frac((_Time.x * 5) + timing)));
     //마스크와 베이스 텍스쳐가 같은 좌표라 반복 파동이 보여서 worldUV의 UV는 다르게 처리
     float rain = GlobalTextureScroll.b * GlobalTextureScroll.b * GlobalTexture.b * GlobalTexture.b  ;
     // GlobalTextureScroll.b 를 곱하면 거품이 약해지고 GlobalTexture.b 를 곱하면 크기가 작아집니다
@@ -420,7 +440,7 @@ float MMN_GlobalTex_RaindropCalc(float3 positionWS, half3 normalWS, float timing
 }
 
 //패턴을 보이지 않게 하기 위해서 섞음
-float MMN_GlobalTex_Raindrop(float3 positionWS, half3 normalWS)
+float MMN_GlobalTex_Raindrop(float3 positionWS, float3 normalWS)
 {
     float a = MMN_GlobalTex_RaindropCalc(positionWS * 0.7 , normalWS, 0);
     float b = MMN_GlobalTex_RaindropCalc(positionWS * 1.0 + float3(0.3, 0, 0.3), normalWS, 0.3);
@@ -432,11 +452,11 @@ float MMN_GlobalTex_Raindrop(float3 positionWS, half3 normalWS)
 //                      비로 젖은 재질 전환 함수                               //
 ///////////////////////////////////////////////////////////////////////////////
 
-half3 wetTextureLerp(float3 positionWS, half3 dryColor, float3 wetColor)
+float3 wetTextureLerp(float3 positionWS, float3 dryColor, float3 wetColor)
 {
-    half3 color;
+    float3 color;
     float2 worldUV = positionWS.xz ;
-    half4 GlobalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.02);
+    float4 GlobalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.02);
     float wetness = smoothstep(GlobalTexture.r, GlobalTexture.r + 0.3, _Global_Raining);
 
     color = lerp(dryColor, wetColor, wetness);
@@ -447,12 +467,13 @@ half3 wetTextureLerp(float3 positionWS, half3 dryColor, float3 wetColor)
 //                      눈 전환 함수들                                        //
 ///////////////////////////////////////////////////////////////////////////////
 
-half3 snowTextureLerp(float3 positionWS, half3 dryColor, half3 normalWS, float3 bakedGI)
+
+float3 snowTextureLerp(float3 positionWS, float3 dryColor, float3 normalWS, float3 bakedGI)
 {
-    half3 color;
+    float3 color;
     float2 worldUV = positionWS.xz ;
-    half4 globalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.015);
-    half4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
+    float4 globalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.015);
+    float4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
     
     float wetness = globalTexture.r * snowTexture.r + pow(globalTexture.r, 5);
     wetness = saturate(wetness);
@@ -466,12 +487,28 @@ half3 snowTextureLerp(float3 positionWS, half3 dryColor, half3 normalWS, float3 
     return color;
 }
 
-half3 snowTextureLerpTerrain(float3 positionWS, half3 dryColor, half3 normalWS, float3 bakedGI, float4 control, float4 snowMask)
+float3 snowTextureOnly(float3 positionWS, float3 dryColor, float3 normalWS)
 {
-    half3 color;
+    float3 color;
     float2 worldUV = positionWS.xz ;
-    half4 globalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.015);
-    half4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
+    float4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
+    
+    float wetness = snowTexture.r ;
+    wetness = step((1 - _Global_Snow), wetness);
+    
+    float3 snowColor = lerp(snowTexture.aaa, dryColor, 0.1) ;
+    float normalY = saturate(normalWS.y);
+
+    color = lerp(dryColor, snowColor, saturate(wetness * step(0.4, normalY)));
+    return color;
+}
+
+float3 snowTextureLerpTerrain(float3 positionWS, float3 dryColor, float3 normalWS, float3 bakedGI, float4 control, float4 snowMask)
+{
+    float3 color;
+    float2 worldUV = positionWS.xz ;
+    float4 globalTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.015);
+    float4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
 
     control = 1 - control;
     snowMask = 1 - snowMask;
@@ -490,10 +527,10 @@ half3 snowTextureLerpTerrain(float3 positionWS, half3 dryColor, half3 normalWS, 
 }
 
 
-void snowTreeTextureLerp(float3 positionWS, inout half3 diffuseColor, half3 normalWS, inout half snowMask)
+void snowTreeTextureLerp(float3 positionWS, inout float3 diffuseColor, float3 normalWS, inout float snowMask)
 {
     float2 worldUV = positionWS.xz ;
-    half4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
+    float4 snowTexture = SAMPLE_TEXTURE2D(_Global_Texture, sampler_Global_Texture, worldUV * 0.1);
     float3 snowColor = lerp(snowTexture.aaa, diffuseColor, 0.1) ;
     float normalY = saturate(normalWS.y);
     snowMask = saturate(step(1 - _Global_Snow + 0.15, normalY));

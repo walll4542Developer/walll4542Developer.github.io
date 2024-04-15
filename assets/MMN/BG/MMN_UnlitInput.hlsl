@@ -5,19 +5,19 @@
 
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
-    half4 _BaseColor;
-    half _Cutoff;
-    half _Surface;
-    half _FogOff;
+    float4 _BaseColor;
+    float _Cutoff;
+    float _Surface;
+    float _FogOff;
     float _ALPHATEST;
 CBUFFER_END
 
 //GlobalVariables
-// half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-// half _Global_CloudScale;
-// half _Global_CloudEdgeHardness;
-half _Global_Night2Day;
+// float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+// float _Global_CloudScale;
+// float _Global_CloudEdgeHardness;
+float _Global_Night2Day;
 
 // #ifdef UNITY_DOTS_INSTANCING_ENABLED
 // UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)

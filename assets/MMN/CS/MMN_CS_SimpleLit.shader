@@ -6,7 +6,6 @@ Shader "MMN/CutScene/SimpleLit"
     {
         _StencilRef("Stencil Ref", Int) = 0
         [Enum(UnityEngine.Rendering.CompareFunction)]_Comp("Comp", Int) = 3
-        [Toggle]_NEARHALFTONECLIP ("니어 클립", float) = 0
         [Toggle]_ALPHATEST ("알파테스트", float) = 0
         [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
         [Toggle]_BackFaceNormalturn ("백페이스 노말을 돌려서 뒷면도 노말을 앞으로 생성한다", float) = 0
@@ -125,7 +124,8 @@ Shader "MMN/CutScene/SimpleLit"
             // Material Keywords
 
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
@@ -145,7 +145,8 @@ Shader "MMN/CutScene/SimpleLit"
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
 
             // -------------------------------------
             // Unity defined keywords
@@ -245,16 +246,18 @@ Shader "MMN/CutScene/SimpleLit"
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
             // #pragma shader_feature_local_fragment _GLOSSINESS_FROM_BASE_ALPHA
             // 에디터에서 니어 클리핑을 잠시 안보게 할 수 있는 기능. 에디터 한정이라 셰이더 피쳐로 올립니다
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
             // GPU Instancing
             // #pragma multi_compile_instancing
             // #pragma multi_compile _ DOTS_INSTANCING_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
             // #pragma multi_compile _ _GLOBAL_NEARHALFTONECLIP_ON
-            #pragma multi_compile _ _ALPHATEST_ON
-            #pragma multi_compile _ _NEARHALFTONECLIP_ON
+            // #pragma multi_compile _ _NEARHALFTONECLIP_ON
+            #pragma multi_compile _ _ALPHATEST_ON            
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
             #define RAYCAST 1
             #define LODFADE 1
@@ -286,14 +289,16 @@ Shader "MMN/CutScene/SimpleLit"
         //     // Material Keywords
         //     // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
         //     // 에디터에서 니어 클리핑을 잠시 안보게 할 수 있는 기능. 에디터 한정이라 셰이더 피쳐로 올립니다
-        //     #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+        //     // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+        //     // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
         //     //--------------------------------------
         //     // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
         //     // GPU Instancing
         //     #pragma multi_compile_instancing
         //     #pragma multi_compile _ DOTS_INSTANCING_ON
-        //     #pragma multi_compile _ _NEARHALFTONECLIP_ON
+        //     // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+        //     // #pragma multi_compile _ _NEARHALFTONECLIP_ON
         //     #pragma multi_compile _ _ALPHATEST_ON
         //     #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
         //     #define RAYCAST 1

@@ -7,27 +7,18 @@
 TEXTURECUBE(_CubeMap);       SAMPLER(sampler_CubeMap);
 
 CBUFFER_START(UnityPerMaterial)
-    half4 _BaseMap_ST;
-    half4 _BaseColor;
-    half _VertexColorWeight;
-    half _AlbedoTintStrength;
-    half4 _SpecColor;
-    half _Gloss;
-    half _RampY;
-    half _BackfaceReceiveShadowOff;
-    half4 _EmissionColor;
-    half _Surface;
-    half _Night2DayEnum;
-    half _ALPHATEST;
-    half _Lerp;
-    half _Global_Night2Day;
-
-    // DepthOnly 지원을 위한 변수
-    half _Cutoff;
-    half _WindMultiply; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
-    half _WindSpeedMultiply; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
-    half _VertexAniOn; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
-    half _RaycastHarftoneClip;
+    float4 _BaseMap_ST;
+    float4 _BaseColor;
+    float4 _SpecColor;
+    float _Gloss;
+    float _Lerp;
 CBUFFER_END
+
+// DepthOnly 지원을 위한 변수
+float _WindMultiply; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
+float _WindSpeedMultiply; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
+float _VertexAniOn; //Shadow와 Depthpass를 심플릿과 같이 쓰기 위해 놔둔것
+float _RaycastHarftoneClip;
+float _Cutoff;
 
 #endif // UNIVERSAL_FLOORREFLECTION_INPUT_INCLUDED

@@ -2,25 +2,17 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 {
 	Properties
 	{
-		[HideInInspector] _Mode("__mode", Float) = -1
-		[HideInInspector] _TransitionValue("_TransitionValue", Float) = 1
-		[HideInInspector] _FogReceive("_FogReceive", Float) = 0
 		/*ase_props*/
 	}
 
 	SubShader
 	{
-		LOD 100
 		/*ase_subshader_options:Name=Additional Options
 			Option:Vertex Position:Absolute,Relative:Relative
 				Absolute:SetDefine:ASE_ABSOLUTE_VERTEX_POS 1
 				Absolute:SetPortName:Unlit:3,Vertex Position
 				Relative:RemoveDefine:ASE_ABSOLUTE_VERTEX_POS 1
 				Relative:SetPortName:Unlit:3,Vertex Offset
-		ase_subshader_options:Name=Raycast Define
-			Option:Raycast:On,Off:Off
-				On:SetDefine:_RAYCAST_ON 1
-				Off:RemoveDefine:_RAYCAST_ON 1
 		*/
 
 		Tags
@@ -38,7 +30,6 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 		/*ase_pass*/
 		Pass
 		{
-			
 			Name "Unlit"
 			Tags { }
 
@@ -51,10 +42,6 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 
 			HLSLPROGRAM
 			#pragma exclude_renderers gles gles3 glcore
-
-			// GPU Instancing
-
-			// Material Keywords
 
 			// Unity defined keywords
 			#pragma multi_compile_fog
@@ -71,17 +58,14 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			/*ase_pragma*/
 
 			/*ase_globals*/
-			half _Mode = -1;
-			half _TransitionValue = 1;
-			half _FogReceive = 0;
 
 			struct Attributes
 			{
 				float4 positionOS : POSITION;
-				half3 normalOS : NORMAL;
-    			half4 tangentOS : TANGENT;
+				float3 normalOS : NORMAL;
+    			float4 tangentOS : TANGENT;
 				float4 texcoord : TEXCOORD0;
-				half4 color : COLOR;
+				float4 color : COLOR;
 				/*ase_vdata:p=p;n=n;t=t;c=c;uv0=tc0*/
 			};
 
@@ -90,11 +74,12 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 				float4 positionCS : SV_POSITION;
 				float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
 				float4 uv1 : TEXCOORD1; 				// xyzw : custom data
-				float4 fogCoord : TEXCOORD2; 		    // x : fogcoord				yzw :
-				float3 positionWS : TEXCOORD11;
-				float4 positionOS : TEXCOORD12;
-				half3 normalWS : TEXCOORD13;
-				/*ase_interp(3,):sp=sp;uv0=tc0;wp=tc11;p=tc12;wn=tc13*/
+				float4 screenPos : TEXCOORD6;			// xyzw : ScreenSpace
+				float4 fogCoord : TEXCOORD7; 		    // x : fogcoord				yzw :
+				float3 positionWS : TEXCOORD8;
+				float4 positionOS : TEXCOORD9;
+				float3 normalWS : TEXCOORD10;
+				/*ase_interp(2,5):uv0=tc0;uv6=tc6;uv7=tc7;wp=tc8;p=tc9;wn=tc10*/
 			};
 
 			/*ase_funcs*/
@@ -116,35 +101,32 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 					input.positionOS.xyz += vertexValue;
 				#endif
 
-				VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
-
-				input.normalOS = /*ase_vert_out:Vertex Normal;Float3;4;-1;_VNormal*/input.normalOS/*end*/;
-
+				VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
 				VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    			output.normalWS = normalInput.normalWS;
-				output.uv0 = input.texcoord; // output.shadowCoord
-				output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+
+    			output.normalWS = /*ase_vert_out:Vertex Normal;Float3;4;-1;_VertexNormal*/normalInput.normalWS/*end*/;
+				output.uv0 = input.texcoord;
+				output.positionWS = vertexInput.positionWS;
 				output.positionOS = input.positionOS;
 				output.positionCS = vertexInput.positionCS;
+				output.screenPos = ComputeScreenPos(vertexInput.positionCS);
 				output.fogCoord.x = CalculateFogCoord(vertexInput.positionCS.z);
 
 				return output;
 			}
 
-			half4 frag(Varyings input/*ase_frag_input*/) : SV_Target
+			float4 frag(Varyings input/*ase_frag_input*/) : SV_Target
 			{
 				/*ase_frag_code:input=Varyings*/
-				half3 color = /*ase_frag_out:color;Float3;0*/half3(1, 1, 1)/*end*/;
-				half alpha = /*ase_frag_out:alpha;Float;1*/1/*end*/;
+				float3 color = /*ase_frag_out:color;Float3;0*/float3(1, 1, 1)/*end*/;
+				float alpha = /*ase_frag_out:alpha;Float;1*/1/*end*/;
 
-				half4 finalColor = half4(color, alpha);
-				ApplyFogColor(finalColor, input.positionWS, input.normalWS, _Mode, _FogReceive, input.fogCoord.x);
-				ApplyTransitionValue(finalColor, _Mode, _TransitionValue);
+				float4 finalColor = float4(color, alpha);
 
 				// 디버그
 				#if defined(DEBUG_DISPLAY)
 				{
-					return FXDebuggingColor(input, Color, Alpha);
+					return FXDebuggingColor(input, color, alpha);
 				}
 				#endif
 
@@ -153,6 +135,6 @@ Shader /*ase_name*/ "Hidden/Universal/FX" /*end*/
 			ENDHLSL
 		}
 	}
+	/*ase_lod*/
 	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI"
-	FallBack Off
 }

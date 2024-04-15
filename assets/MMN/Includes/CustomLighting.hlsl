@@ -137,19 +137,19 @@ float3 CalculateLightingColorCustom(LightingDataCustom lightingDataCustom, float
     return lightingColor;
 }
 
-half4 CalculateFinalColorCustom(LightingDataCustom lightingDataCustom, half alpha) //연산이 여기로 먼저 들어옴
+float4 CalculateFinalColorCustom(LightingDataCustom lightingDataCustom, float alpha) //연산이 여기로 먼저 들어옴
 
 {
-    half3 finalColor = CalculateLightingColorCustom(lightingDataCustom, 1);
+    float3 finalColor = CalculateLightingColorCustom(lightingDataCustom, 1);
 
-    return half4(finalColor, alpha);
+    return float4(finalColor, alpha);
 }
 
 
-// 디버그용 함수 . 나무용. LightingDataCustom 이 LightingData 구조체를 받아 그대로 추가한 것이라서 half 프리시젼을 맞춰야 한다
-half3 CalculateLightingColorCustom4Tree(LightingDataCustom lightingDataCustom)
+// 디버그용 함수 . 나무용. LightingDataCustom 이 LightingData 구조체를 받아 그대로 추가한 것이라서 float 프리시젼을 맞춰야 한다
+float3 CalculateLightingColorCustom4Tree(LightingDataCustom lightingDataCustom)
 {
-    half3 lightingColor = 0;
+    float3 lightingColor = 0;
 
     if (IsOnlyAOLightingFeatureEnabled())
     {
@@ -253,7 +253,7 @@ float3 LightingSpecularCustomPhong(float3 lightColor, float3 lightDir, float3 no
     float RdotL = saturate(dot(Reflection, viewDir));
     float modifier = saturate(pow(RdotL, smoothness * 512));
     float3 specularReflection = specular.rgb * modifier;
-    return lightColor * specularReflection * cloudShadow /* * (smoothness*5) */;
+    return lightColor * specularReflection * cloudShadow;
 }
 
 // Screen Space Fake Spacular
@@ -322,7 +322,6 @@ float3 MM_VertexLighting(float3 positionWS, float3 normalWS)
 
 
 
-
 //유니티 2021.2.3 용 신형  램버트 + 스페큘러 연산
 float3 CalculateLightingCustom(Light light, InputData inputData, SurfaceData surfaceData, float cloudShadow, float shadowDimming, float halfLambertWeight)
 {
@@ -382,10 +381,31 @@ float3 CalculateLightingCustom(Light light, InputData inputData, SurfaceData sur
     ///////////////////////////////////////////////////////////////////////////
     //  그림자 곱하기
     ///////////////////////////////////////////////////////////////////////////
-    lightColor *= saturate(light.shadowAttenuation + shadowDimming);
+    // lightColor *= saturate(light.shadowAttenuation + shadowDimming);// 이게 왜 한번 더 있더라?
 
     return lightColor;
 }
+
+
+//메탈 전용 라이트 연산 
+float3 CalculateLightingCustomMetal(Light light, InputData inputData, SurfaceData surfaceData, float cloudShadow, float shadowDimming, float halfLambertWeight, float glossNormalMulti )
+{
+    //라이트 칼라
+    float3 attenuatedLightColor = light.color ;
+
+    //감쇠와 구름 그림자
+    float attanWithCloudShadow = (light.distanceAttenuation * saturate(light.shadowAttenuation) );
+    attenuatedLightColor *= attanWithCloudShadow;
+
+    float3 lightColor = 0;
+    //스페큘러 노말 강조 . 원래는 탄젠트 스페이스로 재변환 해야 정석이지만, 다소 오차가 있더라도 최적화를 위해 이렇게 했습니다. 
+    inputData.normalWS = normalize(inputData.normalWS * float3(glossNormalMulti,1,glossNormalMulti));
+    lightColor = LightingSpecularCustomPhong(attenuatedLightColor, light.direction, inputData.normalWS, inputData.viewDirectionWS, float4(surfaceData.specular, 1), surfaceData.smoothness, 1);
+    lightColor *= surfaceData.albedo ;
+
+    return lightColor;
+}
+
 
 
 
@@ -408,7 +428,7 @@ float3 CalculateLightingCustomAdditionalLight(Light light, InputData inputData, 
     #if LIGHT_SPECULAR
         lightColor += LightingSpecularCustomPhong(attenuatedLightColor, light.direction, inputData.normalWS, inputData.viewDirectionWS, float4(surfaceData.specular, 1), surfaceData.smoothness, cloudShadow);
     #endif
-    lightColor *= saturate(light.shadowAttenuation + shadowDimming);
+    // lightColor *= saturate(light.shadowAttenuation + shadowDimming);// 이게 왜 한번 더 있더라?
 
     return lightColor;
 }
@@ -453,6 +473,30 @@ float4 UniversalFragmentLightCustomLOD(InputData inputData, SurfaceData surfaceD
     return CalculateFinalColorCustom(lightingData, surfaceData.alpha);
 }
 
+
+
+// METAL용 라이트 연산 함수
+float4 UniversalFragmentLightCustomMetal(InputData inputData, SurfaceData surfaceData , float glossNormalMulti)
+{
+    #if defined(DEBUG_DISPLAY) //텍스쳐 데이터 디버그 디스플레이용
+        float4 debugColor;
+        if (CanDebugOverrideOutputColor(inputData, surfaceData, debugColor))
+        {
+            return debugColor;
+        }
+    #endif
+
+    Light mainLight = GetMainLight(inputData.shadowCoord);
+
+    inputData.bakedGI *= _Global_GILightMulti.rgb;
+    inputData.bakedGI *= surfaceData.albedo;
+
+    LightingData lightingData = CreateLightingData(inputData, surfaceData);
+    lightingData.mainLightColor += CalculateLightingCustomMetal(mainLight, inputData, surfaceData, MMN_GlobalTex_CloudShadows(inputData.positionWS).r, /* shadowDimming */0, /* halfLambertWeight */0, glossNormalMulti);
+    
+    return CalculateFinalColorCustom(lightingData, surfaceData.alpha);
+}
+
 // 유니티 2021.2.3 용 신형 라이트 함수
 float4 UniversalFragmentLightCustom(InputData inputData, SurfaceData surfaceData, float shadowDimming, float halfLambertWeight, float _BackfaceReceiveShadowOff, FRONT_FACE_TYPE isFacing, float BackFaceNormalturn)
 {
@@ -474,7 +518,9 @@ float4 UniversalFragmentLightCustom(InputData inputData, SurfaceData surfaceData
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData); //SSAO
     Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
 
+    // return float4(inputData.bakedGI,1);
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, aoFactor);
+
 
     inputData.bakedGI *= _Global_GILightMulti.rgb;
     inputData.bakedGI *= surfaceData.albedo;
@@ -755,6 +801,25 @@ float4 UniversalFragmentLightCustomLOD(InputData inputData, float3 diffuse, floa
 }
 
 
+float4 UniversalFragmentLightCustomMetal(InputData inputData, float3 diffuse, float4 specularGloss, float smoothness, float3 emission, float alpha, float3 normalTS , float glossNormalMulti)
+{
+    SurfaceData surfaceData;
+
+    surfaceData.albedo = diffuse;
+    surfaceData.alpha = alpha;
+    surfaceData.emission = emission;
+    surfaceData.metallic = 0;
+    surfaceData.occlusion = 1;
+    surfaceData.smoothness = smoothness;
+    surfaceData.specular = specularGloss.rgb;
+    surfaceData.clearCoatMask = 0;
+    surfaceData.clearCoatSmoothness = 1;
+    surfaceData.normalTS = normalTS;
+
+    return UniversalFragmentLightCustomMetal(inputData, surfaceData, glossNormalMulti);
+}
+
+
 
 
 float4 UniversalFragmentLightCustom(InputData inputData, float3 diffuse, float4 specularGloss, float smoothness, float3 emission, float alpha, float3 normalTS, float shadowDimming, float halfLambertWeight, float _BackfaceReceiveShadowOff, FRONT_FACE_TYPE isFacing, float BackFaceNormalturn)
@@ -847,7 +912,7 @@ float UniversalFragmentTreeLeavesInnerAO(float4 positionOS, float _CenterPointHe
 {
     positionOS.g = positionOS.g * _AOVertical ;
     float innerAO = distance(positionOS.rgb, float3(0, _CenterPointHeight * _AOVertical, 0));
-    innerAO = saturate(pow(max(0, innerAO / _AOarea), _AOintensity));
+    innerAO = saturate(pow(max(0, innerAO / (_AOarea+0.00001f)), _AOintensity));
     return innerAO;
 }
 
@@ -856,7 +921,7 @@ float UniversalFragmentTreeLeavesInnerAO(float4 positionOS, float _CenterPointHe
 {
     positionOS.g = positionOS.g ;
     float innerAO = distance(positionOS.rgb, float3(0, _CenterPointHeight, 0));
-    innerAO = saturate(pow(max(0, innerAO / _AOarea), _AOintensity));
+    innerAO = saturate(pow(max(0, innerAO / (_AOarea+0.00001f)), _AOintensity));
     return innerAO;
 }
 

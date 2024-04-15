@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMN_CS_Character_LerpTexCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: c511a5840fcbae8468ff667b29ff33ef, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+      - keywords: _CASTING_PUNCTUAL_LIGHT_SHADOW
+        passType: 8
+      - keywords: 
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_COOKIES
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_COOKIES _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_COOKIES _LIGHT_LAYERS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_COOKIES _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_LAYERS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _LIGHT_LAYERS _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_COOKIES
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_COOKIES _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_COOKIES _LIGHT_LAYERS
+          _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_COOKIES _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_LAYERS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _LIGHT_LAYERS _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_COOKIES
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_COOKIES _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_COOKIES _LIGHT_LAYERS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_COOKIES _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_LAYERS
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_LAYERS _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _LIGHT_LAYERS _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: FOG_LINEAR _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13

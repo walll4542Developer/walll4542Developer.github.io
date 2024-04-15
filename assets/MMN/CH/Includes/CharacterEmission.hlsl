@@ -3,25 +3,25 @@
 
 #include "Assets/PatchableAssets/Shaders/MMN/Includes/Night2DayControl.hlsl"
 
-half3 ApplyEmissionColor(half3 emissionMap, half3 emissionColor,
-    half isEnableEmissionAtNight, half isBreathingEmissionMode, half breathingEmissionModePeriod)
+float3 ApplyEmissionColor(float3 emissionMap, float3 emissionColor,
+    float isEnableEmissionAtNight, float isBreathingEmissionMode, float breathingEmissionModePeriod)
 {
-    half3 emissionBase = emissionMap * emissionColor;
+    float3 emissionBase = emissionMap * emissionColor;
 
     breathingEmissionModePeriod = max(0.0001, breathingEmissionModePeriod);
-    half breathing = sin(_Time.y * PI / breathingEmissionModePeriod) * 0.5 + 0.5;
-    half3 breathingEmission = lerp(emissionBase * 0.3, emissionBase, breathing);
+    float breathing = sin(_Time.y * PI / breathingEmissionModePeriod) * 0.5 + 0.5;
+    float3 breathingEmission = lerp(emissionBase * 0.3, emissionBase, breathing);
 
-    half3 emissionResult = lerp(emissionBase, breathingEmission, isBreathingEmissionMode);
+    float3 emissionResult = lerp(emissionBase, breathingEmission, isBreathingEmissionMode);
     emissionResult *= (1.0 - (_Global_Night2Day * isEnableEmissionAtNight));
 
     return emissionResult;
 }
 
-half3 ApplyEmissionColorLOD(in half3 resultColor, half3 emissionMap, half3 emissionColor,
-    half isEnableEmissionAtNight)
+float3 ApplyEmissionColorLOD(in float3 resultColor, float3 emissionMap, float3 emissionColor,
+    float isEnableEmissionAtNight)
 {
-    half3 emissionResult = emissionMap * emissionColor;
+    float3 emissionResult = emissionMap * emissionColor;
     emissionResult *= (1.0 - (_Global_Night2Day * isEnableEmissionAtNight));
 
     return emissionResult;

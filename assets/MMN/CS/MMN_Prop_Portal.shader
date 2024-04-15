@@ -69,9 +69,9 @@
                 return output;
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
-                return half4(0, 0, 0, 0);
+                return float4(0, 0, 0, 0);
             }
 
             ENDHLSL

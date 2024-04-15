@@ -14,6 +14,8 @@ Shader "MMN/BG/SimpleLitLOD"
         [HDR] _EmissionColor ("Emission Color", Color) = (0, 0, 0)
         [NoScaleOffset]_EmissionMap ("Emission Map", 2D) = "white" { }
         [Enum(Always, 0, NightOnly, 1, DayOnly, 2)] _Night2DayEnum ("언제 Emission이 켜지게 할까요", float) = 0
+        //날씨
+        [Toggle]_IsRaindrop ("빗방울이 떨어질까요?/ 눈이 쌓일까요?", float) = 1
     }
 
     SubShader
@@ -43,6 +45,7 @@ Shader "MMN/BG/SimpleLitLOD"
             #pragma multi_compile_fog
             #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             #pragma vertex LitPassVertexSimple
             #pragma fragment LitPassFragmentSimple
@@ -56,9 +59,9 @@ Shader "MMN/BG/SimpleLitLOD"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
+                float3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
-                half4 color : COLOR;
+                float4 color : COLOR;
             };
 
             struct Varyings
@@ -68,11 +71,11 @@ Shader "MMN/BG/SimpleLitLOD"
                 float3 normalWS : TEXCOORD2;
                 float fogFactor : TEXCOORD3;
                 float4 vertexSH : TEXCOORD7;
-                half4 color : COLOR;
+                float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
             };
 
-            void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
+            void InitializeInputData(Varyings input, float3 normalTS, out InputData inputData)
             {
                 inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
@@ -81,8 +84,8 @@ Shader "MMN/BG/SimpleLitLOD"
                 viewDirWS = SafeNormalize(viewDirWS);
                 inputData.viewDirectionWS = viewDirWS;
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-                inputData.vertexLighting = half3(0, 0, 0);
-                inputData.bakedGI = SAMPLE_GI(/* input.staticLightmapUV */1, input.vertexSH.rgb, inputData.normalWS);
+                inputData.vertexLighting = float3(0, 0, 0);
+                inputData.bakedGI = float3(1, 1, 1);
                 #if defined(DEBUG_DISPLAY)
                     inputData.vertexSH = input.vertexSH;
                 #endif
@@ -113,13 +116,13 @@ Shader "MMN/BG/SimpleLitLOD"
             }
 
             // Fragment shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
 
                 float2 uv = input.uv;
                 float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                half3 diffuse = diffuseAlpha.rgb;
-                half alpha = diffuseAlpha.a * _BaseColor.a;
+                float3 diffuse = diffuseAlpha.rgb;
+                float alpha = diffuseAlpha.a * _BaseColor.a;
 
                 //알파 테스트 기능
                 #if defined(_ALPHATEST_ON)
@@ -127,20 +130,20 @@ Shader "MMN/BG/SimpleLitLOD"
                 #endif
 
                 //틴트칼라와 버텍스 칼라
-                half3 tintProp = _BaseColor.rgb;
-                half tintStrengthProp = _AlbedoTintStrength;
+                float3 tintProp = _BaseColor.rgb;
+                float tintStrengthProp = _AlbedoTintStrength;
                 diffuse = TextureTintBlend(diffuse.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
 
                 //버텍스칼라 디버깅
                 #ifdef _SHOWVERTEXCOLOR_ON
-                    return half4(saturate(abs(input.color.rgb)), 1);
+                    return float4(saturate(abs(input.color.rgb)), 1);
                 #endif
 
                 #ifdef _SHOWVERTEXALPHA_ON
-                    return half4(saturate(abs(input.color.aaa)), 1);
+                    return float4(saturate(abs(input.color.aaa)), 1);
                 #endif
 
-                half3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb * _EmissionColor.rgb;
+                float3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb * _EmissionColor.rgb;
 
                 //Emission 을 밤낮에 따라 켜지게 꺼지게 혹은 계속 유지하게 하는 기능
                 #define NightOnly 1
@@ -159,19 +162,25 @@ Shader "MMN/BG/SimpleLitLOD"
                 }
 
                 InputData inputData;
-                InitializeInputData(input, /* normalTS */ half3(0, 0, 1), inputData);
+                InitializeInputData(input, /* normalTS */ float3(0, 0, 1), inputData);
                 SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
 
+                if(_IsRaindrop)
+                {
                 //눈내리는 텍스쳐 전환
-                diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
+                diffuse.rgb = snowTextureOnly(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb);
+                }
 
                 //라이팅
-                half4 color = 0;
-                color = UniversalFragmentLightCustomLOD(inputData, diffuse, /* specular */0, /* smoothness */0, emission, /* alpha */1, /* normalTS */ half3(0, 0, 1));
+                float4 color = 0;
+                color = UniversalFragmentLightCustomLOD(inputData, diffuse, /* specular */0, /* smoothness */0, emission, /* alpha */1, /* normalTS */ float3(0, 0, 1));
 
+                if(_IsRaindrop)
+                { 
                 //레인텍스쳐 only 레인 드롭 애니메이션은 삭제
-                half3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
+                float3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
+                }
 
                 //하이트 포그  연산
                 color = MMN_GlobalTex_HeightFog(
@@ -205,11 +214,13 @@ Shader "MMN/BG/SimpleLitLOD"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #define VERTEX_CAMERA_DEPEND_BENDING 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0

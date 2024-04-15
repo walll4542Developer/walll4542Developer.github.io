@@ -5,7 +5,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-    half4 _BaseMap_ST;
+    float4 _BaseMap_ST;
 CBUFFER_END
 
 #endif // MMN_FX_SHADOW_CASTER_INPUT_INCLUDED

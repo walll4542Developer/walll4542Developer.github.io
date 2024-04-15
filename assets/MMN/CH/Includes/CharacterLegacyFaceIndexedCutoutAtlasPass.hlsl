@@ -17,7 +17,7 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
+    float3 normalOS : NORMAL;
 
     float2 texcoord : TEXCOORD0;
 };
@@ -29,12 +29,12 @@ struct Varyings
     float2 texcoord : TEXCOORD0;
 
     float4 positionWS : TEXCOORD1;  // xyz: position, w: camera distance
-    half3 normalWS : TEXCOORD2;     // xyz: normal
-    half3 viewDirWS : TEXCOORD3;
+    float3 normalWS : TEXCOORD2;     // xyz: normal
+    float3 viewDirWS : TEXCOORD3;
 
-    half4 fogCoord : TEXCOORD4;     // x: fogFactor, yzw: vertexLighting
+    float4 fogCoord : TEXCOORD4;     // x: fogFactor, yzw: vertexLighting
 
-    half4 positionNDC : TEXCOORD5;
+    float4 positionNDC : TEXCOORD5;
 };
 
 
@@ -54,8 +54,8 @@ Varyings vert(Attributes input)
     Varyings output = (Varyings)0;
 
     float2 uvOffset, uvScale;
-    CalcUvOffsetScale_Legacy((half)_AtlasTextureColNum, (half)_AtlasTextureRowNum,
-        (half)(_AtlasIndexFromOne - 1), uvOffset, uvScale);
+    CalcUvOffsetScale_Legacy((float)_AtlasTextureColNum, (float)_AtlasTextureRowNum,
+        (float)(_AtlasIndexFromOne - 1), uvOffset, uvScale);
 
     float aspectRatio = (float)_AtlasTextureRowNum / (float)_AtlasTextureColNum;
     float2 displacedTexcoord = input.texcoord - float2(0.5, 0.5);
@@ -72,15 +72,15 @@ Varyings vert(Attributes input)
     output.positionCS = vertexInput.positionCS;
 
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
-    output.normalWS = half3(normalInput.normalWS);
+    output.normalWS = float3(normalInput.normalWS);
     output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
-    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
-        output.fogCoord = half4(fogFactor, vertexLight); //fogFactorAndVertexLight
+        float3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
+        output.fogCoord = float4(fogFactor, vertexLight); //fogFactorAndVertexLight
     #else
-        output.fogCoord = half4(fogFactor, 0.0, 0.0, 0.0);
+        output.fogCoord = float4(fogFactor, 0.0, 0.0, 0.0);
     #endif
 
     output.positionNDC = ComputeScreenPos(output.positionCS);
@@ -98,33 +98,33 @@ void InitializeCharacterInputData(Varyings input, out InputData inputData)
 
     inputData.normalWS.xyz = input.normalWS.xyz;
 
-    inputData.shadowCoord = half4(0, 0, 0, 0);
+    inputData.shadowCoord = float4(0, 0, 0, 0);
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
         inputData.vertexLighting = input.fogCoord.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
-        inputData.vertexLighting = half3(0, 0, 0);
+        inputData.vertexLighting = float3(0, 0, 0);
     #endif
 
     inputData.bakedGI = 1.0; //음영을 사용 안하도록
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    inputData.shadowMask = half4(1, 1, 1, 1);
+    inputData.shadowMask = float4(1, 1, 1, 1);
 }
 
-half4 frag(Varyings input) : SV_Target
+float4 frag(Varyings input) : SV_Target
 {
-    half4 baseMap = SAMPLE_TEXTURE2D(_IndexedCutoutAtlasTexture, sampler_IndexedCutoutAtlasTexture, input.texcoord + _PositionOffset);
-    half3 baseColor = baseMap.rgb;
-    half alpha = baseMap.a * _Alpha;
+    float4 baseMap = SAMPLE_TEXTURE2D(_IndexedCutoutAtlasTexture, sampler_IndexedCutoutAtlasTexture, input.texcoord + _PositionOffset);
+    float3 baseColor = baseMap.rgb;
+    float alpha = baseMap.a * _Alpha;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
     //-----------------------------------------------------------------------------
     // 염색
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -152,7 +152,7 @@ half4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         dyedBaseColor);
@@ -172,7 +172,7 @@ half4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

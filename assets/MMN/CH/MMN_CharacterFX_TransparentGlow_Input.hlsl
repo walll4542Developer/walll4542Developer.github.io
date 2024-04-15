@@ -14,13 +14,13 @@ CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
     float4 _BumpMap_ST;
 
-    half4 _Color;
-    half _TintColorIntensity;
+    float4 _Color;
+    float _TintColorIntensity;
 
-    half _BumpPower;
-    half4 _FresnelColor;
-    half _FresnelPower;
-    half _FresnelRange;
+    float _BumpPower;
+    float4 _FresnelColor;
+    float _FresnelPower;
+    float _FresnelRange;
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)
     // 반드시 수정/추가가 필요할 때 관련된 모든 셰이더의 Property {} 에도 동일하게 넣어줘야 한다!

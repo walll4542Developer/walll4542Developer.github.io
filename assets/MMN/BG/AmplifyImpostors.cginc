@@ -84,7 +84,7 @@ float _TintStr;
 
 
 #ifdef EFFECT_HUE_VARIATION
-    half4 _HueVariation;
+    float4 _HueVariation;
 #endif
 #if defined(AI_RENDERPIPELINE) && (AI_HDRP_VERSION >= 50702 || AI_LWRP_VERSION >= 50702)
 CBUFFER_END
@@ -320,9 +320,9 @@ inline void OctaImpostorFragment(inout SurfaceOutputSimpleLit o, out float4 clip
     #endif
 
     #ifdef EFFECT_HUE_VARIATION
-        half3 shiftedColor = lerp(blendedAlbedo.rgb, _HueVariation.rgb, interpViewPos.w);
-        half maxBase = max(blendedAlbedo.r, max(blendedAlbedo.g, blendedAlbedo.b));
-        half newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
+        float3 shiftedColor = lerp(blendedAlbedo.rgb, _HueVariation.rgb, interpViewPos.w);
+        float maxBase = max(blendedAlbedo.r, max(blendedAlbedo.g, blendedAlbedo.b));
+        float newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
         maxBase /= newMaxBase;
         maxBase = maxBase * 0.5f + 0.5f;
         shiftedColor.rgb *= maxBase;
@@ -512,9 +512,9 @@ inline void SphereImpostorFragment(inout SurfaceOutputSimpleLit o, out float4 cl
     o.Alpha = 1;//없으면 iOS 에서 랜덤하게 댑스문제로 번쩍거림
 
     #ifdef EFFECT_HUE_VARIATION
-        half3 shiftedColor = lerp(albedoSample.rgb, _HueVariation.rgb, viewPos.w);
-        half maxBase = max(albedoSample.r, max(albedoSample.g, albedoSample.b));
-        half newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
+        float3 shiftedColor = lerp(albedoSample.rgb, _HueVariation.rgb, viewPos.w);
+        float maxBase = max(albedoSample.r, max(albedoSample.g, albedoSample.b));
+        float newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
         maxBase /= newMaxBase;
         maxBase = maxBase * 0.5f + 0.5f;
         shiftedColor.rgb *= maxBase;
@@ -712,9 +712,9 @@ inline void HorizontalImpostorFragment(inout SurfaceOutputSimpleLit o, out float
 
 
     #ifdef EFFECT_HUE_VARIATION
-        half3 shiftedColor = lerp(albedoSample.rgb, _HueVariation.rgb, viewPos.w);
-        half maxBase = max(albedoSample.r, max(albedoSample.g, albedoSample.b));
-        half newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
+        float3 shiftedColor = lerp(albedoSample.rgb, _HueVariation.rgb, viewPos.w);
+        float maxBase = max(albedoSample.r, max(albedoSample.g, albedoSample.b));
+        float newMaxBase = max(shiftedColor.r, max(shiftedColor.g, shiftedColor.b));
         maxBase /= newMaxBase;
         maxBase = maxBase * 0.5f + 0.5f;
         shiftedColor.rgb *= maxBase;

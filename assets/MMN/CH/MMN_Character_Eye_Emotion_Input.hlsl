@@ -16,7 +16,7 @@ float4 _EyeballTexture_MipInfo;
 
 CBUFFER_START(UnityPerMaterial)
     float4 _EyeballTexture_ST;
-    half _Alpha;
+    float _Alpha;
 
     int _EyeballTextureRowNum;
     int _EyeballTextureColNum;
@@ -29,21 +29,21 @@ CBUFFER_START(UnityPerMaterial)
     float _EyeRotationOffset;
 
 #ifdef _DISSOLVE_FEATURE
-    half _DissolveAmount;
+    float _DissolveAmount;
 
-    half4 _DissolveRange;
-    half _NotUseDirection;
-    half3 _DissolveDirection;
+    float4 _DissolveRange;
+    float _NotUseDirection;
+    float3 _DissolveDirection;
 
-    half _DissolvePanningSpeed;
-    half4 _DissolveMap_ST;
+    float _DissolvePanningSpeed;
+    float4 _DissolveMap_ST;
 
-    half _DissolveCutoff;
+    float _DissolveCutoff;
 
-    half4 _DissolveColor;
-    half _DissolveWidth;
-    half4 _DissolveEdgeColor;
-    half _DissolveEdgeWidth;
+    float4 _DissolveColor;
+    float _DissolveWidth;
+    float4 _DissolveEdgeColor;
+    float _DissolveEdgeWidth;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

@@ -14,16 +14,16 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    half3 baseColor = baseMap.rgb;
-    half alpha = 1.0;
+    float3 baseColor = baseMap.rgb;
+    float alpha = 1.0;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -46,34 +46,43 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Stockings Color
     //-----------------------------------------------------------------------------
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
 
     // _Denier : [10 ~ 180] 범위의 값을 가짐.
-    half nomalizedDenier = (_Denier - 10.0) / 170.0;
-    half reverseNomalizedDenier = 1.0 - nomalizedDenier;
+    float nomalizedDenier = (_Denier - 10.0) / 170.0;
+    float reverseNomalizedDenier = 1.0 - nomalizedDenier;
 
-    half3 skinColor = _DyeColor1.rgb;
-    half3 stockingsColor = _DyeColor2.rgb;
-    half3 stockingsBlendColor = sqrt(stockingsColor * skinColor);
+    float3 skinColor = _DyeColor1.rgb;
+    float3 stockingsColor = _DyeColor2.rgb;
+    float3 stockingsBlendColor = sqrt(stockingsColor * skinColor);
     stockingsBlendColor = lerp(stockingsBlendColor, stockingsColor, nomalizedDenier); // 두께가 얇으면 스킨과 스타킹이 적절히 섞인 컬러로, 두꺼울 수록 스타킹 본연의 색으로 표현.
-    half3 stockingsHighlightColor = lerp(skinColor, half3(1, 1, 1), nomalizedDenier); // 두께가 얇으면 스킨색으로, 두꺼울 수록 흰색으로 표현
+    float3 stockingsHighlightColor = lerp(skinColor, stockingsBlendColor, nomalizedDenier); // 두께가 얇으면 스킨색으로, 두꺼울 수록 흰색으로 표현
 
-    half nDotV = dot(inputData.normalWS, inputData.viewDirectionWS);
+    float nDotV = dot(inputData.normalWS, inputData.viewDirectionWS);
 
     // 스타킹 베이스 컬러 공식.
     // 기본 N dot V 공식인데 두께가 얇으면 스킨의 컬러가 넓은 면적이 되도록,
     // 두꺼울 수록 스킨은 튀어나온 곳에만 보이고 대부분 스타킹 본연의 컬러가 나오도록 표현.
-    half denierFactor = (180.0 - _Denier) / 170.0;
-    denierFactor = saturate(PositivePow(denierFactor, 5.0));
-    half stockingsBaseFactor = max(0.0, nDotV * denierFactor - (denierFactor * 0.3) - 0.06);
+    // float denierFactor = (180.0 - _Denier) / 170.0;
+    // denierFactor = saturate(PositivePow(denierFactor, 5.0));
+    float stockingsBaseFactor = nDotV * nDotV * (1.0 - nomalizedDenier); // max(0.0, nDotV * denierFactor - (denierFactor * 0.3) - 0.06);
     dyedBaseColor = lerp(stockingsBlendColor, skinColor, stockingsBaseFactor);
 
     // 스타킹 하이라이트 컬러 공식.
     // 두께가 얇으면 하이라이트가 넓게 표현하고, 두꺼울 수록 좁게 표현함.
     // 그리고 두꺼울 수록 하이라이트가 연하게 보이도록 조정.
-    half stockingsHighlightFactor = saturate(nDotV - lerp(nomalizedDenier * 0.2 + 0.6, 0.96, PositivePow(nomalizedDenier, 0.2)));
-    stockingsHighlightFactor *= reverseNomalizedDenier * 1.2;
-    dyedBaseColor += stockingsHighlightColor * stockingsHighlightFactor * nomalizedDenier * 0.4;
+    // float stockingsHighlightFactor = saturate(nDotV - lerp(nomalizedDenier * 0.2 + 0.6, 0.96, PositivePow(nomalizedDenier, 0.2)));
+    // stockingsHighlightFactor *= reverseNomalizedDenier * 1.2;
+    // dyedBaseColor += stockingsHighlightColor * stockingsHighlightFactor * nomalizedDenier * 0.4;
+
+    // 스타킹은 빛에 반응해야 함
+    // 2D 공간에서 하이라이트를 구한다. 이렇게 하지 않으면 발등에 하이라이트가 생겨서 이상해보이게 됨.
+    // 아주 트리키한 방법임.
+    float nDotV2D = saturate(dot(normalize(-inputData.normalWS.xz + 2.0 * mainLight.direction.xz), normalize(inputData.viewDirectionWS.xz)));
+    float spec = PositivePow(nDotV2D * nDotV, (1.0 + nomalizedDenier) * 7.0);
+
+    float stockingsHighlightFactor = spec;
+    dyedBaseColor += stockingsHighlightColor * stockingsHighlightFactor * (reverseNomalizedDenier * 0.5 + 0.5);
 
     // 스타킹 마스킹
     // 텍스쳐의 RGB 채널이 0이면 스타킹이 보이고, 1이면 스킨이 그대로 보임. (망사 표현용)
@@ -94,16 +103,16 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
+        _SHADINGTYPE_STANDARD_VALUE, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _SHADINGTYPE_STANDARD_VALUE);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1, 1, 1);
+            outlineColor = float3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
@@ -149,7 +158,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

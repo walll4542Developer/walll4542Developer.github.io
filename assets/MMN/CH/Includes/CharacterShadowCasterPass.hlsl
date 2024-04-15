@@ -33,14 +33,14 @@ struct Varyings
 
 #ifdef _DISSOLVE_FEATURE
     float4 positionWS : TEXCOORD1;  // xyz: position, w: camera distance
-    half3 normalWS : TEXCOORD2;     // xyz: normal
+    float3 normalWS : TEXCOORD2;     // xyz: normal
     float3 positionOS : TEXCOORD3;
 #endif
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-float4 GetShadowPositionHClip(Attributes input, float3 positionWS, half3 normalWS)
+float4 GetShadowPositionHClip(Attributes input, float3 positionWS, float3 normalWS)
 {
 #if _CASTING_PUNCTUAL_LIGHT_SHADOW
     float3 lightDirectionWS = normalize(_LightPosition - positionWS);
@@ -79,9 +79,9 @@ Varyings ShadowPassVertex(Attributes input)
     return output;
 }
 
-half4 ShadowPassFragment(Varyings input) : SV_TARGET
+float4 ShadowPassFragment(Varyings input) : SV_TARGET
 {
-    half alpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).a;
+    float alpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).a;
 
     #ifdef _ALPHA_TEST
         clip(alpha - _Cutoff);
@@ -107,7 +107,7 @@ half4 ShadowPassFragment(Varyings input) : SV_TARGET
         dissolveInput.positionOS = input.positionOS;
         dissolveInput.normalWS = SafeNormalize(input.normalWS.xyz);
         dissolveInput.characterData = characterData;
-        ApplyDissolve(half3(1.0, 1.0, 1.0), _DissolveAmount, dissolveInput);
+        ApplyDissolve(float3(1.0, 1.0, 1.0), _DissolveAmount, dissolveInput);
     #endif
 
     return 0;

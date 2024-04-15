@@ -2,7 +2,7 @@ Shader "MMN/CH/FX_TransformPaladin"
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -81,6 +81,7 @@ Shader "MMN/CH/FX_TransformPaladin"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -112,6 +113,9 @@ Shader "MMN/CH/FX_TransformPaladin"
         #undef _ALPHA_OVERRIDE_FEATURE
         #undef _GRADIENT_ALPHA_FEATURE
         #define _TEXTURE_LERP_FEATURE
+
+        // 셰딩 타입의 큰 카테고리
+        #define _SHADINGTYPE_STANDARD
 
         #include "MMN_Character_Standard_Input.hlsl"
     ENDHLSL
@@ -152,17 +156,16 @@ Shader "MMN/CH/FX_TransformPaladin"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -228,6 +231,7 @@ Shader "MMN/CH/FX_TransformPaladin"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -275,16 +279,15 @@ Shader "MMN/CH/FX_TransformPaladin"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
-            #pragma multi_compile _ _LIGHT_LAYERS
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
 
             // -------------------------------------
             // Unity defined keywords
@@ -350,6 +353,7 @@ Shader "MMN/CH/FX_TransformPaladin"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment

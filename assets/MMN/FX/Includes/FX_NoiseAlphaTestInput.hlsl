@@ -7,75 +7,118 @@
 #include "Assets/PatchableAssets/Shaders/MMN/Includes/bendingVertex.hlsl"
 #include "Assets/PatchableAssets/Shaders/MMN/Includes/EnvironmentHelper.hlsl"
 
-CBUFFER_START(UnityPerMaterial)
-    TEXTURE2D(_MainTex);
-    SAMPLER(sampler_MainTex);
-    float4 _MainTex_ST;
+struct Attributes
+{
+    float4 positionOS : POSITION;
+    float3 normalOS : NORMAL;
+    float4 tangentOS : TANGENT;
+    float4 texcoord : TEXCOORD0;
+    float4 color : COLOR;
+};
 
-    TEXTURE2D(_NoiseTex);
-    SAMPLER(sampler_NoiseTex);
+struct Varyings
+{
+    float4 positionCS : SV_POSITION;
+    float4 color : COLOR;
+    float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
+    float4 fogCoord : TEXCOORD1; 		    // x : fogcoord				yzw :
+    float3 positionWS : TEXCOORD2;
+    float3 normalWS : TEXCOORD3;
+    float4 positionNDC : TEXCOORD4;
+};
+
+TEXTURE2D(_MainTex);            SAMPLER(sampler_MainTex);
+TEXTURE2D(_NoiseTex);           SAMPLER(sampler_NoiseTex);
+
+CBUFFER_START(UnityPerMaterial)
+    float4 _MainTex_ST;
     float4 _NoiseTex_ST;
 
-    half _Intensive;
-    half4 _Color;
+    float4 _Color;
 
-    half _LightReceive;
+    float _CutoutThreshold;
     
-    half _CutoutThreshold;
-    half _AlphaTestRange;
-    half _BendRange;
-    half _GradientRange;
+    float _uvGradient;
+    float _GradientRange;
 
-    half4 _ColorA;
-    half4 _ColorB;
+    float _AlphaTestRange;
+    float _BendRange;
 
-    float _Speed;
+    float4 _ColorA;
+    float4 _ColorB;
+
     float _Power;
+    float _Speed;
     float _NoiseSize;
+
+    float _Mode;
+    float _TransitionValue;
+
+    float _RaycastHarftoneClip;
+    float _RaycastMinimumAlpha;
+
+    float _NearPlaneAlpha;
+    float _NearPlaneInvertDistance;
+
+    float _LightReceive;
+    float _LightRatio;
+
+    float _SoftParticle;
+    float _SoftParticleNearFadeDistance;
+    float _SoftParticleFarFadeDistance;
+    float _SoftParticleFadeOutRange;
+
+    float _FogReceive;
 CBUFFER_END
 
-half TriplanarNoise(float3 positionWS, float3 normalWS)
+float TriplanarNoise(float3 positionWS, float3 normalWS)
 {
     float3 position = positionWS;
 
-    half triplanarX = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.zy * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
-    half triplanarY = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.xz * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
-    half triplanarZ = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.xy * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
+    float triplanarX = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.zy * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
+    float triplanarY = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.xz * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
+    float triplanarZ = SAMPLE_TEXTURE2D_LOD(_NoiseTex, sampler_NoiseTex, position.xy * _NoiseTex_ST.xy + _NoiseTex_ST.zw, 0).r;
 
     float3 normalBlend = abs(normalWS);
     normalBlend /= (normalBlend.x + normalBlend.y + normalBlend.z);
 
-    half nx = triplanarX * normalBlend.x;
-    half ny = triplanarY * normalBlend.y;
-    half nz = triplanarZ * normalBlend.z;
+    float nx = triplanarX * normalBlend.x;
+    float ny = triplanarY * normalBlend.y;
+    float nz = triplanarZ * normalBlend.z;
 
-    half triplanarNoise = nx + ny + nz;
+    float triplanarNoise = nx + ny + nz;
     return triplanarNoise;
 }
 
-half4 ProcessNoiseAlphaTest(half4 resultColor, float2 uv, half gradientRange, 
-                            half cutout, half range, half alphaTest, 
-                            half noise0, half noise1, half4 colorA, half4 colorB)
+float4 ProcessNoiseAlphaTest(float4 resultColor, float2 uv, float gradientRange,
+                            float cutout, float range, float alphaTest,
+                            float noise0, float noise1, float4 colorA, float4 colorB,
+                            float uvGradientDirection)
 {
     float uvGradient;
-    #ifdef _UVGRADIENT_U
+    if (uvGradientDirection == 1.0)
+    {
         uvGradient = uv.x;
-    #elif _UVGRADIENT_V
+    }
+    else if (uvGradientDirection == 2.0)
+    {
         uvGradient = uv.y;
-    #else
+    }
+    else
+    {
         uvGradient = 1;
-    #endif
+    }
 
-    uvGradient = saturate(1- uvGradient + gradientRange);
+    uvGradient = saturate(1 - uvGradient + gradientRange);
     noise0 *= uvGradient;
 
-    half stepNoise = step(cutout, noise0);
-    half3 noiseAlphaTest = lerp(resultColor.rgb * colorA.rgb, resultColor.rgb * colorB.rgb, stepNoise);
-    
-    half stepValue = (1 - step(cutout, noise0)) * saturate(step(cutout, noise0 + range));
-    
+    float stepNoise = step(cutout, noise0);
+    float3 noiseAlphaTest = lerp(resultColor.rgb * colorA.rgb, resultColor.rgb * colorB.rgb, stepNoise);
+
+    float stepValue = (1 - step(cutout, noise0)) * saturate(step(cutout, noise0 + range));
+
     // 색을 floor 사용하여 5단계로(floor * 5 * 0.2) 끊어서 섞어줌
-    half3 color = lerp(colorA.rgb, colorB.rgb, floor(noise1 * 5) * 0.2);
+    float3 color = lerp(colorA.rgb, colorB.rgb, floor(noise1 * 5) * 0.2);
 
     resultColor.rgb = lerp(noiseAlphaTest, color, stepValue);
     resultColor.a = noise0 + alphaTest;
@@ -94,7 +137,7 @@ half4 ProcessNoiseAlphaTest(half4 resultColor, float2 uv, half gradientRange,
 //     return result;
 // }
 
-// float NoiseTexel(float3 positionWS, float noiseTexture) 
+// float NoiseTexel(float3 positionWS, float noiseTexture)
 // {
 //     float3 i = floor(positionWS * _NoiseSize);
 //     float3 uv3d = smoothstep(0, 1, frac(positionWS * _NoiseSize));
@@ -125,7 +168,7 @@ half4 ProcessNoiseAlphaTest(half4 resultColor, float2 uv, half gradientRange,
 //     float Texel = 1;
 //     float power = 0.5;
 //     float result = 0;
-//     for (int i = 0; i < Iteration; i++) 
+//     for (int i = 0; i < Iteration; i++)
 //     {
 //         result += NoiseTexel(positionWS * Texel, noiseTexture) * power;
 //         Texel *= 2;
@@ -135,31 +178,5 @@ half4 ProcessNoiseAlphaTest(half4 resultColor, float2 uv, half gradientRange,
 // }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct Attributes
-{
-    float4 positionOS : POSITION;
-    float4 texcoord : TEXCOORD0;
-    half4 color : COLOR;
-    float3 normalOS : NORMAL;
-
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-
-struct Varyings
-{
-    float4 uv : TEXCOORD0;
-    float3 positionWS : TEXCOORD1;      // World space position
-    #ifdef _FOG_RCV_ON
-        half fogCoord : TEXCOORD2;      // x: fogFactor
-    #endif
-    float3 normalWS : NORMAL;
-
-    half4 color : COLOR0;               // low-precision, 0–1 range data
-    float4 positionCS : SV_POSITION;    // Homogeneous clip space position
-
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-		
 
 #endif // MMN_SUMMONSTONE_INPUT_INCLUDED

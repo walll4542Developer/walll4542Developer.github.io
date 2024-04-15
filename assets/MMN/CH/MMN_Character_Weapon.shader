@@ -2,7 +2,7 @@ Shader "MMN/CH/Weapon"
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -76,6 +76,7 @@ Shader "MMN/CH/Weapon"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -108,6 +109,9 @@ Shader "MMN/CH/Weapon"
         #define _GRADIENT_ALPHA_FEATURE
         #define _WEAPON_GRADE_FEATURE
         #undef _DISSOLVE_FEATURE
+
+        // 셰딩 타입의 큰 카테고리
+        #define _SHADINGTYPE_STANDARD
 
         #include "MMN_Character_Standard_Input.hlsl"
     ENDHLSL
@@ -148,10 +152,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -207,10 +210,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -275,6 +277,10 @@ Shader "MMN/CH/Weapon"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -298,6 +304,10 @@ Shader "MMN/CH/Weapon"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -331,10 +341,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -399,10 +408,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -457,10 +465,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -524,6 +531,10 @@ Shader "MMN/CH/Weapon"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -547,6 +558,10 @@ Shader "MMN/CH/Weapon"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -580,10 +595,9 @@ Shader "MMN/CH/Weapon"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords

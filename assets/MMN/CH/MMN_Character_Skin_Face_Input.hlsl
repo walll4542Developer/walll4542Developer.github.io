@@ -28,94 +28,94 @@ CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
 
 #ifdef _ALPHA_OVERRIDE_FEATURE
-    half _AlphaOverride;
+    float _AlphaOverride;
 #endif
 
 #ifdef _TINTCOLOR_FEATURE
-    half4 _TintColor;
+    float4 _TintColor;
 #endif
 
 #ifdef _DYE_FEATURE
-    half _IsDyable;
-    half4 _DyeColor1;
-    half4 _DyeColor2;
-    half4 _DyeColor3;
+    float _IsDyable;
+    float4 _DyeColor1;
+    float4 _DyeColor2;
+    float4 _DyeColor3;
 #endif
 
-    half _MouthShowType;
+    float _MouthShowType;
     float4 _MouthMapScalePosition;
-    half _MouthMapRotation;
+    float _MouthMapRotation;
 
-    half4 _EmotionMouthMapAtlasSize;
+    float4 _EmotionMouthMapAtlasSize;
     float4 _EmotionMouthMapScalePosition;
 
-    half _MouthPushStrength;
+    float _MouthPushStrength;
 
-    half _IsScarMode;
-    half4 _TattooMapScalePosition;
-    half _TattooMapRotation;
+    float _IsScarMode;
+    float4 _TattooMapScalePosition;
+    float _TattooMapRotation;
 
 // NOTE @jihun.song 230605 : 이제 문신/흉터는 염색하지 않는 스펙으로 확정됨.
 // #ifdef _DYE_FEATURE
-//     half _IsDyableTattoo;
-//     half4 _TattooDyeColor1;
-//     half4 _TattooDyeColor2;
-//     half4 _TattooDyeColor3;
+//     float _IsDyableTattoo;
+//     float4 _TattooDyeColor1;
+//     float4 _TattooDyeColor2;
+//     float4 _TattooDyeColor3;
 // #endif
 
     float4 _BeardMapScalePosition;
-    half _BeardMapRotation;
+    float _BeardMapRotation;
 
 #ifdef _DYE_FEATURE
-    half _IsDyableBeard;
-    half4 _BeardDyeColor1;
-    half4 _BeardDyeColor2;
-    half4 _BeardDyeColor3;
+    float _IsDyableBeard;
+    float4 _BeardDyeColor1;
+    float4 _BeardDyeColor2;
+    float4 _BeardDyeColor3;
 #endif
 
     float4 _AccessoryMapScalePosition;
-    half _AccessoryMapRotation;
+    float _AccessoryMapRotation;
 
 #ifdef _DYE_FEATURE
-    half _IsDyableAccessory;
-    half4 _AccessoryDyeColor1;
-    half4 _AccessoryDyeColor2;
-    half4 _AccessoryDyeColor3;
+    float _IsDyableAccessory;
+    float4 _AccessoryDyeColor1;
+    float4 _AccessoryDyeColor2;
+    float4 _AccessoryDyeColor3;
 #endif
 
     float _FlatShadingOff;
 
 #ifdef _SILHOUETTE_FEATURE
-    half _SilhouetteOff;
-    half4 _SilhouetteTintColor;
+    float _SilhouetteOff;
+    float4 _SilhouetteTintColor;
 #endif
 
-    half4 _OutlineColor;
-    half _OutlineColorMode;
-    // half _OutlineWidth;
+    float4 _OutlineColor;
+    float _OutlineColorMode;
+    // float _OutlineWidth;
 
 #ifdef _FRESNEL_FEATURE
-    half4 _FresnelColor;
-    half _FresnelRange;
-    half _FresnelPower;
+    float4 _FresnelColor;
+    float _FresnelRange;
+    float _FresnelPower;
 #endif
 
 #ifdef _DISSOLVE_FEATURE
-    half _DissolveAmount;
+    float _DissolveAmount;
 
-    half4 _DissolveRange;
-    half _NotUseDirection;
-    half3 _DissolveDirection;
+    float4 _DissolveRange;
+    float _NotUseDirection;
+    float3 _DissolveDirection;
 
-    half _DissolvePanningSpeed;
-    half4 _DissolveMap_ST;
+    float _DissolvePanningSpeed;
+    float4 _DissolveMap_ST;
 
-    half _DissolveCutoff;
+    float _DissolveCutoff;
 
-    half4 _DissolveColor;
-    half _DissolveWidth;
-    half4 _DissolveEdgeColor;
-    half _DissolveEdgeWidth;
+    float4 _DissolveColor;
+    float _DissolveWidth;
+    float4 _DissolveEdgeColor;
+    float _DissolveEdgeWidth;
 #endif
 
     // NTOE @jihun.song : 로직 스크립트에서 넘어오는 값들. (MMN_Character_Global_Input.hlsl 에 정의됨)

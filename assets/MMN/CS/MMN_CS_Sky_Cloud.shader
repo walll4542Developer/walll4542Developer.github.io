@@ -116,16 +116,16 @@ Shader "MMN/CutScene/Sky_Clouds"
             CBUFFER_END
 
             //Global Property
-            half4 _Global_CloudColor;
-            half4 _Global_CloudColor2;
-            half4 _Global_CloudColor3;
-            half4 _Global_CloudColor4;
+            float4 _Global_CloudColor;
+            float4 _Global_CloudColor2;
+            float4 _Global_CloudColor3;
+            float4 _Global_CloudColor4;
 
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
-            half _Global_Night2Day;
+            // float _Global_CloudDensity;
+            // float _Global_CloudSpeed;
+            // float _Global_CloudScale;
+            // float _Global_CloudEdgeHardness;
+            float _Global_Night2Day;
 
             TEXTURE2D(_MaskMap);        SAMPLER(sampler_MaskMap);
             TEXTURE2D(_BaseTex);        SAMPLER(sampler_BaseTex);
@@ -149,7 +149,7 @@ Shader "MMN/CutScene/Sky_Clouds"
             {
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD2;
                 float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 3);
@@ -191,7 +191,7 @@ Shader "MMN/CutScene/Sky_Clouds"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -212,19 +212,19 @@ Shader "MMN/CutScene/Sky_Clouds"
                 float2 uv = input.uv;
 
                 float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
-                half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, maskMapUV);
+                float4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, maskMapUV);
 
                 float2 basemapUV = TRANSFORM_TEX(uvScroll(uv, _BaseTexSpeedMultix, _BaseTexSpeedMultiy, 0.01), _BaseTex);
-                half4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001) * _Global_CloudColor;
+                float4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001) * _Global_CloudColor;
 
                 float2 basemap2UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex2SpeedMultix, _BaseTex2SpeedMultiy, 0.01), _BaseTex2);
-                half4 basemap2 = SAMPLE_TEXTURE2D(_BaseTex2, sampler_BaseTex2, basemap2UV + maskMap.r * _Distortion2 * 0.001) * _Global_CloudColor2;
+                float4 basemap2 = SAMPLE_TEXTURE2D(_BaseTex2, sampler_BaseTex2, basemap2UV + maskMap.r * _Distortion2 * 0.001) * _Global_CloudColor2;
 
                 float2 basemap3UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex3SpeedMultix, _BaseTex3SpeedMultiy, 0.01), _BaseTex3);
-                half4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, basemap3UV + maskMap.r * _Distortion3 * 0.001) * _Global_CloudColor3;
+                float4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, basemap3UV + maskMap.r * _Distortion3 * 0.001) * _Global_CloudColor3;
 
                 float2 basemap4UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex4SpeedMultix, _BaseTex4SpeedMultiy, 0.01), _BaseTex4);
-                half4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) * _Global_CloudColor4;
+                float4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) * _Global_CloudColor4;
 
 
                 //검은 테두리를 흰색으로 감쇄시킨다. 리소스를 수정하는게 더 좋지만 psd작업 편의를 위해
@@ -247,7 +247,7 @@ Shader "MMN/CutScene/Sky_Clouds"
                 basemap2.rgb = lerp(basemap3.rgb, basemap2.rgb, basemap2.a);
                 basemap.rgb = lerp(basemap2.rgb, basemap.rgb, basemap.a);
 
-                half4 color ;
+                float4 color ;
 
                 //구름 알파 연산
                 //현재 두 방식의 차이는 없다

@@ -20,13 +20,15 @@
 void InitializeLightData(in InputData inputData, out Light mainLight, out LightingData lightingData)
 {
     uint meshRenderingLayers = GetMeshRenderingLightLayer();
-    half4 shadowMask = inputData.shadowMask;
+    float4 shadowMask = inputData.shadowMask;
 
     mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
 
-    if (_CustomLightMode == 1)
+    if (_CustomLightMode >= 1.0)
     {
         // NOTE : 유니티에서 transform.rotation * Vector3.back 을 한 값이 올바른 방향이다.
+        // 해당 값을 편하게 가져오기 위해 다음 툴을 사용하면 좋다.
+        //https://deskcat.io/d/R52592/MM-미술-가방-캐릭터-선택창의-라이트-설정하는-방법
         mainLight.direction = _CustomLightDirection.xyz;
         mainLight.color = _CustomLightColor.rgb;
     }
@@ -37,10 +39,10 @@ void InitializeLightData(in InputData inputData, out Light mainLight, out Lighti
     // GI color
     lightingData.giColor = _Global_GILightMulti.rgb;
 
-    if (_CustomLightMode == 1)
+    // NOTE : 0.5인 이유는 GI 컬러만 확인해보고 싶을 때 1.0이 아닌 0.8 정도의 값만 넣어도 동작하도록 하기 위해서이다.
+    if (_CustomLightMode >= 0.5)
     {
-        // NOTE: 티르코네일 낮 기준의 giColor
-        lightingData.giColor = half3(0.7686275, 0.827451, 0.854902);
+        lightingData.giColor = _CustomGIColor.rgb;
     }
 
     // Main light color
@@ -55,30 +57,19 @@ void InitializeLightData(in InputData inputData, out Light mainLight, out Lighti
 //                              Process Color                                //
 ///////////////////////////////////////////////////////////////////////////////
 
-half3 ProcessCharacterColor(InputData inputData,
+float3 ProcessCharacterColor(InputData inputData,
     Light mainLight, LightingData lightingData, CharacterData characterData,
-    half3 dyedBaseColor, half silhouetteOff, half4 silhouetteTintColor, half flatShadingOff = 0.0)
+    float shadingType, float3 dyedBaseColor, float silhouetteOff, float4 silhouetteTintColor, float flatShadingOff = 0.0)
 {
-    //-----------------------------------------------------------------------------
-    // Main light shade source
-    //-----------------------------------------------------------------------------
-    half3 cameraDirWS = -GetViewForwardDir();
-    // half3 lightDirWSFlatten = normalize(half3(mainLight.direction.x, mainLight.direction.y * 0.65, mainLight.direction.z));
-    // half3 cameraDirWSFlatten = normalize(half3(cameraDirWS.x, cameraDirWS.y * 0.1, cameraDirWS.z));
-    half cDotL = dot(cameraDirWS, mainLight.direction);
-    half nDotV = dot(inputData.normalWS, inputData.viewDirectionWS);
-    half sunVisibility = -cDotL; // -1(sun behind me) ~ 1(facing the sun)
-    half lightingMask = saturate((1.2 - sunVisibility) * 1.02);
-    half cameraDistance = distance(GetCameraPositionWS(), characterData.characterPos);
-
-    half verticalGradientRemapped = GetVerticalGradientRemapped(inputData.positionWS.xyz, characterData);
+    float3 cameraDirWS = -GetViewForwardDir();
+    float verticalGradientRemapped = GetVerticalGradientRemapped(inputData.positionWS.xyz, characterData);
 
     //-----------------------------------------------------------------------------
     // Received shadow
     // receivedShadow : 0이면 그림자를 받는 상태, 1이면 그림자를 받지 않는 상태.
     //                  [0, 1] 값이 머리와 발 끝의 그림자 수신 여부에 따라 그라디언트로 출력됨.
     //-----------------------------------------------------------------------------
-    half receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
+    float receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
         characterData.characterCenterPos, characterData.visualHeight,
         characterData.topShadow, characterData.bottomShadow);
 
@@ -89,17 +80,13 @@ half3 ProcessCharacterColor(InputData inputData,
     mainLightInput.normalWS = inputData.normalWS;
     mainLightInput.lightDirection = mainLight.direction;
     mainLightInput.cameraDirection = cameraDirWS;
-    mainLightInput.cameraDistance = cameraDistance;
-    mainLightInput.cDotL = cDotL;
-    mainLightInput.nDotV = nDotV;
     mainLightInput.verticalGradientRemapped = verticalGradientRemapped;
-    mainLightInput.lightingMask = lightingMask;
-    mainLightInput.dyedBaseColor = dyedBaseColor;
     mainLightInput.lightingData = lightingData;
     mainLightInput.flatShadingOff = flatShadingOff;
+    mainLightInput.shadingType = shadingType;
 
-    MainLightShadingResult mainLightResult;
-    GetMainLightShading(mainLightInput, mainLightResult);
+    MainLightShadingResult mainLightShadingResult;
+    GetMainLightShading(mainLightInput, mainLightShadingResult);
 
     //-----------------------------------------------------------------------------
     // Silhouette
@@ -110,10 +97,11 @@ half3 ProcessCharacterColor(InputData inputData,
         silhouetteInput.lightColor = lightingData.mainLightColor;
         silhouetteInput.normalWS = inputData.normalWS;
         silhouetteInput.cameraDirWS = cameraDirWS;
-        silhouetteInput.nDotV = nDotV;
+        silhouetteInput.viewDirectionWS = inputData.viewDirectionWS;
         silhouetteInput.receivedShadow = receivedShadow;
         silhouetteInput.dyedBaseColor = dyedBaseColor;
         silhouetteInput.silhouetteTintColor = silhouetteTintColor.rgb;
+        silhouetteInput.shadingType = shadingType;
 
         SilhouetteResult silhouetteResult = (SilhouetteResult)0;
         if (IS_FALSE(silhouetteOff))
@@ -125,7 +113,7 @@ half3 ProcessCharacterColor(InputData inputData,
     //-----------------------------------------------------------------------------
     // Additional light shading
     //-----------------------------------------------------------------------------
-    half3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
+    float3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)
         additionalLightShading += inputData.vertexLighting;
@@ -136,16 +124,15 @@ half3 ProcessCharacterColor(InputData inputData,
     //-----------------------------------------------------------------------------
     // Result
     //-----------------------------------------------------------------------------
-    half3 mainLightColor = lightingData.mainLightColor * mainLightResult.finalShading * mainLightResult.volumeShadingLight;
-    half3 ambientColor = lightingData.giColor * mainLightResult.volumeShadingDark;
-    ambientColor = lerp(ambientColor, saturate(ambientColor), receivedShadow);
+    float3 mainLightColor = mainLightShadingResult.finalShading * mainLightShadingResult.mainLightResult;
+    float3 ambientColor = mainLightShadingResult.ambientLightResult;
 
     // 아티스트가 앰비언트와 메인을 더해서 1이 초과되게 지정할 수도 있다. 이것이 물리적으로 맞으나
     // 색이 타는 현상이 생겨서 saturate함
-    half3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow);
-    lightColor = lightColor + additionalLightShading;
+    float3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow);
+    lightColor = min(lightColor + additionalLightShading, float3(1.6, 1.6, 1.6));
 
-    half3 resultColor;
+    float3 resultColor;
     resultColor = dyedBaseColor * lightColor;
     #ifdef _SILHOUETTE_FEATURE
         resultColor += silhouetteResult.silhouetteColor * (silhouetteResult.silhouette * receivedShadow);
@@ -158,32 +145,21 @@ half3 ProcessCharacterColor(InputData inputData,
 }
 
 // 메탈 재질도 처리가능한 버전
-half3 ProcessCharacterColorFull(InputData inputData,
-    Light mainLight, LightingData lightingData, CharacterData characterData, FRONT_FACE_TYPE isFacing, half backFaceDarkenAmount,
-    half3 dyedBaseColor, half silhouetteOff, half4 silhouetteTintColor,
-    half isMetal, half smoothness, half smoothnessMask, half specularStrength, half4 metalTintColor)
+float3 ProcessCharacterColorFull(InputData inputData,
+    Light mainLight, LightingData lightingData, CharacterData characterData, FRONT_FACE_TYPE isFacing, float backFaceDarkenAmount,
+    float shadingType, float3 dyedBaseColor, float silhouetteOff, float4 silhouetteTintColor,
+    float isMetal, float smoothness, float smoothnessMask, float specularStrength, float4 metalTintColor)
 {
-    //-----------------------------------------------------------------------------
-    // Main light shade source
-    //-----------------------------------------------------------------------------
-    half3 normalWS = IS_FRONT_VFACE(isFacing, inputData.normalWS, -inputData.normalWS);
-    half3 cameraDirWS = -GetViewForwardDir();
-    // half3 lightDirWSFlatten = normalize(half3(mainLight.direction.x, mainLight.direction.y * 0.65, mainLight.direction.z));
-    // half3 cameraDirWSFlatten = normalize(half3(cameraDirWS.x, cameraDirWS.y * 0.1, cameraDirWS.z));
-    half cDotL = dot(cameraDirWS, mainLight.direction);
-    half nDotV = dot(normalWS, inputData.viewDirectionWS);
-    half sunVisibility = -cDotL; // -1(sun behind me) ~ 1(facing the sun)
-    half lightingMask = saturate((1.2 - sunVisibility) * 1.02);
-    half cameraDistance = distance(GetCameraPositionWS(), characterData.characterPos);
-
-    half verticalGradientRemapped = GetVerticalGradientRemapped(inputData.positionWS.xyz, characterData);
+    float3 normalWS = IS_FRONT_VFACE(isFacing, inputData.normalWS, -inputData.normalWS);
+    float3 cameraDirWS = -GetViewForwardDir();
+    float verticalGradientRemapped = GetVerticalGradientRemapped(inputData.positionWS.xyz, characterData);
 
     //-----------------------------------------------------------------------------
     // Received shadow
     // receivedShadow : 0이면 그림자를 받는 상태, 1이면 그림자를 받지 않는 상태.
     //                  [0, 1] 값이 머리와 발 끝의 그림자 수신 여부에 따라 그라디언트로 출력됨.
     //-----------------------------------------------------------------------------
-    half receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
+    float receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
         characterData.characterCenterPos, characterData.visualHeight,
         characterData.topShadow, characterData.bottomShadow);
 
@@ -194,17 +170,13 @@ half3 ProcessCharacterColorFull(InputData inputData,
     mainLightInput.normalWS = normalWS;
     mainLightInput.lightDirection = mainLight.direction;
     mainLightInput.cameraDirection = cameraDirWS;
-    mainLightInput.cameraDistance = cameraDistance;
-    mainLightInput.cDotL = cDotL;
-    mainLightInput.nDotV = nDotV;
     mainLightInput.verticalGradientRemapped = verticalGradientRemapped;
-    mainLightInput.lightingMask = lightingMask;
-    mainLightInput.dyedBaseColor = dyedBaseColor;
     mainLightInput.lightingData = lightingData;
     mainLightInput.flatShadingOff = 0.0;
+    mainLightInput.shadingType = shadingType;
 
-    MainLightShadingResult mainLightResult;
-    GetMainLightShading(mainLightInput, mainLightResult);
+    MainLightShadingResult mainLightShadingResult;
+    GetMainLightShading(mainLightInput, mainLightShadingResult);
 
     //-----------------------------------------------------------------------------
     // Silhouette
@@ -215,10 +187,11 @@ half3 ProcessCharacterColorFull(InputData inputData,
         silhouetteInput.lightColor = lightingData.mainLightColor;
         silhouetteInput.normalWS = normalWS;
         silhouetteInput.cameraDirWS = cameraDirWS;
-        silhouetteInput.nDotV = nDotV;
+        silhouetteInput.viewDirectionWS = inputData.viewDirectionWS;
         silhouetteInput.receivedShadow = receivedShadow;
         silhouetteInput.dyedBaseColor = dyedBaseColor;
         silhouetteInput.silhouetteTintColor = silhouetteTintColor.rgb;
+        silhouetteInput.shadingType = shadingType;
 
         SilhouetteResult silhouetteResult = (SilhouetteResult)0;
         if (IS_FALSE(silhouetteOff))
@@ -230,7 +203,7 @@ half3 ProcessCharacterColorFull(InputData inputData,
     //-----------------------------------------------------------------------------
     // Additional light shading
     //-----------------------------------------------------------------------------
-    half3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
+    float3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)
         additionalLightShading += inputData.vertexLighting;
@@ -241,7 +214,7 @@ half3 ProcessCharacterColorFull(InputData inputData,
     //-----------------------------------------------------------------------------
     // Specular / Reflection
     //-----------------------------------------------------------------------------
-    half3 specularReflection = half3(0.0, 0.0, 0.0);
+    float3 specularReflection = float3(0.0, 0.0, 0.0);
     #ifdef _METAL_FEATURE
     {
         // NOTE @jihun.song
@@ -249,33 +222,43 @@ half3 ProcessCharacterColorFull(InputData inputData,
         // 1이면 마스킹이 된 상태(금속이 아닌 재질)로 색칠을 해뒀기 때문에
         // 셰이더 안에서 사용할 때에는 직관성을 위해 역수로 사용한다.
         smoothness = smoothness * (1.0 - smoothnessMask);
+        // smoothness = 1.0;
 
-        half3 reflectionVec = reflect(half3(-inputData.viewDirectionWS), half3(normalWS));
-        half reflectionMapLodBias = (1.0 - smoothness) * 7.0;
-        half3 originReflectionColor = DecodeHDREnvironment(SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectionVec, reflectionMapLodBias), unity_SpecCube0_HDR);
-        originReflectionColor = saturate(originReflectionColor); // NTOE @jihun.song : 너무 밝게 나오는 것을 방지하기 위한 안전장치.
-        half3 grayReflectionColor = dot(originReflectionColor, half3(0.2126729, 0.7151522, 0.0721750)).xxx;
+        // dyedBaseColor = float3(0.5,0.2,0.0);
+        float dyedBaseColorLuminance = dot(dyedBaseColor, float3(0.2126729, 0.7151522, 0.0721750));
+
+        float3 reflectionVec = reflect(float3(-inputData.viewDirectionWS), float3(normalWS));
+        float reflectionMapLodBias = (1.0 - smoothness) * 7.0;
+        float3 originReflectionColor = DecodeHDREnvironment(SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0, samplerunity_SpecCube0, reflectionVec, reflectionMapLodBias), unity_SpecCube0_HDR);
+        // originReflectionColor = saturate(originReflectionColor); // NTOE @jihun.song : 너무 밝게 나오는 것을 방지하기 위한 안전장치.
+        // 음수가 나오는 처리를 해야 전반사 느낌을 낼 수 있다.
+        // 재질 밝기가 높으면 더 감산하도록 한다.
+        originReflectionColor = originReflectionColor * 1.0 - dyedBaseColorLuminance * 0.3 - 0.1;
+        originReflectionColor = min(1.2,originReflectionColor);
+        float3 grayReflectionColor = dot(originReflectionColor, float3(0.2126729, 0.7151522, 0.0721750)).xxx;
 
         // 라이트의 블루 부분이 낮아지거나 비가 오면 반사 색상을 그레이스케일로 바꾼다.
-        half3 specularLightColor = saturate(lightingData.mainLightColor * receivedShadow + lightingData.giColor);
-        half mainLightBrightness = saturate(specularLightColor.b * (1.0 - _Global_Raining));
-        half3 reflectionColor = lerp(grayReflectionColor, originReflectionColor, mainLightBrightness);
-        half3 reflectionResult = reflectionColor * metalTintColor.rgb * specularLightColor * smoothness;
+        float3 specularLightColor = saturate(lightingData.mainLightColor * receivedShadow + lightingData.giColor);
+        float mainLightBrightness = saturate(specularLightColor.b * (1.0 - _Global_Raining));
+        float3 reflectionColor = lerp(grayReflectionColor, originReflectionColor, mainLightBrightness);
+        float3 reflectionResult = reflectionColor * metalTintColor.rgb * specularLightColor;
         // return reflectionResult;
 
-        half3 halfVec = SafeNormalize(half3(mainLight.direction) + half3(inputData.viewDirectionWS));
-        half nDotH = saturate(dot(half3(normalWS), halfVec));
-        half specularPower = pow(nDotH, smoothness * smoothness * 512.0);
-        half specular = max(0.0, specularPower * smoothness * mainLightBrightness * 12.0);
-        half3 specularResult = (specular.xxx * reflectionResult * metalTintColor.rgb * specularLightColor) * specularStrength.xxx;
+        float3 floatVec = SafeNormalize(float3(mainLight.direction) + float3(inputData.viewDirectionWS));
+        float nDotH = saturate(dot(float3(normalWS), floatVec));
+        float specularPower = pow(nDotH, smoothness * smoothness * 512.0);
+        float specular = max(0.0, specularPower * smoothness * mainLightBrightness * 12.0);
+        float3 specularResult = (specular.xxx * metalTintColor.rgb * specularLightColor) * specularStrength.xxx;
         // return specularResult;
 
-        specularReflection = (reflectionResult + specularResult) * dyedBaseColor;
+        // 광택이 높으면 전반사가 일어나게 된다.
+        // 뒷부분은 휘도에 따라 광택을 좀 죽여주는 처리이다. 블랙일 때 최소값 0.2를 보장
+        specularReflection = (reflectionResult + specularResult) * lerp(dyedBaseColor, 1.0, smoothness) * (dyedBaseColorLuminance*1.0 + 0.2);
         // return specularReflection;
 
-        #ifdef _SILHOUETTE_FEATURE
-            // 메탈 일 때 Silhouette 튠 해줌.
-            silhouetteResult.silhouetteColor += metalTintColor.rgb * (silhouetteResult.silhouette * smoothness * mainLightBrightness);
+    #ifdef _SILHOUETTE_FEATURE
+        // 메탈 일 때 Silhouette 튠 해줌.
+        silhouetteResult.silhouetteColor += metalTintColor.rgb * (silhouetteResult.silhouette * smoothness * mainLightBrightness);
         #endif
     }
     #endif
@@ -283,7 +266,7 @@ half3 ProcessCharacterColorFull(InputData inputData,
     //-----------------------------------------------------------------------------
     // 2-Side 일 때 살짝 어둡게 처리함.
     //-----------------------------------------------------------------------------
-    mainLightResult.finalShading *= IS_FRONT_VFACE(isFacing, 1.0, backFaceDarkenAmount);
+    mainLightShadingResult.finalShading *= IS_FRONT_VFACE(isFacing, 1.0, backFaceDarkenAmount);
 
     #ifdef _SILHOUETTE_FEATURE
         silhouetteResult.silhouetteColor *= IS_FRONT_VFACE(isFacing, 1.0, 0.0);  // 뒷면일 때 실루엣은 없는 것이 나아보임.
@@ -294,16 +277,15 @@ half3 ProcessCharacterColorFull(InputData inputData,
     //-----------------------------------------------------------------------------
     // Result
     //-----------------------------------------------------------------------------
-    half3 mainLightColor = lightingData.mainLightColor * mainLightResult.finalShading * mainLightResult.volumeShadingLight;
-    half3 ambientColor = lightingData.giColor * mainLightResult.volumeShadingDark;
+    float3 mainLightColor = mainLightShadingResult.finalShading * mainLightShadingResult.mainLightResult;
+    float3 ambientColor = mainLightShadingResult.ambientLightResult;
 
     // 아티스트가 앰비언트와 메인을 더해서 1이 초과되게 지정할 수도 있다. 이것이 물리적으로 맞으나
     // 색이 타는 현상이 생겨서 saturate함
-    half3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow);
-    // 조명을 강하게 받았을 때 최대 2.6까지 밝아질 수 있다
-    lightColor = min(lightColor + additionalLightShading, half3(2.6, 2.6, 2.6));
+    float3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow);
+    lightColor = min(lightColor + additionalLightShading, float3(1.6, 1.6, 1.6));
 
-    half3 resultColor;
+    float3 resultColor;
     resultColor = dyedBaseColor * lightColor;
     #ifdef _SILHOUETTE_FEATURE
         resultColor += silhouetteResult.silhouetteColor * (silhouetteResult.silhouette * receivedShadow);
@@ -317,39 +299,37 @@ half3 ProcessCharacterColorFull(InputData inputData,
 }
 
 // 눈 등에서 간단하게 셰이딩해야 할 때 사용한다.
-half3 ProcessCharacterColorSimple(InputData inputData,
+float3 ProcessCharacterColorSimple(InputData inputData,
     Light mainLight, LightingData lightingData, CharacterData characterData,
-    half3 dyedBaseColor)
+    float3 dyedBaseColor)
 {
     //-----------------------------------------------------------------------------
     // Base shade source
     //-----------------------------------------------------------------------------
-    half3 cameraDirWS = -GetViewForwardDir();
-    // half3 lightDirWSFlatten = normalize(half3(mainLight.direction.x, mainLight.direction.y * 0.65, mainLight.direction.z));
-    // half3 cameraDirWSFlatten = normalize(half3(cameraDirWS.x, cameraDirWS.y * 0.1, cameraDirWS.z));
-    half cDotL = dot(cameraDirWS, mainLight.direction);
-    half sunVisibility = -cDotL; // -1(sun behind me) ~ 1(facing the sun)
-    half lightingMask = saturate((1.2 - sunVisibility) * 1.02);//min(1.0, 1.0 - (sunVisibility * 0.7));
+    float3 cameraDirWS = -GetViewForwardDir();
+    float cDotL = dot(cameraDirWS, mainLight.direction);
+    float sunVisibility = -cDotL; // -1(sun behind me) ~ 1(facing the sun)
+    float lightingMask = saturate((1.2 - sunVisibility) * 1.02);//min(1.0, 1.0 - (sunVisibility * 0.7));
 
     //-----------------------------------------------------------------------------
     // Received shadow
     // receivedShadow : 0이면 그림자를 받는 상태, 1이면 그림자를 받지 않는 상태.
     //                  [0, 1] 값이 머리와 발 끝의 그림자 수신 여부에 따라 그라디언트로 출력됨.
     //-----------------------------------------------------------------------------
-    half receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
+    float receivedShadow = GetReceivedShadow(mainLight.direction, inputData.positionWS.xyz,
         characterData.characterCenterPos, characterData.visualHeight,
         characterData.topShadow, characterData.bottomShadow);
 
     //-----------------------------------------------------------------------------
     // Main light shading
     //-----------------------------------------------------------------------------
-    half finalShading = min(lightingMask, 1.0);
+    float finalShading = min(lightingMask, 1.0);
     finalShading = saturate(finalShading);
 
     //-----------------------------------------------------------------------------
     // Additional light shading
     //-----------------------------------------------------------------------------
-    half3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
+    float3 additionalLightShading = 0; // 최종 결과물에 영향을 주지 않는 값을 기본 값으로 정해야 한다.
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)
         additionalLightShading += inputData.vertexLighting;
@@ -360,13 +340,13 @@ half3 ProcessCharacterColorSimple(InputData inputData,
     //-----------------------------------------------------------------------------
     // Result
     //-----------------------------------------------------------------------------
-    half3 mainLightColor = lightingData.mainLightColor * finalShading;
-    half3 ambientColor = lightingData.giColor;
+    float3 mainLightColor = lightingData.mainLightColor * finalShading;
+    float3 ambientColor = lightingData.giColor;
 
-    half3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow + 0.14 /*눈을 살짝 밝게*/);
+    float3 lightColor = saturate(ambientColor + mainLightColor * receivedShadow + 0.14 /*눈을 살짝 밝게*/);
     lightColor = saturate(lightColor + additionalLightShading);
 
-    half3 resultColor;
+    float3 resultColor;
     resultColor = dyedBaseColor * lightColor;
 
     return resultColor;

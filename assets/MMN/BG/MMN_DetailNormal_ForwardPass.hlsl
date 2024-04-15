@@ -9,12 +9,12 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
-    half4 tangentOS : TANGENT;
+    float3 normalOS : NORMAL;
+    float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
     // float2 dynamicLightmapUV : TEXCOORD2; //리얼타임 라이 트맵 안씁니다!
-    half4 color : COLOR;
+    float4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -26,17 +26,17 @@ struct Varyings
 
 
     // #ifdef _NORMALMAP
-    // half4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
-    // half4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
-    // half4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
+    // float4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
+    // float4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
+    // float4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
     // #else
-        half3 normalWS : TEXCOORD2;
+        float3 normalWS : TEXCOORD2;
     // #endif
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
+        float4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
     #else
-        half fogFactor : TEXCOORD5;
+        float fogFactor : TEXCOORD5;
     #endif
 
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
@@ -63,11 +63,11 @@ void InitializeInputData(Varyings input, float3 normalTS, out InputData inputDat
     inputData.positionWS = input.positionWS;
 
     // #ifdef _NORMALMAP
-    // half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
-    // inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
+    // float3 viewDirWS = float3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
+    // inputData.tangentToWorld = float3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
     // inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
     // #else
-        half3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
+        float3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
     inputData.normalWS = input.normalWS;
     // #endif
 
@@ -89,7 +89,7 @@ void InitializeInputData(Varyings input, float3 normalTS, out InputData inputDat
         inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-        inputData.vertexLighting = half3(0, 0, 0);
+        inputData.vertexLighting = float3(0, 0, 0);
     #endif
 
     // #if defined(DYNAMICLIGHTMAP_ON) //리얼타임 라이트맵 사용금지합니다.
@@ -130,7 +130,7 @@ Varyings LitPassVertexSimple(Attributes input)
     //VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
     //아래 개조된 버전. 함수 오버라이드로 되어 있음. 카메라 바라보는 각도에 따라 버텍스 휘어짐
     VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
-    
+
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
     // output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
@@ -139,10 +139,10 @@ Varyings LitPassVertexSimple(Attributes input)
     output.positionCS = vertexInput.positionCS;
 
     // #ifdef _NORMALMAP
-    // half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
-    // output.normalWS = half4(normalInput.normalWS, viewDirWS.x);
-    // output.tangentWS = half4(normalInput.tangentWS, viewDirWS.y);
-    // output.bitangentWS = half4(normalInput.bitangentWS, viewDirWS.z);
+    // float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+    // output.normalWS = float4(normalInput.normalWS, viewDirWS.x);
+    // output.tangentWS = float4(normalInput.tangentWS, viewDirWS.y);
+    // output.bitangentWS = float4(normalInput.bitangentWS, viewDirWS.z);
     // #else
         output.normalWS = NormalizeNormalPerVertex(normalInput.normalWS);
     // #endif
@@ -160,7 +160,7 @@ Varyings LitPassVertexSimple(Attributes input)
     float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
         float3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
-        output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+        output.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
     #else
         output.fogFactor = fogFactor;
     #endif
@@ -181,8 +181,8 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 
     float2 uv = input.uv;
     float4 diffuseAlpha = SampleAlbedoAlpha(TRANSFORM_TEX(uv, _BaseMap), TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-    half3 diffuse = diffuseAlpha.rgb;
-    half alpha = diffuseAlpha.a * _BaseColor.a;
+    float3 diffuse = diffuseAlpha.rgb;
+    float alpha = diffuseAlpha.a * _BaseColor.a;
 
     //임시로 두 번째 텍스쳐가 버텍스 알파로 동작하게 만듭니다.
     // float4 diffuse2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, TRANSFORM_TEX(uv, _BaseMap2));
@@ -198,14 +198,15 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     #endif
 
     //거리에 따라 하프톤으로 사라지게 하는 기능
-    #if defined(_NEARHALFTONECLIP_ON)
-        half halftoneAlpha = 1;
-        NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
-        clip(halftoneAlpha);
-    #endif
+    // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+    // #if defined(_NEARHALFTONECLIP_ON)
+    //     float halftoneAlpha = 1;
+    //     NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
+    //     clip(halftoneAlpha);
+    // #endif
 
     //레이케스트 되면 사라지는 기능
-    half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+    float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
     clip(RaycasthalftoneAlpha - 0.1);
 
 
@@ -224,7 +225,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     InputData inputData;
     InitializeInputData(input, /* normalTS */float3(0, 0, 1), inputData);
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
-    
+
     //디테일 맵 섞기
     float3 posWS4Detail = input.positionWS * 0.1;
     float4 detailXY = SAMPLE_TEXTURE2D(_DetailMap, sampler_DetailMap, TRANSFORM_TEX(posWS4Detail.xy, _DetailMap));
@@ -244,7 +245,8 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 
 
     //세컨드 텍스쳐를 노말 Y 방향으로 더할 때 활성화. 따로 인클루드로 뺄까도 생각해 봤지만 여기에서밖에 안쓰이므로 일단 존재
-    #if _SECONDMAP_ON
+    if (_SECONDMAP == 1)
+    {
         // 세컨드 텍스쳐 사용
         float secondTextureMask = 0;
         float vertexAlphaMask = 0;
@@ -269,8 +271,8 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 
         //스페큘러가 2nd 텍스쳐에서는 고정되게
         alpha = lerp(alpha, secondMap.a, secondMapMask);
-    #endif
-    
+    }
+
     //전역적으로 틴트칼라 적용하기
     float3 tintProp = _BaseColor.rgb;
     float tintStrengthProp = _AlbedoTintStrength;
@@ -279,7 +281,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     //리플렉션 프로브. 스페큘러 마스킹으로 마스킹된다
     float3 reflectionProbe = LightingReflectionProbe(inputData.viewDirectionWS, inputData.normalWS, _Glossiness);
     emission += reflectionProbe * alpha * _SpecColor.rgb * _Global_GILightMulti.rgb;
-    
+
     //LOD 디더링 기능
     float fadeValue;
     float lodFade;
@@ -302,34 +304,40 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
     {
         fadeValue = 1;
     }
-    
 
+
+    if(_IsRaindrop)
+    {
     //눈내리는 텍스쳐 전환
     diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
+    }
 
     //라이팅 연산
-    half4 color = 0;
+    float4 color = 0;
 
     //Half Subtractive
     #if HALF_SUBTRACTIVE_LIGHTMAP_ON
-        color = UniversalFragmentLightCustomBaked(inputData, diffuse, specular, smoothness, emission, alpha, /* normalTS */ half3(0, 0, 1), /*shadowDimming*/ 0, _RampY, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
+        color = UniversalFragmentLightCustomBaked(inputData, diffuse, specular, smoothness, emission, alpha, /* normalTS */ float3(0, 0, 1), /*shadowDimming*/ 0, _RampY, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
     #else
         color = UniversalFragmentLightCustom(inputData, diffuse, specular, smoothness, emission, alpha, /* normalTS */float3(0, 0, 1), /*shadowDimming*/0, _RampY, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
     #endif
 
 
+    if(_IsRaindrop)
+    {
     //레인텍스쳐와 레인 드롭 애니메이션
-    half3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
+    float3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
     color_Rain += MMN_GlobalTex_Raindrop(input.positionWS.rgb, input.normalWS.rgb) * step(0.85, inputData.bakedGI).r * color_Rain;
     color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
-    
+    }
+
 
     //리플렉션 프로브
     float3 reflectionProbe2 = LightingReflectionProbe(inputData.viewDirectionWS, inputData.normalWS, _Glossiness);
     color.rgb += reflectionProbe2 * alpha * _SpecColor.rgb * _Global_GILightMulti.rgb;
 
     //컨텍트 셰도우 연산
-    color *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
+    color.rgb *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
 
     //하이트 포그  연산
     color = MMN_GlobalTex_HeightFog(
@@ -344,7 +352,7 @@ float4 LitPassFragmentSimple(Varyings input) : SV_Target
 
     //원본 포그 연산
     //color.rgb =  MixFog(color.rgb, inputData.fogCoord);
-    
+
     return color;
 };
 

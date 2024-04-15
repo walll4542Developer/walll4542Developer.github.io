@@ -36,6 +36,7 @@ Shader "Hidden/MMN/CH/FX_Outline"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -90,7 +91,7 @@ Shader "Hidden/MMN/CH/FX_Outline"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Unity defined keywords
@@ -104,7 +105,6 @@ Shader "Hidden/MMN/CH/FX_Outline"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "../Includes/BendingVertex.hlsl"
             #include "MMN_Character_Global_Input.hlsl"
             #include "Includes/CharacterMacro.hlsl"
 
@@ -121,6 +121,7 @@ Shader "Hidden/MMN/CH/FX_Outline"
 
             #include "Includes/CharacterData.hlsl"
             #include "Includes/CharacterApplyDissolve.hlsl"
+            #include "Includes/CharacterMotionBlurPass.hlsl"
 
         #ifdef _DISSOLVE_FEATURE
             TEXTURE2D(_DissolveMap);
@@ -147,6 +148,10 @@ Shader "Hidden/MMN/CH/FX_Outline"
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
+
+            #ifdef _VERTEX_OBJECT_MOTION_BLUR
+                uint id : SV_VertexID;
+            #endif
             };
 
             struct Varyings
@@ -154,7 +159,7 @@ Shader "Hidden/MMN/CH/FX_Outline"
                 float4 positionCS : SV_POSITION;
             #ifdef _DISSOLVE_FEATURE
                 float3 positionWS : TEXCOORD0;
-                half3 normalWS : TEXCOORD1;
+                float3 normalWS : TEXCOORD1;
                 float3 positionOS : TEXCOORD2;
             #endif
             };
@@ -163,7 +168,13 @@ Shader "Hidden/MMN/CH/FX_Outline"
             {
                 Varyings output = (Varyings)0;
 
+            #ifdef _VERTEX_OBJECT_MOTION_BLUR
+                // 오브젝트 모션블러(버텍스)를 적용한다
+                float3 positionOS = CaculateMotionBlurVertexPositionOS(input.positionOS.xyz, input.normalOS, input.id);
+            #else
                 float3 positionOS = input.positionOS.xyz;
+            #endif
+
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(positionOS);
                 output.positionCS = vertexInput.positionCS;
 

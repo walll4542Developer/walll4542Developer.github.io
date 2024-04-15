@@ -6,40 +6,41 @@
 
 // CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
-    half4 _BaseColor;
-    half4 _SpecColor;
-    half4 _EmissionColor;
-    half _Cutoff;
-    half4 _TopColor;
-    half _Glossiness;
-    half _Shake;
-    half _ShakeSpeed;
-    half _GrassPushPower;
-    half _WindMultiply;
-    half _WindSpeedMultiply;
-    half _GlobalTextureBlending;
-    half _RaycastHarftoneClip;
-    half _ShadowDimming;
+    float4 _BaseColor;
+    float4 _SpecColor;
+    float4 _EmissionColor;
+    float _Cutoff;
+    float4 _TopColor;
+    float _Glossiness;
+    float _Shake;
+    float _ShakeSpeed;
+    float _GrassPushPower;
+    float _WindMultiply;
+    float _WindSpeedMultiply;
+    float _GlobalTextureBlending;
+    float _RaycastHarftoneClip;
+    float _ShadowDimming;
     //지형 컬러를 따라서 풀 칼라가 변하는 기능인데 사용성이 나빠서 일단 봉인
-    // half _GlobalTextureBottomBlending;
-    half _TextureBlendingScroll;
-    half _VertexAniOn;
+    // float _GlobalTextureBottomBlending;
+    float _TextureBlendingScroll;
+    float _VertexAniOn;
     float _ALPHATEST;
-    half _GrassVisualRange;
-    half _GrassVisualActionToggle;
+    float _GrassVisualRange;
+    float _GrassVisualActionToggle;
 // CBUFFER_END
+    static const float defaultVisualRange = 20.0;
 
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
     UNITY_DEFINE_INSTANCED_PROP(float4, _InstancingColor)
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 //GlobalVariables
-// half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-// half _Global_CloudScale;
-// half _Global_CloudEdgeHardness;
+// float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+// float _Global_CloudScale;
+// float _Global_CloudEdgeHardness;
 float4 _Global_Grass_TextureSP;
-half _Global_Grass_VisualRangeFactor;
+float _Global_Grass_VisualRangeFactor;
 //지형 컬러를 따라서 풀 칼라가 변하는 기능인데 사용성이 나빠서 일단 봉인
 // float4 _Global_Grass_Bottom_TextureSP;
 

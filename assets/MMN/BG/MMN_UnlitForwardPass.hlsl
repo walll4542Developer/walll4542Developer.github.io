@@ -14,8 +14,8 @@ struct Attributes
     float2 uv : TEXCOORD0;
 
     #if defined(DEBUG_DISPLAY)
-        half3 normalOS : NORMAL;
-        half4 tangentOS : TANGENT;
+        float3 normalOS : NORMAL;
+        float4 tangentOS : TANGENT;
     #endif
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -47,15 +47,15 @@ void InitializeInputData(Varyings input, out InputData inputData)
         inputData.viewDirectionWS = input.viewDirWS;
     #else
         inputData.positionWS = input.positionWS;
-        inputData.normalWS = half3(0, 0, 1);
-        inputData.viewDirectionWS = half3(0, 0, 1);
+        inputData.normalWS = float3(0, 0, 1);
+        inputData.viewDirectionWS = float3(0, 0, 1);
     #endif
     inputData.shadowCoord = 0;
     inputData.fogCoord = 0;
-    inputData.vertexLighting = half3(0, 0, 0);
-    inputData.bakedGI = half3(0, 0, 0);
+    inputData.vertexLighting = float3(0, 0, 0);
+    inputData.bakedGI = float3(0, 0, 0);
     inputData.normalizedScreenSpaceUV = 0;
-    inputData.shadowMask = half4(1, 1, 1, 1);
+    inputData.shadowMask = float4(1, 1, 1, 1);
 }
 
 Varyings UnlitPassVertex(Attributes input)
@@ -82,7 +82,7 @@ Varyings UnlitPassVertex(Attributes input)
         // this is required to avoid skewing the direction during interpolation
         // also required for per-vertex lighting and SH evaluation
         VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-        half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+        float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
         // already normalized from normal transform to WS.
         output.normalWS = normalInput.normalWS;
@@ -92,15 +92,15 @@ Varyings UnlitPassVertex(Attributes input)
     return output;
 }
 
-half4 UnlitPassFragment(Varyings input) : SV_Target
+float4 UnlitPassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-    half2 uv = input.uv;
-    half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    half3 color = texColor.rgb * _BaseColor.rgb;
-    half alpha = texColor.a * _BaseColor.a;
+    float2 uv = input.uv;
+    float4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float3 color = texColor.rgb * _BaseColor.rgb;
+    float alpha = texColor.a * _BaseColor.a;
 
     AlphaDiscard(alpha, _Cutoff);
 
@@ -116,14 +116,14 @@ half4 UnlitPassFragment(Varyings input) : SV_Target
         #if (defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2))
             float viewZ = -input.fogCoord;
             float nearToFarZ = max(viewZ - _ProjectionParams.y, 0);
-            half fogFactor = ComputeFogFactorZ0ToFar(nearToFarZ);
+            float fogFactor = ComputeFogFactorZ0ToFar(nearToFarZ);
         #else
-            half fogFactor = 0;
+            float fogFactor = 0;
         #endif
     #else
-        half fogFactor = input.fogCoord;
+        float fogFactor = input.fogCoord;
     #endif
-    half4 finalColor = UniversalFragmentUnlit(inputData, color, alpha);
+    float4 finalColor = UniversalFragmentUnlit(inputData, color, alpha);
 
     #if defined(_SCREEN_SPACE_OCCLUSION) && !defined(_SURFACE_TYPE_TRANSPARENT)
         float2 normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);

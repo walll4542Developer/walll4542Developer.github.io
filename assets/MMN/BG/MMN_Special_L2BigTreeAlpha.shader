@@ -77,21 +77,21 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
-                half4 _BaseColor;
-                half _VertexColorWeight;
-                half _AlbedoTintStrength;
-                half _Cutoff;
+                float4 _BaseColor;
+                float _VertexColorWeight;
+                float _AlbedoTintStrength;
+                float _Cutoff;
             CBUFFER_END
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
-                half4 tangentOS : TANGENT;
+                float3 normalOS : NORMAL;
+                float4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
                 float2 staticLightmapUV : TEXCOORD1;
                 // float2 dynamicLightmapUV    : TEXCOORD2; //리얼타임 라이트맵 안씁니다!
-                half4 color : COLOR;
+                float4 color : COLOR;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
             };
@@ -101,8 +101,8 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                 float2 uv : TEXCOORD0;
 
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
-                half fogFactor : TEXCOORD3;
+                float3 normalWS : TEXCOORD2;
+                float fogFactor : TEXCOORD3;
 
                 // #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
                 //     float4 shadowCoord : TEXCOORD4;
@@ -121,10 +121,10 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                 inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
 
-                inputData.normalWS = half3(0, 1, 0); //이 나무의 조명은 강제로 위로 보도록
+                inputData.normalWS = float3(0, 1, 0); //이 나무의 조명은 강제로 위로 보도록
                 inputData.shadowCoord = float4(0, 0, 0, 0);
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-                inputData.vertexLighting = half3(0, 0, 0);
+                inputData.vertexLighting = float3(0, 0, 0);
                 inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 
                 inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
@@ -160,8 +160,8 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
 
                 float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
                 #ifdef _ADDITIONAL_LIGHTS_VERTEX
-                    half3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
-                    output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+                    float3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+                    output.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
                 #else
                     output.fogFactor = fogFactor;
                 #endif
@@ -170,16 +170,16 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 float2 uv = input.uv;
-                half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+                float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
 
                 //틴트칼라와 버텍스 칼라
                 float3 tintProp = _BaseColor.rgb;
-                half tintStrengthProp = _AlbedoTintStrength;
+                float tintStrengthProp = _AlbedoTintStrength;
                 float3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
-                half alpha = diffuseAlpha.a;
+                float alpha = diffuseAlpha.a;
 
                 InputData inputData;
                 InitializeInputData(input, inputData);
@@ -209,11 +209,11 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
                 //눈내리는 텍스쳐 전환
                 diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
 
-                // half4 color = UniversalFragmentBlinnPhong(inputData, surfaceData);
-                half4 color = UniversalFragmentLightCustom(inputData, diffuse, /* specular */0, /* smoothness */0, /* emission */0, alpha, /* normalTS */ half3(0, 0, 1), /*shadowDimming*/ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
+                // float4 color = UniversalFragmentBlinnPhong(inputData, surfaceData);
+                float4 color = UniversalFragmentLightCustom(inputData, diffuse, /* specular */0, /* smoothness */0, /* emission */0, alpha, /* normalTS */ float3(0, 0, 1), /*shadowDimming*/ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
 
                 //비내리는 텍스쳐 전환
-                half3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
+                float3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
                 color_Rain = color_Rain.rgb + MMN_GlobalTex_Raindrop(input.positionWS, input.normalWS) * step(0.85, inputData.bakedGI).r * color_Rain.rgb;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
@@ -231,7 +231,7 @@ Shader "MMN/BG/Special/L2BigTreeHLODAlphaBlend"
 
                 //기울어졌을때 알파가 빠지도록 만들자
                 input.camForward_n = NormalizeNormalPerPixel(input.camForward_n);
-                half tiltAlpha = abs(dot(input.normalWS, input.camForward_n));
+                float tiltAlpha = abs(dot(input.normalWS, input.camForward_n));
                 // tiltAlpha = saturate(tiltAlpha * tiltAlpha);
 
                 color.a = saturate(alpha * _BaseColor.a * tiltAlpha);

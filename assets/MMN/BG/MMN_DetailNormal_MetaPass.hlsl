@@ -30,7 +30,7 @@ Varyings UniversalVertexMeta(Attributes input)
     return output;
 }
 
-half4 UniversalFragmentMetaSimple(Varyings input): SV_Target
+float4 UniversalFragmentMetaSimple(Varyings input): SV_Target
 {
     float2 uv = input.uv;
     MetaInput metaInput;
@@ -49,7 +49,7 @@ Varyings LightweightVertexMeta(Attributes input)
     return UniversalVertexMeta(input);
 }
 
-half4 LightweightFragmentMetaSimple(Varyings input): SV_Target
+float4 LightweightFragmentMetaSimple(Varyings input): SV_Target
 {
     return UniversalFragmentMetaSimple(input);
 }

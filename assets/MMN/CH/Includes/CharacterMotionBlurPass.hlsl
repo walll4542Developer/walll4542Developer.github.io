@@ -82,7 +82,8 @@ float3 CaculateMotionBlurVertexPositionOS(float3 positionOS, float3 normalOS, ui
     float motionBlurMinLengthSmoothEnd = _MotionBlurLengthFactors.y * frameRateRatio;
 
     // 최소 모션 길이(최소 임계 값) 적용
-    float currentMotionLength = length(motionVector);
+    // https://deskcat.io/d/R39985/MM-기술-QA-캐릭터-상호작용-타겟을-사선으로-쳐다보는-위치에서-화면을-확대-및-축소하면-머리-모델링이-늘어남
+    float currentMotionLength = length(motionVector.xy); 
     float minMotionLengthSmooth = CheapSmoothstep(motionBlurMinLengthSmoothStart, motionBlurMinLengthSmoothEnd, currentMotionLength);
 
     minMotionLengthSmooth = lerp(0.001, minMotionLengthSmooth, step(motionBlurMinLengthSmoothStart, currentMotionLength));

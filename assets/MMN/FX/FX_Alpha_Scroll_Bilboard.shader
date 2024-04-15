@@ -74,7 +74,7 @@ Shader "MM/FX/Alpha_Scroll_Billboard"
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;      // World space position
                 float3 normalWS : TEXCOORD2;      // World space position
-                half fogCoord : TEXCOORD3;      // x: fogFactor
+                float fogCoord : TEXCOORD3;      // x: fogFactor
 
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 

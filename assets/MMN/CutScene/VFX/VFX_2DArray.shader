@@ -23,7 +23,7 @@ Shader "MMN/VFX/FX_2DArray"
 
 	SubShader
 	{
-		LOD 0
+		LOD 100
 
 		Tags 
 		{ 
@@ -69,7 +69,7 @@ Shader "MMN/VFX/FX_2DArray"
 			struct Attributes
 			{
 				float4 positionOS : POSITION;
-				float2 texcoord : TEXCOORD0;
+				float4 texcoord : TEXCOORD0;
 			};
 
 			struct Varyings
@@ -83,33 +83,33 @@ Shader "MMN/VFX/FX_2DArray"
 				Varyings output = (Varyings)0;
 				
 				VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
-				output.uv0 = TRANSFORM_TEX(input.texcoord, _MainTex2DArray);
+				output.uv0 = TRANSFORM_TEX(input.texcoord.xy, _MainTex2DArray);
 				output.positionCS = vertexInput.positionCS;
 
 				return output;
 			}
 
-			half4 frag(Varyings input) : SV_Target
+			float4 frag(Varyings input) : SV_Target
 			{
 				// 셰이더 프로퍼티 범위 값 수정
 				_MaskFeather *= 0.5; 	// 0 ~ 0.5 범위로 만듬
 				_MaskSize *= 2; 		// -1 ~ 1 범위로 만듬
 				_MaskSize -= 1; 
 
-				half2 uv = input.uv0.xy;
-				half4 mainTex2DArray = SAMPLE_TEXTURE2D_ARRAY_LOD(_MainTex2DArray, sampler_MainTex2DArray, uv.xy, _ArrayIndex, 0);
+				float2 uv = input.uv0.xy;
+				float4 mainTex2DArray = SAMPLE_TEXTURE2D_ARRAY_LOD(_MainTex2DArray, sampler_MainTex2DArray, uv.xy, _ArrayIndex, 0);
 			
-				half2 maskUV = uv;
-				half mask = 0;
+				float2 maskUV = uv;
+				float mask = 0;
 
 				// Circle Mask
-				half2 circleMaskUV = uv - 0.5;
-				half circleMask = 1 - saturate(length(circleMaskUV) + _MaskSize);
+				float2 circleMaskUV = uv - 0.5;
+				float circleMask = 1 - saturate(length(circleMaskUV) + _MaskSize);
 				circleMask = saturate(smoothstep(_MaskFeather, 1 - _MaskFeather, circleMask));
 
 				// Quad Mask
-				half2 quadMaskUV = 1 - saturate(abs(uv - 0.5) * 2);
-				half quadMask = saturate(quadMaskUV.x * quadMaskUV.y + _MaskSize);
+				float2 quadMaskUV = 1 - saturate(abs(uv - 0.5) * 2);
+				float quadMask = saturate(quadMaskUV.x * quadMaskUV.y + _MaskSize);
 				quadMask = saturate(smoothstep(_MaskFeather, 1 - _MaskFeather, quadMask));
 
 				// Mask Shape
@@ -117,10 +117,10 @@ Shader "MMN/VFX/FX_2DArray"
 				mask = lerp(circleMask, quadMask, _MaskShape);
 				
 				// Final Color
-				half3 color = lerp(_MaskColor.rgb, mainTex2DArray.rgb, mask);
+				float3 color = lerp(_MaskColor.rgb, mainTex2DArray.rgb, mask);
 				color = lerp(color, mainTex2DArray.rgb, _UseAlpha);
-				half alpha = lerp(1, mask, _UseAlpha);
-				half4 finalColor = half4(color, alpha);
+				float alpha = lerp(1, mask, _UseAlpha);
+				float4 finalColor = float4(color, alpha);
 
 				return finalColor;
 			}

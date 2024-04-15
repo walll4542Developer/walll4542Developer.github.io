@@ -2,7 +2,7 @@ Shader "MMN/CH/Standard_Merged"
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -43,16 +43,6 @@ Shader "MMN/CH/Standard_Merged"
         _DyeColor22 ("염색 슬롯 22", Color) = (1.0, 1.0, 1.0, 1.0)
         _DyeColor23 ("염색 슬롯 23", Color) = (1.0, 1.0, 1.0, 1.0)
         _DyeColor24 ("염색 슬롯 24", Color) = (1.0, 1.0, 1.0, 1.0)
-
-        [Header(UV Offset)]
-        _UVOffset1 ("UV 오프셋 1", Float) = 0.0
-        _UVOffset2 ("UV 오프셋 2", Float) = 1.0
-        _UVOffset3 ("UV 오프셋 3", Float) = 1.0
-        _UVOffset4 ("UV 오프셋 4", Float) = 1.0
-        _UVOffset5 ("UV 오프셋 5", Float) = 1.0
-        _UVOffset6 ("UV 오프셋 6", Float) = 1.0
-        _UVOffset7 ("UV 오프셋 7", Float) = 1.0
-        _UVOffset8 ("UV 오프셋 8", Float) = 1.0
 
         [Header(Silhouette)]
         [Space(10)]
@@ -122,6 +112,7 @@ Shader "MMN/CH/Standard_Merged"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -152,6 +143,9 @@ Shader "MMN/CH/Standard_Merged"
         #define _FRESNEL_FEATURE
         #define _ALPHA_OVERRIDE_FEATURE
         #define _GRADIENT_ALPHA_FEATURE
+
+        // 셰딩 타입의 큰 카테고리
+        #define _SHADINGTYPE_STANDARD
 
         #include "MMN_Character_Standard_Input_Merged.hlsl"
     ENDHLSL
@@ -192,11 +186,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -252,11 +245,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -328,6 +320,7 @@ Shader "MMN/CH/Standard_Merged"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -355,6 +348,7 @@ Shader "MMN/CH/Standard_Merged"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -389,11 +383,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -458,11 +451,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -517,11 +509,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -592,6 +583,7 @@ Shader "MMN/CH/Standard_Merged"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -619,6 +611,7 @@ Shader "MMN/CH/Standard_Merged"
             // -------------------------------------
             // Material Keywords
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             //--------------------------------------
             // Vertex and Fragment
@@ -653,11 +646,10 @@ Shader "MMN/CH/Standard_Merged"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
             #pragma multi_compile_fragment _ _DISSOLVE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords

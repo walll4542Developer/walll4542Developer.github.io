@@ -4,7 +4,7 @@ Shader "MMN/CutScene/Standard_LerpTex"
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
 
         [Header(Texture)]
         [Space(10)]
@@ -33,6 +33,7 @@ Shader "MMN/CutScene/Standard_LerpTex"
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
         [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
+        [HideInInspector] _CharacterHeadDirection ("xyz: direction, w: height", Vector) = (0.0, 0.0, 1.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -43,9 +44,6 @@ Shader "MMN/CutScene/Standard_LerpTex"
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
-
-        [HideInInspector] _InflateWidth ("_InflateWidth", Float) = 0.0
-        [HideInInspector] _InflateColor ("_InflateColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _InnerGlow ("_InnerGlow", Float) = 0.0
         [HideInInspector] _InnerGlowPower ("_InnerGlowPower", Float) = 0.0
@@ -80,6 +78,9 @@ Shader "MMN/CutScene/Standard_LerpTex"
             #undef _DYE_FEATURE
             #define _SILHOUETTE_FEATURE
 
+            // 셰딩 타입의 큰 카테고리
+            #define _SHADINGTYPE_STANDARD
+
             #include "MMN_CS_Character_LerpTex_Input.hlsl"
         ENDHLSL
 
@@ -106,9 +107,8 @@ Shader "MMN/CutScene/Standard_LerpTex"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -178,7 +178,7 @@ Shader "MMN/CutScene/Standard_LerpTex"
                 float4 resultColor;
                 resultColor.rgb = ProcessCharacterColor(inputData,
                     mainLight, lightingData, characterData,
-                    baseColor, _SilhouetteOff, _SilhouetteTintColor);
+                    _ShadingType, baseColor, _SilhouetteOff, _SilhouetteTintColor);
 
                 #if defined(_OUTLINE_FEATURE)
                     float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
@@ -248,6 +248,10 @@ Shader "MMN/CutScene/Standard_LerpTex"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex

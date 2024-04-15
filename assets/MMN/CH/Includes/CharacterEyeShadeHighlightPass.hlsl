@@ -12,18 +12,18 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 shadeUV  = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 shadeTex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, shadeUV);
-    half shadeMask = max(shadeTex.r, max(shadeTex.g, shadeTex.b));
+    float4 shadeTex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, shadeUV);
+    float shadeMask = max(shadeTex.r, max(shadeTex.g, shadeTex.b));
     shadeMask *= _ShadeColor.a;
 
-    half3 baseColor = _ShadeColor.rgb * shadeMask;
-    half alpha = shadeMask;
+    float3 baseColor = _ShadeColor.rgb * shadeMask;
+    float alpha = shadeMask;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -45,7 +45,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         baseColor);
@@ -86,7 +86,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return half4(baseColor, resultColor.a);
+        return float4(baseColor, resultColor.a);
     }
     #endif
 

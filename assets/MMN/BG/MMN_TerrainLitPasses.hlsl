@@ -57,10 +57,10 @@ struct Varyings
     #else
         float3 normal : TEXCOORD3;
         float3 viewDir : TEXCOORD4;
-        half3 vertexSH : TEXCOORD5; // SH
+        float3 vertexSH : TEXCOORD5; // SH
     #endif
 
-    half4 fogFactorAndVertexLight : TEXCOORD6; // x: fogFactor, yzw: vertex light
+    float4 fogFactorAndVertexLight : TEXCOORD6; // x: fogFactor, yzw: vertex light
     float3 positionWS : TEXCOORD7;
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
         float4 shadowCoord : TEXCOORD8;
@@ -69,26 +69,26 @@ struct Varyings
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
-void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
+void InitializeInputData(Varyings IN, float3 normalTS, out InputData input)
 {
     input = (InputData)0;
 
     input.positionWS = IN.positionWS;
-    half3 SH = half3(0, 0, 0);
+    float3 SH = float3(0, 0, 0);
 
     #if defined(_NORMALMAP) && !defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-        half3 viewDirWS = half3(IN.normal.w, IN.tangent.w, IN.bitangent.w);
-        input.normalWS = TransformTangentToWorld(normalTS, half3x3(-IN.tangent.xyz, IN.bitangent.xyz, IN.normal.xyz));
+        float3 viewDirWS = float3(IN.normal.w, IN.tangent.w, IN.bitangent.w);
+        input.normalWS = TransformTangentToWorld(normalTS, float3x3(-IN.tangent.xyz, IN.bitangent.xyz, IN.normal.xyz));
         SH = SampleSH(input.normalWS.xyz);
     #elif defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-        half3 viewDirWS = IN.viewDir;
+        float3 viewDirWS = IN.viewDir;
         float2 sampleCoords = (IN.uvMainAndLM.xy / _TerrainHeightmapRecipSize.zw + 0.5f) * _TerrainHeightmapRecipSize.xy;
-        half3 normalWS = TransformObjectToWorldNormal(normalize(SAMPLE_TEXTURE2D(_TerrainNormalmapTexture, sampler_TerrainNormalmapTexture, sampleCoords).rgb * 2 - 1));
-        half3 tangentWS = cross(GetObjectToWorldMatrix()._13_23_33, normalWS);
-        input.normalWS = TransformTangentToWorld(normalTS, half3x3(-tangentWS, cross(normalWS, tangentWS), normalWS));
+        float3 normalWS = TransformObjectToWorldNormal(normalize(SAMPLE_TEXTURE2D(_TerrainNormalmapTexture, sampler_TerrainNormalmapTexture, sampleCoords).rgb * 2 - 1));
+        float3 tangentWS = cross(GetObjectToWorldMatrix()._13_23_33, normalWS);
+        input.normalWS = TransformTangentToWorld(normalTS, float3x3(-tangentWS, cross(normalWS, tangentWS), normalWS));
         SH = SampleSH(input.normalWS.xyz);
     #else
-        half3 viewDirWS = IN.viewDir;
+        float3 viewDirWS = IN.viewDir;
         input.normalWS = IN.normal;
         SH = IN.vertexSH;
     #endif
@@ -121,9 +121,9 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
 
 #ifndef TERRAIN_SPLAT_BASEPASS
 
-    void SplatmapMix(float4 uvMainAndLM, float4 uvSplat01, float4 uvSplat23, inout half4 splatControl, out half weight, out half3 mixedDiffuse, inout half3 mixedNormal, out float sp_alpha, float3 positionWS, float3 normalWS)
+    void SplatmapMix(float4 uvMainAndLM, float4 uvSplat01, float4 uvSplat23, inout float4 splatControl, out float weight, out float3 mixedDiffuse, inout float3 mixedNormal, out float sp_alpha, float3 positionWS, float3 normalWS)
     {
-        half4 diffAlbedo[4];
+        float4 diffAlbedo[4];
 
         // UV ????? ????
         // diffAlbedo[0] = SAMPLE_TEXTURE2D(_Splat0, sampler_Splat0, uvSplat01.xy);
@@ -171,17 +171,17 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         // This means that if we have an alpha channel, _SmoothnessN is locked to 1.0 and
         // otherwise, the true slider value is passed down and diffAlbedo[n].a == 1.0.
         //???????Ͻ? ?⺻?? 0???? ?α?.
-        // defaultSmoothness = half4(diffAlbedo[0].a, diffAlbedo[1].a, diffAlbedo[2].a, diffAlbedo[3].a);
-        // defaultSmoothness *= half4(_Smoothness0, _Smoothness1, _Smoothness2, _Smoothness3);
+        // defaultSmoothness = float4(diffAlbedo[0].a, diffAlbedo[1].a, diffAlbedo[2].a, diffAlbedo[3].a);
+        // defaultSmoothness *= float4(_Smoothness0, _Smoothness1, _Smoothness2, _Smoothness3);
         
         sp_alpha = splatControl.r;// + 0.5; //2nd pass?? ?ĥ?? ??ĸ? ?ġ?? ???? ?????? ????? ??ĸ? ????ֱ? ?????. ????? ?Ⱦ?
 
         //?????? ????? ??? ????ε? ??? ?????? ???ε?
         #ifndef _TERRAIN_BLEND_HEIGHT
             // 20.0 is the number of steps in inputAlphaMask (Density mask. We decided 20 empirically)
-            half4 opacityAsDensity = saturate((half4(diffAlbedo[0].a, diffAlbedo[1].a, diffAlbedo[2].a, diffAlbedo[3].a) - (half4(1.0, 1.0, 1.0, 1.0) - splatControl)) * 20.0);
+            float4 opacityAsDensity = saturate((float4(diffAlbedo[0].a, diffAlbedo[1].a, diffAlbedo[2].a, diffAlbedo[3].a) - (float4(1.0, 1.0, 1.0, 1.0) - splatControl)) * 20.0);
             opacityAsDensity += 0.001h * splatControl;      // if all weights are zero, default to what the blend mask says
-            half4 useOpacityAsDensityParam = {
+            float4 useOpacityAsDensityParam = {
                 _DiffuseRemapScale0.w, _DiffuseRemapScale1.w, _DiffuseRemapScale2.w, _DiffuseRemapScale3.w
             };
             // 1 is off
@@ -245,7 +245,7 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[1], sp_g); */
         // mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb, saturate(sp_b));
         // mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[3].rgb, sp_a);
-        //half alpha = 1;
+        //float alpha = 1;
 
         // mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb.rgb + (_V_T2M_Splat3_EdgeColor * 4.2 - 1) * 0.1, sp_bExpand);
         mixedDiffuse = lerp(mixedDiffuse, diffAlbedo[2].rgb.rgb + (_V_T2M_Splat3_EdgeColor.rgb * 4.2 - 1) * 0.2, sp_bExpand);
@@ -279,7 +279,7 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         // ==                         ?븻?? ?????                                      ==
         // ===============================================================================
         #ifdef _NORMALMAP
-            half3 nrm = 0.0f;
+            float3 nrm = 0.0f;
             nrm += splatControl.r * UnpackNormalScale(SAMPLE_TEXTURE2D(_Normal0, sampler_Normal0, positionWS.xz * 0.0025 * _V_T2M_Splat1_uvScale), _NormalScale0);
             nrm += splatControl.g * UnpackNormalScale(SAMPLE_TEXTURE2D(_Normal1, sampler_Normal0, positionWS.xz * 0.0025 * _V_T2M_Splat2_uvScale), _NormalScale1);
             nrm += splatControl.b * UnpackNormalScale(SAMPLE_TEXTURE2D(_Normal2, sampler_Normal0, positionWS.xz * 0.0025 * _V_T2M_Splat3_uvScale), _NormalScale2);
@@ -299,18 +299,18 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
 #endif
 
 #ifdef _TERRAIN_BLEND_HEIGHT
-    void HeightBasedSplatModify(inout half4 splatControl, in half4 masks[4])
+    void HeightBasedSplatModify(inout float4 splatControl, in float4 masks[4])
     {
         // heights are in mask blue channel, we multiply by the splat Control weights to get combined height
-        half4 splatHeight = half4(masks[0].b, masks[1].b, masks[2].b, masks[3].b) * splatControl.rgba;
-        half maxHeight = max(splatHeight.r, max(splatHeight.g, max(splatHeight.b, splatHeight.a)));
+        float4 splatHeight = float4(masks[0].b, masks[1].b, masks[2].b, masks[3].b) * splatControl.rgba;
+        float maxHeight = max(splatHeight.r, max(splatHeight.g, max(splatHeight.b, splatHeight.a)));
 
         // Ensure that the transition height is not zero.
-        half transition = max(_HeightTransition, 1e-5);
+        float transition = max(_HeightTransition, 1e-5);
 
         // This sets the highest splat to "transition", and everything else to a lower value relative to that, clamping to zero
         // Then we clamp this to zero and normalize everything
-        half4 weightedHeights = splatHeight + transition - maxHeight.xxxx;
+        float4 weightedHeights = splatHeight + transition - maxHeight.xxxx;
         weightedHeights = max(0, weightedHeights);
 
         // We need to add an epsilon here for active layers (hence the blendMask again)
@@ -318,21 +318,21 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
         weightedHeights = (weightedHeights + 1e-6) * splatControl;
 
         // Normalize (and clamp to epsilon to keep from dividing by zero)
-        half sumHeight = max(dot(weightedHeights, half4(1, 1, 1, 1)), 1e-6);
+        float sumHeight = max(dot(weightedHeights, float4(1, 1, 1, 1)), 1e-6);
         splatControl = weightedHeights / sumHeight.xxxx;
     }
 #endif
 
 
 
-// void SplatmapFinalColor(inout half4 color, half fogCoord , float sp_alpha , float3 positionWS)
+// void SplatmapFinalColor(inout float4 color, float fogCoord , float sp_alpha , float3 positionWS)
 // {
 //     color.rgb *= color.a;
 
 //     #ifndef TERRAIN_GBUFFER // Technically we don't need fogCoord, but it is still passed from the vertex shader.
 
 //     #ifdef TERRAIN_SPLAT_ADDPASS
-//         color.rgb = MixFogColor(color.rgb, half3(0,0,0), fogCoord);
+//         color.rgb = MixFogColor(color.rgb, float3(0,0,0), fogCoord);
 //     #else
 //         color.rgb = MixFog(color.rgb, fogCoord);
 //     #endif
@@ -342,7 +342,7 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
 
 
 //??? ???? ??? ?κ?
-void SplatmapFinalColor(inout half4 color, half fogCoord, float sp_alpha, float3 positionWS, float3 normalWS)
+void SplatmapFinalColor(inout float4 color, float fogCoord, float sp_alpha, float3 positionWS, float3 normalWS)
 {
     color.rgb *= color.a; // ?? ?κ?? 2nd pass?? ?????? ?κ?
     
@@ -351,7 +351,7 @@ void SplatmapFinalColor(inout half4 color, half fogCoord, float sp_alpha, float3
         float3 withFogColor;
 
         #ifdef TERRAIN_SPLAT_ADDPASS
-            withFogColor = MixFogColor(color.rgb, half3(0, 0, 0), fogCoord);
+            withFogColor = MixFogColor(color.rgb, float3(0, 0, 0), fogCoord);
             
             // ??׿? ?????? ?????? ?? ?κ?. ????? ????ο????? ?״?? ?߿??? ??????ٰ?,
             // 4?????? ????? ??̴??? ?????? ???? ?ǹ̰? ?????ϴ?.
@@ -430,7 +430,7 @@ Varyings SplatmapVert(Attributes v)
         o.uvSplat23.zw = TRANSFORM_TEX(v.texcoord, _Splat3);
     #endif
 
-    half3 viewDirWS = GetWorldSpaceViewDir(Attributes.positionWS);
+    float3 viewDirWS = GetWorldSpaceViewDir(Attributes.positionWS);
     #if !SHADER_HINT_NICE_QUALITY
         viewDirWS = SafeNormalize(viewDirWS);
     #endif
@@ -439,9 +439,9 @@ Varyings SplatmapVert(Attributes v)
         float4 vertexTangent = float4(cross(float3(0, 0, 1), v.normalOS), 1.0);
         VertexNormalInputs normalInput = GetVertexNormalInputs(v.normalOS, vertexTangent);
 
-        o.normal = half4(normalInput.normalWS, viewDirWS.x);
-        o.tangent = half4(normalInput.tangentWS, viewDirWS.y);
-        o.bitangent = half4(normalInput.bitangentWS, viewDirWS.z);
+        o.normal = float4(normalInput.normalWS, viewDirWS.x);
+        o.tangent = float4(normalInput.tangentWS, viewDirWS.y);
+        o.bitangent = float4(normalInput.bitangentWS, viewDirWS.z);
     #else
         o.normal = TransformObjectToWorldNormal(v.normalOS);
         o.viewDir = viewDirWS;
@@ -459,7 +459,7 @@ Varyings SplatmapVert(Attributes v)
     return o;
 }
 
-void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
+void ComputeMasks(out float4 masks[4], float4 hasMask, Varyings IN)
 {
     masks[0] = 0.5h;
     masks[1] = 0.5h;
@@ -487,7 +487,7 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
 // #ifdef TERRAIN_GBUFFER
 //     FragmentOutput SplatmapFragment(Varyings IN)
 // #else
-    half4 SplatmapFragment(Varyings IN) : SV_TARGET
+    float4 SplatmapFragment(Varyings IN) : SV_TARGET
 // #endif
 
 {
@@ -496,23 +496,23 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
         ClipHoles(IN.uvMainAndLM.xy);
     #endif
 
-    half3 normalTS = half3(0.0h, 0.0h, 1.0h);
+    float3 normalTS = float3(0.0h, 0.0h, 1.0h);
 
     
     #ifdef TERRAIN_SPLAT_BASEPASS
-        half3 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uvMainAndLM.xy).rgb;
-        // half smoothness = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uvMainAndLM.xy).a;
-        // half metallic = SAMPLE_TEXTURE2D(_MetallicTex, sampler_MetallicTex, IN.uvMainAndLM.xy).r;
-        half alpha = 1;
-        // half occlusion = 1;
+        float3 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uvMainAndLM.xy).rgb;
+        // float smoothness = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uvMainAndLM.xy).a;
+        // float metallic = SAMPLE_TEXTURE2D(_MetallicTex, sampler_MetallicTex, IN.uvMainAndLM.xy).r;
+        float alpha = 1;
+        // float occlusion = 1;
     #else
 
-        half4 hasMask = half4(_LayerHasMask0, _LayerHasMask1, _LayerHasMask2, _LayerHasMask3);
-        half4 masks[4];
+        float4 hasMask = float4(_LayerHasMask0, _LayerHasMask1, _LayerHasMask2, _LayerHasMask3);
+        float4 masks[4];
         ComputeMasks(masks, hasMask, IN);
 
         float2 splatUV = (IN.uvMainAndLM.xy * (_Control_TexelSize.zw - 1.0f) + 0.5f) * _Control_TexelSize.xy;
-        half4 splatControl = SAMPLE_TEXTURE2D(_Control, sampler_Control, splatUV);
+        float4 splatControl = SAMPLE_TEXTURE2D(_Control, sampler_Control, splatUV);
 
         #ifdef _TERRAIN_BLEND_HEIGHT
             // disable Height Based blend when there are more than 4 layers (multi-pass breaks the normalization)
@@ -523,31 +523,31 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
         InputData inputData;
         
 
-        half weight;
-        half3 mixedDiffuse;
+        float weight;
+        float3 mixedDiffuse;
         
         float sp_alpha;
         SplatmapMix(IN.uvMainAndLM, IN.uvSplat01, IN.uvSplat23, splatControl, weight, mixedDiffuse, normalTS, sp_alpha, IN.positionWS.rgb, IN.normal);
-        half3 albedo = mixedDiffuse.rgb;
+        float3 albedo = mixedDiffuse.rgb;
 
         InitializeInputData(IN, normalTS, inputData);
         
-        // half4 defaultMetallic = half4(_Metallic0, _Metallic1, _Metallic2, _Metallic3);
-        // half4 defaultOcclusion = half4(_MaskMapRemapScale0.g, _MaskMapRemapScale1.g, _MaskMapRemapScale2.g, _MaskMapRemapScale3.g) +
-        // half4(_MaskMapRemapOffset0.g, _MaskMapRemapOffset1.g, _MaskMapRemapOffset2.g, _MaskMapRemapOffset3.g);
+        // float4 defaultMetallic = float4(_Metallic0, _Metallic1, _Metallic2, _Metallic3);
+        // float4 defaultOcclusion = float4(_MaskMapRemapScale0.g, _MaskMapRemapScale1.g, _MaskMapRemapScale2.g, _MaskMapRemapScale3.g) +
+        // float4(_MaskMapRemapOffset0.g, _MaskMapRemapOffset1.g, _MaskMapRemapOffset2.g, _MaskMapRemapOffset3.g);
 
-        // half4 maskSmoothness = half4(masks[0].a, masks[1].a, masks[2].a, masks[3].a);
+        // float4 maskSmoothness = float4(masks[0].a, masks[1].a, masks[2].a, masks[3].a);
         // defaultSmoothness = lerp(defaultSmoothness, maskSmoothness, hasMask);
-        // half smoothness = dot(splatControl, defaultSmoothness);
+        // float smoothness = dot(splatControl, defaultSmoothness);
 
-        // half4 maskMetallic = half4(masks[0].r, masks[1].r, masks[2].r, masks[3].r);
+        // float4 maskMetallic = float4(masks[0].r, masks[1].r, masks[2].r, masks[3].r);
         // defaultMetallic = lerp(defaultMetallic, maskMetallic, hasMask);
-        // half metallic = dot(splatControl, defaultMetallic);
+        // float metallic = dot(splatControl, defaultMetallic);
 
-        // half4 maskOcclusion = half4(masks[0].g, masks[1].g, masks[2].g, masks[3].g);
+        // float4 maskOcclusion = float4(masks[0].g, masks[1].g, masks[2].g, masks[3].g);
         // defaultOcclusion = lerp(defaultOcclusion, maskOcclusion, hasMask);
-        // half occlusion = dot(splatControl, defaultOcclusion);
-        half alpha = weight;
+        // float occlusion = dot(splatControl, defaultOcclusion);
+        float alpha = weight;
     #endif
 
 
@@ -575,8 +575,8 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
     // ==                            Lighting Calc                                  ==
     // ===============================================================================
 
-    half4 specular = _SpecColor * specCalc.r;
-    half smoothness = _Glossiness;
+    float4 specular = _SpecColor * specCalc.r;
+    float smoothness = _Glossiness;
 
     //??????
     float rim = (dot(normalize(inputData.normalWS), normalize(inputData.viewDirectionWS)));
@@ -589,10 +589,10 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
     // #ifdef TERRAIN_GBUFFER
 
     //     BRDFData brdfData;
-    //     // InitializeBRDFData(albedo, metallic, /* specular */ half3(0.0h, 0.0h, 0.0h), smoothness, alpha, brdfData);
-    //     InitializeBRDFData(albedo, 0, /* specular */ half3(0.0h, 0.0h, 0.0h), 0.4, alpha, brdfData);
+    //     // InitializeBRDFData(albedo, metallic, /* specular */ float3(0.0h, 0.0h, 0.0h), smoothness, alpha, brdfData);
+    //     InitializeBRDFData(albedo, 0, /* specular */ float3(0.0h, 0.0h, 0.0h), 0.4, alpha, brdfData);
 
-    //     half4 color;
+    //     float4 color;
     //     color.rgb = GlobalIllumination(brdfData, inputData.bakedGI, occlusion, inputData.normalWS, inputData.viewDirectionWS);
     //     color.a = alpha;
 
@@ -603,16 +603,16 @@ void ComputeMasks(out half4 masks[4], half4 hasMask, Varyings IN)
     // #else
 
     //PBR???? ????
-    // half4 color = UniversalFragmentPBR(inputData, albedo, metallic, /* specular */ half3(0.0h, 0.0h, 0.0h), 0.4, occlusion, /* emission */ half3(0, 0, 0), alpha);
+    // float4 color = UniversalFragmentPBR(inputData, albedo, metallic, /* specular */ float3(0.0h, 0.0h, 0.0h), 0.4, occlusion, /* emission */ float3(0, 0, 0), alpha);
 
     // Ŀ??? ???? ?????? ?ٲ۴?
-    // half4 color = UniversalFragmentLightCustom(inputData, albedo, specular, smoothness, rimcolor, alpha);
-    half4 color = UniversalFragmentLightCustom(inputData, albedo, specular, smoothness, rimcolor, alpha, /* normalTS */ float3(0, 0, 1), /* shadowDimming */ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
+    // float4 color = UniversalFragmentLightCustom(inputData, albedo, specular, smoothness, rimcolor, alpha);
+    float4 color = UniversalFragmentLightCustom(inputData, albedo, specular, smoothness, rimcolor, alpha, /* normalTS */ float3(0, 0, 1), /* shadowDimming */ 0, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
     
 
     SplatmapFinalColor(color, inputData.fogCoord, sp_alpha, inputData.positionWS, inputData.normalWS);
     
-    return half4(color.rgb, 1.0h);
+    return float4(color.rgb, 1.0h);
     // #endif
 
 }
@@ -667,7 +667,7 @@ VaryingsLean ShadowPassVertex(AttributesLean v)
     return o;
 }
 
-half4 ShadowPassFragment(VaryingsLean IN) : SV_TARGET
+float4 ShadowPassFragment(VaryingsLean IN) : SV_TARGET
 {
     #ifdef _ALPHATEST_ON
         ClipHoles(IN.texcoord);
@@ -690,14 +690,14 @@ VaryingsLean DepthOnlyVertex(AttributesLean v)
     return o;
 }
 
-half4 DepthOnlyFragment(VaryingsLean IN) : SV_TARGET
+float4 DepthOnlyFragment(VaryingsLean IN) : SV_TARGET
 {
     #ifdef _ALPHATEST_ON
         ClipHoles(IN.texcoord);
     #endif
     #ifdef SCENESELECTIONPASS
         // We use depth prepass for scene selection in the editor, this code allow to output the outline correctly
-        return half4(_ObjectId, _PassValue, 1.0, 1.0);
+        return float4(_ObjectId, _PassValue, 1.0, 1.0);
     #endif
     return 0;
 }
@@ -752,16 +752,16 @@ VaryingsDepthNormal DepthNormalOnlyVertex(AttributesDepthNormal v)
     #endif
 
     #if defined(_NORMALMAP) && !defined(ENABLE_TERRAIN_PERPIXEL_NORMAL)
-        half3 viewDirWS = GetWorldSpaceViewDir(Attributes.positionWS);
+        float3 viewDirWS = GetWorldSpaceViewDir(Attributes.positionWS);
         #if !SHADER_HINT_NICE_QUALITY
             viewDirWS = SafeNormalize(viewDirWS);
         #endif
         float4 vertexTangent = float4(cross(float3(0, 0, 1), v.normalOS), 1.0);
         VertexNormalInputs normalInput = GetVertexNormalInputs(v.normalOS, vertexTangent);
 
-        o.normal = half4(normalInput.normalWS, viewDirWS.x);
-        o.tangent = half4(normalInput.tangentWS, viewDirWS.y);
-        o.bitangent = half4(normalInput.bitangentWS, viewDirWS.z);
+        o.normal = float4(normalInput.normalWS, viewDirWS.x);
+        o.tangent = float4(normalInput.tangentWS, viewDirWS.y);
+        o.bitangent = float4(normalInput.bitangentWS, viewDirWS.z);
     #else
         o.normal = TransformObjectToWorldNormal(v.normalOS);
     #endif
@@ -770,13 +770,13 @@ VaryingsDepthNormal DepthNormalOnlyVertex(AttributesDepthNormal v)
     return o;
 }
 
-half4 DepthNormalOnlyFragment(VaryingsDepthNormal IN) : SV_TARGET
+float4 DepthNormalOnlyFragment(VaryingsDepthNormal IN) : SV_TARGET
 {
     #ifdef _ALPHATEST_ON
         ClipHoles(IN.uvMainAndLM.xy);
     #endif
 
-    half3 normalWS = IN.normal.xyz;
+    float3 normalWS = IN.normal.xyz;
     return float4(PackNormalOctRectEncode(TransformWorldToViewDir(normalWS, true)), 0.0, 0.0);
 }
 

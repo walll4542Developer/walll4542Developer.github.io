@@ -6,72 +6,72 @@
 // 텍스쳐가 sRGB 모드일 경우(sRGB 체크 일 때)에 아래 값을 1로 설정해야한다.
 #define SRGB_TEXTURE_MODE 1
 
-static const half ReferenceColorValue = 1.347368421; // 192 기준 그레이 컬러일 때 염색 컬러가 그대로 나오게 하는 보정 값
-static const half ThresholdMask = 0.0078125; // 마스크의 플로팅 오차를 보정하기 위한 값
+static const float ReferenceColorValue = 1.347368421; // 192 기준 그레이 컬러일 때 염색 컬러가 그대로 나오게 하는 보정 값
+static const float ThresholdMask = 0.0078125; // 마스크의 플로팅 오차를 보정하기 위한 값
 
-inline half3 DyedColor(half3 texColor, half3 maskColor, half3 dyeColor1, half3 dyeColor2, half3 dyeColor3)
+inline float3 DyedColor(float3 texColor, float3 maskColor, float3 dyeColor1, float3 dyeColor2, float3 dyeColor3)
 {
-    half3 finalColor;
+    float3 finalColor;
 
-    half3 originalColor = texColor * saturate(1.0f - maskColor.r - maskColor.g - maskColor.b); // original color
-    half3 dyeColor = dyeColor1 * maskColor.r + dyeColor2 * maskColor.g + dyeColor3 * maskColor.b; // dye color
-    half isMaskArea = step(0.001, (maskColor.r + maskColor.g + maskColor.b));
+    float3 originalColor = texColor * saturate(1.0f - maskColor.r - maskColor.g - maskColor.b); // original color
+    float3 dyeColor = dyeColor1 * maskColor.r + dyeColor2 * maskColor.g + dyeColor3 * maskColor.b; // dye color
+    float isMaskArea = step(0.001, (maskColor.r + maskColor.g + maskColor.b));
 
     //------------------------------
     // 0 ~ 0.7529412(192): MULTIPLY
     // 0.7568627(193) ~ 1: SCREEN
     //------------------------------
-    half3 srgbTexColor = FastLinearToSRGB(texColor);
-    half3 offset = srgbTexColor - half3(0.7529412, 0.7529412, 0.7529412); // delta color
+    float3 srgbTexColor = FastLinearToSRGB(texColor);
+    float3 offset = srgbTexColor - float3(0.7529412, 0.7529412, 0.7529412); // delta color
 
-    half3 cLow = dyeColor * srgbTexColor * ReferenceColorValue; // low range color (dyeColor multiplied by normalized-texColor)
-    half3 cHigh = offset + dyeColor - (offset * dyeColor); // SCREEN
+    float3 cLow = dyeColor * srgbTexColor * ReferenceColorValue; // low range color (dyeColor multiplied by normalized-texColor)
+    float3 cHigh = offset + dyeColor - (offset * dyeColor); // SCREEN
 
-    half3 s = step(half3(0.0f, 0.0f, 0.0f), offset); // 0, 1 switch
-    half3 dyedColor = saturate(lerp(cLow, cHigh, s)) * isMaskArea;
+    float3 s = step(float3(0.0f, 0.0f, 0.0f), offset); // 0, 1 switch
+    float3 dyedColor = saturate(lerp(cLow, cHigh, s)) * isMaskArea;
     finalColor = saturate(originalColor + dyedColor);
 
     return finalColor;
 }
 
-void ApplyDyeColor(inout half3 resultColor, half4 dyeColor1)
+void ApplyDyeColor(inout float3 resultColor, float4 dyeColor1)
 {
-    resultColor = DyedColor(resultColor.rgb, half3(1, 0, 0), dyeColor1.rgb, half3(1, 1, 1), half3(1, 1, 1));
+    resultColor = DyedColor(resultColor.rgb, float3(1, 0, 0), dyeColor1.rgb, float3(1, 1, 1), float3(1, 1, 1));
 }
 
-void ApplyDyeColorOnlyMask(inout half3 resultColor, half4 dyeColor1, half4 dyeColor2, half4 dyeColor3)
+void ApplyDyeColorOnlyMask(inout float3 resultColor, float4 dyeColor1, float4 dyeColor2, float4 dyeColor3)
 {
-    // resultColor = DyedColor(half3(1, 1, 1), resultColor.rgb, dyeColor1.rgb, dyeColor2.rgb, dyeColor3.rgb);
+    // resultColor = DyedColor(float3(1, 1, 1), resultColor.rgb, dyeColor1.rgb, dyeColor2.rgb, dyeColor3.rgb);
     resultColor = dyeColor1.rgb * resultColor.r + dyeColor2.rgb * resultColor.g + dyeColor3.rgb * resultColor.b;
 }
 
 // 압축 공식
-// half3 override = step(0.001, maskMap.r + maskMap.g + maskMap.b);
-// half3 r1 = baseMap.rgb * 0.5 + 0.5;
-// half3 r2 = (1.0 - (maskMap.rgb * baseMap.rgb)) * 0.5;
-// half3 c = (r1 * (1.0 - override)) + (r2 * override);
+// float3 override = step(0.001, maskMap.r + maskMap.g + maskMap.b);
+// float3 r1 = baseMap.rgb * 0.5 + 0.5;
+// float3 r2 = (1.0 - (maskMap.rgb * baseMap.rgb)) * 0.5;
+// float3 c = (r1 * (1.0 - override)) + (r2 * override);
 
 // 풀기 공식
-// half3 base = max(0.0, (compressedColor - 0.5) * 2.0);
-// half3 mask = (1.0 - min(1.0, compressedColor * 2.0));
+// float3 base = max(0.0, (compressedColor - 0.5) * 2.0);
+// float3 mask = (1.0 - min(1.0, compressedColor * 2.0));
 
-void ApplyDyeColor(inout half3 resultColor, half4 dyeColor1, half4 dyeColor2, half4 dyeColor3)
+void ApplyDyeColor(inout float3 resultColor, float4 dyeColor1, float4 dyeColor2, float4 dyeColor3)
 {
-    half3 compressedColor = resultColor.rgb;
+    float3 compressedColor = resultColor.rgb;
     #if SRGB_TEXTURE_MODE
         compressedColor = FastLinearToSRGB(compressedColor);
     #endif
 
-    half3 base = max(0.0, (compressedColor - 0.5) * 2.0);
-    half3 mask = (1.0 - min(1.0, compressedColor * 2.0));
+    float3 base = max(0.0, (compressedColor - 0.5) * 2.0);
+    float3 mask = (1.0 - min(1.0, compressedColor * 2.0));
 
-    half3 originalColor = FastSRGBToLinear(base);
+    float3 originalColor = FastSRGBToLinear(base);
 
-    half3 dyedColor1 = dyeColor1.rgb * (step(ThresholdMask, mask.r) * mask.r);
-    half3 dyedColor2 = dyeColor2.rgb * (step(ThresholdMask, mask.g) * mask.g);
-    half3 dyedColor3 = dyeColor3.rgb * (step(ThresholdMask, mask.b) * mask.b);
+    float3 dyedColor1 = dyeColor1.rgb * (step(ThresholdMask, mask.r) * mask.r);
+    float3 dyedColor2 = dyeColor2.rgb * (step(ThresholdMask, mask.g) * mask.g);
+    float3 dyedColor3 = dyeColor3.rgb * (step(ThresholdMask, mask.b) * mask.b);
 
-    half3 dyedColor = dyedColor1 + dyedColor2 + dyedColor3;
+    float3 dyedColor = dyedColor1 + dyedColor2 + dyedColor3;
     dyedColor *= ReferenceColorValue;
     resultColor = saturate(dyedColor + originalColor);
 
@@ -93,30 +93,30 @@ void ApplyDyeColor(inout half3 resultColor, half4 dyeColor1, half4 dyeColor2, ha
     // https://deskcat.io/d/O70657/MM-미술-채택-베이스-텍스쳐의-RGB-채널에-마스크-넣기
 }
 
-// half3 RgbToHsv(half3 c)
+// float3 RgbToHsv(float3 c)
 // {
-//     const half4 K = half4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-//     half4 p = lerp(half4(c.bg, K.wz), half4(c.gb, K.xy), step(c.b, c.g));
-//     half4 q = lerp(half4(p.xyw, c.r), half4(c.r, p.yzx), step(p.x, c.r));
-//     half d = q.x - min(q.w, q.y);
-//     const half e = 1.0e-4;
-//     return half3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+//     const float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+//     float4 p = lerp(float4(c.bg, K.wz), float4(c.gb, K.xy), step(c.b, c.g));
+//     float4 q = lerp(float4(p.xyw, c.r), float4(c.r, p.yzx), step(p.x, c.r));
+//     float d = q.x - min(q.w, q.y);
+//     const float e = 1.0e-4;
+//     return float3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 // }
 
 // 스킨 컬러를 적용할 때 스킨 컬러의 70퍼센트만 곱해준다.
 // 이 공식은 포토샵에서 스킨 컬러 레이어를 70퍼센트 Opacity로
 // 아래 오리지널 컬러 레이어와 Multiply 해주는 것과 같다.
-half3 ApplySkinColorForScar(half3 originalColor, half3 skinColor)
+float3 ApplySkinColorForScar(float3 originalColor, float3 skinColor)
 {
-    half layerOpacity = 1.0;
+    float layerOpacity = 1.0;
 
     // Hue, Saturation, Value
     // Ranges:
     //  Hue [0.0, 1.0]
     //  Sat [0.0, 1.0]
     //  Lum [0.0, HALF_MAX]
-    half3 skinColorHSV = RgbToHsv(skinColor);
-    half3 originalColorHSV = RgbToHsv(originalColor);
+    float3 skinColorHSV = RgbToHsv(skinColor);
+    float3 originalColorHSV = RgbToHsv(originalColor);
 
     // 흉터는 명도로 구분
     layerOpacity = saturate(layerOpacity - lerp(0, 0.1, skinColorHSV.z)/*명도를 정규화 하지 않고 매직 넘버를 사용한다.*/);
@@ -140,23 +140,23 @@ half3 ApplySkinColorForScar(half3 originalColor, half3 skinColor)
     return ((skinColor * layerOpacity) + (1.0 - layerOpacity)) * originalColor;
 }
 
-half3 ApplySkinColorForTattoo(half3 originalColor, half3 skinColor)
+float3 ApplySkinColorForTattoo(float3 originalColor, float3 skinColor)
 {
-    half layerOpacity = 0.7;
+    float layerOpacity = 0.7;
     return ((skinColor * layerOpacity) + (1.0 - layerOpacity)) * originalColor;
 }
 
-half3 ApplySkinColor(half3 originalColor, half3 skinColor)
+float3 ApplySkinColor(float3 originalColor, float3 skinColor)
 {
-    const half layerOpacity = 0.7;
+    const float layerOpacity = 0.7;
     return ((skinColor * layerOpacity) + (1.0 - layerOpacity)) * originalColor;
 }
 
 // 모노톤은 스킨 컬러를 좀 더 강하게 적용한다. 이유는 오리지널 컬러가 밝은 상태이기 때문에
 // 스킨 컬러보다 오리지널 컬러의 비중이 높으면 너무 하얗게 떠 보이는 문제가 있다.
-half3 ApplySkinColorForMonotone(half3 originalColor, half3 skinColor)
+float3 ApplySkinColorForMonotone(float3 originalColor, float3 skinColor)
 {
-    const half layerOpacity = 0.99;
+    const float layerOpacity = 0.99;
     return ((skinColor * layerOpacity) + (1.0 - layerOpacity)) * originalColor;
 }
 

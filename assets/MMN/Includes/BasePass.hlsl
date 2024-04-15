@@ -23,8 +23,8 @@ struct Varyings
     float4 positionCS : SV_POSITION; // Homogeneous clip space position
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
-    half2 diffuseTexcoord : TEXCOORD0;
-    half2 shadeByNormalTexcoord : TEXCOORD1;
+    float2 diffuseTexcoord : TEXCOORD0;
+    float2 shadeByNormalTexcoord : TEXCOORD1;
     float4 positionWS : TEXCOORD2;
     float3 normalWS : TEXCOORD3;
     float4 positionOS : TEXCOORD4;
@@ -53,8 +53,8 @@ SAMPLER(sampler_ToonShade);
 TEXTURE2D(_RampTex);
 SAMPLER(sampler_RampTex);
 
-half4 _MainTex_ST;
-half4 _MaskTex_ST;
+float4 _MainTex_ST;
+float4 _MaskTex_ST;
 
 real4 _Color;
 real4 _SpecColor;
@@ -72,7 +72,7 @@ real _Flatness;
 real _ReceiveShadowStrength;
 
 #ifndef _TRANSPARENCY
-    half _CutoutThreshold;
+    float _CutoutThreshold;
 #endif
 
 float2 ComputeScreenUV(float4 Pos, float2 Texel)
@@ -82,7 +82,7 @@ float2 ComputeScreenUV(float4 Pos, float2 Texel)
     return uv;
 }
 
-half InitializeShadowcoordData(Varyings input, float _ReceiveShadowStrength)
+float InitializeShadowcoordData(Varyings input, float _ReceiveShadowStrength)
 {
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
@@ -92,7 +92,7 @@ half InitializeShadowcoordData(Varyings input, float _ReceiveShadowStrength)
     #endif
 
     Light mainLight = GetMainLight(input.shadowCoord);
-    half shadowAtten = saturate(mainLight.shadowAttenuation + (1- _ReceiveShadowStrength)); //_ReceiveShadowStrength
+    float shadowAtten = saturate(mainLight.shadowAttenuation + (1- _ReceiveShadowStrength)); //_ReceiveShadowStrength
 
     return shadowAtten;
 }
@@ -121,8 +121,8 @@ Varyings vert(Attributes input)
 
     output.diffuseTexcoord = TRANSFORM_TEX(input.texcoord, _MainTex);
     
-    half3 viewNormal = mul((float3x3)UNITY_MATRIX_IT_MV, normalize(input.normalOS));
-    viewNormal = normalize(viewNormal) * half3(0.5, 0.5, 0.5) + half3(0.5, 0.5, 0.5);
+    float3 viewNormal = mul((float3x3)UNITY_MATRIX_IT_MV, normalize(input.normalOS));
+    viewNormal = normalize(viewNormal) * float3(0.5, 0.5, 0.5) + float3(0.5, 0.5, 0.5);
     output.shadeByNormalTexcoord = viewNormal.xy;
 
     output.fogCoord.x = ComputeFogFactor(output.positionCS.z);
@@ -162,7 +162,7 @@ float4 frag(Varyings input) : SV_Target
     float halfLambert = saturate(nDotL * 0.5 + 0.5);
 
     //Receive Shadow
-    half shadowAtten = InitializeShadowcoordData(input, _ReceiveShadowStrength);
+    float shadowAtten = InitializeShadowcoordData(input, _ReceiveShadowStrength);
     #if !defined(_RECEIVE_SHADOWS_OFF)
         #if _RECEIVESHADOW_ON
         halfLambert *= shadowAtten;

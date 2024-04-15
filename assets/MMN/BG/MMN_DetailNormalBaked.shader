@@ -6,7 +6,6 @@ Shader "MMN/BG/Baked/DetailNormalBaked"
     Properties
     {
         //셰이더 셋업
-        [Toggle]_NEARHALFTONECLIP ("니어 클립", float) = 0
         [Toggle]_ALPHATEST ("알파테스트", float) = 0
         _Cutoff ("Alpha Clipping", Range(0.0, 1.0)) = 0.5
         [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
@@ -96,14 +95,16 @@ Shader "MMN/BG/Baked/DetailNormalBaked"
             // Material Keywords
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
 
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
-
+                     
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #pragma multi_compile_local_fragment _ _SECONDMAP_ON
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -112,6 +113,7 @@ Shader "MMN/BG/Baked/DetailNormalBaked"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -175,11 +177,13 @@ Shader "MMN/BG/Baked/DetailNormalBaked"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
 
             #define VERTEX_CAMERA_DEPEND_BENDING 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0

@@ -16,7 +16,9 @@ CBUFFER_START(UnityPerMaterial)
     float4 _EmissionColor;
     float _Cutoff;
     float _Glossiness;
-    float _DetailBumpScale;
+    float _IsRaindrop;
+    // float _DetailBumpScale;
+    float _SECONDMAP;
     float _SecondMapOffset;
     float _SecondMapScale;
     float _SecondMapBlendHardness;
@@ -29,9 +31,9 @@ TEXTURE2D(_DetailMap);       SAMPLER(sampler_DetailMap);
 TEXTURE2D(_SecondMap);           SAMPLER(sampler_SecondMap);
 
 //실제로 사용하지 않지만 내장된 메타패스에서 참조합니다. 물론 메타패스를 따로 만들면 되긴 하지만 번잡하므로 남겨둡니다. (...)
-half4 SampleSpecularSmoothness(half2 uv, half alpha, half4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
+float4 SampleSpecularSmoothness(float2 uv, float alpha, float4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
 {
-    half4 specularSmoothness = half4(0.0h, 0.0h, 0.0h, 1.0h);
+    float4 specularSmoothness = float4(0.0h, 0.0h, 0.0h, 1.0h);
 
     specularSmoothness = SAMPLE_TEXTURE2D(specMap, sampler_specMap, uv) * specColor;
 

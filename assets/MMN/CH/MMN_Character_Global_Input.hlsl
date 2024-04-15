@@ -11,19 +11,20 @@
 // 아래 매크로 이름으로 전체 검색하면 모두 나오니깐 참고하세요.
 #define MM_DECLARE_PROPERTIES_FROM_SCRIPT \
     float4 _CharacterPositionAndVisualHeight; \
-    half4 _CharacterDirection; \
-    half4 _CharacterHeadDirection; \
-    half _TopShadow; \
-    half _BottomShadow; \
-    half _HalftoneClip; \
-    half _CustomLightMode; \
-    half3 _CustomLightDirection; \
-    half3 _CustomLightColor; \
-    half4 _EffectTint; \
-    half _InnerGlow; \
-    half _InnerGlowPower; \
-    half4 _InnerGlowColor; \
-    half _EffectAlphaValue; \
+    float4 _CharacterDirection; \
+    float4 _CharacterHeadDirection; \
+    float _TopShadow; \
+    float _BottomShadow; \
+    float _HalftoneClip; \
+    float _CustomLightMode; \
+    float3 _CustomLightDirection; \
+    float3 _CustomLightColor; \
+    float3 _CustomGIColor; \
+    float4 _EffectTint; \
+    float _InnerGlow; \
+    float _InnerGlowPower; \
+    float4 _InnerGlowColor; \
+    float _EffectAlphaValue; \
     float _MotionBlurLerpValue; \
     int _VertexBufferLength;
 //--------------------------------------------------------------------------------

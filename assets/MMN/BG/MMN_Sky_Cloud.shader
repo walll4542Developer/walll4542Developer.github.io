@@ -140,17 +140,17 @@ Shader "MMN/BG/Sky_Clouds"
             CBUFFER_END
 
             //Global Property
-            half4 _Global_CloudColor;
-            half4 _Global_CloudColor2;
-            half4 _Global_CloudColor3;
-            half4 _Global_CloudColor4;
+            float4 _Global_CloudColor;
+            float4 _Global_CloudColor2;
+            float4 _Global_CloudColor3;
+            float4 _Global_CloudColor4;
             float4 _GlobalSkyUnlitColor;
             
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
-            half _Global_Night2Day;
+            // float _Global_CloudDensity;
+            // float _Global_CloudSpeed;
+            // float _Global_CloudScale;
+            // float _Global_CloudEdgeHardness;
+            float _Global_Night2Day;
 
             TEXTURE2D(_MaskMap);        SAMPLER(sampler_MaskMap);
             TEXTURE2D(_BaseTex);        SAMPLER(sampler_BaseTex);
@@ -164,10 +164,10 @@ Shader "MMN/BG/Sky_Clouds"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
+                float3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
-                half4 color : COLOR;
+                float4 color : COLOR;
                 float2 staticLightmapUV : TEXCOORD1;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -178,8 +178,8 @@ Shader "MMN/BG/Sky_Clouds"
                 float2 uv : TEXCOORD0;
                 float2 uv2 : TEXCOORD1;
                 float3 positionWS : TEXCOORD2;    // xyz: posWS
-                half3 normalWS : NORMAL;
-                half4 color : COLOR;
+                float3 normalWS : NORMAL;
+                float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 4);
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -224,7 +224,7 @@ Shader "MMN/BG/Sky_Clouds"
 
             
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 // UNITY_SETUP_INSTANCE_ID(input);
                 // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -242,28 +242,28 @@ Shader "MMN/BG/Sky_Clouds"
 
                 //마스크맵. 타일링이나 스피드가 가로 세로 제한이 없고 자유롭다.
                 float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
-                half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, maskMapUV);
+                float4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, maskMapUV);
 
                 //구름 텍스쳐들. 가로로만 타일링이 제한되고, Y 쪽으로는 타일링을 껐다 켤 수 있다.
                 float2 basemapUV = TRANSFORM_TEX(uvScroll(uv, _BaseTexSpeedMultix, 0, 0.01), _BaseTex);
                 basemapUV.y = _YTiling ? basemapUV.y : saturate(basemapUV.y);
-                half4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001) * _Global_CloudColor;
+                float4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001) * _Global_CloudColor;
 
                 float2 basemap2UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex2SpeedMultix, 0, 0.01), _BaseTex2);
                 basemap2UV.y = _YTiling2 ? basemap2UV.y : saturate(basemap2UV.y);
-                half4 basemap2 = SAMPLE_TEXTURE2D(_BaseTex2, sampler_BaseTex2, basemap2UV + maskMap.r * _Distortion2 * 0.001) * _Global_CloudColor2;
+                float4 basemap2 = SAMPLE_TEXTURE2D(_BaseTex2, sampler_BaseTex2, basemap2UV + maskMap.r * _Distortion2 * 0.001) * _Global_CloudColor2;
                 
                 float2 basemap3UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex3SpeedMultix, 0, 0.01), _BaseTex3);
                 basemap3UV.y = _YTiling3 ? basemap3UV.y : saturate(basemap3UV.y);
-                half4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, basemap3UV + maskMap.r * _Distortion3 * 0.001) * _Global_CloudColor3;
+                float4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, basemap3UV + maskMap.r * _Distortion3 * 0.001) * _Global_CloudColor3;
                 
                 float2 basemap4UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex4SpeedMultix, 0, 0.01), _BaseTex4);
                 basemap4UV.y = _YTiling4 ? basemap4UV.y : saturate(basemap4UV.y);
-                half4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) * _Global_CloudColor4;
+                float4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) * _Global_CloudColor4;
 
                 //별 텍스쳐. 구름이 미세하게 알파가 있어도 별이 숨겨질 수 있도록 셰이더를 합쳤다.
                 float2 starMapUV = TRANSFORM_TEX(uvScroll(uv2, _StarSpeedMultix, _StarSpeedMultiy, 0), _StarMap);
-                half4 starColor = SAMPLE_TEXTURE2D(_StarMap, sampler_StarMap, starMapUV) * _StarColor * _GlobalSkyUnlitColor;
+                float4 starColor = SAMPLE_TEXTURE2D(_StarMap, sampler_StarMap, starMapUV) * _StarColor * _GlobalSkyUnlitColor;
 
 
 
@@ -287,7 +287,7 @@ Shader "MMN/BG/Sky_Clouds"
                 basemap.rgb = lerp(basemap.rgb, basemap2.rgb, basemap2.a);
                 basemap.rgb = lerp(basemap.rgb, basemap3.rgb, basemap3.a);
 
-                half4 color ;
+                float4 color ;
                 
                 //구름 알파 연산//////////////////////////////////
                 //현재 알파 두 방식의 차이는 없다

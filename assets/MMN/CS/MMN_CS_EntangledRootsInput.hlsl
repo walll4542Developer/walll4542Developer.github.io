@@ -5,33 +5,33 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-    half4 _BaseMap_ST;
-    half4 _BaseColor;
-    half _VertexColorWeight;
-    half _AlbedoTintStrength;
-    half4 _SpecColor;
-    half _Gloss;
-    half _RampY;
-    half _BackfaceReceiveShadowOff;
-    half4 _EmissionColor;
-    half _Cutoff;
-    half _Surface;
-    half _WindMultiply;
-    half _WindSpeedMultiply;
-    half _VertexAniOn;
-    half _RaycastHarftoneClip;
-    half _Night2DayEnum;
-    half _ALPHATEST;
-    half _Thickness;
-    half _ThicknessRange;
+    float4 _BaseMap_ST;
+    float4 _BaseColor;
+    float _VertexColorWeight;
+    float _AlbedoTintStrength;
+    float4 _SpecColor;
+    float _Gloss;
+    float _RampY;
+    float _BackfaceReceiveShadowOff;
+    float4 _EmissionColor;
+    float _Cutoff;
+    float _Surface;
+    float _WindMultiply;
+    float _WindSpeedMultiply;
+    float _VertexAniOn;
+    float _RaycastHarftoneClip;
+    float _Night2DayEnum;
+    float _ALPHATEST;
+    float _Thickness;
+    float _ThicknessRange;
 CBUFFER_END
 
 //GlobalVariables
-// half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-// half _Global_CloudScale;
-// half _Global_CloudEdgeHardness;
-half _Global_Night2Day;
+// float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+// float _Global_CloudScale;
+// float _Global_CloudEdgeHardness;
+float _Global_Night2Day;
 
 //Dot 관련도사실 쓸모없을거라 생각합니다만 혹시나 하는 마음에 남겨둡니다.
 // #ifdef UNITY_DOTS_INSTANCING_ENABLED
@@ -53,9 +53,9 @@ half _Global_Night2Day;
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
 
 //실제로 사용하지 않지만 내장된 메타패스에서 참조합니다. 물론 메타패스를 따로 만들면 되긴 하지만 번잡하므로 남겨둡니다. (...)
-half4 SampleSpecularSmoothness(float2 uv, half alpha, half4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
+float4 SampleSpecularSmoothness(float2 uv, float alpha, float4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
 {
-    half4 specularSmoothness = half4(0, 0, 0, 1);
+    float4 specularSmoothness = float4(0, 0, 0, 1);
     // #ifdef _SPECGLOSSMAP
     specularSmoothness = SAMPLE_TEXTURE2D(specMap, sampler_specMap, uv) * specColor;
     // #elif defined(_SPECULAR_COLOR)
@@ -73,7 +73,7 @@ half4 SampleSpecularSmoothness(float2 uv, half alpha, half4 specColor, TEXTURE2D
 // {
 //     outSurfaceData = (SurfaceData)0;
 
-//     half4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+//     float4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
 //     outSurfaceData.alpha = albedoAlpha.a * _BaseColor.a;
 //     AlphaDiscard(outSurfaceData.alpha, _Cutoff);
 
@@ -82,7 +82,7 @@ half4 SampleSpecularSmoothness(float2 uv, half alpha, half4 specColor, TEXTURE2D
 //     outSurfaceData.albedo *= outSurfaceData.alpha;
 // #endif
 
-//     half4 specularSmoothness = SampleSpecularSmoothness(uv, outSurfaceData.alpha, _SpecColor, TEXTURE2D_ARGS(_SpecGlossMap, sampler_SpecGlossMap));
+//     float4 specularSmoothness = SampleSpecularSmoothness(uv, outSurfaceData.alpha, _SpecColor, TEXTURE2D_ARGS(_SpecGlossMap, sampler_SpecGlossMap));
 //     outSurfaceData.metallic = 0.0; // unused
 //     outSurfaceData.specular = specularSmoothness.rgb;
 //     outSurfaceData.smoothness = specularSmoothness.a;

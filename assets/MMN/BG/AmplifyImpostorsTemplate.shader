@@ -84,7 +84,7 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 					float4 lmap : TEXCOORD0;
 				#endif
 				#if !defined(LIGHTMAP_ON) && UNITY_SHOULD_SAMPLE_SH
-					half3 sh : TEXCOORD1;
+					float3 sh : TEXCOORD1;
 				#endif
 				#if UNITY_VERSION >= 201810
 					UNITY_LIGHTING_COORDS(2,3)
@@ -153,11 +153,11 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				/*ase_frag_code:IN=v2f_surf*/
 				fixed3 albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/fixed3( 0, 0, 0 )/*end*/;
 				fixed3 normal = /*ase_frag_out:World Normal;Float3;1;-1;_Normal*/fixed3( 0, 0, 1 )/*end*/;
-				half3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/half3( 0, 0, 0 )/*end*/;
+				float3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/float3( 0, 0, 0 )/*end*/;
 				fixed3 specular = /*ase_frag_out:Specular;Float3;3;-1;_Specular*/fixed3( 0, 0, 0 )/*end*/;
 				fixed metallic = /*ase_frag_out:Metallic;Float;7;-1;_Metallic*/0/*end*/;
-				half smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
-				half occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
+				float smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
+				float occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;9;-1;_AlphaClipThreshold*/0/*end*/;
 				float4 bakedGI = /*ase_frag_out:Baked GI;Float4;8;-1;_BakedGI*/float4( 0, 0, 0, 0 )/*end*/;
@@ -346,11 +346,11 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				/*ase_frag_code:IN=v2f_surf*/
 				fixed3 albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/fixed3( 0, 0, 0 )/*end*/;
 				fixed3 normal = /*ase_frag_out:World Normal;Float3;1;-1;_Normal*/fixed3( 0, 0, 1 )/*end*/;
-				half3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/half3( 0, 0, 0 )/*end*/;
+				float3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/float3( 0, 0, 0 )/*end*/;
 				fixed3 specular = /*ase_frag_out:Specular;Float3;3;-1;_Specular*/fixed3( 0, 0, 0 )/*end*/;
 				fixed metallic = /*ase_frag_out:Metallic;Float;7;-1;_Metallic*/0/*end*/;
-				half smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
-				half occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
+				float smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
+				float occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;8;-1;_AlphaClipThreshold*/0/*end*/;
 
@@ -464,12 +464,12 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 			struct v2f_surf {
 				UNITY_POSITION(pos);
 				#ifndef DIRLIGHTMAP_OFF
-					half3 viewDir : TEXCOORD1;
+					float3 viewDir : TEXCOORD1;
 				#endif
 				float4 lmap : TEXCOORD2;
 				#ifndef LIGHTMAP_ON
 					#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
-						half3 sh : TEXCOORD3;
+						float3 sh : TEXCOORD3;
 					#endif
 				#else
 					#ifdef DIRLIGHTMAP_OFF
@@ -520,9 +520,9 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				return o;
 			}
 
-			void frag_surf (v2f_surf IN /*ase_frag_input*/, out half4 outGBuffer0 : SV_Target0, out half4 outGBuffer1 : SV_Target1, out half4 outGBuffer2 : SV_Target2, out half4 outEmission : SV_Target3
+			void frag_surf (v2f_surf IN /*ase_frag_input*/, out float4 outGBuffer0 : SV_Target0, out float4 outGBuffer1 : SV_Target1, out float4 outGBuffer2 : SV_Target2, out float4 outEmission : SV_Target3
 			#if defined(SHADOWS_SHADOWMASK) && (UNITY_ALLOWED_MRT_COUNT > 4)
-				, out half4 outShadowMask : SV_Target4
+				, out float4 outShadowMask : SV_Target4
 			#endif
 			, out float outDepth : SV_Depth
 			) {
@@ -538,11 +538,11 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				/*ase_frag_code:IN=v2f_surf*/
 				fixed3 albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/fixed3( 0, 0, 0 )/*end*/;
 				fixed3 normal = /*ase_frag_out:World Normal;Float3;1;-1;_Normal*/fixed3( 0, 0, 1 )/*end*/;
-				half3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/half3( 0, 0, 0 )/*end*/;
+				float3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/float3( 0, 0, 0 )/*end*/;
 				fixed3 specular = /*ase_frag_out:Specular;Float3;3;-1;_Specular*/fixed3( 0, 0, 0 )/*end*/;
 				fixed metallic = /*ase_frag_out:Metallic;Float;7;-1;_Metallic*/0/*end*/;
-				half smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
-				half occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
+				float smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
+				float occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;9;-1;_AlphaClipThreshold*/0/*end*/;
 				float4 bakedGI = /*ase_frag_out:Baked GI;Float4;8;-1;_BakedGI*/float4( 0, 0, 0, 0 )/*end*/;
@@ -574,14 +574,14 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				fixed3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 
 				UNITY_APPLY_DITHER_CROSSFADE(IN.pos.xy);
-				half atten = 1;
+				float atten = 1;
 
 				UnityGI gi;
 				UNITY_INITIALIZE_OUTPUT(UnityGI, gi);
 				gi.indirect.diffuse = 0;
 				gi.indirect.specular = 0;
 				gi.light.color = 0;
-				gi.light.dir = half3(0,1,0);
+				gi.light.dir = float3(0,1,0);
 
 				UnityGIInput giInput;
 				UNITY_INITIALIZE_OUTPUT(UnityGIInput, giInput);
@@ -718,11 +718,11 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				/*ase_frag_code:IN=v2f_surf*/
 				fixed3 albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/fixed3( 0, 0, 0 )/*end*/;
 				fixed3 normal = /*ase_frag_out:World Normal;Float3;1;-1;_Normal*/fixed3( 0, 0, 1 )/*end*/;
-				half3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/half3( 0, 0, 0 )/*end*/;
+				float3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/float3( 0, 0, 0 )/*end*/;
 				fixed3 specular = /*ase_frag_out:Specular;Float3;3;-1;_Specular*/fixed3( 0, 0, 0 )/*end*/;
 				fixed metallic = /*ase_frag_out:Metallic;Float;7;-1;_Metallic*/0/*end*/;
-				half smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
-				half occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
+				float smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
+				float occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;8;-1;_AlphaClipThreshold*/0/*end*/;
 
@@ -836,11 +836,11 @@ Shader /*ase_name*/ "Hidden/Impostors/Runtime/Standard Legacy"/*end*/
 				/*ase_frag_code:IN=v2f_surf*/
 				fixed3 albedo = /*ase_frag_out:Albedo;Float3;0;-1;_Albedo*/fixed3( 0, 0, 0 )/*end*/;
 				fixed3 normal = /*ase_frag_out:World Normal;Float3;1;-1;_Normal*/fixed3( 0, 0, 1 )/*end*/;
-				half3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/half3( 0, 0, 0 )/*end*/;
+				float3 emission = /*ase_frag_out:Emission;Float3;2;-1;_Emission*/float3( 0, 0, 0 )/*end*/;
 				fixed3 specular = /*ase_frag_out:Specular;Float3;3;-1;_Specular*/fixed3( 0, 0, 0 )/*end*/;
 				fixed metallic = /*ase_frag_out:Metallic;Float;7;-1;_Metallic*/0/*end*/;
-				half smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
-				half occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
+				float smoothness = /*ase_frag_out:Smoothness;Float;4;-1;_Smoothness*/0/*end*/;
+				float occlusion = /*ase_frag_out:Occlusion;Float;5;-1;_Occlusion*/1/*end*/;
 				fixed alpha = /*ase_frag_out:Alpha;Float;6;-1;_Alpha*/1/*end*/;
 				fixed alphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;8;-1;_AlphaClipThreshold*/0/*end*/;
 

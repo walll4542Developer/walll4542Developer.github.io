@@ -7,50 +7,50 @@
 
 CBUFFER_START(UnityPerMaterial)
 float4 _MainTex_ST;
-half4 _BaseColor;
-half _Cutoff;
+float4 _BaseColor;
+float _Cutoff;
 CBUFFER_END
 
 #define _Surface 0.0 // Terrain is always opaque
 
     CBUFFER_START(_Terrain)
-    half _NormalScale0, _NormalScale1, _NormalScale2, _NormalScale3;
-    half _Metallic0, _Metallic1, _Metallic2, _Metallic3;
-    half _Smoothness0, _Smoothness1, _Smoothness2, _Smoothness3;
-    half4 _DiffuseRemapScale0, _DiffuseRemapScale1, _DiffuseRemapScale2, _DiffuseRemapScale3;
-    half4 _MaskMapRemapOffset0, _MaskMapRemapOffset1, _MaskMapRemapOffset2, _MaskMapRemapOffset3;
-    half4 _MaskMapRemapScale0, _MaskMapRemapScale1, _MaskMapRemapScale2, _MaskMapRemapScale3;
+    float _NormalScale0, _NormalScale1, _NormalScale2, _NormalScale3;
+    float _Metallic0, _Metallic1, _Metallic2, _Metallic3;
+    float _Smoothness0, _Smoothness1, _Smoothness2, _Smoothness3;
+    float4 _DiffuseRemapScale0, _DiffuseRemapScale1, _DiffuseRemapScale2, _DiffuseRemapScale3;
+    float4 _MaskMapRemapOffset0, _MaskMapRemapOffset1, _MaskMapRemapOffset2, _MaskMapRemapOffset3;
+    float4 _MaskMapRemapScale0, _MaskMapRemapScale1, _MaskMapRemapScale2, _MaskMapRemapScale3;
 
     float4 _Control_ST;
     float4 _Control_TexelSize;
-    half _DiffuseHasAlpha0, _DiffuseHasAlpha1, _DiffuseHasAlpha2, _DiffuseHasAlpha3;
-    half _LayerHasMask0, _LayerHasMask1, _LayerHasMask2, _LayerHasMask3;
-    half4 _Splat0_ST, _Splat1_ST, _Splat2_ST, _Splat3_ST;
-    half _HeightTransition;
-    half _NumLayersCount;
+    float _DiffuseHasAlpha0, _DiffuseHasAlpha1, _DiffuseHasAlpha2, _DiffuseHasAlpha3;
+    float _LayerHasMask0, _LayerHasMask1, _LayerHasMask2, _LayerHasMask3;
+    float4 _Splat0_ST, _Splat1_ST, _Splat2_ST, _Splat3_ST;
+    float _HeightTransition;
+    float _NumLayersCount;
 
-    half4 _SpecColor;
-    half _Glossiness;
+    float4 _SpecColor;
+    float _Glossiness;
 
-    half _V_T2M_Splat1_uvScale;
-    half _V_T2M_Splat2_uvScale;
-    half _V_T2M_Splat3_uvScale;
-    half _V_T2M_Splat4_uvScale;
+    float _V_T2M_Splat1_uvScale;
+    float _V_T2M_Splat2_uvScale;
+    float _V_T2M_Splat3_uvScale;
+    float _V_T2M_Splat4_uvScale;
 
-    half _V_T2M_Splat2_Vector1;
-    half _V_T2M_Splat2_Vector2;
-    half4 _V_T2M_Splat2_EdgeColor;
-    // half _V_T2M_Splat2_Vector4;
+    float _V_T2M_Splat2_Vector1;
+    float _V_T2M_Splat2_Vector2;
+    float4 _V_T2M_Splat2_EdgeColor;
+    // float _V_T2M_Splat2_Vector4;
 
-    half _V_T2M_Splat3_Vector1;
-    half _V_T2M_Splat3_Vector2;
-    half4 _V_T2M_Splat3_EdgeColor;
-    // half _V_T2M_Splat3_Vector4;
+    float _V_T2M_Splat3_Vector1;
+    float _V_T2M_Splat3_Vector2;
+    float4 _V_T2M_Splat3_EdgeColor;
+    // float _V_T2M_Splat3_Vector4;
 
-    half _V_T2M_Splat4_Vector1;
-    half _V_T2M_Splat4_Vector2;
-    half4 _V_T2M_Splat4_EdgeColor;
-    // half _V_T2M_Splat4_Vector4;
+    float _V_T2M_Splat4_Vector1;
+    float _V_T2M_Splat4_Vector2;
+    float4 _V_T2M_Splat4_EdgeColor;
+    // float _V_T2M_Splat4_Vector4;
 
     TEXTURE2D(_V_T2M_Splat1_mask);        SAMPLER(sampler_V_T2M_Splat1_mask);
     TEXTURE2D(_V_T2M_Splat2_mask);        
@@ -67,10 +67,10 @@ CBUFFER_END
     #endif
     CBUFFER_END
 
-// half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-// half _Global_CloudScale;
-// half _Global_CloudEdgeHardness;
+// float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+// float _Global_CloudScale;
+// float _Global_CloudEdgeHardness;
 
 
 TEXTURE2D(_Control);    SAMPLER(sampler_Control);
@@ -97,9 +97,9 @@ TEXTURE2D(_MainTex);       SAMPLER(sampler_MainTex);
 TEXTURE2D(_SpecGlossMap);  SAMPLER(sampler_SpecGlossMap);
 TEXTURE2D(_MetallicTex);   SAMPLER(sampler_MetallicTex);
 
-half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
+float4 SampleMetallicSpecGloss(float2 uv, float albedoAlpha)
 {
-    half4 specGloss;
+    float4 specGloss;
     specGloss = SAMPLE_TEXTURE2D(_MetallicTex, sampler_MetallicTex, uv);
     specGloss.a = albedoAlpha;
     return specGloss;
@@ -108,14 +108,14 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfaceData)
 {
     outSurfaceData = (SurfaceData)0;
-    half4 albedoSmoothness = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+    float4 albedoSmoothness = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
     outSurfaceData.alpha = 1;
 
-    half4 specGloss = SampleMetallicSpecGloss(uv, albedoSmoothness.a);
+    float4 specGloss = SampleMetallicSpecGloss(uv, albedoSmoothness.a);
     outSurfaceData.albedo = albedoSmoothness.rgb;
 
     outSurfaceData.metallic = specGloss.r;
-    outSurfaceData.specular = half3(0.0h, 0.0h, 0.0h);
+    outSurfaceData.specular = float3(0.0h, 0.0h, 0.0h);
 
     outSurfaceData.smoothness = specGloss.a;
     outSurfaceData.normalTS = SampleNormal(uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));

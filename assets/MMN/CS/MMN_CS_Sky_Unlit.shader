@@ -74,7 +74,7 @@ Shader "MMN/CutScene/Sky_Unlit"
             CBUFFER_START(UnityPerMaterial)
                 float4 _EmissionMap_ST;
                 float4 _MaskMap_ST;
-                half4 _EmissionColor;
+                float4 _EmissionColor;
                 float _Distortion;
                 float _DistortionSpeedMultix;
                 float _DistortionSpeedMultiy;
@@ -93,11 +93,11 @@ Shader "MMN/CutScene/Sky_Unlit"
             float _GlobalSkyUnlitScrollSpeed2;
             // float _Global_WindUV;
 
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
-            half _Global_Night2Day;
+            // float _Global_CloudDensity;
+            // float _Global_CloudSpeed;
+            // float _Global_CloudScale;
+            // float _Global_CloudEdgeHardness;
+            float _Global_Night2Day;
 
 
             #include "../Includes/bendingVertex.hlsl"
@@ -117,7 +117,7 @@ Shader "MMN/CutScene/Sky_Unlit"
             {
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD2;
                 float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -151,7 +151,7 @@ Shader "MMN/CutScene/Sky_Unlit"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 // UNITY_SETUP_INSTANCE_ID(input);
                 // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -167,9 +167,9 @@ Shader "MMN/CutScene/Sky_Unlit"
                 }
 
                 float2 uv = input.uv;
-                half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_DistortionSpeedMultix, _DistortionSpeedMultiy)), _MaskMap));
-                half4 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_EmissionSpeedMultix, _EmissionSpeedMultiy) * _GlobalSkyUnlitScrollSpeed), _EmissionMap) + maskMap.r * _Distortion) * _EmissionColor * _GlobalSkyUnlitColor;
-                half4 color;
+                float4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_DistortionSpeedMultix, _DistortionSpeedMultiy)), _MaskMap));
+                float4 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, TRANSFORM_TEX(uv + frac(_Time.x * float2(_EmissionSpeedMultix, _EmissionSpeedMultiy) * _GlobalSkyUnlitScrollSpeed), _EmissionMap) + maskMap.r * _Distortion) * _EmissionColor * _GlobalSkyUnlitColor;
+                float4 color;
                 color.rgb = emission.rgb ;
                 color.a = emission.a ;
 

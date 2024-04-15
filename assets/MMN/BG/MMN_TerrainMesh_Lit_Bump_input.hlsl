@@ -7,10 +7,10 @@
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
     float4 _V_T2M_Control_ST;
-    half4 _BaseColor;
-    // half4 _SpecColor;
-    half4 _EmissionColor;
-    // half _Cutoff;
+    float4 _BaseColor;
+    // float4 _SpecColor;
+    float4 _EmissionColor;
+    // float _Cutoff;
     // float _ALPHATEST;
     
     float _V_T2M_Splat1_uvScale;
@@ -49,10 +49,10 @@ CBUFFER_END
 
 
 //GlobalVariables
-// half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-// half _Global_CloudScale;
-// half _Global_CloudEdgeHardness;
+// float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+// float _Global_CloudScale;
+// float _Global_CloudEdgeHardness;
 
 
 // TEXTURE2D(_SpecGlossMap);        SAMPLER(sampler_SpecGlossMap);
@@ -73,9 +73,9 @@ TEXTURE2D(_V_T2M_Splat4);        SAMPLER(sampler_V_T2M_Splat4);
 
 
 //metapass 에서 사용합니다. 별 필요는 없지만 살려둡시다
-half4 SampleSpecularSmoothness(half2 uv, half alpha, half4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
+float4 SampleSpecularSmoothness(float2 uv, float alpha, float4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
 {
-    half4 specularSmoothness = half4(0.0h, 0.0h, 0.0h, 1.0h);
+    float4 specularSmoothness = float4(0.0h, 0.0h, 0.0h, 1.0h);
     //#ifdef _SPECGLOSSMAP
     //    specularSmoothness = SAMPLE_TEXTURE2D(specMap, sampler_specMap, uv) * specColor;
     //#elif defined(_SPECULAR_COLOR)
@@ -95,7 +95,7 @@ half4 SampleSpecularSmoothness(half2 uv, half alpha, half4 specColor, TEXTURE2D_
 // {
 //     outSurfaceData = (SurfaceData)0;
 
-//     half4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+//     float4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
 //     outSurfaceData.alpha = albedoAlpha.a * _BaseColor.a;
 //     AlphaDiscard(outSurfaceData.alpha, _Cutoff);
 
@@ -104,7 +104,7 @@ half4 SampleSpecularSmoothness(half2 uv, half alpha, half4 specColor, TEXTURE2D_
 //         outSurfaceData.albedo *= outSurfaceData.alpha;
 //     #endif
 
-//     //half4 specularSmoothness = SampleSpecularSmoothness(uv, outSurfaceData.alpha, _SpecColor, TEXTURE2D_ARGS(_SpecGlossMap, sampler_SpecGlossMap));
+//     //float4 specularSmoothness = SampleSpecularSmoothness(uv, outSurfaceData.alpha, _SpecColor, TEXTURE2D_ARGS(_SpecGlossMap, sampler_SpecGlossMap));
 //     outSurfaceData.metallic = 0.0; // unused
 //     outSurfaceData.specular = _SpecColor.rgb;
 //     outSurfaceData.smoothness = 0.0; // unused

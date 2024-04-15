@@ -146,7 +146,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
             {
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD2;
                 float3 viewDir : TEXCOORD3;
                 float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
@@ -209,7 +209,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
 
                 // UNITY_SETUP_INSTANCE_ID(input);
@@ -249,11 +249,11 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
                 float2 haloMapPolarUV = TRANSFORM_TEX(uvScroll(polarUV, _HaloSpeedMultix, _HaloSpeedMultiy, 0.01), _MaskMap);
 
                 //마스크맵 만들기
-                // half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
-                half4 maskMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapPolarUV  * 0.5 /*타일링*/);
-                half4 skyMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, skyMapPolarUV  * 0.5 /*타일링*/);
-                half4 haloMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, haloMapPolarUV  * 0.5 /*타일링*/);
-                // half4 maskMap2 = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, float2(polarUV.x - _Global_WindUV, polarUV.y));
+                // float4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
+                float4 maskMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapPolarUV  * 0.5 /*타일링*/);
+                float4 skyMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, skyMapPolarUV  * 0.5 /*타일링*/);
+                float4 haloMapPolar = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, haloMapPolarUV  * 0.5 /*타일링*/);
+                // float4 maskMap2 = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, float2(polarUV.x - _Global_WindUV, polarUV.y));
 
                 float polarNoise = maskMapPolar.r;
                 float skyPolarNoise = skyMapPolar.r;
@@ -263,7 +263,7 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
 
                 //하늘
                 float2 skymapUV = TRANSFORM_TEX(uv, _SkyTex);
-                half4 skymap = SAMPLE_TEXTURE2D(_SkyTex, sampler_SkyTex, skymapUV + skyPolarNoise * _SkyDistortion * 0.003) ;
+                float4 skymap = SAMPLE_TEXTURE2D(_SkyTex, sampler_SkyTex, skymapUV + skyPolarNoise * _SkyDistortion * 0.003) ;
 
                 //헤일로
                 float2 blackMoonUV = uv * _BlackMoon.xy + _BlackMoon.zw;
@@ -273,11 +273,11 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
 
                 //검은 달
                 //UV는 헤일로와 같은것을 씁니다.
-                half4 blackMoon = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, blackMoonUV + polarNoise* 0.01);
+                float4 blackMoon = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, blackMoonUV + polarNoise* 0.01);
 
                 //별가루
                 float2 starDustUV = TRANSFORM_TEX(uvScroll(polarUV , _PolarDistortionSpeedMultix * 3, _PolarDistortionSpeedMultiy, 0.05), _MaskMap);
-                half4 starDust = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, starDustUV  + polarNoise * 2 /*구겨지는 정도*/);
+                float4 starDust = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, starDustUV  + polarNoise * 2 /*구겨지는 정도*/);
 
 
                 //////////////////// 최종연산 /////////////////////////
@@ -285,15 +285,15 @@ Shader "MMN/CutScene/Sky_AltarOfMorrighan"
 
                 float4 color ;
                 //하늘을 일단 넣고
-                color.rgb = skymap ;
+                color.rgb = skymap.rgb;
                 //헤일로를 더하고
-                color.rgb += halo.bbb *_HaloColor;
+                color.rgb += halo.bbb * _HaloColor.rgb;
                 //검은 달이 나오게 lerp합니다.
-                color.rgb = lerp( color.rgb ,float3(0,0,0),blackMoon.a );
+                color.rgb = lerp(color.rgb, float3(0, 0, 0), blackMoon.a);
                 //다시 헤일로를 더하고
                 color.rgb += halo.bbb * 0.1;
                 //별가루를 더함
-                color.rgb += starDust.g * halo.b * _StarDustColor;
+                color.rgb += starDust.g * halo.b * _StarDustColor.rgb;
 
 
                 color.a = 1;

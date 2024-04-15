@@ -30,6 +30,7 @@
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -125,12 +126,12 @@
                 float2 uv : TEXCOORD0;
 
                 float3 positionWS : TEXCOORD1;   // World space position
-                half3 normalWS : TEXCOORD2;
-                half4 tangentWS : TEXCOORD3;
-                half3 bitangentWS : TEXCOORD4;
-                half3 viewDirWS : TEXCOORD5;
+                float3 normalWS : TEXCOORD2;
+                float4 tangentWS : TEXCOORD3;
+                float3 bitangentWS : TEXCOORD4;
+                float3 viewDirWS : TEXCOORD5;
 
-                half4 fogCoord : TEXCOORD6;     // x: fogFactor, yzw: vertexLighting
+                float4 fogCoord : TEXCOORD6;     // x: fogFactor, yzw: vertexLighting
                 float4 positionNDC : TEXCOORD7;
             };
 
@@ -148,20 +149,20 @@
 
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
                 output.normalWS = normalInput.normalWS;
-                half crossSign = half(input.tangentOS.w) * GetOddNegativeScale();
-                output.tangentWS = half4(normalInput.tangentWS, crossSign);
+                float crossSign = float(input.tangentOS.w) * GetOddNegativeScale();
+                output.tangentWS = float4(normalInput.tangentWS, crossSign);
                 output.bitangentWS = normalInput.bitangentWS;
                 output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
                 output.positionNDC = ComputeScreenPos(output.positionCS);
 
-                half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
                 #ifdef _ADDITIONAL_LIGHTS_VERTEX
-                    half3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
-                    output.fogCoord = half4(fogFactor, vertexLight); //fogFactorAndVertexLight
+                    float3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
+                    output.fogCoord = float4(fogFactor, vertexLight); //fogFactorAndVertexLight
                 #else
-                    output.fogCoord = half4(fogFactor, 0.0, 0.0, 0.0);
+                    output.fogCoord = float4(fogFactor, 0.0, 0.0, 0.0);
                 #endif
 
                 return output;
@@ -172,37 +173,37 @@
                 inputData = (InputData)0;
                 inputData.positionWS = input.positionWS.xyz;
 
-                half3 viewDirWS = input.viewDirWS;
+                float3 viewDirWS = input.viewDirWS;
                 viewDirWS = SafeNormalize(viewDirWS);
                 inputData.viewDirectionWS = viewDirWS;
 
                 inputData.normalWS.xyz = input.normalWS.xyz;
 
-                inputData.shadowCoord = half4(0, 0, 0, 0);
+                inputData.shadowCoord = float4(0, 0, 0, 0);
 
                 #ifdef _ADDITIONAL_LIGHTS_VERTEX
-                    inputData.fogCoord = InitializeInputDataFog(half4(inputData.positionWS, 1.0), input.fogCoord.x);
+                    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
                     inputData.vertexLighting = input.fogCoord.yzw;
                 #else
-                    inputData.fogCoord = InitializeInputDataFog(half4(inputData.positionWS, 1.0), input.fogCoord.x);
-                    inputData.vertexLighting = half3(0, 0, 0);
+                    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
+                    inputData.vertexLighting = float3(0, 0, 0);
                 #endif
 
                 inputData.bakedGI = 1.0; //음영을 사용 안하도록
 
                 inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-                inputData.shadowMask = half4(1, 1, 1, 1);
+                inputData.shadowMask = float4(1, 1, 1, 1);
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
                 //-----------------------------------------------------------------------------
                 // Diffuse
                 //-----------------------------------------------------------------------------
                 float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-                half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-                half3 baseColor = baseMap.rgb;
-                half alpha = baseMap.a;
+                float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+                float3 baseColor = baseMap.rgb;
+                float alpha = baseMap.a;
 
                 HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -221,21 +222,21 @@
                 //-----------------------------------------------------------------------------
                 // Process Color
                 //-----------------------------------------------------------------------------
-                half3 mainLightColor = saturate(lightingData.mainLightColor + lightingData.giColor);
+                float3 mainLightColor = saturate(lightingData.mainLightColor + lightingData.giColor);
 
-                half3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(input.uv.xy + half2(0,-_Time.x), _BumpMap)));
-                half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
-                half3 bumpNormal = TransformTangentToWorld(lerp(half3(0.0, 0.0, 1.0), normalTS, _BumpPower), tangentToWorld);
+                float3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(input.uv.xy + float2(0,-_Time.x), _BumpMap)));
+                float3x3 tangentToWorld = float3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
+                float3 bumpNormal = TransformTangentToWorld(lerp(float3(0.0, 0.0, 1.0), normalTS, _BumpPower), tangentToWorld);
 
-                half nDotV = 1-step(dot(bumpNormal, inputData.viewDirectionWS), _FresnelRange);
-                half fresnelValue = (1.0 - nDotV) * _FresnelPower;
-                half3 fresnelResult = mainLightColor * fresnelValue * _FresnelColor.rgb;
+                float nDotV = 1-step(dot(bumpNormal, inputData.viewDirectionWS), _FresnelRange);
+                float fresnelValue = (1.0 - nDotV) * _FresnelPower;
+                float3 fresnelResult = mainLightColor * fresnelValue * _FresnelColor.rgb;
 
                 //-----------------------------------------------------------------------------
                 // Result
                 //-----------------------------------------------------------------------------
-                half3 lightColor = mainLightColor;
-                half4 resultColor;
+                float3 lightColor = mainLightColor;
+                float4 resultColor;
                 resultColor.rgb = saturate(baseColor * lightColor * _TintColorIntensity);
                 resultColor.rgb = lerp(resultColor.rgb, fresnelResult, fresnelValue);
                 resultColor.rgb *= _Color.rgb;

@@ -5,13 +5,13 @@
 
 float _Global_WindUV;
 float4 _Global_pos;
-half _Global_CloudDensity;
-// half _Global_CloudSpeed;
-half _Global_CloudScale;
-half _Global_CloudEdgeHardness;
-half4 _Global_GILightMulti;
-half _ReceiveGIStrength;
-half _Global_ContactShadowStrength;
+float _Global_CloudDensity;
+// float _Global_CloudSpeed;
+float _Global_CloudScale;
+float _Global_CloudEdgeHardness;
+float4 _Global_GILightMulti;
+float _ReceiveGIStrength;
+float _Global_ContactShadowStrength;
 
 void InitializeGlobalValue()
 {

@@ -62,18 +62,20 @@
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-            struct Attributes
-            {
-                float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
-                float2 texcoord : TEXCOORD0;
-            };
+			struct Attributes
+			{
+				float4 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+    			float4 tangentOS : TANGENT;
+				float4 texcoord : TEXCOORD0;
+				float4 color : COLOR;
+			};
 
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                half3 normalWS : TEXCOORD1;
+                float3 normalWS : TEXCOORD1;
                 float3 positionWS : TEXCOORD2;
             };
 
@@ -88,18 +90,18 @@
             CBUFFER_START( UnityPerMaterial )
                 float4 _BaseMap_ST;
 
-                half _UniverseUVScale;
-                half _SilhouetteUVScale;
+                float _UniverseUVScale;
+                float _SilhouetteUVScale;
 
-                half4 _SilhouetteColor;
-                half _SilhouetteThickness;
-                half _SilhouetteAnimSpeed;
+                float4 _SilhouetteColor;
+                float _SilhouetteThickness;
+                float _SilhouetteAnimSpeed;
 
-                half _SilhouetteInnerGlowBase;
-                half _SilhouetteInnerGlowSharpness;
+                float _SilhouetteInnerGlowBase;
+                float _SilhouetteInnerGlowSharpness;
 
-                half _SilhouetteEdgeBase;
-                half _SilhouetteEdgeSharpness;
+                float _SilhouetteEdgeBase;
+                float _SilhouetteEdgeSharpness;
             CBUFFER_END
 
             Varyings vert (Attributes input)
@@ -112,53 +114,53 @@
 
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
 
-                output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap) * 6.0;
+                output.uv = TRANSFORM_TEX(input.texcoord.xy, _BaseMap) * 6.0;
 
                 return output;
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
-                half4 resultColor;
+                float4 resultColor;
 
                 // Texcoord
                 float2 uv = input.uv;
 
                 // Fresnel
                 float3 positionWS = input.positionWS;
-                half3 normalWS = input.normalWS;
+                float3 normalWS = input.normalWS;
 
-                half3 viewDirWS = normalize(GetCameraPositionWS() - positionWS);
-                half nDotV = dot(normalize(normalWS), viewDirWS);
+                float3 viewDirWS = normalize(GetCameraPositionWS() - positionWS);
+                float nDotV = dot(normalize(normalWS), viewDirWS);
 
                 // Universe Texture
-                half2 screenRatio = _ScreenParams.xy / min(_ScreenParams.x, _ScreenParams.y);
+                float2 screenRatio = _ScreenParams.xy / min(_ScreenParams.x, _ScreenParams.y);
                 float2 screenUV = (input.positionCS.xy / _ScreenParams.xy - float2(0.5, 0.5)) * screenRatio;
 
                 float2 universeUV = screenUV * _UniverseUVScale + float2(0.5, 0.5);
-                half4 universeTexColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, universeUV);
+                float4 universeTexColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, universeUV);
 
                 // Noise (Silhouette)
                 float2 silhouetteUV = screenUV * _SilhouetteUVScale + float2(0.5, 0.5);
-                half3 silhouetteTexColor = SAMPLE_TEXTURE2D(_SilhouetteMap, sampler_SilhouetteMap, silhouetteUV).rgb;
+                float3 silhouetteTexColor = SAMPLE_TEXTURE2D(_SilhouetteMap, sampler_SilhouetteMap, silhouetteUV).rgb;
 
-                half time = frac(_Time.x * _SilhouetteAnimSpeed);
-                half3 weightRGB = half3(
+                float time = frac(_Time.x * _SilhouetteAnimSpeed);
+                float3 weightRGB = float3(
                     saturate(abs(time * 3.0 - 1.5) - 0.5),
                     saturate(-abs(time * 3.0 - 1.0) + 1.0),
                     saturate(-abs(time * 3.0 - 2.0) + 1.0)
                 );
 
-                half noise = dot(silhouetteTexColor, weightRGB);
+                float noise = dot(silhouetteTexColor, weightRGB);
 
                 // Silhouette
-                half rimThickness = _SilhouetteThickness * 2 - 1;
-                half rim = 1 - saturate(nDotV) + rimThickness;
-                half contourHeight = noise + rim * 2.0 - 1.0;
+                float rimThickness = _SilhouetteThickness * 2 - 1;
+                float rim = 1 - saturate(nDotV) + rimThickness;
+                float contourHeight = noise + rim * 2.0 - 1.0;
 
-                half silhouetteInnerGlow = saturate((rim + _SilhouetteInnerGlowBase) * _SilhouetteInnerGlowSharpness);
-                half silhouetteEdge = saturate((contourHeight + _SilhouetteEdgeBase) * _SilhouetteEdgeSharpness);
-                half silhouetteBias = saturate(contourHeight * 100.0);
+                float silhouetteInnerGlow = saturate((rim + _SilhouetteInnerGlowBase) * _SilhouetteInnerGlowSharpness);
+                float silhouetteEdge = saturate((contourHeight + _SilhouetteEdgeBase) * _SilhouetteEdgeSharpness);
+                float silhouetteBias = saturate(contourHeight * 100.0);
 
                 // Composite
                 resultColor.rgb = lerp(universeTexColor.rgb, _SilhouetteColor.rgb, silhouetteBias);

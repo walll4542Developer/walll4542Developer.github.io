@@ -17,23 +17,23 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Skin diffuse
     //-----------------------------------------------------------------------------
     float2 uv = TRANSFORM_TEX(input.uv.xy, _BaseMap);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
-    half3 baseColor = baseMap.rgb;
-    half alpha = 1.0;
+    float3 baseColor = baseMap.rgb;
+    float alpha = 1.0;
     #if defined(_ALPHA_OVERRIDE_FEATURE) && defined(_TRANSPARENCY)
         alpha = baseMap.a * _AlphaOverride;
     #endif
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -66,33 +66,33 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #ifdef _MOUTHPUSH_FEATURE
         // 입 밀어넣기 (Parallax)
-        const half3 upVector = half3(0.0, 1.0, 0.0);
-        half3 cameraDirWS = -GetViewForwardDir();
-        half3 mouthNormal = characterData.headDirection3D;
+        const float3 upVector = float3(0.0, 1.0, 0.0);
+        float3 cameraDirWS = -GetViewForwardDir();
+        float3 mouthNormal = characterData.headDirection3D;
 
-        half adjustHorizontal = abs(dot(mouthNormal, cameraDirWS));
-        half adjustVertical = abs(dot(upVector, cameraDirWS));
+        float adjustHorizontal = abs(dot(mouthNormal, cameraDirWS));
+        float adjustVertical = abs(dot(upVector, cameraDirWS));
 
-        half strengthLimit = lerp(_MouthPushStrength * 0.2, _MouthPushStrength, adjustHorizontal);
-        half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, mouthNormal, inputData.viewDirectionWS);
-        half2 parallaxOffset = GetParallaxOffset1Step(strengthLimit, viewDirTS);
+        float strengthLimit = lerp(_MouthPushStrength * 0.2, _MouthPushStrength, adjustHorizontal);
+        float3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, mouthNormal, inputData.viewDirectionWS);
+        float2 parallaxOffset = GetParallaxOffset1Step(strengthLimit, viewDirTS);
 
-        half offsetSign = (parallaxOffset.x > 0.0) ? 1.0 : -1.0;
-        half offsetLimit = lerp(0.16, 0.52, adjustHorizontal);
+        float offsetSign = (parallaxOffset.x > 0.0) ? 1.0 : -1.0;
+        float offsetLimit = lerp(0.16, 0.52, adjustHorizontal);
         parallaxOffset.x = offsetSign * min(offsetLimit, abs(parallaxOffset.x));
 
-        parallaxOffset = lerp(parallaxOffset, half2(parallaxOffset.x * 0.3, parallaxOffset.y), adjustVertical);
-        parallaxOffset = lerp(parallaxOffset, half2(0.0, parallaxOffset.y), adjustHorizontal);
+        parallaxOffset = lerp(parallaxOffset, float2(parallaxOffset.x * 0.3, parallaxOffset.y), adjustVertical);
+        parallaxOffset = lerp(parallaxOffset, float2(0.0, parallaxOffset.y), adjustHorizontal);
     #else
-        half2 parallaxOffset = 0;
+        float2 parallaxOffset = 0;
     #endif
 
     // 기본 입
-    _MouthMapScalePosition.zw -= parallaxOffset * half2(10.0, 0.0);
+    _MouthMapScalePosition.zw -= parallaxOffset * float2(10.0, 0.0);
     _MouthShowType = step(0.1, _MouthShowType);
     float2 mouthMapUV = TransformUV(_MouthMapScalePosition, _MouthMapRotation, input.uv.zw);
-    half4 mouthMap = SAMPLE_TEXTURE2D_BIAS(_MouthMap, _MouthMap_linear_clamp_sampler, mouthMapUV, -1.2);
-    half3 mouthColor = mouthMap.rgb;
+    float4 mouthMap = SAMPLE_TEXTURE2D_BIAS(_MouthMap, _MouthMap_linear_clamp_sampler, mouthMapUV, -1.2);
+    float3 mouthColor = mouthMap.rgb;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -102,18 +102,18 @@ half4 BasePassFragment(Varyings input) : SV_Target
     dyedBaseColor = lerp(dyedBaseColor, mouthColor, mouthMap.a * (1.0 - _MouthShowType));
 
     // 이모션 용 입
-    _EmotionMouthMapScalePosition.zw -= parallaxOffset * half2(10.0, 0.0);
+    _EmotionMouthMapScalePosition.zw -= parallaxOffset * float2(10.0, 0.0);
     float2 emotionMouthMapUV = ConvertToAtlasUV(_EmotionMouthMapAtlasSize.xy, _EmotionMouthMapAtlasSize.z, _EmotionMouthMapScalePosition, _EmotionMouthMapAtlasSize.w, input.uv.zw);
-    half4 emotionMouthMap = SAMPLE_TEXTURE2D_BIAS(_EmotionMouthMap, sampler_EmotionMouthMap, emotionMouthMapUV, -1.2);
-    half3 emotionMouthColor = emotionMouthMap.rgb;
+    float4 emotionMouthMap = SAMPLE_TEXTURE2D_BIAS(_EmotionMouthMap, sampler_EmotionMouthMap, emotionMouthMapUV, -1.2);
+    float3 emotionMouthColor = emotionMouthMap.rgb;
     dyedBaseColor = lerp(dyedBaseColor, emotionMouthColor, emotionMouthMap.a * _MouthShowType);
 
     //-----------------------------------------------------------------------------
     // 문신 / 횽터
     //-----------------------------------------------------------------------------
     float2 tattooUV = TransformUV(_TattooMapScalePosition, _TattooMapRotation, input.uv.xy);
-    half4 tattooMap = SAMPLE_TEXTURE2D(_TattooMap, sampler_TattooMap, tattooUV);
-    half3 tattooColor = tattooMap.rgb;
+    float4 tattooMap = SAMPLE_TEXTURE2D(_TattooMap, sampler_TattooMap, tattooUV);
+    float3 tattooColor = tattooMap.rgb;
 
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
@@ -134,8 +134,8 @@ half4 BasePassFragment(Varyings input) : SV_Target
     // 수염
     //-----------------------------------------------------------------------------
     float2 beardUV = TransformUV(_BeardMapScalePosition, _BeardMapRotation, input.uv.xy);
-    half4 beardMap = SAMPLE_TEXTURE2D(_BeardMap, sampler_BeardMap, beardUV);
-    half3 beardColor = beardMap.rgb;
+    float4 beardMap = SAMPLE_TEXTURE2D(_BeardMap, sampler_BeardMap, beardUV);
+    float3 beardColor = beardMap.rgb;
 
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyableBeard))
@@ -149,8 +149,8 @@ half4 BasePassFragment(Varyings input) : SV_Target
     // 악세서리 (예비용)
     //-----------------------------------------------------------------------------
     float2 accessoryUV = TransformUV(_AccessoryMapScalePosition, _AccessoryMapRotation, input.uv.xy);
-    half4 accessoryMap = SAMPLE_TEXTURE2D(_AccessoryMap, sampler_AccessoryMap, accessoryUV);
-    half3 accessoryColor = accessoryMap.rgb;
+    float4 accessoryMap = SAMPLE_TEXTURE2D(_AccessoryMap, sampler_AccessoryMap, accessoryUV);
+    float3 accessoryColor = accessoryMap.rgb;
 
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyableAccessory))
@@ -163,23 +163,23 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColor(inputData,
         mainLight, lightingData, characterData,
-        dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor, _FlatShadingOff);
+        _SHADINGTYPE_SKINFACE_VALUE, dyedBaseColor, _SilhouetteOff, _SilhouetteTintColor, _FlatShadingOff);
 
     #ifdef _OUTLINE_FEATURE
-        half3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode);
+        float3 outlineColor = OnePassOutline(inputData, mainLight.direction, _OutlineColorMode, _SHADINGTYPE_SKINFACE_VALUE);
 
         #ifdef DEBUG_OUTLINE_OFF
-            outlineColor = half3(1, 1, 1);
+            outlineColor = float3(1, 1, 1);
         #endif
 
         resultColor.rgb *= outlineColor;
     #endif
 
     #ifdef _FRESNEL_FEATURE
-        half3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
+        float3 fresnelColor = ApplyFresnel(dyedBaseColor, lightingData.mainLightColor, lightingData.giColor,
             inputData.normalWS, inputData.viewDirectionWS, _FresnelColor.rgb, _FresnelRange, _FresnelPower);
         resultColor.rgb += fresnelColor;
     #endif
@@ -224,7 +224,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
             dyedBaseColor *= outlineColor;
         #endif
 
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

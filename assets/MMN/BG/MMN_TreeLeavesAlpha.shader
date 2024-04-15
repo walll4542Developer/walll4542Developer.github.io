@@ -113,7 +113,8 @@ Shader "Hidden/MMN/BG/TreeLeavesAlphaBlend"
             // #pragma shader_feature _ _SHOWAO_ON
             // #pragma shader_feature _ _TOPLIGHT_ON
             // #pragma shader_feature _ _SHOWVERTEXCOLOR_ON
-            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // //#pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -123,6 +124,7 @@ Shader "Hidden/MMN/BG/TreeLeavesAlphaBlend"
             // #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
