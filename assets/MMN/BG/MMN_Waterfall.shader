@@ -72,10 +72,10 @@ Shader "MMN/BG/Waterfall"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
-                half4 tangentOS : TANGENT;
+                float3 normalOS : NORMAL;
+                float4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
-                half4 color : COLOR;
+                float4 color : COLOR;
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
@@ -86,17 +86,17 @@ Shader "MMN/BG/Waterfall"
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;      // World space position
                 float4 projectedPosition : TEXCOORD2;
-                //half3 normalWS : TEXCOORD3;
+                //float3 normalWS : TEXCOORD3;
                 float4 normal : TEXCOORD3;    // xyz: normal, w: viewDir.x
                 float4 tangent : TEXCOORD4;    // xyz: tangent, w: viewDir.y
                 float4 bitangent : TEXCOORD5;    // xyz: bitangent, w: viewDir.z
 
-                half fogFactor : TEXCOORD6;          // x: fogFactor
+                float fogFactor : TEXCOORD6;          // x: fogFactor
 
                 float4 shadowCoord : TEXCOORD7;
                 float4 screenPos : TEXCOORD8;
 
-                half4 color : COLOR0;               // low-precision, 0–1 range data
+                float4 color : COLOR0;               // low-precision, 0–1 range data
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -108,21 +108,21 @@ Shader "MMN/BG/Waterfall"
             float _UseGlobalFresnel;
 
             CBUFFER_START(UnityPerMaterial)
-                half _VertexFlowSpeed;
-                half _VertexFlowCrmpled;
+                float _VertexFlowSpeed;
+                float _VertexFlowCrmpled;
                 float4 _ScatterColor2;
-                half _Turbidity;
+                float _Turbidity;
                 float4 _FresnelColor;
                 float4 _FoamColor;
-                half _FoamOpacity;
-                half _FoamOffset;
-                half _FlowSpeed;
-                half _DistortionAmount;
+                float _FoamOpacity;
+                float _FoamOffset;
+                float _FlowSpeed;
+                float _DistortionAmount;
                 float _Glossiness;
                 float4 _SpecColor;
                 float4 _DistortionTexture_ST;
                 float4 _BumpMap_ST;
-                half _RaycastHarftoneClip;
+                float _RaycastHarftoneClip;
             CBUFFER_END
 
             TEXTURE2D(_DistortionTexture);         SAMPLER(sampler_DistortionTexture);
@@ -138,7 +138,7 @@ Shader "MMN/BG/Waterfall"
 
 
                 float2 flowingUV = input.texcoord.xy * 5.0 + float2(0.0, -1.0) * _Time.z * _VertexFlowSpeed;
-                half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D_LOD(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap), 0), 1).rgb;
+                float3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D_LOD(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap), 0), 1).rgb;
 
                 // vertex transform
                 // VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz); //원본백업
@@ -158,7 +158,7 @@ Shader "MMN/BG/Waterfall"
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
                 float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
-                //half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+                //float3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
                 float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
                 output.uv = input.texcoord;
@@ -166,15 +166,15 @@ Shader "MMN/BG/Waterfall"
                 output.projectedPosition = vertexInput.positionNDC;
                 output.positionCS = vertexInput.positionCS;
 
-                output.normal = half4(normalInput.normalWS, viewDirWS.x);
-                output.tangent = half4(normalInput.tangentWS, viewDirWS.y);
-                output.bitangent = half4(normalInput.bitangentWS, viewDirWS.z);
+                output.normal = float4(normalInput.normalWS, viewDirWS.x);
+                output.tangent = float4(normalInput.tangentWS, viewDirWS.y);
+                output.bitangent = float4(normalInput.bitangentWS, viewDirWS.z);
                 //output.normalWS = NormalizeNormalPerVertex(normalInput.normalWS);
 
                 output.color = input.color; //r굴곡g포말b투명a음영
                 // #ifdef _ADDITIONAL_LIGHTS_VERTEX
-                //     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
-                //     output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+                //     float3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+                //     output.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
                 // #else
                     output.fogFactor = fogFactor;
                 // #endif
@@ -214,16 +214,16 @@ Shader "MMN/BG/Waterfall"
 
 
                 //노말 + 디테일 노말 연산
-                half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
-                half3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
+                float3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
+                float3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
                 normalTS = normalize(float3(normalTS.rg + normalTS2.rg, normalTS.b * normalTS2.b) * float3(_DistortionAmount.xx, 1));
 
                 // return float4(normalTS.xxx, 1);
 
 
                 //각 변수 계산해주기
-                half3 viewDirWS = half3(input.normal.w, input.tangent.w, input.bitangent.w);
-                half3 normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
+                float3 viewDirWS = float3(input.normal.w, input.tangent.w, input.bitangent.w);
+                float3 normalWS = TransformTangentToWorld(normalTS, float3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
                 normalWS = NormalizeNormalPerPixel(normalWS);
                 viewDirWS = SafeNormalize(viewDirWS);
 
@@ -239,8 +239,8 @@ Shader "MMN/BG/Waterfall"
 
                 //스페큘러
                 Light mainLight = GetMainLight(input.shadowCoord);
-                half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
-                half3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS, viewDirWS, 0.5, _Glossiness * 50);
+                float3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
+                float3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS, viewDirWS, 0.5, _Glossiness * 50);
 
                 //리플렉션 프로브
                 float3 reflectVec = reflect(-viewDirWS, normalWS);
@@ -284,7 +284,7 @@ Shader "MMN/BG/Waterfall"
                 opacity += Luminance(specularColor);
 
                 //레이케스트 되면 사라지는 기능
-                half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+                float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
                 clip(RaycasthalftoneAlpha - 0.1);
 
                 //fog calc =============================================================
@@ -293,13 +293,13 @@ Shader "MMN/BG/Waterfall"
                 Unity_SimpleNoise_float(input.positionWS.xz + _Time.y * _Global_FogHeightNoiseSpeed, _Global_FogHeightNoiseScale, noisevalue);
                 //y is height
                 float y = saturate(input.positionWS.y / 100 - _Global_FogHeightOffset -noisevalue * _Global_FogHeightNoiseValue);
-                half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-                half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-                half fogHeight = max(fogHeightBottom, fogHeightTop);
+                float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+                float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+                float fogHeight = max(fogHeightBottom, fogHeightTop);
 
 
                 //레인드롭 텍스쳐 : 폭포는 세로로 떨어지니까 이게 필요 없을 것 같아서.
-                // half3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS, normalWS) * 0.5;
+                // float3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS, normalWS) * 0.5;
                 // color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
 

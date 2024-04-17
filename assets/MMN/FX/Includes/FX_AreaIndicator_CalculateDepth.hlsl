@@ -17,6 +17,7 @@
 //     return depthAlpha;
 // }
 
+
 /*
 float CalculateDepthAlpha(float2 uv, float4 ZBufferParams, float3 positionWS, float alpha)
 {
@@ -129,7 +130,16 @@ float CalculateDepthAlphaTargetRing(float2 uv, float4 ZBufferParams, float3 posi
 
 float3 CalculateGreyScale(float3 color, float alpha)
 {
-    return lerp(color, dot(color, half3(0.3,0.6,0.1)), 1.0 - alpha);
+    return lerp(color, dot(color, float3(0.3,0.6,0.1)), 1.0 - alpha);
+}
+
+void CalculateDepthAlphaTargetRingOpaque(inout float4 finalColor, float opaque, float4 positionNDC, float4 ZBufferParams, float3 positionWS)
+{
+    if (opaque < 0.5)
+    {
+        finalColor.rgb = finalColor.rgb * 0.2;
+        finalColor.a = CalculateDepthAlphaTargetRing(positionNDC.xy, ZBufferParams, positionWS, finalColor.a);
+    }
 }
 
 #endif // MMN_FX_AREAINDICATOR_DEPTH

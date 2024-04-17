@@ -7,25 +7,31 @@ TEXTURE2D(_MainTex);
 SAMPLER(sampler_MainTex);
 
 CBUFFER_START(UnityPerMaterial)
-    real _OffsetMode;
+    float _LightReceive;
+    float _LightRatio;
+
+    float _FogReceive;
+
+    float _OffsetMode;
 
     float4 _MainTex_ST;
-    real4 _Color;
-    real _Intensity_Color;
-    real4 _EmissionColor;
-    real _AlphaCutoff;
+
+    float4 _Color;
+    float _Intensity_Color;
+    float4 _EmissionColor;
+    float _AlphaCutoff;
+
+    float4 _FresnelColor;
+    float _FresnelRange;
+    float _FresnelPower;
 
     float _Sphereofinfluence;
     float4 _VelocityVector;
     float _TimeSpeed;
     float _Threshold;
     float _SinScope;
-
-    real _FogPower;
-    real _LightRatio;
-
-    real _Mode;
-    real _TransitionValue;
 CBUFFER_END
+
+
 
 #endif

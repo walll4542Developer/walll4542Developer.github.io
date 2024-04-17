@@ -8,7 +8,7 @@
 
 #define FXDebuggingColor(input, color, alpha) FXDebugColor(input.normalWS, input.positionWS, input.positionOS, input.positionCS, input.fogCoord, color, alpha);
 
-// bool CanDebugOverrideOutputColor(inout InputData inputData, inout SurfaceData surfaceData, inout half4 debugColor)
+// bool CanDebugOverrideOutputColor(inout InputData inputData, inout SurfaceData surfaceData, inout float4 debugColor)
 // {
 //     if (_DebugMaterialMode == DEBUGMATERIALMODE_LIGHTING_COMPLEXITY)
 //     {
@@ -38,9 +38,9 @@
 //     }
 // }
 
-half4 FXDebugColor(in float3 normalWS, in half3 positionWS, in float4 positionOS, in float4 positionCS, in half4 fogCoord, half3 color, half alpha)
+float4 FXDebugColor(in float3 normalWS, in float3 positionWS, in float4 positionOS, in float4 positionCS, in float4 fogCoord, float3 color, float alpha)
 {
-    half4 debugColor = half4(0, 0, 0, 0);
+    float4 debugColor = float4(0, 0, 0, 0);
 
     // initializeSurfaceData
     SurfaceData surfaceData = (SurfaceData)0;
@@ -85,9 +85,9 @@ half4 FXDebugColor(in float3 normalWS, in half3 positionWS, in float4 positionOS
     return debugColor;
 }
 
-half4 FXDebugColor(in float3 normalWS, in half3 positionWS, in half4 fogCoord, half3 color, half alpha)
+float4 FXDebugColor(in float3 normalWS, in float3 positionWS, in float3 fogCoord, float3 color, float alpha)
 {
-    half4 debugColor = half4(0, 0, 0, 0);
+    float4 debugColor = float4(0, 0, 0, 0);
 
     // initializeSurfaceData
     SurfaceData surfaceData = (SurfaceData)0;

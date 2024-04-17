@@ -16,6 +16,7 @@ CBUFFER_START(UnityPerMaterial)
     float4 _EmissionColor;
     float _Cutoff;
     float _Surface;
+    float _IsRaindrop;
     float _WindMultiply;
     float _WindSpeedMultiply;
     float _VertexAniOn;
@@ -28,13 +29,13 @@ CBUFFER_START(UnityPerMaterial)
     float _GroundAOintensity;
 CBUFFER_END
 
-half _Global_Night2Day;
+float _Global_Night2Day;
 
 //실제로 사용하지 않지만 내장된 메타패스에서 참조합니다. 그래서 최소한만 남겨 둡니다. 물론 메타패스를 따로 만들면 되긴 하지만 번잡하므로 남겨둡니다. (...)
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
-half4 SampleSpecularSmoothness(float2 uv, half alpha, half4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
+float4 SampleSpecularSmoothness(float2 uv, float alpha, float4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))
 {
-    half4 specularSmoothness = half4(0, 0, 0, 1);
+    float4 specularSmoothness = float4(0, 0, 0, 1);
     specularSmoothness = SAMPLE_TEXTURE2D(specMap, sampler_specMap, uv) * specColor;
     return specularSmoothness;
 }

@@ -69,11 +69,11 @@ Shader "MMN/CutScene/Sky_Lit"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
             //GlobalVariables
-            // half _Global_CloudDensity;
-            // half _Global_CloudSpeed;
-            // half _Global_CloudScale;
-            // half _Global_CloudEdgeHardness;
-            // half _Global_Night2Day;
+            // float _Global_CloudDensity;
+            // float _Global_CloudSpeed;
+            // float _Global_CloudScale;
+            // float _Global_CloudEdgeHardness;
+            // float _Global_Night2Day;
 
             #include "../Includes/bendingVertex.hlsl"
             #include "../Includes/CustomLighting.hlsl"
@@ -81,61 +81,61 @@ Shader "MMN/CutScene/Sky_Lit"
             #include "../Includes/EnvironmentHelper.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                half4 _BaseMap_ST;
-                half4 _BaseColor;
-                half _AlbedoTintStrength;
-                half _Surface;
+                float4 _BaseMap_ST;
+                float4 _BaseColor;
+                float _AlbedoTintStrength;
+                float _Surface;
             CBUFFER_END
 
             struct Attributes
             {
-                half4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
-                half4 tangentOS : TANGENT;
-                half2 texcoord : TEXCOORD0;
-                half2 staticLightmapUV : TEXCOORD1;
-                half4 color : COLOR;
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+                float4 tangentOS : TANGENT;
+                float2 texcoord : TEXCOORD0;
+                float2 staticLightmapUV : TEXCOORD1;
+                float4 color : COLOR;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
 
             };
 
             struct Varyings
             {
-                half2 uv : TEXCOORD0;
-                half3 positionWS : TEXCOORD1;    // xyz: posWS
-                half4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
-                half4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
-                half4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
+                float2 uv : TEXCOORD0;
+                float3 positionWS : TEXCOORD1;    // xyz: posWS
+                float4 normalWS : TEXCOORD2;    // xyz: normal, w: viewDir.x
+                float4 tangentWS : TEXCOORD3;    // xyz: tangent, w: viewDir.y
+                float4 bitangentWS : TEXCOORD4;    // xyz: bitangent, w: viewDir.z
 
                 #ifdef _ADDITIONAL_LIGHTS_VERTEX
-                    half4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
+                    float4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
                 #else
-                    half fogFactor : TEXCOORD5;
+                    float fogFactor : TEXCOORD5;
                 #endif
 
                 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-                    half4 shadowCoord : TEXCOORD6;
+                    float4 shadowCoord : TEXCOORD6;
                 #endif
 
                 DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
 
-                half4 screenPos : TEXCOORD8;
+                float4 screenPos : TEXCOORD8;
                 // float cameraDistance                : TEXCOORD9; //@TODO 이걸 나중에 positionWS 의 알파로 빼는걸 생각해 봅시다.
-                half4 color : COLOR;
-                half4 positionCS : SV_POSITION;
+                float4 color : COLOR;
+                float4 positionCS : SV_POSITION;
                 // UNITY_VERTEX_INPUT_INSTANCE_ID
                 // UNITY_VERTEX_OUTPUT_STEREO
 
             };
 
-            void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
+            void InitializeInputData(Varyings input, float3 normalTS, out InputData inputData)
             {
                 inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
 
                 //NORMALMAP
-                half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
-                inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
+                float3 viewDirWS = float3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
+                inputData.tangentToWorld = float3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
                 inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
 
                 inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
@@ -152,7 +152,7 @@ Shader "MMN/CutScene/Sky_Lit"
                 #endif
 
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-                inputData.vertexLighting = half3(0, 0, 0);
+                inputData.vertexLighting = float3(0, 0, 0);
 
                 inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
                 inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
@@ -186,17 +186,17 @@ Shader "MMN/CutScene/Sky_Lit"
                 VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
-                half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
                 output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
                 output.positionWS.xyz = vertexInput.positionWS;
                 output.positionCS = vertexInput.positionCS ;
 
                 //NORMALMAP
-                half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
-                output.normalWS = half4(normalInput.normalWS, viewDirWS.x);
-                output.tangentWS = half4(normalInput.tangentWS, viewDirWS.y);
-                output.bitangentWS = half4(normalInput.bitangentWS, viewDirWS.z);
+                float3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+                output.normalWS = float4(normalInput.normalWS, viewDirWS.x);
+                output.tangentWS = float4(normalInput.tangentWS, viewDirWS.y);
+                output.bitangentWS = float4(normalInput.bitangentWS, viewDirWS.z);
 
                 output.color = input.color;
                 output.screenPos = ComputeScreenPos(output.positionCS);
@@ -214,20 +214,20 @@ Shader "MMN/CutScene/Sky_Lit"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                half2 uv = input.uv;
-                half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+                float2 uv = input.uv;
+                float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
 
-                half3 tintProp = _BaseColor.rgb;
-                half tintStrengthProp = _AlbedoTintStrength;
-                half3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp);
+                float3 tintProp = _BaseColor.rgb;
+                float tintStrengthProp = _AlbedoTintStrength;
+                float3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp);
                 //* saturate(input.color.rgb + (1 - _VertexColorWeight));
-                half alpha = diffuseAlpha.a * _BaseColor.a;
-                half3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, uv));
+                float alpha = diffuseAlpha.a * _BaseColor.a;
+                float3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, uv));
 
                 InputData inputData;
                 InitializeInputData(input, normalTS, inputData);
@@ -240,7 +240,7 @@ Shader "MMN/CutScene/Sky_Lit"
                 inputData.normalWS = lerp(inputData.normalWS, float3(0, 1, 0), lightDir2Y);
                 inputData.normalWS = normalize(inputData.normalWS);
 
-                half4 color = UniversalFragmentLightCustom(inputData, diffuse, /* specular */0, /* smoothness */0, /* emission */0, alpha, normalTS, /*구름그림자를 안받게한다*/ 1, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */1.0, /* float backFaceNormalrecover */1.0);
+                float4 color = UniversalFragmentLightCustom(inputData, diffuse, /* specular */0, /* smoothness */0, /* emission */0, alpha, normalTS, /*구름그림자를 안받게한다*/ 1, /*RampY*/0.5, /* _BackfaceReceiveShadowOff */0, /* FRONT_FACE_TYPE isFacing */1.0, /* float backFaceNormalrecover */1.0);
 
                 //하이트 포그  연산
                 color = MMN_GlobalTex_HeightFog(

@@ -1,12 +1,9 @@
-// Made with Amplify Shader Editor v1.9.1.2
+// Made with Amplify Shader Editor v1.9.2.2
 // Available at the Unity Asset Store - http://u3d.as/y3X
 Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 {
 	Properties
 	{
-		[HideInInspector] _Mode("__mode", Float) = -1
-		[HideInInspector] _TransitionValue("_TransitionValue", Float) = 1
-		[HideInInspector] _FogPower("_FogPower", Range(0, 1)) = 0
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
 		[Header(MainTexture)][Space()]_MainTex("MainTex", 2D) = "white" {}
@@ -20,26 +17,30 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 		[HideInInspector][Enum(UnityEngine.Rendering.BlendMode)][Header(Rendering Options)][Space()]_BlendSrc("Blend Src", Float) = 1
 		[HideInInspector][Enum(UnityEngine.Rendering.BlendMode)]_BlendDst("Blend Dst", Float) = 1
 		[Toggle]_Use_G_Channel_Alpha("Use_G_Channel_Alpha", Float) = 0
-		[ASEEnd][Enum(UnityEngine.Rendering.CullMode)][Header(Z Buffer)][Space(10)]_CullMode("Cull Mode", Float) = 0
-		[HideInInspector][Toggle(_FOG_RCV_ON)] _FogReceive("안개 적용", Float) = 0
+		[Enum(UnityEngine.Rendering.CullMode)][Header(Z Buffer)][Space(10)]_CullMode("Cull Mode", Float) = 0
+		[HideInInspector]_Mode("Mode", Float) = -1
+		[HideInInspector]_TransitionValue("TransitionValue", Range( 0 , 1)) = 1
+		[HideInInspector]_SpawnTransition("SpawnTransition", Range( 0 , 1)) = 0
 		[HideInInspector][PerRendererData]_RaycastHarftoneClip("raycastHarftoneClip", Range( 0 , 1)) = 0
 		[HideInInspector]_RaycastMinimumAlpha("raycastMinimumAlpha", Range( 0 , 1)) = 0
 		[HideInInspector]_NearPlaneAlpha("nearPlaneAlpha", Range( 0 , 1)) = 0
-		[HideInInspector][Toggle]_NearPlaneInvertDistance("nearPlaneInvertDistance", Range( 0 , 1)) = 0
-		[HideInInspector][Space(10)][Toggle(_LIGHTRECEIVE_ON)] _LightReceive("빛 적용", Float) = 0
-		[HideInInspector][Toggle(_SOFTPARTICLE_ON)] _SoftParticle("소프트 파티클 적용", Float) = 0
-		[HideInInspector][Toggle(_RAYCAST_ON)] _Raycast("레이캐스트 적용", Float) = 0
+		[HideInInspector][ToggleUI]_NearPlaneInvertDistance("nearPlaneInvertDistance", Range( 0 , 1)) = 0
+		[HideInInspector][ToggleUI][Space(10)]_LightReceive("LightReceive", Range( 0 , 1)) = 0
 		[HideInInspector]_LightRatio("lightRatio", Range( 0 , 1)) = 1
+		[HideInInspector][ToggleUI]_SoftParticle("SoftParticle", Range( 0 , 1)) = 0
 		[HideInInspector]_SoftParticleNearFadeDistance("Soft Particle Near Fade", Float) = 0
 		[HideInInspector]_SoftParticleFarFadeDistance("Soft Particle Far Fade", Float) = 1
-		[HideInInspector]_SoftParticleFadeOutRange("사라지는 범위 조절", Range( 0 , 10)) = 1
+		[HideInInspector][ToggleUI]_FogReceive("FogReceive", Range( 0 , 1)) = 0
+		[HideInInspector]_SoftParticleFadeOutRange("SoftParticleFadeOutRange", Range( 0 , 10)) = 1
+		[HideInInspector][Toggle(_RAYCAST_ON)] _Raycast("_Raycast", Float) = 1
 		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)]_ZTest("Z Test", Float) = 4
+		[HideInInspector]_EffectAlpha("EffectAlpha", Float) = 1
 
 	}
 
 	SubShader
 	{
-		LOD 0
+		LOD 100
 
 
 
@@ -67,22 +68,10 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 
 			#pragma exclude_renderers glcore gles gles3 switch
 
-			// GPU Instancing
-
-			// Material Keywords
-			// 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-			// #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-
-            // Unity defined keywords
+			// Unity defined keywords
 			#pragma multi_compile_fog
             #pragma skip_variants FOG_EXP FOG_EXP2
 			#pragma multi_compile_fragment _ DEBUG_DISPLAY
-			// #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            // #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            // #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            // #pragma multi_compile_fragment _ _LIGHT_LAYERS
-            // #pragma multi_compile_fragment _ _LIGHT_COOKIES
 
 			#pragma vertex vert
 			#pragma fragment frag
@@ -93,11 +82,7 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 
 			#include "../Includes/FXCommonOutputs.hlsl"
 			#define ASE_NEEDS_FRAG_COLOR
-			#define ASE_NEEDS_FRAG_POSITION
-			#pragma multi_compile_local __ _LIGHTRECEIVE_ON
-			#pragma multi_compile_local __ _RAYCAST_ON
-			#pragma multi_compile_local __ _SOFTPARTICLE_ON
-			#pragma multi_compile_local __ _FOG_RCV_ON
+			#pragma multi_compile_fragment __ _RAYCAST_ON
 
 
 			sampler2D _MainTex;
@@ -105,59 +90,58 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 			CBUFFER_START( UnityPerMaterial )
 			float4 _NoiseTex_ST;
 			float4 _MainTex_ST;
-			float _LightRatio;
+			float _NearPlaneAlpha;
+			float _Intensity_Color;
 			float _Noise_V_Speed;
 			float _Noise_U_Speed;
 			float _Use_G_Channel_Alpha;
 			float _Main_V_Speed;
-			float _Intensity_Color;
 			float _Main_U_Speed;
-			float _RaycastMinimumAlpha;
-			float _RaycastHarftoneClip;
-			float _NearPlaneInvertDistance;
+			float _SpawnTransition;
+			float _TransitionValue;
+			float _FogReceive;
+			float _Mode;
+			float _SoftParticle;
 			float _SoftParticleFadeOutRange;
 			float _SoftParticleFarFadeDistance;
 			float _SoftParticleNearFadeDistance;
-			float _NearPlaneAlpha;
+			float _LightReceive;
+			float _LightRatio;
+			float _RaycastMinimumAlpha;
+			float _RaycastHarftoneClip;
+			float _NearPlaneInvertDistance;
 			float _Intensity_Alpha;
+			float _EffectAlpha;
 			CBUFFER_END
 
-			float _Mode = -1;
-			float _TransitionValue = 1;
-			float _FogPower = 0;
 
 			struct Attributes
 			{
 				float4 positionOS : POSITION;
-				half3 normalOS : NORMAL;
-    			half4 tangentOS : TANGENT;
+				float3 normalOS : NORMAL;
+    			float4 tangentOS : TANGENT;
 				float4 texcoord : TEXCOORD0;
-				half4 color : COLOR;
+				float4 color : COLOR;
 
 			};
 
 			struct Varyings
 			{
 				float4 positionCS : SV_POSITION;
-				half4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
-				half4 uv1 : TEXCOORD1; 				// xyzw : custom data
-				half4 fogCoord : TEXCOORD2; 		// x : fogcoord				yzw :
-				half3 positionWS : TEXCOORD11;
-				float4 positionOS : TEXCOORD12;
-				float3 normalWS : TEXCOORD13;
-
+				float4 uv0 : TEXCOORD0; 				// xy : uv or shadowCoord    zw : particle system vertex stream
+				float4 uv1 : TEXCOORD1; 				// xyzw : custom data
+				float4 screenPos : TEXCOORD6;			// xyzw : ScreenSpace
+				float4 fogCoord : TEXCOORD7; 		    // x : fogcoord				yzw :
+				float3 positionWS : TEXCOORD8;
+				float4 positionOS : TEXCOORD9;
+				float3 normalWS : TEXCOORD10;
 				float4 ase_color : COLOR;
-				float4 ase_texcoord3 : TEXCOORD3;
 			};
 
 
 			Varyings vert(Attributes input)
 			{
 				Varyings output = (Varyings)0;
-
-				float4 ase_clipPos = TransformObjectToHClip((input.positionOS).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				output.ase_texcoord3 = screenPos;
 
 				output.ase_color = input.color;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -172,27 +156,23 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 					input.positionOS.xyz += vertexValue;
 				#endif
 
-				VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
-
-				input.normalOS = input.normalOS;
-
+				VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
 				VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+
     			output.normalWS = normalInput.normalWS;
-				output.uv0 = input.texcoord; // output.shadowCoord
-				output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+				output.uv0 = input.texcoord;
+				output.positionWS = vertexInput.positionWS;
 				output.positionOS = input.positionOS;
 				output.positionCS = vertexInput.positionCS;
+				output.screenPos = ComputeScreenPos(vertexInput.positionCS);
 				output.fogCoord.x = CalculateFogCoord(vertexInput.positionCS.z);
 
 				return output;
 			}
 
-			half4 frag(Varyings input) : SV_Target
+			float4 frag(Varyings input) : SV_Target
 			{
-				float localApplySoftParticle80_g9 = ( 0.0 );
-				float localApplyLightColor6_g9 = ( 0.0 );
-				float localApplyShadowAtten104_g9 = ( 0.0 );
-				half localApplyRaycastingAlpha92_g9 = ( 0.0 );
+				float localFXFinalColorOutputs125_g9 = ( 0.0 );
 				float temp_output_28_0 = ( frac( ( _TimeParameters.x * 0.001 ) ) * 1000.0 );
 				float2 appendResult40 = (float2(_Main_U_Speed , _Main_V_Speed));
 				float2 uv_MainTex = input.uv0.xy * _MainTex_ST.xy + _MainTex_ST.zw;
@@ -208,53 +188,46 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 				float4 break32 = ( lerpResult50 * tex2DNode14.g * input.ase_color * _Intensity_Color );
 				float3 appendResult8 = (float3(break32.r , break32.g , break32.b));
 				float2 texCoord54 = input.uv0.xy * float2( 1,1 ) + float2( 0,0 );
-				float4 appendResult32_g9 = (float4(appendResult8 , saturate( ( lerpResult50 * tex2DNode14.g * saturate( ( ( 1.0 - texCoord54.x ) * tex2DNode14.g * input.ase_color.a ) ) * _Intensity_Alpha ) )));
-				half4 finalColor92_g9 = appendResult32_g9;
-				half3 positionWS92_g9 = input.positionWS;
-				float4 screenPos = input.ase_texcoord3;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				half4 screenUV92_g9 = ase_screenPosNorm;
-				half4 screenPos92_g9 = ase_screenPosNorm;
-				half nearPlane92_g9 = _NearPlaneAlpha;
-				half nearPlaneInvertDistance92_g9 = _NearPlaneInvertDistance;
-				half raycastHarftoneClip92_g9 = _RaycastHarftoneClip;
-				half raycastMinimumAlpha92_g9 = _RaycastMinimumAlpha;
-				ApplyRaycastingAlpha( finalColor92_g9 , positionWS92_g9 , screenUV92_g9 , screenPos92_g9 , nearPlane92_g9 , nearPlaneInvertDistance92_g9 , raycastHarftoneClip92_g9 , raycastMinimumAlpha92_g9 );
-				float4 finalColor104_g9 = finalColor92_g9;
-				float4 shadowCoord104_g9 = input.uv0;
-				float3 positionWS104_g9 = input.positionWS;
-				float lightRatio104_g9 = _LightRatio;
-				ApplyShadowAtten( finalColor104_g9 , shadowCoord104_g9 , positionWS104_g9 , lightRatio104_g9 );
-				float4 finalColor6_g9 = finalColor104_g9;
-				float3 normalWS6_g9 = input.normalWS;
-				float lightRatio6_g9 = _LightRatio;
-				ApplyLightColor( finalColor6_g9 , normalWS6_g9 , lightRatio6_g9 );
-				float4 finalColor80_g9 = finalColor6_g9;
-				float near80_g9 = _SoftParticleNearFadeDistance;
-				float far80_g9 = _SoftParticleFarFadeDistance;
-				float fadeOutRange80_g9 = _SoftParticleFadeOutRange;
-				float localGetPositionCSForBending58_g9 = ( 0.0 );
-				float4 positionCS58_g9 = float4( 0,0,0,0 );
-				float4 positionNDC58_g9 = float4( 0,0,0,0 );
-				float3 positionOS58_g9 = input.positionOS.xyz;
-				GetPositionCSForBending( positionCS58_g9 , positionNDC58_g9 , positionOS58_g9 );
-				float4 positionNDC80_g9 = positionNDC58_g9;
-				ApplySoftParticle( finalColor80_g9 , near80_g9 , far80_g9 , fadeOutRange80_g9 , positionNDC80_g9 );
-				float4 break64_g9 = finalColor80_g9;
+				float4 appendResult32_g9 = (float4(appendResult8 , ( saturate( ( lerpResult50 * tex2DNode14.g * saturate( ( ( 1.0 - texCoord54.x ) * tex2DNode14.g * input.ase_color.a ) ) * _Intensity_Alpha ) ) * saturate( _EffectAlpha ) )));
+				float4 finalColor125_g9 = appendResult32_g9;
+				float4 texCoord147_g9 = input.screenPos;
+				texCoord147_g9.xy = input.screenPos.xy * float2( 1,1 ) + float2( 0,0 );
+				float4 ScreenPos146_g9 = texCoord147_g9;
+				float4 positionNDC125_g9 = ScreenPos146_g9;
+				float4 texCoord140_g9 = input.fogCoord;
+				texCoord140_g9.xy = input.fogCoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float4 fogCoord139_g9 = texCoord140_g9;
+				float4 fogCoord125_g9 = fogCoord139_g9;
+				float3 positionWS125_g9 = input.positionWS;
+				float3 normalizedWorldNormal = normalize( input.normalWS );
+				float3 normalWS125_g9 = normalizedWorldNormal;
+				float nearPlaneAlpha125_g9 = _NearPlaneAlpha;
+				float nearPlaneInvertDistance125_g9 = _NearPlaneInvertDistance;
+				float raycastHarftoneClip125_g9 = _RaycastHarftoneClip;
+				float raycastMinimumAlpha125_g9 = _RaycastMinimumAlpha;
+				float lightRatio125_g9 = _LightRatio;
+				float lightReceive125_g9 = _LightReceive;
+				float near125_g9 = _SoftParticleNearFadeDistance;
+				float far125_g9 = _SoftParticleFarFadeDistance;
+				float fadeOutRange125_g9 = _SoftParticleFadeOutRange;
+				float softParticle125_g9 = _SoftParticle;
+				float mode125_g9 = _Mode;
+				float fogReceive125_g9 = _FogReceive;
+				float transitionValue125_g9 = _TransitionValue;
+				float spawnTransition125_g9 = _SpawnTransition;
+				FXFinalColorOutputs( finalColor125_g9 , positionNDC125_g9 , fogCoord125_g9 , positionWS125_g9 , normalWS125_g9 , nearPlaneAlpha125_g9 , nearPlaneInvertDistance125_g9 , raycastHarftoneClip125_g9 , raycastMinimumAlpha125_g9 , lightRatio125_g9 , lightReceive125_g9 , near125_g9 , far125_g9 , fadeOutRange125_g9 , softParticle125_g9 , mode125_g9 , fogReceive125_g9 , transitionValue125_g9 , spawnTransition125_g9 );
+				float4 break64_g9 = finalColor125_g9;
 				float3 appendResult76_g9 = (float3(break64_g9.x , break64_g9.y , break64_g9.z));
 
-				float3 Color = appendResult76_g9;
-				float Alpha = break64_g9.w;
+				float3 color = appendResult76_g9;
+				float alpha = break64_g9.w;
 
-				float4 finalColor = float4(Color, Alpha);
-				ApplyFogColor(finalColor, input.positionWS, input.normalWS, _Mode, _FogPower, input.fogCoord.x);
-				ApplyTransitionValue(finalColor, _Mode, _TransitionValue);
+				float4 finalColor = float4(color, alpha);
 
 				// 디버그
 				#if defined(DEBUG_DISPLAY)
 				{
-					return FXDebuggingColor(input, Color, Alpha);
+					return FXDebuggingColor(input, color, alpha);
 				}
 				#endif
 
@@ -263,13 +236,13 @@ Shader "MMN/FX/Amplify shader/FX_Trail_Default"
 			ENDHLSL
 		}
 	}
-	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI"
-	FallBack Off
 
-	Fallback "Off"
+	CustomEditor "MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI"
+
+	Fallback Off
 }
 /*ASEBEGIN
-Version=19102
+Version=19202
 Node;AmplifyShaderEditor.TextureCoordinatesNode;21;-2401.59,47.13741;Inherit;False;0;10;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.TextureCoordinatesNode;23;-2473.942,582.2296;Inherit;False;0;14;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;12;-2468.59,441.8374;Inherit;False;Property;_Main_V_Speed;Main_V_Speed;2;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
@@ -301,15 +274,18 @@ Node;AmplifyShaderEditor.RangedFloatNode;37;-1336.371,905.4279;Inherit;False;Pro
 Node;AmplifyShaderEditor.BreakToComponentsNode;32;-931.1669,377.1404;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;33;-1065.951,656.0502;Inherit;False;4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;8;-813.2623,379.8674;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;2;-448,528;Inherit;False;204;375;Rendering Options;4;6;4;3;53;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;2;-378,525;Inherit;False;204;375;Rendering Options;4;6;4;3;53;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.SaturateNode;38;-872.3712,662.4279;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;6;-416,736;Inherit;False;Property;_CullMode;Cull Mode;11;1;[Enum];Fetch;True;0;0;1;UnityEngine.Rendering.CullMode;True;2;Header(Z Buffer);Space(10);False;0;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;4;-416,576;Inherit;False;Property;_BlendSrc;Blend Src;8;2;[HideInInspector];[Enum];Fetch;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;2;Header(Rendering Options);Space();False;1;5;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;7;-688,384;Inherit;False;MMN_CommonOutputs;13;;9;08656d87d50d792418fb85b40434f915;0;2;9;FLOAT3;1,1,1;False;28;FLOAT;1;False;2;FLOAT3;2;FLOAT;26
-Node;AmplifyShaderEditor.RangedFloatNode;53;-416,816;Inherit;False;Property;_ZTest;Z Test;26;2;[HideInInspector];[Enum];Fetch;True;0;2;Default;2;Always;6;1;UnityEngine.Rendering.CompareFunction;True;0;False;4;4;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;3;-416,656;Inherit;False;Property;_BlendDst;Blend Dst;9;2;[HideInInspector];[Enum];Fetch;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;1;1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;9;-224,576;Inherit;False;Property;_ZWrite;ZWrite;12;2;[HideInInspector];[Enum];Create;False;0;2;Off;0;On;1;0;False;0;False;0;2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;-448,384;Float;False;True;-1;2;MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI;0;14;MMN/FX/Amplify shader/FX_Trail_Default;308ae98526c03914f8dfddbb03a3d101;True;Unlit;0;0;Unlit;4;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Transparent=RenderType;Queue=Transparent=Queue=0;True;5;False;0;True;True;1;0;True;_BlendSrc;0;True;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_CullMode;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;255;False;;255;False;;255;False;;7;False;;1;False;;1;False;;1;False;;7;False;;1;False;;1;False;;1;False;;True;True;2;True;_ZWrite;True;0;True;_ZTest;False;True;0;False;True;8;d3d11;metal;vulkan;xboxone;xboxseries;playstation;ps4;ps5;0;Off;0;0;Standard;1;Vertex Position;1;0;0;1;True;False;;False;0
+Node;AmplifyShaderEditor.RangedFloatNode;53;-346,813;Inherit;False;Property;_ZTest;Z Test;29;2;[HideInInspector];[Enum];Fetch;True;0;2;Default;2;Always;6;1;UnityEngine.Rendering.CompareFunction;True;0;False;4;4;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;59;-605.3129,677.21;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SaturateNode;60;-731.813,849.21;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;61;-920.813,851.21;Inherit;False;Property;_EffectAlpha;EffectAlpha;30;1;[HideInInspector];Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;7;-657,381;Inherit;False;MMN_CommonOutputs;13;;9;08656d87d50d792418fb85b40434f915;0;2;9;FLOAT3;1,1,1;False;28;FLOAT;1;False;2;FLOAT3;2;FLOAT;26
+Node;AmplifyShaderEditor.RangedFloatNode;6;-346,733;Inherit;False;Property;_CullMode;Cull Mode;11;1;[Enum];Fetch;True;0;0;1;UnityEngine.Rendering.CullMode;True;2;Header(Z Buffer);Space(10);False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;4;-346,573;Inherit;False;Property;_BlendSrc;Blend Src;8;2;[HideInInspector];[Enum];Fetch;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;2;Header(Rendering Options);Space();False;1;5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;3;-346,653;Inherit;False;Property;_BlendDst;Blend Dst;9;2;[HideInInspector];[Enum];Fetch;False;0;1;UnityEngineRenderingBlendMode;0;1;UnityEngine.Rendering.BlendMode;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;9;-154,573;Inherit;False;Property;_ZWrite;ZWrite;12;2;[HideInInspector];[Enum];Create;False;0;2;Off;0;On;1;0;False;0;False;0;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;-378,381;Float;False;True;-1;2;MM.Client.Editor.ShaderGUI.MMN_FxBlendModeShaderGUI;100;14;MMN/FX/Amplify shader/FX_Trail_Default;308ae98526c03914f8dfddbb03a3d101;True;Unlit;0;0;Unlit;4;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Transparent=RenderType;Queue=Transparent=Queue=0;True;5;False;0;True;True;1;0;True;_BlendSrc;0;True;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_CullMode;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;255;False;;255;False;;255;False;;7;False;;1;False;;1;False;;1;False;;7;False;;1;False;;1;False;;1;False;;True;True;2;True;_ZWrite;True;0;True;_ZTest;False;True;0;False;True;8;d3d11;metal;vulkan;xboxone;xboxseries;playstation;ps4;ps5;0;;0;0;Standard;1;Vertex Position;1;0;0;1;True;False;;False;0
 WireConnection;49;0;21;1
 WireConnection;43;0;23;1
 WireConnection;44;0;43;0
@@ -349,9 +325,12 @@ WireConnection;8;0;32;0
 WireConnection;8;1;32;1
 WireConnection;8;2;32;2
 WireConnection;38;0;33;0
+WireConnection;59;0;38;0
+WireConnection;59;1;60;0
+WireConnection;60;0;61;0
 WireConnection;7;9;8;0
-WireConnection;7;28;38;0
+WireConnection;7;28;59;0
 WireConnection;1;0;7;2
 WireConnection;1;1;7;26
 ASEEND*/
-//CHKSM=615F430A3CF518B2F0BE664B42312345D91B837C
+//CHKSM=96AC81F0F90EAB76C75CFA641B8E4243B58B9FB1

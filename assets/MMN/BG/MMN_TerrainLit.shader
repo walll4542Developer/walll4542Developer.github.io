@@ -105,6 +105,7 @@ Shader "MMN/BG/TerrainLit"
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+			#pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -206,10 +207,10 @@ Shader "MMN/BG/TerrainLit"
         //     #include "Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainLitInput.hlsl"
         //     // #include "Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainLitPasses.hlsl"
         //                 //GlobalVariables
-        //     half _Global_CloudDensity;
-        //     half _Global_CloudSpeed;
-        //     half _Global_CloudScale;
-        //     half _Global_CloudEdgeHardness;
+        //     float _Global_CloudDensity;
+        //     float _Global_CloudSpeed;
+        //     float _Global_CloudScale;
+        //     float _Global_CloudEdgeHardness;
 
         //     #include "MMN_TerrainLitPasses.hlsl"
         //     ENDHLSL

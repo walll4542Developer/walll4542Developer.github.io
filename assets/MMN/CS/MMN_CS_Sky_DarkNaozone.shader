@@ -145,7 +145,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
             {
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD2;
                 float3 viewDir : TEXCOORD3;
                 float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
@@ -190,7 +190,7 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
             }
 
             // Used for StandardSimpleLighting shader
-            half4 LitPassFragmentSimple(Varyings input) : SV_Target
+            float4 LitPassFragmentSimple(Varyings input) : SV_Target
             {
                 // UNITY_SETUP_INSTANCE_ID(input);
                 // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -215,26 +215,26 @@ Shader "MMN/CutScene/Sky_DarkNaozone"
 
                 //마스크맵
                 float2 maskMapUV = TRANSFORM_TEX(uvScroll(uv, _DistortionSpeedMultix, _DistortionSpeedMultiy, 0.01), _MaskMap);
-                half4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
+                float4 maskMap = SAMPLE_TEXTURE2D(_MaskMap, MMN_linear_repeat_sampler, maskMapUV);
                 //구름 텍스쳐
                 float2 basemapUV = TRANSFORM_TEX(uvScroll(uv, _BaseTexSpeedMultix, _BaseTexSpeedMultiy, 0.01), _BaseTex);
-                half4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001);
+                float4 basemap = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, basemapUV + maskMap.r * _Distortion * 0.001);
                 //달 텍스쳐
                 float2 redMoonUV = uv * _MoonUV.xy + _MoonUV.zw;
-                half4 redMoon = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, redMoonUV + maskMap.r /* * _Distortion2*/ * 0.001) ;
+                float4 redMoon = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, redMoonUV + maskMap.r /* * _Distortion2*/ * 0.001) ;
                 //헤일로 텍스쳐
                 float2 haloTexUV = uv * _HaloUV.xy + _HaloUV.zw ;
                 haloTexUV.x += 0.2 * dottest; //카메라 방향에 따라 헤일로가 좌우로 조금 움직임
-                half4 haloTex = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, haloTexUV) ;
+                float4 haloTex = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, haloTexUV) ;
                 //별 텍스쳐
-                half4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, TRANSFORM_TEX(uv, _BaseTex3)) ;
+                float4 basemap3 = SAMPLE_TEXTURE2D(_BaseTex3, sampler_BaseTex3, TRANSFORM_TEX(uv, _BaseTex3)) ;
                 //마스크맵을 반짝임으로 이용한다
                 //별이 두 배 반짝
                 //마스크를 스탭으로, 별이 반짝이게 만들고 0.3을 더해 너무 없어지지 않게 한다
                 //별 텍스쳐 RGB는 사실상 쓰지 않는다. 그래서 4번 텍스쳐랑 동시에 쓴다. 여긴 A만 쓴다.
                 basemap3.a *= saturate(step(_Distortion3, maskMap.r) + 0.3);
                 float2 basemap4UV = TRANSFORM_TEX(uvScroll(uv, _BaseTex4SpeedMultix, _BaseTex4SpeedMultiy, 0.01), _BaseTex4);
-                half4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) ;
+                float4 basemap4 = SAMPLE_TEXTURE2D(_BaseTex4, sampler_BaseTex4, basemap4UV + maskMap.r * _Distortion4 * 0.001) ;
 
 
                 //////////////////// 최종연산 /////////////////////////

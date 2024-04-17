@@ -9,7 +9,7 @@ struct Attributes
 {
     float4 positionOS : POSITION;
     float2 texcoord : TEXCOORD0;
-    half4 color : COLOR;
+    float4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -36,7 +36,6 @@ Varyings DepthOnlyVertex(Attributes input)
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
 
-
     #if VERTEX_CAMERA_DEPEND_BENDING
         VertexPositionInputs vertexInput = GetVertexPositionInputsForBending(input.positionOS.xyz);
         output.positionCS = vertexInput.positionCS;
@@ -49,11 +48,17 @@ Varyings DepthOnlyVertex(Attributes input)
         VertexPositionInputs vertexInput = GetVertexPositionInputs4treeShake(input.positionOS.xyz, _Global_VertexPositionOffset, _Global_VertexPositionOffset.z, input.color, _WindMultiply, _WindSpeedMultiply, _GrassPushPower, /* _VertexAniOn */ 1);
         output.positionCS = vertexInput.positionCS;
 
+    #elif VERTEX_GRASS_HEIGHT_MOVEMENT
+        input.positionOS.xyz = GrassHeightMovementByDistance(input.positionOS.xyz, _GrassVisualRange, defaultVisualRange, _Global_Grass_VisualRangeFactor, _GrassVisualActionToggle);
+        VertexPositionInputs vertexInput = GetVertexPositionInputs4treeShake(input.positionOS, input.color, _WindMultiply, _WindSpeedMultiply, _GrassPushPower);
+        output.positionCS = vertexInput.positionCS;
     #else
         VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
         output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
 
     #endif
+
+
 
     output.viewDir = GetWorldSpaceViewDir(vertexInput.positionWS);
     output.screenPos = ComputeScreenPos(output.positionCS);
@@ -63,23 +68,24 @@ Varyings DepthOnlyVertex(Attributes input)
     return output;
 }
 
-half4 DepthOnlyFragment(Varyings input) : SV_TARGET
+float4 DepthOnlyFragment(Varyings input) : SV_TARGET
 {
     // UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
     UNITY_SETUP_INSTANCE_ID(input);
 
-    half4 diffuseAlpha = SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-    half alpha = diffuseAlpha.a * _BaseColor.a;
+    float4 diffuseAlpha = SampleAlbedoAlpha(input.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+    float alpha = diffuseAlpha.a * _BaseColor.a;
 
-    #if defined(_GLOBAL_NEARHALFTONECLIP_ON) && defined(_NEARHALFTONECLIP_ON)
-        {
-            //가까워지면 하프톤으로 사라지게 하는 기능
-            half halftoneAlpha;
-            float cameraDistance = input.cameraDistance  ;
-            NearHarftoneAlphaTesting(cameraDistance, input.screenPos, 0.5, halftoneAlpha);
-            clip(halftoneAlpha);
-        }
-    #endif
+    // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+    // #if defined(_GLOBAL_NEARHALFTONECLIP_ON) && defined(_NEARHALFTONECLIP_ON)
+    //     {
+    //         //가까워지면 하프톤으로 사라지게 하는 기능
+    //         float halftoneAlpha;
+    //         float cameraDistance = input.cameraDistance  ;
+    //         NearHarftoneAlphaTesting(cameraDistance, input.screenPos, 0.5, halftoneAlpha);
+    //         clip(halftoneAlpha);
+    //     }
+    // #endif
 
     #if defined(_ALPHATEST_ON)
         clip(alpha - _Cutoff);
@@ -90,7 +96,7 @@ half4 DepthOnlyFragment(Varyings input) : SV_TARGET
 
     #if RAYCAST
         //레이케스트 되면 사라지는 기능
-        half RaycasthalftoneAlpha;
+        float RaycasthalftoneAlpha;
         float dist = distance((input.screenPos.xy / input.screenPos.w - 0.5), float2(0, 0));
         dist = saturate(dist);
         dist = pow(dist, 1.5);

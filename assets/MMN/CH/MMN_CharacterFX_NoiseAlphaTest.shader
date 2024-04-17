@@ -2,8 +2,6 @@
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
-
         [Header(Texture)]
         [Space(10)]
         _BaseMap ("베이스 맵", 2D) = "white" {}
@@ -20,12 +18,11 @@
         [Toggle] _SilhouetteOff ("실루엣 끄기", Float) = 0.0
         _SilhouetteTintColor ("실루엣 틴트", Color)  = (1.0, 1.0, 1.0, 1.0)
 
-        [Header(Outline)]
-        [Space(10)]
-        [ToggleOff(_OUTLINE_FEATURE)] _OutlineOff ("아웃라인 끄기", Float) = 0.0
-        _OutlineColor ("아웃라인 색상", Color) = (1.0, 1.0, 1.0, 1.0)
-        [Enum(Multiply, 0, Override, 1)] _OutlineColorMode ("아웃라인 색상 적용 방식", Float) = 0.0
-        // _OutlineWidth ("아웃라인 두께", Range(0, 3)) = 1.0
+        // [Header(Outline)]
+        // [Space(10)]
+        // [ToggleOff(_OUTLINE_FEATURE)] _OutlineOff ("아웃라인 끄기", Float) = 0.0
+        // _OutlineColor ("아웃라인 색상", Color) = (1.0, 1.0, 1.0, 1.0)
+        // [Enum(Multiply, 0, Override, 1)] _OutlineColorMode ("아웃라인 색상 적용 방식", Float) = 0.0
 
         [Header(AlphaTest Options)]
         [Space(10)]
@@ -34,7 +31,7 @@
         _Cutoff ("노이즈 알파 컷오프", Range(0, 2)) = 0.0
         _SecondTexPower ("세컨드 맵 강도", Range(0, 1)) = 1.0
 
-        [KeywordEnum(none, U, V)] _uvGradient ("알파 그라데이션 방향", Float) = 2.0
+        [Enum(none, 0, U, 1, V, 2)] _uvGradient ("알파 그라데이션 방향", Float) = 2.0
         _GradientRange ("그라데이션 범위", Range(-1, 1)) = 0
         _AlphaTestRange ("알파 테스트 범위", Range(0.0, 1)) = 0.1
         _BendRange ("벤딩 정도", Range(0, 0.1)) = 0.02
@@ -58,6 +55,7 @@
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -83,6 +81,9 @@
         // Input 최적화를 위한 디파인
         #define _DYE_FEATURE
         #define _SILHOUETTE_FEATURE
+
+        // 셰딩 타입의 큰 카테고리
+        #define _SHADINGTYPE_STANDARD
 
         #include "MMN_CharacterFX_NoiseAlphaTest_Input.hlsl"
     ENDHLSL
@@ -122,15 +123,14 @@
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
-            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            // #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -185,6 +185,10 @@
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -206,6 +210,10 @@
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -239,13 +247,13 @@
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _UVGRADIENT_NONE _UVGRADIENT_U _UVGRADIENT_V
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
 
             // -------------------------------------
             // Unity defined keywords
@@ -303,14 +311,13 @@
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
-            #pragma multi_compile_fragment _ _OUTLINE_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            // #pragma multi_compile_fragment _ _OUTLINE_FEATURE
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
-            #pragma multi_compile _ _LIGHT_LAYERS
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
 
             // -------------------------------------
             // Unity defined keywords
@@ -365,6 +372,10 @@
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -386,6 +397,10 @@
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex
@@ -419,12 +434,12 @@
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile _UVGRADIENT_NONE _UVGRADIENT_U _UVGRADIENT_V
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
-            #pragma multi_compile _ _LIGHT_LAYERS
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
 
             // -------------------------------------
             // Unity defined keywords

@@ -66,7 +66,7 @@ Shader "MMN/Special/FloorReflection"
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _LIGHT_LAYERS
+            #define _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
             // -------------------------------------
             // Unity defined keywords
@@ -106,7 +106,8 @@ Shader "MMN/Special/FloorReflection"
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
             // #pragma shader_feature_local_fragment _GLOSSINESS_FROM_BASE_ALPHA
             // 에디터에서 니어 클리핑을 잠시 안보게 할 수 있는 기능. 에디터 한정이라 셰이더 피쳐로 올립니다
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐

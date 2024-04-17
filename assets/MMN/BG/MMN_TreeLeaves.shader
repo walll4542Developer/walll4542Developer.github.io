@@ -111,12 +111,13 @@ Shader "MMN/BG/TreeLeaves"
 
             // -------------------------------------
             // Material Keywords
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature _ _SHOWCENTERPOSITION_ON
             #pragma shader_feature _ _RIMPREVIEW_ON
             #pragma shader_feature _ _SHOWAO_ON
             #pragma shader_feature _ _TOPLIGHT_ON
-            #pragma shader_feature _ _SHOWVERTEXCOLOR_ON
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            #pragma shader_feature _ _SHOWVERTEXCOLOR_ON            
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -126,6 +127,7 @@ Shader "MMN/BG/TreeLeaves"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -190,12 +192,14 @@ Shader "MMN/BG/TreeLeaves"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
-            #define _NEARHALFTONECLIP_ON 1
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // #define _NEARHALFTONECLIP_ON 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
             #define RAYCAST 1
             #define TREELODFADE 1
@@ -259,18 +263,20 @@ Shader "MMN/BG/TreeLeaves"
 
             // -------------------------------------
             // Material Keywords
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature _ _SHOWCENTERPOSITION_ON
             #pragma shader_feature _ _RIMPREVIEW_ON
             #pragma shader_feature _ _SHOWAO_ON
             #pragma shader_feature _ _TOPLIGHT_ON
-            #pragma shader_feature _ _SHOWVERTEXCOLOR_ON
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            #pragma shader_feature _ _SHOWVERTEXCOLOR_ON            
 
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
             #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -334,12 +340,14 @@ Shader "MMN/BG/TreeLeaves"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
-            #define _NEARHALFTONECLIP_ON 1
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // #define _NEARHALFTONECLIP_ON 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
             #define RAYCAST 1
             #define TREELODFADE 1

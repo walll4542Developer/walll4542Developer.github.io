@@ -31,20 +31,20 @@ real3 LinearLightBlend(real3 src, real3 dst)
     return saturate(blendResult);
 }
 
-real3 ScreenBlend(real3 src, half strength)
+real3 ScreenBlend(real3 src, float strength)
 {
     real3 blendResult = 1.0 - (1.0 - src) * (1.0 - strength);
     return saturate(blendResult);
 }
 
-real3 TextureTintBlend(real3 src, real3 tint, half strength) // strength: [-1.0 ~ 1.0]
+real3 TextureTintBlend(real3 src, real3 tint, float strength) // strength: [-1.0 ~ 1.0]
 
 {
     real3 tintPower = lerp(src, tint, saturate(strength));
     real3 blend1 = lerp(real3(0, 0, 0), tint, tintPower);
     real3 blend2 = (src * tint * (strength + 1.0));
 
-    half split = saturate(strength);
+    float split = saturate(strength);
     real3 blendResult = blend1 * split + blend2 * (1.0 - split);
 
     return saturate(blendResult);

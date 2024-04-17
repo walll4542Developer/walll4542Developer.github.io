@@ -46,9 +46,9 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
 
         struct SurfaceOutputSimpleLit
         {
-            half3 Albedo;
-            half3 Normal;
-            half Alpha;
+            float3 Albedo;
+            float3 Normal;
+            float Alpha;
         };
 
         ENDHLSL
@@ -70,6 +70,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             // #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fog
             #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             #pragma vertex vert
             #pragma fragment frag
@@ -90,8 +91,8 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
-                half4 tangent : TANGENT;
+                float3 normal : NORMAL;
+                float4 tangent : TANGENT;
                 //float4 texcoord  : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -101,7 +102,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             {
                 float4 clipPos : SV_POSITION;
                 float4 lightmapUVOrVertexSH : TEXCOORD0;
-                half4 fogFactorAndVertexLight : TEXCOORD1;
+                float4 fogFactorAndVertexLight : TEXCOORD1;
                 float4 shadowCoord : TEXCOORD2;
                 float4 frameUVs : TEXCOORD3;
                 float4 viewPos : TEXCOORD4;
@@ -127,9 +128,9 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 OUTPUT_LIGHTMAP_UV(v.texcoord1.xyxx, unity_LightmapST, o.lightmapUVOrVertexSH.xy);
                 OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH.xyz);
 
-                half3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
-                half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
-                o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+                float3 vertexLight = VertexLighting(vertexInput.positionWS, lwWNormal);
+                float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                o.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
                 o.clipPos = vertexInput.positionCS;
                 o.screenPos = ComputeScreenPos(vertexInput.positionCS);
                 o.positionOS = v.vertex;
@@ -140,7 +141,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_Target
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
 
@@ -164,7 +165,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 OUTPUT_SH(inputData.normalWS, IN.lightmapUVOrVertexSH.xyz);
                 inputData.bakedGI = SAMPLE_GI(IN.lightmapUVOrVertexSH.xy, IN.lightmapUVOrVertexSH.xyz, inputData.normalWS);
 
-                half4 color = 1;
+                float4 color = 1;
                 color.a = o.Alpha;
 
 
@@ -197,8 +198,8 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 color.rgb = lerp(o.Albedo, ((o.Albedo * o.Albedo) + o.Albedo) / 2, saturate(_Global_Raining));
 
                 //눈이 왔을때 체크
-                float snowCheck = saturate(dot(IN.positionOS.rgb, half3(0, 1, 0)));
-                snowCheck = step(0.1, snowCheck * inputData.normalWS.y * _Global_Snow);
+                float snowCheck = saturate(dot(IN.positionOS.rgb, float3(0, 1, 0)));
+                snowCheck = step(0.1, snowCheck * (inputData.normalWS.y*0.7+0.3) * _Global_Snow);
                 color.rgb = lerp(color.rgb, 0.8, snowCheck);
 
                 //라이팅
@@ -259,7 +260,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
             struct VertexInput
             {
                 float4 vertex : POSITION;
-                half3 normal : NORMAL;
+                float3 normal : NORMAL;
                 //float4 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -289,7 +290,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
@@ -369,7 +370,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
                 return o;
             }
 
-            half4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
+            float4 frag(VertexOutput IN, out float outDepth : SV_Depth) : SV_TARGET
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;
@@ -456,7 +457,7 @@ Shader "Amplify Impostors/MM_Horizontal Impostor URP"
         // 				return o;
         // 			}
 
-        // 			half4 frag( VertexOutput IN, out float outDepth : SV_Depth ) : SV_TARGET
+        // 			float4 frag( VertexOutput IN, out float outDepth : SV_Depth ) : SV_TARGET
         // 			{
         // 				UNITY_SETUP_INSTANCE_ID( IN );
         // 				SurfaceOutputSimpleLit o = (SurfaceOutputSimpleLit)0;

@@ -15,9 +15,9 @@ float3 _LightPosition;
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
+    float3 normalOS : NORMAL;
     float2 texcoord : TEXCOORD0;
-    half4 color : COLOR;
+    float4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -68,7 +68,7 @@ Varyings ShadowPassVertex(Attributes input)
     return output;
 }
 
-half4 ShadowPassFragment(Varyings input) : SV_TARGET
+float4 ShadowPassFragment(Varyings input) : SV_TARGET
 {
     
     //LOD 디더링 기능

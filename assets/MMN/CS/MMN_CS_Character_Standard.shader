@@ -2,7 +2,7 @@ Shader "MMN/CutScene/Standard"
 {
     Properties
     {
-        [KeywordEnum(Standard, Monster, Deep)] _ShadingType ("셰딩 타입", Float) = 0.0
+        [Enum(Standard, 0, Monster, 1, Deep, 2)] _ShadingType ("셰딩 타입", Float) = 0.0
         [Enum(BackCull, 2, TwoSide, 0)] _CullType ("컬링 타입", Float) = 2.0
 
         [Header(Texture)]
@@ -54,6 +54,7 @@ Shader "MMN/CutScene/Standard"
         // 이 문제(https://deskcat.io/d/Q02981/MM-미술-QA-캐릭터-셰딩-오류)를 해결하기 위해서 CBUFFER에 등록함.
         [HideInInspector] _CharacterPositionAndVisualHeight ("xyz: position, w: visual height", Vector) = (0.0, 0.0, 0.0, 1.0)
         [HideInInspector] _CharacterDirection ("xy: direction, zw: reserved", Vector) = (0.0, -1.0, 0.0, 0.0)
+        [HideInInspector] _CharacterHeadDirection ("xyz: direction, w: height", Vector) = (0.0, 0.0, 1.0, 0.0)
         [HideInInspector] _TopShadow ("_TopShadow", Float) = 0.0
         [HideInInspector] _BottomShadow ("_BottomShadow", Float) = 0.0
 
@@ -64,9 +65,6 @@ Shader "MMN/CutScene/Standard"
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
-
-        [HideInInspector] _InflateWidth ("_InflateWidth", Float) = 0.0
-        [HideInInspector] _InflateColor ("_InflateColor", Color) = (0.0, 0.0, 0.0, 0.0)
 
         [HideInInspector] _InnerGlow ("_InnerGlow", Float) = 0.0
         [HideInInspector] _InnerGlowPower ("_InnerGlowPower", Float) = 0.0
@@ -107,6 +105,9 @@ Shader "MMN/CutScene/Standard"
             #define _TWO_SIDE_FEATURE
             #define _EMISSION_FEATURE
 
+            // 셰딩 타입의 큰 카테고리
+            #define _SHADINGTYPE_STANDARD
+
             #include "Assets/PatchableAssets/Shaders/MMN/CH/MMN_Character_Standard_Input.hlsl"
         ENDHLSL
 
@@ -128,10 +129,9 @@ Shader "MMN/CutScene/Standard"
             HLSLPROGRAM
             // -------------------------------------
             // Material Keywords
-            #pragma multi_compile_fragment _SHADINGTYPE_STANDARD _SHADINGTYPE_MONSTER _SHADINGTYPE_DEEP
             #pragma multi_compile_fragment _ _OUTLINE_FEATURE
             #pragma multi_compile_fragment _ _METAL_FEATURE
-            #pragma multi_compile _ _VERTEX_OBJECT_MOTION_BLUR
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -190,6 +190,10 @@ Shader "MMN/CutScene/Standard"
             ColorMask 0
 
             HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+            #pragma multi_compile_vertex _ _VERTEX_OBJECT_MOTION_BLUR
+
             //--------------------------------------
             // Vertex and Fragment
             #pragma vertex DepthPassVertex

@@ -4,7 +4,6 @@ Shader "MMN/BG/Grass"
     // Keep properties of StandardSpecular shader for upgrade reasons.
     Properties
     {
-        [Toggle]_NEARHALFTONECLIP ("니어 클립", float) = 1
         [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
         [PerRendererData]_RaycastHarftoneClip ("레이케스트 하프톤 클립", Range(0, 1)) = 0
         [HideInInspector][Toggle]_ALPHATEST ("알파테스트", float) = 1 //기본이 켜있게
@@ -84,8 +83,9 @@ Shader "MMN/BG/Grass"
             // -------------------------------------
             // Material Keywords
             // #pragma shader_feature_local_fragment _ _ALPHATEST_ON
-            #pragma shader_feature _SHOWGLOBALTEXTURE_ON
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            #pragma shader_feature _SHOWGLOBALTEXTURE_ON                        
 
             // -------------------------------------
             // Universal Pipeline keywords
@@ -95,6 +95,7 @@ Shader "MMN/BG/Grass"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -112,7 +113,8 @@ Shader "MMN/BG/Grass"
             #pragma fragment LitPassFragmentSimple
 
             #define BUMP_SCALE_NOT_SUPPORTED 1
-            #define _NEARHALFTONECLIP_ON 1
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #define _NEARHALFTONECLIP_ON 1
 
             #include "MMN_GrassInput.hlsl"
             #include "MMN_GrassForwardPass.hlsl"
@@ -139,7 +141,8 @@ Shader "MMN/BG/Grass"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             // GPU Instancing
@@ -149,9 +152,10 @@ Shader "MMN/BG/Grass"
 
             // #pragma multi_compile _ALPHATEST_ON _ALPHATEST_OFF
 
-            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
+            #define VERTEX_GRASS_HEIGHT_MOVEMENT 1
             #define LODFADE 1
-            #define _NEARHALFTONECLIP_ON 1 //늘 켜지게 되어 있음
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #define _NEARHALFTONECLIP_ON 1 //늘 켜지게 되어 있음
             #define RAYCAST 1
             #define _ALPHATEST_ON
             #define GRASS_INSTANCING
@@ -185,14 +189,15 @@ Shader "MMN/BG/Grass"
             // -------------------------------------
             // Material Keywords
             // #pragma shader_feature_local_fragment _ _ALPHATEST_ON
-            #pragma shader_feature _SHOWGLOBALTEXTURE_ON
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON                        
 
             // -------------------------------------
             // Universal Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
             #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -209,7 +214,8 @@ Shader "MMN/BG/Grass"
             #pragma fragment LitPassFragmentSimple
 
             #define BUMP_SCALE_NOT_SUPPORTED 1
-            #define _NEARHALFTONECLIP_ON 1
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #define _NEARHALFTONECLIP_ON 1
 
             #include "MMN_GrassInput.hlsl"
             #include "MMN_GrassForwardPass.hlsl"
@@ -236,7 +242,8 @@ Shader "MMN/BG/Grass"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
             // GPU Instancing
@@ -246,9 +253,10 @@ Shader "MMN/BG/Grass"
 
             // #pragma multi_compile _ALPHATEST_ON _ALPHATEST_OFF
 
-            #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 1
+            #define VERTEX_GRASS_HEIGHT_MOVEMENT 1
             #define LODFADE 1
-            #define _NEARHALFTONECLIP_ON 1 //늘 켜지게 되어 있음
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #define _NEARHALFTONECLIP_ON 1 //늘 켜지게 되어 있음
             #define RAYCAST 1
             #define _ALPHATEST_ON
             #define GRASS_INSTANCING

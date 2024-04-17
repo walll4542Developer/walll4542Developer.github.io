@@ -4,10 +4,10 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "../MMN_Character_Global_Input.hlsl"
 
-void ApplyInnerGlow(inout half3 color, half3 viewDirWS, half3 normalWS,
-    half innerGlow, half innerGlowPower, half4 innerGlowColor)
+void ApplyInnerGlow(inout float3 color, float3 viewDirWS, float3 normalWS,
+    float innerGlow, float innerGlowPower, float4 innerGlowColor)
 {
-    half fresnel = 1.0 - saturate(dot(normalWS, viewDirWS));
+    float fresnel = 1.0 - saturate(dot(normalWS, viewDirWS));
     fresnel = pow(fresnel, innerGlowPower);
     fresnel = saturate(fresnel);
     color = lerp(color, innerGlowColor.rgb, saturate(fresnel * innerGlow));

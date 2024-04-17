@@ -11,14 +11,14 @@ float4 _IndexedCutoutAtlasTexture_MipInfo;
 
 CBUFFER_START(UnityPerMaterial)
     float4 _IndexedCutoutAtlasTexture_ST;
-    half _Alpha;
+    float _Alpha;
 
     int _AtlasTextureRowNum;
     int _AtlasTextureColNum;
     int _AtlasIndexFromOne;
 
-    half _IsDyable;
-    half4 _DyeColor1;
+    float _IsDyable;
+    float4 _DyeColor1;
 
     float2 _PositionOffset;
     float _RotationOffset;

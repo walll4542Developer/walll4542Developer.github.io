@@ -51,7 +51,7 @@ Shader "MMN/BG/Sky_Re"
             struct Varyings
             {
                 float3 uv : TEXCOORD0;
-                half fogCoord : TEXCOORD1;          // x: fogFactor
+                float fogCoord : TEXCOORD1;          // x: fogFactor
                 float3 positionWS : TEXCOORD2;
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
@@ -71,8 +71,8 @@ Shader "MMN/BG/Sky_Re"
                 float _SkyPosition3;
                 float _SkyPosition4;
 
-                half _SunDisk;
-                half _SunGlowDisk;
+                float _SunDisk;
+                float _SunGlowDisk;
                 float4 _SunGlowColor;
                 
             CBUFFER_END
@@ -130,16 +130,16 @@ Shader "MMN/BG/Sky_Re"
             }
 
             // Calculates the sun shape. 태양 디스크 연산. 레거시에서 이식해 온걸 개조함
-            half3 calcSunAttenuation(half3 lightPos, half3 ray, half3 lightcolor)
+            float3 calcSunAttenuation(float3 lightPos, float3 ray, float3 lightcolor)
             {
-                half3 delta = lightPos - ray;
-                half dist = length(delta);
-                half spot = max(0, 1.0 - smoothstep(0.0, _SunDisk, dist));
-                half glow = max(0, 1.0 - smoothstep(0.0, _SunGlowDisk, dist));
+                float3 delta = lightPos - ray;
+                float dist = length(delta);
+                float spot = max(0, 1.0 - smoothstep(0.0, _SunDisk, dist));
+                float glow = max(0, 1.0 - smoothstep(0.0, _SunGlowDisk, dist));
                 return (pow(spot, 20) + pow(glow, 10) * 0.1) * lightcolor.rgb * _SunGlowColor.rgb * 10 ;
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
                 //sky Color Calc
                 float skyColormask1 = smoothstep(_SkyPosition3, _SkyPosition4, input.uv.y);
@@ -149,13 +149,13 @@ Shader "MMN/BG/Sky_Re"
                 
                 //sundisk draw
                 Light light = GetMainLight();
-                half3 direction = light.direction;
-                half3 ray = normalize(input.positionWS.xyz);
-                half3 sundirection = normalize(direction);
-                half3 sundisk = calcSunAttenuation(sundirection, ray, light.color) ;
+                float3 direction = light.direction;
+                float3 ray = normalize(input.positionWS.xyz);
+                float3 sundirection = normalize(direction);
+                float3 sundisk = calcSunAttenuation(sundirection, ray, light.color) ;
 
-                half3 finalColor = skyGradColor.rgb + sundisk.rgb;
-                half4 finalResult = half4(finalColor, 1.0);
+                float3 finalColor = skyGradColor.rgb + sundisk.rgb;
+                float4 finalResult = float4(finalColor, 1.0);
 
                 //return fogHeightBottom;
                 return finalResult;

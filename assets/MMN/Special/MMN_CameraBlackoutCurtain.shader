@@ -41,7 +41,7 @@ Shader "MMN/Special/CameraBlackoutCurtain"
             sampler2D _BaseMap;
 
             CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
+                float4 _BaseColor;
             CBUFFER_END
 
             struct Attributes
@@ -54,7 +54,7 @@ Shader "MMN/Special/CameraBlackoutCurtain"
             struct Varyings
             {
                 float4 positionCS   : SV_POSITION;
-                half4 color         : COLOR;
+                float4 color         : COLOR;
                 float4 uv           : TEXCOORD0;
             };
 
@@ -70,11 +70,11 @@ Shader "MMN/Special/CameraBlackoutCurtain"
                 return output;
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
-                half4 color = tex2D(_BaseMap, input.uv);
-                half alpha = saturate(_BaseColor.a * color.a);
-                return half4(color.rgb, alpha);
+                float4 color = tex2D(_BaseMap, input.uv);
+                float alpha = saturate(_BaseColor.a * color.a);
+                return float4(color.rgb, alpha);
             }
             ENDHLSL
         }

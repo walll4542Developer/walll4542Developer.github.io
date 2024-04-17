@@ -15,7 +15,7 @@
 #include "CharacterDebugging.hlsl"
 
 
-half4 BasePassFragment(Varyings input) : SV_Target
+float4 BasePassFragment(Varyings input) : SV_Target
 {
     //-----------------------------------------------------------------------------
     // Initialize data
@@ -29,13 +29,13 @@ half4 BasePassFragment(Varyings input) : SV_Target
     // Diffuse
     //-----------------------------------------------------------------------------
     float2 uv = ConvertToAtlasUV(_BaseMapAtlasSize.xy, _BaseMapAtlasSize.z, _BaseMapScalePosition, _BaseMapAtlasSize.w, input.uv.xy);
-    half4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-    half3 baseColor = baseMap.rgb;
-    half alpha = baseMap.a * _AlphaOverride;
+    float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
+    float3 baseColor = baseMap.rgb;
+    float alpha = baseMap.a * _AlphaOverride;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
-    half3 dyedBaseColor = baseColor;
+    float3 dyedBaseColor = baseColor;
     #ifdef _DYE_FEATURE
         if (IS_TRUE(_IsDyable))
         {
@@ -57,7 +57,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         dyedBaseColor);
@@ -98,7 +98,7 @@ half4 BasePassFragment(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return half4(dyedBaseColor, resultColor.a);
+        return float4(dyedBaseColor, resultColor.a);
     }
     #endif
 

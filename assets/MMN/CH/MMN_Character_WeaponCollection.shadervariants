@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMN_Character_WeaponCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: 692f517453235ad4e9c97b9d20764d39, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+      - keywords: _CASTING_PUNCTUAL_LIGHT_SHADOW
+        passType: 8
+      - keywords: 
+        passType: 13
+      - keywords: FOG_LINEAR
+        passType: 13
+      - keywords: FOG_LINEAR _METAL_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _METAL_FEATURE _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _OUTLINE_FEATURE
+        passType: 13
+      - keywords: FOG_LINEAR _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13
+      - keywords: _VERTEX_OBJECT_MOTION_BLUR
+        passType: 13

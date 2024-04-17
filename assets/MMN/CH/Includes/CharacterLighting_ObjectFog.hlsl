@@ -13,21 +13,21 @@
 // 주석을 풀면 볼 수 있다.
 // 그냥 하지말자... -_-
 
-// void CharacterObjectFog(inout half3 resultColor, half3 positionWS, half3 characterPos, half visualHeight, half power, half4 fogColor)
+// void CharacterObjectFog(inout float3 resultColor, float3 positionWS, float3 characterPos, float visualHeight, float power, float4 fogColor)
 // {
-//     // half3 cameraPos = GetCameraPositionWS() - inputData.positionWS.xyz;
-//     // half3 charPos = characterPos - inputData.positionWS.xyz;
-//     // half mask = saturate(dot(half2(cameraPos.xz), half2(charPos.xz)) * 1.0) * (1.0 -verticalGradientRemapped); // y축 제거
-//     // half3 fogColor = 0.1 * lightingData.giColor;
+//     // float3 cameraPos = GetCameraPositionWS() - inputData.positionWS.xyz;
+//     // float3 charPos = characterPos - inputData.positionWS.xyz;
+//     // float mask = saturate(dot(float2(cameraPos.xz), float2(charPos.xz)) * 1.0) * (1.0 -verticalGradientRemapped); // y축 제거
+//     // float3 fogColor = 0.1 * lightingData.giColor;
 //     // resultColor = lerp(resultColor,fogColor,mask);
 // }
 
-// void CharacterObjectFog2(inout half3 resultColor, half3 positionWS, half3 characterPos, half visualHeight, half power, half4 fogColor)
+// void CharacterObjectFog2(inout float3 resultColor, float3 positionWS, float3 characterPos, float visualHeight, float power, float4 fogColor)
 // {
-//     // half3 cameraPos = GetCameraPositionWS() - positionWS.xyz;
-//     // half3 charPos = half3(characterPos.x, characterPos.y + (visualHeight * 0.5), characterPos.z) - positionWS.xyz;
-//     // half mask = saturate(dot(cameraPos, half3(charPos.x, 0, charPos.z))); // y축 제거
-//     // half flat = 1 - saturate(dot(half3(0, 1, 0), positionWS.xyz - characterPos.xyz));
+//     // float3 cameraPos = GetCameraPositionWS() - positionWS.xyz;
+//     // float3 charPos = float3(characterPos.x, characterPos.y + (visualHeight * 0.5), characterPos.z) - positionWS.xyz;
+//     // float mask = saturate(dot(cameraPos, float3(charPos.x, 0, charPos.z))); // y축 제거
+//     // float flat = 1 - saturate(dot(float3(0, 1, 0), positionWS.xyz - characterPos.xyz));
 //     // mask = pow(mask, power) * flat; // 0.45
 //     // resultColor = lerp(resultColor, resultColor * fogColor.rgb, mask);
 //     // resultColor = mask;

@@ -68,26 +68,26 @@ Varyings ShadowPassVertex(Attributes input)
 }
 
 void DissolveShadow(
-    in float3 positionOS, in float3 positionWS, in float3 normalWS, 
-    in float3 dissolveDirection, in float dissolveEdgeWidth, in float dissolveWidth, in float dissolveAmount, 
+    in float3 positionOS, in float3 positionWS, in float3 normalWS,
+    in float3 dissolveDirection, in float dissolveEdgeWidth, in float dissolveWidth, in float dissolveAmount,
     in float noiseCutoff, in float noiseCutoffSmoothness, in float noiseTexScale)
 {
     float3 direction = normalize(dissolveDirection.xyz);
-    half movingPosition = dot(positionOS, direction);
+    float movingPosition = dot(positionOS, direction);
 
-    half dissolvePos = (movingPosition + dissolveAmount) * noiseTexScale;
+    float dissolvePos = (movingPosition + dissolveAmount) * noiseTexScale;
 
-    half triplanarNoise = TriplanarNoise(positionWS, normalWS);
+    float triplanarNoise = TriplanarNoise(positionWS, normalWS);
     dissolvePos += triplanarNoise;
 
-    half dissolveResult = smoothstep(dissolvePos, dissolvePos + noiseCutoffSmoothness, min(dissolveEdgeWidth + dissolveWidth, dissolveWidth));
+    float dissolveResult = smoothstep(dissolvePos, dissolvePos + noiseCutoffSmoothness, min(dissolveEdgeWidth + dissolveWidth, dissolveWidth));
     clip(dissolveResult - noiseCutoff);
 }
 
-half4 ShadowPassFragment(Varyings input) : SV_TARGET
+float4 ShadowPassFragment(Varyings input) : SV_TARGET
 {
-    half4 customdata = input.uv1;
-    half2 uv = input.uv0.xy;
+    float4 customdata = input.uv1;
+    float2 uv = input.uv0.xy;
 
     // 디졸브 연산
     #if _CUSTOMDATA_ON
@@ -95,8 +95,8 @@ half4 ShadowPassFragment(Varyings input) : SV_TARGET
     #endif
 
     DissolveShadow(
-        input.positionOS.xyz, input.positionWS.xyz, input.normalWS.xyz, 
-        _DissolveDirection, _DissolveEdgeWidth, _DissolveWidth, _DissolveAmount, 
+        input.positionOS.xyz, input.positionWS.xyz, input.normalWS.xyz,
+        _DissolveDirection.xyz, _DissolveEdgeWidth, _DissolveWidth, _DissolveAmount,
         _NoiseCutoff, _NoiseCutoffSmoothness, _NoiseTexScale);
 
     // LOD 디더링 기능
@@ -121,7 +121,7 @@ half4 ShadowPassFragment(Varyings input) : SV_TARGET
     }
 
     Alpha(SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a, _BaseColor, _Cutoff);
-    
+
     return 0;
 }
 

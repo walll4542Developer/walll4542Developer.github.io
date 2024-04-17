@@ -114,6 +114,7 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords
@@ -254,6 +255,7 @@ Shader "Amazing Assets/Terrain To Mesh/Splatmap"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING //이거 지우면 플레이때 어둡게 나옴
             #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             // -------------------------------------
             // Unity defined keywords

@@ -2,22 +2,23 @@
 #define MMN_CHARACTER_DEPTH_ONLY_PASS_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-// #include "../../Includes/BendingVertex.hlsl"
-// #include "../../Includes/VectorRigHelper.hlsl"
 
 #include "CharacterData.hlsl"
 #include "CharacterApplyDissolve.hlsl"
+#include "CharacterMotionBlurPass.hlsl"
 
 struct Attributes
 {
     float4 positionOS : POSITION;
+    float3 normalOS : NORMAL;
 
 #ifdef _DISSOLVE_FEATURE
-    float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
 #endif
 
-    // VECTOR_RIG_ATTRIBUTES(1, 2, 3, 4, 5)
+#ifdef _VERTEX_OBJECT_MOTION_BLUR
+    uint id : SV_VertexID;
+#endif
 };
 
 struct Varyings
@@ -26,7 +27,7 @@ struct Varyings
 
 #ifdef _DISSOLVE_FEATURE
     float4 positionWS : TEXCOORD1;  // xyz: position, w: camera distance
-    half3 normalWS : TEXCOORD2;     // xyz: normal
+    float3 normalWS : TEXCOORD2;     // xyz: normal
     float3 positionOS : TEXCOORD3;
 #endif
 };
@@ -35,13 +36,18 @@ Varyings DepthPassVertex(Attributes input)
 {
     Varyings output = (Varyings)0;
 
-    // VECTOR_RIG_DEFORM_VERTEX(input, input.positionOS)
+#ifdef _VERTEX_OBJECT_MOTION_BLUR
+    // 오브젝트 모션블러(버텍스)를 적용한다
+    float3 positionOS = CaculateMotionBlurVertexPositionOS(input.positionOS.xyz, input.normalOS, input.id);
+#else
+    float3 positionOS = input.positionOS.xyz;
+#endif
 
-    VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(positionOS);
     output.positionCS = vertexInput.positionCS;
 #ifdef _DISSOLVE_FEATURE
     output.positionWS.xyz = vertexInput.positionWS;
-    output.positionOS = input.positionOS.xyz;
+    output.positionOS = positionOS;
 
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
     output.normalWS = normalInput.normalWS;
@@ -50,7 +56,7 @@ Varyings DepthPassVertex(Attributes input)
     return output;
 }
 
-half4 DepthPassFragment(Varyings input) : SV_Target
+float4 DepthPassFragment(Varyings input) : SV_Target
 {
     #ifdef _DISSOLVE_FEATURE
         CharacterData characterData = InitializeCharacterData();
@@ -72,10 +78,10 @@ half4 DepthPassFragment(Varyings input) : SV_Target
         dissolveInput.positionOS = input.positionOS;
         dissolveInput.normalWS = SafeNormalize(input.normalWS.xyz);
         dissolveInput.characterData = characterData;
-        ApplyDissolve(half3(1.0, 1.0, 1.0), _DissolveAmount, dissolveInput);
+        ApplyDissolve(float3(1.0, 1.0, 1.0), _DissolveAmount, dissolveInput);
     #endif
 
-    return half4(1.0, 1.0, 1.0, 1.0);
+    return float4(1.0, 1.0, 1.0, 1.0);
 }
 
 #endif // MMN_CHARACTER_DEPTH_ONLY_PASS_INCLUDED

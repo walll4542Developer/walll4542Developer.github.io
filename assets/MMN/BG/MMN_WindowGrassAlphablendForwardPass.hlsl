@@ -6,39 +6,39 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
+    float3 normalOS : NORMAL;
     float2 texcoord : TEXCOORD0;
     float2 staticLightmapUV : TEXCOORD1;
-    half4 color : COLOR;
+    float4 color : COLOR;
 };
 
 struct Varyings
 {
     float2 uv : TEXCOORD0;
     float3 positionWS : TEXCOORD1;    // xyz: posWS
-    half3 normalWS : TEXCOORD2;
-    half fogFactor : TEXCOORD5;
+    float3 normalWS : TEXCOORD2;
+    float fogFactor : TEXCOORD5;
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 7);
     float4 screenPos : TEXCOORD8;
     float cameraDistance : TEXCOORD9; //이걸 나중에 positionWS 의 알파로 빼는걸 생각해 봅시다.
-    half4 color : COLOR;
+    float4 color : COLOR;
     float4 positionCS : SV_POSITION;
 };
 
 
-void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
+void InitializeInputData(Varyings input, float3 normalTS, out InputData inputData)
 {
     
     inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
 
-    half3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
+    float3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
     inputData.normalWS = input.normalWS;
     inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
     viewDirWS = SafeNormalize(viewDirWS);
     inputData.viewDirectionWS = viewDirWS;
     inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-    inputData.vertexLighting = half3(0, 0, 0);
+    inputData.vertexLighting = float3(0, 0, 0);
 
     #if defined(DEBUG_DISPLAY)
         inputData.vertexSH = input.vertexSH;
@@ -57,7 +57,7 @@ Varyings LitPassVertexSimple(Attributes input)
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
     
-    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
     output.positionWS.xyz = vertexInput.positionWS;
@@ -74,20 +74,20 @@ Varyings LitPassVertexSimple(Attributes input)
 }
 
 // Used for StandardSimpleLighting shader
-half4 LitPassFragmentSimple(Varyings input) : SV_Target
+float4 LitPassFragmentSimple(Varyings input) : SV_Target
 {
-    half nearAlpha = 1;
-    #if defined(_GLOBAL_NEARHALFTONECLIP_ON)
-        //거리에 따라 사라지게 하는 기능
-        float cameraDistance = input.cameraDistance / 1.5  ;//사라지는 거리 조절하고 싶으면 여기에 곱셈하세요
-        nearAlpha = saturate(cameraDistance * cameraDistance - 0.5) ;
-    #endif
+    // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+    // #if defined(_GLOBAL_NEARHALFTONECLIP_ON)
+    //     //거리에 따라 사라지게 하는 기능
+    //     float cameraDistance = input.cameraDistance / 1.5  ;//사라지는 거리 조절하고 싶으면 여기에 곱셈하세요
+    //     nearAlpha = saturate(cameraDistance * cameraDistance - 0.5) ;
+    // #endif
 
     //레이케스트 되면 사라지는 기능
-    half RaycasthalftoneAlpha = RaycastingHalftoneAlphaBlend(input.screenPos, input.screenPos, _RaycastHarftoneClip, 0);
+    float RaycasthalftoneAlpha = RaycastingHalftoneAlphaBlend(input.screenPos, input.screenPos, _RaycastHarftoneClip, 0);
 
     InputData inputData;
-    InitializeInputData(input, /*normalTS*/half3(0, 0, 1), inputData);
+    InitializeInputData(input, /*normalTS*/float3(0, 0, 1), inputData);
     SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
 
     float3 reflectVec = reflect(-inputData.viewDirectionWS, inputData.normalWS);
@@ -97,8 +97,8 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     rim = 1 - (saturate(rim));
     rim = rim * rim * rim;
 
-    half4 color;
-    color = half4(Reflectionprobe * _Global_GILightMulti.rgb * _EmissionColorBright.rgb, saturate(rim + 0.05));
+    float4 color;
+    color = float4(Reflectionprobe * _Global_GILightMulti.rgb * _EmissionColorBright.rgb, saturate(rim + 0.05));
 
     //하이트 포그  연산
     color = MMN_GlobalTex_HeightFog(
@@ -111,7 +111,7 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
         _Global_FogHeightNoiseScale,
         input.uv);
 
-    color.a = saturate(nearAlpha * RaycasthalftoneAlpha * color.a);
+    color.a = saturate(RaycasthalftoneAlpha * color.a);
     return color;
 };
 

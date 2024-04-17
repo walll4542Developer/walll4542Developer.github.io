@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FX_Alpha_Scroll_BilboardCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: dbb1255497f8ca049a266194be6189b5, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_LINEAR
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_BOTTOM _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _ROTATIONPIVOT_PIVOT _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR INSTANCING_ON _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_BOTTOM _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _ROTATIONPIVOT_PIVOT _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_MAX
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_MAX _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_MAX _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_UNITY
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_UNITY _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _UPAXIS_UNITY _UPVECTORFIXED_Y
+        passType: 0
+      - keywords: FOG_LINEAR _UPVECTORFIXED_FREE
+        passType: 0
+      - keywords: FOG_LINEAR _UPVECTORFIXED_Y
+        passType: 0

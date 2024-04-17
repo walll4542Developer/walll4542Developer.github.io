@@ -30,6 +30,7 @@ Shader "MMN/CH/Legacy/Face: Indexed Cutout Atlas"
         [HideInInspector] _CustomLightMode ("_CustomLightMode", Float) = 0.0
         [HideInInspector] _CustomLightDirection ("_CustomLightDirection", Vector) = (0.0, 0.0, -1.0, 0.0)
         [HideInInspector] _CustomLightColor ("_CustomLightColor", Color) = (1.0, 1.0, 1.0, 1.0)
+        [HideInInspector] _CustomGIColor ("_CustomGIColor", Color) = (0.768, 0.827, 0.854, 1.0)
 
         [HideInInspector] _EffectTint ("_EffectTint", Color) = (0.0, 0.0, 0.0, 0.0)
 
@@ -62,6 +63,60 @@ Shader "MMN/CH/Legacy/Face: Indexed Cutout Atlas"
 
     SubShader
     {
+        LOD 300
+
+        Tags
+        {
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent"
+            "RenderPipeline" = "UniversalPipeline"
+            "IgnoreProjector" = "True"
+            "ShaderModel" = "4.5"
+            "PreviewType" = "Plane"
+        }
+
+        Pass
+        {
+            Name "Base"
+            Tags { "LightMode" = "UniversalForward" }
+
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
+            ZTest LEqual
+            Cull Back
+
+            HLSLPROGRAM
+            // -------------------------------------
+            // Material Keywords
+
+            // -------------------------------------
+            // Universal Pipeline keywords
+            #define _ADDITIONAL_LIGHTS
+            #define _LIGHT_LAYERS
+            #define _LIGHT_COOKIES
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fog
+            #pragma skip_variants FOG_EXP FOG_EXP2
+            #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ DEBUG_SHADING_OFF
+
+            // -------------------------------------
+            // 작업 공정의 편의를 위한 Keywords
+
+            //--------------------------------------
+            // Vertex and Fragment
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Includes/CharacterLegacyFaceIndexedCutoutAtlasPass.hlsl"
+            ENDHLSL
+        }
+    }
+
+    SubShader
+    {
         LOD 100
 
         Tags
@@ -90,9 +145,8 @@ Shader "MMN/CH/Legacy/Face: Indexed Cutout Atlas"
 
             // -------------------------------------
             // Universal Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #define _ADDITIONAL_LIGHTS_VERTEX
+            #define _LIGHT_LAYERS
 
             // -------------------------------------
             // Unity defined keywords

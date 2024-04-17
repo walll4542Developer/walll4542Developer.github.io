@@ -4,7 +4,6 @@ Shader "MMN/BG/SimpleLitAlphaBlend"
     // Keep properties of StandardSpecular shader for upgrade reasons.
     Properties
     {
-        // [Toggle]_NEARHALFTONECLIP ("니어 클립", float) = 0
         // [Toggle]_ALPHATEST ("알파테스트", float) = 0
         [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
         [PerRendererData]_RaycastHarftoneClip ("레이케스트 하프톤 클립", Range(0, 1)) = 0
@@ -94,9 +93,11 @@ Shader "MMN/BG/SimpleLitAlphaBlend"
             // -------------------------------------
             // Material Keywords
 
-            #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            
             #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
 
@@ -152,9 +153,10 @@ Shader "MMN/BG/SimpleLitAlphaBlend"
             // -------------------------------------
             // Material Keywords
 
-            #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_local_fragment _ _NEARHALFTONECLIP_ON
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
             #pragma shader_feature_local _SHOWVERTEXALPHA_ON
 

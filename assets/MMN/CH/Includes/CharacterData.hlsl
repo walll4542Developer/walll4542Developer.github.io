@@ -4,15 +4,15 @@
 struct CharacterData
 {
     float3 characterPos;
-    half visualHeight;
+    float visualHeight;
     float3 characterCenterPos;
-    half2 direction2D;
-    half3 direction3D;
-    half3 headDirection3D;
-    half headHeight;
+    float2 direction2D;
+    float3 direction3D;
+    float3 headDirection3D;
+    float headHeight;
 
-    half topShadow;
-    half bottomShadow;
+    float topShadow;
+    float bottomShadow;
 };
 
 CharacterData InitializeCharacterData()
@@ -23,7 +23,7 @@ CharacterData InitializeCharacterData()
     data.visualHeight = _CharacterPositionAndVisualHeight.w;
     data.characterCenterPos = float3(data.characterPos.x, data.characterPos.y + (data.visualHeight * 0.5), data.characterPos.z);
     data.direction2D = _CharacterDirection.xy;
-    data.direction3D = normalize(half3(_CharacterDirection.x, 0.0, _CharacterDirection.y));
+    data.direction3D = normalize(float3(_CharacterDirection.x, 0.0, _CharacterDirection.y));
     data.headDirection3D = _CharacterHeadDirection.xyz;
     data.headHeight = (_CharacterHeadDirection.w <= 0.0001) ? _CharacterPositionAndVisualHeight.w : _CharacterHeadDirection.w;
 

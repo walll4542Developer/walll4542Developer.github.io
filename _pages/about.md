@@ -25,7 +25,7 @@ sitemap: false
   - ![Maya](/assets/images/Icon/Maya_Mini.png) Maya / ![3dsMax](/assets/images/Icon/3dsMax_Mini.png) 3DS MAX / ![Blender](/assets/images/Icon/Blender_Mini.png) Blender / ![Zbrush](/assets/images/Icon/Zbrush_Mini.png) Zbrush
   -  ![Mari](/assets/images/Icon/Mari_Mini.png) Mari / ![Substance](/assets/images/Icon/Substance_Mini.png) Substance Series
 - Shader Langauges
-  - HLSL / GLSL / ShaderLab / node based shader editors
+  - HLSL / GLSL / ShaderLab / D3D10(3dsMax) / node based shader editors
 - Game engine graphic rendering pipeline
   - ![Unity](/assets/images/Icon/Unity_Mini.png) Unity URP & SRP
 

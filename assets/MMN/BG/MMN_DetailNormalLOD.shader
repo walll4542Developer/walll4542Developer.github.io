@@ -62,6 +62,7 @@ Shader "MMN/BG/DetailNormalLOD"
             #pragma multi_compile_fog
             #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #pragma multi_compile_fragment _ _GLOBAL_OPTION_VERY_LOW
 
             #pragma vertex LitPassVertexSimple
             #pragma fragment LitPassFragmentSimple
@@ -76,17 +77,17 @@ Shader "MMN/BG/DetailNormalLOD"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
+                float3 normalOS : NORMAL;
                 float2 texcoord : TEXCOORD0;
-                half4 color : COLOR;
+                float4 color : COLOR;
             };
 
             struct Varyings
             {
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;    // xyz: posWS
-                half3 normalWS : TEXCOORD2;
-                half fogFactor : TEXCOORD3;
+                float3 normalWS : TEXCOORD2;
+                float fogFactor : TEXCOORD3;
                 float4 vertexSH : TEXCOORD7;
                 float4 color : COLOR;
                 float4 positionCS : SV_POSITION;
@@ -101,7 +102,7 @@ Shader "MMN/BG/DetailNormalLOD"
                 viewDirWS = SafeNormalize(viewDirWS);
                 inputData.viewDirectionWS = viewDirWS;
                 inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
-                inputData.vertexLighting = half3(0, 0, 0);
+                inputData.vertexLighting = float3(0, 0, 0);
                 inputData.bakedGI = SAMPLE_GI(/* input.staticLightmapUV */1, input.vertexSH.rgb, inputData.normalWS);
                 #if defined(DEBUG_DISPLAY)
                     inputData.vertexSH = input.vertexSH;
@@ -141,8 +142,8 @@ Shader "MMN/BG/DetailNormalLOD"
 
                 float2 uv = input.uv;
                 float4 diffuseAlpha = SampleAlbedoAlpha(TRANSFORM_TEX(uv, _BaseMap), TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
-                half3 diffuse = diffuseAlpha.rgb;
-                half alpha = diffuseAlpha.a * _BaseColor.a;
+                float3 diffuse = diffuseAlpha.rgb;
+                float alpha = diffuseAlpha.a * _BaseColor.a;
 
                 //알파 테스트 기능
                 #if defined(_ALPHATEST_ON)
@@ -217,11 +218,11 @@ Shader "MMN/BG/DetailNormalLOD"
                 diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
 
                 //라이팅
-                half4 color = 0;
-                color = UniversalFragmentLightCustomLOD(inputData, diffuse, specular, smoothness, emission, /* alpha */1, /* normalTS */ half3(0, 0, 1));
+                float4 color = 0;
+                color = UniversalFragmentLightCustomLOD(inputData, diffuse, specular, smoothness, emission, /* alpha */1, /* normalTS */ float3(0, 0, 1));
 
                 //레인텍스쳐 only 레인 드롭 애니메이션은 삭제
-                half3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
+                float3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
                 //하이트 포그  연산
@@ -258,11 +259,13 @@ Shader "MMN/BG/DetailNormalLOD"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
-            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_local_fragment _ _NEARHALFTONECLIP_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON            
 
             #define VERTEX_CAMERA_DEPEND_BENDING 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 0

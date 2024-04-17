@@ -58,10 +58,10 @@ Shader "MMN/CH/System_ShadowQuery"
                 return output;
             }
 
-            half4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
-                half attenuation = half(SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, input.shadowCoord.xyz));
-                return half4(attenuation.xxx, 1.0);
+                float attenuation = float(SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, input.shadowCoord.xyz));
+                return float4(attenuation.xxx, 1.0);
             }
 
             ENDHLSL

@@ -7,75 +7,75 @@
 
 struct DissolveInput
 {
-    half4 range;
-    half notUseDirection;
-    half3 direction;
+    float4 range;
+    float notUseDirection;
+    float3 direction;
 
-    half panningSpeed;
+    float panningSpeed;
 
     TEXTURE2D(dissolveMap);
     SAMPLER(dissolveMapSampler);
-    half4 dissolveMapST;
+    float4 dissolveMapST;
 
-    half useCutoff;
+    float useCutoff;
 
-    half4 mainColor;
-    half mainWidth;
-    half4 edgeColor;
-    half edgeWidth;
+    float4 mainColor;
+    float mainWidth;
+    float4 edgeColor;
+    float edgeWidth;
 
     float3 positionWS;
     float3 positionOS;
-    half3 normalWS;
+    float3 normalWS;
     CharacterData characterData;
 };
 
-float2 OffsetPanning(float2 uv, half4 texture_ST, half speed)
+float2 OffsetPanning(float2 uv, float4 texture_ST, float speed)
 {
-    half panningSpeed = speed * _Time.y;
+    float panningSpeed = speed * _Time.y;
     float2 tilingOffset = uv * texture_ST.xy + texture_ST.zw;
     float2 panning = tilingOffset + panningSpeed;
     return panning;
 }
 
-half TriplanarNoise(in DissolveInput input)
+float TriplanarNoise(in DissolveInput input)
 {
-    half triplanarX = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.zy, input.dissolveMapST, input.panningSpeed), 0).r;
-    half triplanarY = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.xz, input.dissolveMapST, input.panningSpeed), 0).r;
-    half triplanarZ = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.xy, input.dissolveMapST, input.panningSpeed), 0).r;
+    float triplanarX = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.zy, input.dissolveMapST, input.panningSpeed), 0).r;
+    float triplanarY = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.xz, input.dissolveMapST, input.panningSpeed), 0).r;
+    float triplanarZ = SAMPLE_TEXTURE2D_LOD(input.dissolveMap, input.dissolveMapSampler, OffsetPanning(input.positionWS.xy, input.dissolveMapST, input.panningSpeed), 0).r;
 
-    half3 normalBlend = abs(input.normalWS);
+    float3 normalBlend = abs(input.normalWS);
     normalBlend /= (normalBlend.x + normalBlend.y + normalBlend.z);
 
-    half nx = triplanarX * normalBlend.x;
-    half ny = triplanarY * normalBlend.y;
-    half nz = triplanarZ * normalBlend.z;
+    float nx = triplanarX * normalBlend.x;
+    float ny = triplanarY * normalBlend.y;
+    float nz = triplanarZ * normalBlend.z;
 
-    half triplanarNoise = nx + ny + nz;
+    float triplanarNoise = nx + ny + nz;
     return triplanarNoise;
 }
 
 // #ifdef DISSOLVE_WORLDSPACE
 // // NOTE: 파라미터로 들어오는 모든 벡터는 노멀라이즈 되어 있다고 가정함. 회전은 Y축 기준만 다룸.
-// half3 RotateFromTo(half3 characterDirection, half3 inputDirection)
+// float3 RotateFromTo(float3 characterDirection, float3 inputDirection)
 // {
 //     if (abs(inputDirection.x) <= 0.0001 && abs(inputDirection.z) <= 0.0001)
 //     {
 //         return inputDirection;
 //     }
 
-//     const half3 foward = half3(0.0, 0.0, -1.0);
-//     half cosA = dot(foward, inputDirection);
-//     half3 sinA = cross(foward, inputDirection);
-//     half signedSinA = (sinA.y + sinA.z);
+//     const float3 foward = float3(0.0, 0.0, -1.0);
+//     float cosA = dot(foward, inputDirection);
+//     float3 sinA = cross(foward, inputDirection);
+//     float signedSinA = (sinA.y + sinA.z);
 
 //     // Y 축 기준 회전만 다룸.
-//     half3x3 rotation = half3x3(cosA, 0.0, -signedSinA, 0.0, 1.0, 0.0, signedSinA, 0.0, cosA);
+//     float3x3 rotation = float3x3(cosA, 0.0, -signedSinA, 0.0, 1.0, 0.0, signedSinA, 0.0, cosA);
 //     return mul(rotation, characterDirection);
 // }
 // #endif
 
-half3 ApplyDissolve(in half3 resultColor, in half progress, in DissolveInput input)
+float3 ApplyDissolve(in float3 resultColor, in float progress, in DissolveInput input)
 {
     if (progress <= 0.0)
     {
@@ -83,44 +83,44 @@ half3 ApplyDissolve(in half3 resultColor, in half progress, in DissolveInput inp
     }
 
 // #ifdef DISSOLVE_WORLDSPACE
-//     half3 direction = RotateFromTo(input.characterData.direction3D, input.direction);
-//     half3 position = input.positionWS - input.characterData.characterPos;
+//     float3 direction = RotateFromTo(input.characterData.direction3D, input.direction);
+//     float3 position = input.positionWS - input.characterData.characterPos;
 // #else
-    half3 direction = input.direction;
-    half3 position = input.positionOS;
+    float3 direction = input.direction;
+    float3 position = input.positionOS;
 // #endif
     bool notUseDirection = (length(direction) <= 0.00001) || (input.notUseDirection >= 0.999999);
 
-    half dissolvePosition = dot(position, direction) * input.range.w;
+    float dissolvePosition = dot(position, direction) * input.range.w;
     dissolvePosition = notUseDirection ? 0.0 : dissolvePosition;
 
-    half triplanarNoise = TriplanarNoise(input);
+    float triplanarNoise = TriplanarNoise(input);
 
     bool signDirection = (direction.x + direction.y + direction.z) < 0.0;
-    half progressDirection = signDirection ? 1.0 : -1.0;
+    float progressDirection = signDirection ? 1.0 : -1.0;
 
-    half rangeMin = notUseDirection ? -2.0 : -dot(input.range.xyz, direction) * input.range.w;
+    float rangeMin = notUseDirection ? -2.0 : -dot(input.range.xyz, direction) * input.range.w;
     rangeMin = direction.y >= 0.0 ? rangeMin : input.range.y / input.range.w + input.mainWidth + input.edgeWidth;
 
-    half rangeMax = notUseDirection ? 1.0 : dot(input.range.xyz, direction) * input.range.w;
+    float rangeMax = notUseDirection ? 1.0 : dot(input.range.xyz, direction) * input.range.w;
     rangeMax = direction.y <= 0.0 ? rangeMax : rangeMax * 0.5;
 
-    half dissolve = (dissolvePosition + triplanarNoise);
+    float dissolve = (dissolvePosition + triplanarNoise);
     dissolve -= lerp(rangeMin, rangeMax, progress) * (notUseDirection ? -1.0 : progressDirection);
 
-    half dissolveMin = dissolve;
-    half dissolveMax = dissolve + input.mainWidth;
-    half dissolveArea = saturate((-dissolveMin) / (dissolveMax - dissolveMin + 0.000001));
+    float dissolveMin = dissolve;
+    float dissolveMax = dissolve + input.mainWidth;
+    float dissolveArea = saturate((-dissolveMin) / (dissolveMax - dissolveMin + 0.000001));
 
-    half edgeMin = dissolve;
-    half edgeMax = dissolve + input.edgeWidth;
-    half edgeArea = saturate((-edgeMin) / (edgeMax - edgeMin + 0.000001));
+    float edgeMin = dissolve;
+    float edgeMax = dissolve + input.edgeWidth;
+    float edgeArea = saturate((-edgeMin) / (edgeMax - edgeMin + 0.000001));
 
-    half3 finalColor = 0;
+    float3 finalColor = 0;
     finalColor = lerp(input.mainColor.rgb, resultColor, dissolveArea);
     finalColor = lerp(input.edgeColor.rgb, finalColor, edgeArea);
 
-    half cutoff = 1.0 - min(1.0, dissolve);
+    float cutoff = 1.0 - min(1.0, dissolve);
     clip(cutoff - input.useCutoff);
 
     return finalColor;

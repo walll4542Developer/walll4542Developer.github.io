@@ -4,9 +4,8 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
     // Keep properties of StandardSpecular shader for upgrade reasons.
     Properties
     {
-        [Toggle]_NEARHALFTONECLIP ("니어 클립", float) = 0
         [Toggle]_ALPHATEST ("알파테스트", float) = 0
-        [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
+        // [Enum(off, 0, front, 1, back, 2)]_Cull ("BackfaceCull", Float) = 2.0
         [Toggle]_BackFaceNormalturn ("백페이스 노말을 돌려서 뒷면도 노말을 앞으로 생성한다", float) = 0
         [PerRendererData]_RaycastHarftoneClip ("레이케스트 하프톤 클립", Range(0, 1)) = 0
         _VertexColorWeight ("버텍스 칼라 영향력 가중치", Range(0, 1)) = 1
@@ -18,55 +17,12 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
 
         _Cutoff ("Alpha Clipping", Range(0.0, 1.0)) = 0.5
 
-        [HDR]_SpecColor ("Specular Color", Color) = (0, 0, 0, 0)
-        _Smoothness ("Smoothness", Range(0.0, 1.0)) = 0
-        _Gloss ("Glossiness", Range(0.01, 5)) = 1
         _RampY ("RampY", Range(0, 1)) = 0.5
-        [Toggle]_BackfaceReceiveShadowOff ("백페이스 리시브 셰도우 끄기", float) = 0
-
-        _SpecGlossMap ("Specular Map", 2D) = "white" { }
-        _SmoothnessSource ("Smoothness Source", Float) = 0.0
-        _SpecularHighlights ("Specular Highlights", Float) = 1.0
-
-        // [HideInInspector] _BumpScale ("Scale", Float) = 1.0
-        // [NoScaleOffset] _BumpMap ("Normal Map", 2D) = "bump" { }
-
-        [HDR] _EmissionColor ("Emission Color", Color) = (0, 0, 0)
-        [NoScaleOffset]_EmissionMap ("Emission Map", 2D) = "white" { }
-        [Enum(Always, 0, NightOnly, 1, DayOnly, 2)] _Night2DayEnum ("언제 Emission이 켜지게 할까요", float) = 0
-
-        // Blending state
-        [HideInInspector] _Surface ("__surface", Float) = 0.0
-        [HideInInspector] _Blend ("__blend", Float) = 0.0
-        [HideInInspector] _AlphaClip ("__clip", Float) = 0
-        [HideInInspector] _SrcBlend ("__src", Float) = 1.0
-        [HideInInspector] _DstBlend ("__dst", Float) = 0.0
-        // [HideInInspector] _ZWrite ("__zw", Float) = 1.0
-        // [HideInInspector] _Cull ("__cull", Float) = 2.0
 
         [ToggleUI] _ReceiveShadows ("Receive Shadows", Float) = 1.0
 
         // Editmode props
         _QueueOffset ("Queue offset", Float) = 0.0
-
-        // ObsoleteProperties
-        [HideInInspector] _MainTex ("BaseMap", 2D) = "white" { }
-        [HideInInspector] _Color ("Base Color", Color) = (1, 1, 1, 1)
-        [HideInInspector] _Shininess ("Smoothness", Float) = 0.0
-        [HideInInspector] _GlossinessSource ("GlossinessSource", Float) = 0.0
-        [HideInInspector] _SpecSource ("SpecularHighlights", Float) = 0.0
-
-        [HideInInspector][NoScaleOffset]unity_Lightmaps ("unity_Lightmaps", 2DArray) = "" { }
-        [HideInInspector][NoScaleOffset]unity_LightmapsInd ("unity_LightmapsInd", 2DArray) = "" { }
-        [HideInInspector][NoScaleOffset]unity_ShadowMasks ("unity_ShadowMasks", 2DArray) = "" { }
-
-
-        //흔들리기. 버텍스 알파에 대응한다.
-        [Toggle]_VertexAniOn ("버텍스 애니를 켠다", float) = 1
-        _WindMultiply ("Wind Multiply(바람 디테일)", Range(0, 20)) = 2 //잘게 흔들리게 됩니다.
-        _WindSpeedMultiply ("Wind Speed Multiply(바람 속도 가중치)", Range(0, 40)) = 7 //빠르게 흔들리게 됩니다.
-        [Toggle]_ShowVertexAlpha ("Show Vertex Alpha(확인용)", float) = 0
-        [Toggle]_UseVertexAnimation ("버텍스 애니 기능 통채로 끄기", float) = 0 //GUI에서만 쓰는 기능이라 프로퍼티에서만 유지합니다.
 
         [Header(Stencil Options)]
         [Space]
@@ -86,6 +42,10 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
         _DissolveWidth ("디졸브 두께", Range(0.0, 5.0)) = 1.0
         [HDR] _DissolveEdgeColor ("디졸브 경계의 색상", Color) = (1.0, 1.0, 1.0, 1.0)
         _DissolveEdgeWidth ("디졸브 경계의 두께", Range(0.0, 0.5)) = 0.2
+        //사용하지않지만 SRP배쳐때문에 넣기
+        [HideInInspector]_VertexAniOn ("버텍스 애니를 켠다", float) = 1
+        [HideInInspector]_WindMultiply("_WindMultiply",float) = 0
+        [HideInInspector]_WindSpeedMultiply("_WindSpeedMultiply",float) = 0
     }
 
     SubShader
@@ -95,7 +55,6 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
         ENDHLSL
 
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
-        LOD 300
 
         Pass
         {
@@ -111,11 +70,9 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
                 ZFail Keep
             }
 
-            // Use same blending / depth states as Standard shader
-            Blend[_SrcBlend][_DstBlend]
-            // ZWrite[_ZWrite]
+            Blend One Zero
             ZWrite On
-            Cull[_Cull]
+            // Cull[_Cull]
 
             HLSLPROGRAM
             #pragma exclude_renderers gles gles3 glcore
@@ -124,45 +81,240 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
             // -------------------------------------
             // Material Keywords
             // 셰이더 피쳐. 빌드에 안들어갈 수 있으니 에디터 위주 기능에 사용
-            #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature _ _GLOBAL_NEARHALFTONECLIP_ON
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-            #pragma shader_feature_local _SHOWVERTEXCOLOR_ON
-            #pragma shader_feature_local _SHOWVERTEXALPHA_ON
 
             // -------------------------------------
             // 멀티컴파일. 빌드에 꼭 들어가지만 셰이더 베리언트가 많아짐
             // Universal Pipeline keywords
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            // #pragma multi_compile _ SHADOWS_SHADOWMASK //이걸빼면 더 어두워짐
-            // #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-            // #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            // #pragma multi_compile _ _CLUSTERED_RENDERING
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-
-            #pragma multi_compile _ LIGHTMAP_ON
             #define HALF_SUBTRACTIVE_LIGHTMAP_ON 0
+
             #pragma multi_compile_fog
             #pragma skip_variants FOG_EXP FOG_EXP2
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
-
-            //--------------------------------------
-            // GPU Instancing
-            // #pragma multi_compile_instancing
-            // #pragma instancing_options renderinglayer
-            // #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #pragma vertex LitPassVertexSimple
             #pragma fragment LitPassFragmentSimple
             // #define BUMP_SCALE_NOT_SUPPORTED 1
 
-            #include "Assets/PatchableAssets/Shaders/MMN/FX/includes/FX_SimpleLitDissolveForwardPass.hlsl"
+            #include "Assets/PatchableAssets/Shaders/MMN/Includes/EnvironmentHelper.hlsl"
+            #include "Assets/PatchableAssets/Shaders/MMN/Includes/CustomLighting.hlsl"
+            #include "Assets/PatchableAssets/Shaders/MMN/Includes/BlendingHelper.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS    : POSITION;
+                float3 normalOS      : NORMAL;
+                float4 tangentOS     : TANGENT;
+                float4 texcoord      : TEXCOORD0;
+                float4 customdata      : TEXCOORD1;
+                float4 color: COLOR;
+            };
+
+            struct Varyings
+            {
+                float4 uv0                           : TEXCOORD0;
+                float4 uv1                           : TEXCOORD1;    // xyzw : custom data
+
+                float3 positionWS                   : TEXCOORD2;    // xyz: posWS
+                float3 positionOS                   : TEXCOORD3;    // xyz: posOS
+
+                float3 normalWS                  : TEXCOORD4;    // xyz: normal, w: viewDir.x
+
+                #ifdef _ADDITIONAL_LIGHTS_VERTEX
+                    float4 fogFactorAndVertexLight : TEXCOORD5; // x: fogFactor, yzw: vertex light
+                #else
+                    float fogFactor : TEXCOORD5;
+                #endif
+
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+                    float4 shadowCoord : TEXCOORD6;
+                #endif
+
+                float4 screenPos : TEXCOORD7;
+                float cameraDistance : TEXCOORD8;
+                float3 vertexSH : TRXCOORD9;
+                float4 color : COLOR;
+                float4 positionCS : SV_POSITION;
+            };
+
+            void InitializeInputData(Varyings input, float3 normalTS, out InputData inputData)
+            {
+                inputData = (InputData)0;
+                inputData.positionWS = input.positionWS;
+
+                float3 viewDirWS = GetWorldSpaceNormalizeViewDir(inputData.positionWS);
+                inputData.normalWS = input.normalWS;
+
+                inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
+                viewDirWS = SafeNormalize(viewDirWS);
+
+                inputData.viewDirectionWS = viewDirWS;
+
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+                    inputData.shadowCoord = input.shadowCoord;
+                #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+                    inputData.shadowCoord = TransformWorldToShadowCoord(inputData.positionWS);
+                #else
+                    inputData.shadowCoord = float4(0, 0, 0, 0);
+                #endif
+
+                #ifdef _ADDITIONAL_LIGHTS_VERTEX
+                    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactorAndVertexLight.x);
+                    inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
+                #else
+                    inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogFactor);
+                    inputData.vertexLighting = float3(0, 0, 0);
+                #endif
+
+                inputData.bakedGI = input.vertexSH;
+
+                // inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+
+                #if defined(DEBUG_DISPLAY)
+                    inputData.vertexSH = input.vertexSH;
+                #endif
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////
+            //                  Vertex and Fragment functions                            //
+            ///////////////////////////////////////////////////////////////////////////////
+
+            // Used in Standard (Simple Lighting) shader
+            Varyings LitPassVertexSimple(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+
+                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+                VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
+
+                output.uv0.xy = TRANSFORM_TEX(input.texcoord.xy, _BaseMap);
+                output.uv1 = input.customdata;
+                output.positionOS.xyz = input.positionOS.xyz;
+                output.positionWS.xyz = vertexInput.positionWS;
+                output.positionCS = vertexInput.positionCS;
+                output.normalWS = NormalizeNormalPerVertex(normalInput.normalWS);
+                output.color = input.color;
+                output.screenPos = ComputeScreenPos(output.positionCS);
+                OUTPUT_SH(output.normalWS.xyz, output.vertexSH);
+
+                float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+                #ifdef _ADDITIONAL_LIGHTS_VERTEX
+                    float3 vertexLight = MM_VertexLighting(vertexInput.positionWS, normalInput.normalWS);
+                    output.fogFactorAndVertexLight = float4(fogFactor, vertexLight);
+                #else
+                    output.fogFactor = fogFactor;
+                #endif
+
+                #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+                    output.shadowCoord = GetShadowCoord(vertexInput);
+                #endif
+
+                return output;
+            }
+
+            // Used for StandardSimpleLighting shader
+            float4 LitPassFragmentSimple(Varyings input, FRONT_FACE_TYPE isFacing : FRONT_FACE_SEMANTIC) : SV_Target
+            {
+                float2 uv = input.uv0.xy;
+                float4 customdata = input.uv1;
+
+                float4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+
+                //틴트칼라와 버텍스 칼라
+                float3 tintProp = _BaseColor.rgb;
+                float tintStrengthProp = _AlbedoTintStrength;
+                float3 diffuse = TextureTintBlend(diffuseAlpha.rgb, tintProp, tintStrengthProp) * saturate(input.color.rgb + (1 - _VertexColorWeight));
+
+                float alpha = diffuseAlpha.a * _BaseColor.a;
+
+                #if defined(_ALPHATEST_ON)
+                    clip(alpha - _Cutoff);
+                    alpha = 1;//없으면 댑스문제로 번쩍거림
+                #else
+                    alpha = 1;
+                #endif
+
+                //가까워지면 하프톤으로 사라지게 하는 기능
+                // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+                // #if defined(_NEARHALFTONECLIP_ON) && defined(_GLOBAL_NEARHALFTONECLIP_ON)
+                //     float halftoneAlpha;
+                //     NearHarftoneAlphaTesting(input.cameraDistance, input.screenPos, 0.5, halftoneAlpha);
+                //     clip(halftoneAlpha);
+                // #endif
+
+                //레이케스트 되면 사라지는 기능
+                float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+                clip(RaycasthalftoneAlpha - 0.1);
+
+                InputData inputData;
+                InitializeInputData(input, /* normalTS */ float3(0, 0, 1), inputData);
+                SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+
+                //LOD 디더링 기능
+                float fadeValue;
+                float lodFade;
+                if (unity_LODFade.x != 0)
+                {
+                    if (unity_LODFade.x > 0)
+                    {
+                        fadeValue = pow(unity_LODFade.x, 1) ;
+                    }
+                    else
+                    {
+                        fadeValue = 1 + unity_LODFade.x;
+                    }
+                    Unity_Dither_linear(fadeValue, input.screenPos, lodFade, 0.5);
+                    clip(lodFade);
+                }
+                else
+                {
+                    fadeValue = 1;
+                }
+
+                //눈내리는 텍스쳐 전환
+                diffuse.rgb = snowTextureLerp(input.positionWS.rgb, diffuse.rgb, input.normalWS.rgb, inputData.bakedGI);
+
+                //라이팅
+                float4 color = 0;
+
+                color = UniversalFragmentLightCustom(inputData, diffuse, /* specular */0, /* smoothness */0, /* emission */0, alpha, /* normalTS */ float3(0, 0, 1), /*shadowDimming*/ 0, /*rampY*/ 0, /* _BackfaceReceiveShadowOff */1, /* FRONT_FACE_TYPE isFacing */0.0, /* float _BackFaceNormalturn */0.0);
+
+                //비내리는 텍스쳐 전환
+                float3 color_Rain = ((color.rgb * color.rgb) + color.rgb) / 2;
+                color_Rain = color_Rain.rgb + MMN_GlobalTex_Raindrop(input.positionWS.rgb, input.normalWS.rgb) * step(0.85, inputData.bakedGI).r * color_Rain.rgb;
+                color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
+
+                //디졸브 연산
+                float4 dissolveResult = color;
+                DissolveColor(dissolveResult, input.positionOS.xyz, input.positionWS.xyz, input.normalWS.xyz, customdata);
+                clip(dissolveResult.a - _NoiseCutoff);
+                color = dissolveResult;
+
+                //컨텍트 셰도우 연산
+                color.rgb *= MMN_RecieveContactShadow(input.positionWS, inputData.shadowCoord);
+
+                //하이트 포그  연산
+                color = MMN_GlobalTex_HeightFog(
+                    color,
+                    input.positionWS, inputData.normalWS, inputData.fogCoord,
+                    _Global_FogHeightOffset,
+                    _Global_FogHeightScale,
+                    _Global_FogHeightNoiseValue,
+                    _Global_FogHeightNoiseSpeed,
+                    _Global_FogHeightNoiseScale,
+                    uv);
+                return color;
+            }
+
             ENDHLSL
         }
 
@@ -206,11 +358,13 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
 
             //-------------------------------------
             // Material Keywords
-            #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma shader_feature_fragment _ _GLOBAL_NEARHALFTONECLIP_ON
 
             //--------------------------------------
-            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
-            #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            // 2024-03-07 니어 하프톤 디더링 기능을 더이상 사용하지 않는 정책으로 바뀌어 주석처리합니다. jaehyun.kim
+            // #pragma multi_compile_fragment _ _NEARHALFTONECLIP_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON            
             #define VERTEX_CAMERA_DEPEND_BENDING 0
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION 1
             #define VERTEX_CAMERA_DEPEND_BENDING_N_WIND_ANIMATION_GRASS 0
@@ -224,6 +378,8 @@ Shader "MMN/FX/SimpleLit_Prop_Dissolve"
             ENDHLSL
         }
     }
+
+
 
     Fallback off
     // CustomEditor "MM.Client.Editor.ShaderGUI.MMN_SimpleLitGUI"

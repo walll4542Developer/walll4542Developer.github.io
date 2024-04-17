@@ -18,7 +18,7 @@
 struct Attributes
 {
     float4 positionOS : POSITION;
-    half3 normalOS : NORMAL;
+    float3 normalOS : NORMAL;
 
     float2 texcoord : TEXCOORD0;
 };
@@ -30,10 +30,10 @@ struct Varyings
     float2 texcoord : TEXCOORD0;
 
     float4 positionWS : TEXCOORD1;  // xyz: position, w: camera distance
-    half3 normalWS : TEXCOORD2;     // xyz: normal
-    half3 viewDirWS : TEXCOORD3;
+    float3 normalWS : TEXCOORD2;     // xyz: normal
+    float3 viewDirWS : TEXCOORD3;
 
-    half4 fogCoord : TEXCOORD4;     // x: fogFactor, yzw: vertexLighting
+    float4 fogCoord : TEXCOORD4;     // x: fogFactor, yzw: vertexLighting
 
     float4 positionNDC : TEXCOORD5;
     float3 positionOS : TEXCOORD6;
@@ -42,7 +42,7 @@ struct Varyings
 
 //--------------------------------------
 // CustomFunction
-float2 rotateUV(in float2 uv, in half rotation)
+float2 rotateUV(in float2 uv, in float rotation)
 {
     return float2(
         cos(rotation) * uv.x + sin(rotation) * uv.y,
@@ -62,15 +62,15 @@ Varyings vert(Attributes input)
     output.positionCS = vertexInput.positionCS;
 
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
-    output.normalWS = half3(normalInput.normalWS);
+    output.normalWS = float3(normalInput.normalWS);
     output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
-    half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
+    float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
-        half3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
-        output.fogCoord = half4(fogFactor, vertexLight); //fogFactorAndVertexLight
+        float3 vertexLight = AdditionalLightsVertex(output.positionWS.xyz, output.normalWS);
+        output.fogCoord = float4(fogFactor, vertexLight); //fogFactorAndVertexLight
     #else
-        output.fogCoord = half4(fogFactor, 0.0, 0.0, 0.0);
+        output.fogCoord = float4(fogFactor, 0.0, 0.0, 0.0);
     #endif
 
     output.positionNDC = ComputeScreenPos(output.positionCS);
@@ -88,27 +88,27 @@ void InitializeCharacterInputData(Varyings input, out InputData inputData)
 
     inputData.normalWS.xyz = input.normalWS.xyz;
 
-    inputData.shadowCoord = half4(0, 0, 0, 0);
+    inputData.shadowCoord = float4(0, 0, 0, 0);
 
     #ifdef _ADDITIONAL_LIGHTS_VERTEX
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
         inputData.vertexLighting = input.fogCoord.yzw;
     #else
         inputData.fogCoord = InitializeInputDataFog(float4(inputData.positionWS, 1.0), input.fogCoord.x);
-        inputData.vertexLighting = half3(0, 0, 0);
+        inputData.vertexLighting = float3(0, 0, 0);
     #endif
 
     inputData.bakedGI = 1.0; //음영을 사용 안하도록
 
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    inputData.shadowMask = half4(1, 1, 1, 1);
+    inputData.shadowMask = float4(1, 1, 1, 1);
 }
 
-half4 frag(Varyings input) : SV_Target
+float4 frag(Varyings input) : SV_Target
 {
     float2 eyeballUvOffset, eyeballUvScale;
-    CalcUvOffsetScale_Legacy((half)_EyeballTextureColNum, (half)_EyeballTextureRowNum,
-        (half)(_EyeballIndexFromOne - 1), eyeballUvOffset, eyeballUvScale);
+    CalcUvOffsetScale_Legacy((float)_EyeballTextureColNum, (float)_EyeballTextureRowNum,
+        (float)(_EyeballIndexFromOne - 1), eyeballUvOffset, eyeballUvScale);
 
     float2 eyeballTexcoord;
     float2 clampedUVEyeball;
@@ -144,14 +144,14 @@ half4 frag(Varyings input) : SV_Target
         clampedUVEyeball = clamp(eyeballTexcoord, eyeballClipRect50, eyeballClipRect11);
     }
 
-    half4 eyeballColor = SAMPLE_TEXTURE2D(_EyeballTexture, sampler_EyeballTexture, clampedUVEyeball);
+    float4 eyeballColor = SAMPLE_TEXTURE2D(_EyeballTexture, sampler_EyeballTexture, clampedUVEyeball);
     if (eyeballColor.a < 0.01)
     {
         discard;
     }
 
-    half3 baseColor = eyeballColor.rgb;
-    half alpha = eyeballColor.a * _Alpha;
+    float3 baseColor = eyeballColor.rgb;
+    float alpha = eyeballColor.a * _Alpha;
 
     HalftoneAlphaClip(_HalftoneClip, input.positionNDC);
 
@@ -174,7 +174,7 @@ half4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     // Process Color
     //-----------------------------------------------------------------------------
-    half4 resultColor;
+    float4 resultColor;
     resultColor.rgb = ProcessCharacterColorSimple(inputData,
         mainLight, lightingData, characterData,
         baseColor);
@@ -215,7 +215,7 @@ half4 frag(Varyings input) : SV_Target
     //-----------------------------------------------------------------------------
     #if defined(DEBUG_SHADING_OFF)
     {
-        return half4(baseColor, resultColor.a);
+        return float4(baseColor, resultColor.a);
     }
     #endif
 

@@ -80,10 +80,10 @@ Shader "MMN/BG/Water"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                half3 normalOS : NORMAL;
-                half4 tangentOS : TANGENT;
+                float3 normalOS : NORMAL;
+                float4 tangentOS : TANGENT;
                 float2 texcoord : TEXCOORD0;
-                half4 color : COLOR;
+                float4 color : COLOR;
             };
 
             struct Varyings
@@ -91,16 +91,16 @@ Shader "MMN/BG/Water"
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;      // World space position
                 float4 projectedPosition : TEXCOORD2;
-                //half3 normalWS : TEXCOORD3;
+                //float3 normalWS : TEXCOORD3;
                 float4 normal : TEXCOORD3;    // xyz: normal, w: viewDir.x
                 float4 tangent : TEXCOORD4;    // xyz: tangent, w: viewDir.y
                 float4 bitangent : TEXCOORD5;    // xyz: bitangent, w: viewDir.z
 
-                half fogFactor : TEXCOORD6;          // x: fogFactor
+                float fogFactor : TEXCOORD6;          // x: fogFactor
                 float4 shadowCoord : TEXCOORD7;
                 float4 screenPos : TEXCOORD8;
 
-                half4 color : COLOR0;               // low-precision, 0–1 range data
+                float4 color : COLOR0;               // low-precision, 0–1 range data
                 float4 positionCS : SV_POSITION;    // Homogeneous clip space position
 
             };
@@ -113,22 +113,22 @@ Shader "MMN/BG/Water"
                 float4 _ScatterColor1;
                 float4 _ScatterColor2;
                 float4 _ScatterColor3;
-                half _ScatterDepth2;
-                half _ScatterDepth3;
-                half _Turbidity;
+                float _ScatterDepth2;
+                float _ScatterDepth3;
+                float _Turbidity;
                 float4 _FoamColor;
-                half _FoamOpacity;
-                half _FoamOffset;
-                half _FoamEdgeIntensity;
-                half _DepthScale;
-                half _FlowSpeed;
-                half _DistortionAmount;
-                half _SpecualrNormalMulti;
+                float _FoamOpacity;
+                float _FoamOffset;
+                float _FoamEdgeIntensity;
+                float _DepthScale;
+                float _FlowSpeed;
+                float _DistortionAmount;
+                float _SpecualrNormalMulti;
                 float _Glossiness;
                 float4 _SpecColor;
                 float4 _DistortionTexture_ST;
                 float4 _BumpMap_ST;
-                half _RaycastHarftoneClip;
+                float _RaycastHarftoneClip;
             CBUFFER_END
 
             TEXTURE2D(_DistortionTexture);         SAMPLER(sampler_DistortionTexture);
@@ -149,9 +149,9 @@ Shader "MMN/BG/Water"
                 output.projectedPosition = vertexInput.positionNDC;
                 output.positionCS = vertexInput.positionCS;
 
-                output.normal = half4(normalInput.normalWS, viewDirWS.x);
-                output.tangent = half4(normalInput.tangentWS, viewDirWS.y);
-                output.bitangent = half4(normalInput.bitangentWS, viewDirWS.z);
+                output.normal = float4(normalInput.normalWS, viewDirWS.x);
+                output.tangent = float4(normalInput.tangentWS, viewDirWS.y);
+                output.bitangent = float4(normalInput.bitangentWS, viewDirWS.z);
 
                 output.color = input.color;
                 output.fogFactor = fogFactor;
@@ -177,14 +177,14 @@ Shader "MMN/BG/Water"
 
 
                 //노말 + 디테일 노말 연산
-                half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
-                half3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
+                float3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV, _BumpMap)), 1);
+                float3 normalTS2 = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, TRANSFORM_TEX(flowingUV2, _BumpMap)), 1);
                 normalTS = normalize(float3(normalTS.rg + normalTS2.rg, normalTS.b * normalTS2.b) * float3(_DistortionAmount.xx, 1));
 
 
                 //각 변수 계산해주기
-                half3 viewDirWS = half3(input.normal.w, input.tangent.w, input.bitangent.w);
-                half3 normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
+                float3 viewDirWS = float3(input.normal.w, input.tangent.w, input.bitangent.w);
+                float3 normalWS = TransformTangentToWorld(normalTS, float3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz)) ;
                 normalWS = NormalizeNormalPerPixel(normalWS);
                 viewDirWS = SafeNormalize(viewDirWS);
 
@@ -199,10 +199,10 @@ Shader "MMN/BG/Water"
                 reflectance = saturate(reflectance);
 
                 //스페큘러
-                half3 normalWS4Specular = normalize(normalWS * half3(_SpecualrNormalMulti, 1, _SpecualrNormalMulti));
+                float3 normalWS4Specular = normalize(normalWS * float3(_SpecualrNormalMulti, 1, _SpecualrNormalMulti));
                 Light mainLight = GetMainLight(input.shadowCoord);
-                half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
-                half3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS4Specular, viewDirWS, 0.5, _Glossiness * 50);
+                float3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * mainLight.shadowAttenuation);
+                float3 specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, normalWS4Specular, viewDirWS, 0.5, _Glossiness * 50);
 
                 //리플렉션 프로브
                 float3 reflectVec = reflect(-viewDirWS, normalWS);
@@ -259,11 +259,11 @@ Shader "MMN/BG/Water"
                 opacity += Luminance(specularColor);
 
                 //레이케스트 되면 사라지는 기능
-                half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+                float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
                 clip(RaycasthalftoneAlpha - 0.1);
 
                 //레인드롭 텍스쳐
-                half3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS, normalWS) * 0.5;
+                float3 color_Rain = color.rgb + MMN_GlobalTex_Raindrop(input.positionWS, normalWS) * 0.5;
                 color.rgb = wetTextureLerp(input.positionWS, color.rgb, color_Rain.rgb);
 
 
@@ -295,7 +295,6 @@ Shader "MMN/BG/Water"
     }
 
 
-    //LOD100
     SubShader
     {
         Tags { "RenderType" = "Transparent" "Queue" = "Transparent-200" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" "PreviewType" = "Plane" "ShaderModel" = "4.5" }
@@ -389,8 +388,8 @@ Shader "MMN/BG/Water"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                half3 normalWS = NormalizeNormalPerPixel(input.normalWS);
-                half3 viewDirWS = SafeNormalize(viewDirWS);
+                float3 normalWS = NormalizeNormalPerPixel(input.normalWS);
+                float3 viewDirWS = SafeNormalize(viewDirWS);
 
                 //Depth 계산합니다
                 float rawDepth = SampleSceneDepth(input.projectedPosition.xy / input.projectedPosition.w);
@@ -406,9 +405,10 @@ Shader "MMN/BG/Water"
                 float depthCoeff = 1.0 - pow(abs(_Turbidity), scaledDepth);
 
                 //3층 칼라 계산하기
-                float3 scatterColor1 = saturate(_ScatterColor1.rgb + (0.5 * _FoamColor.rgb)); //경계에 흰 무늬 생기게 가장 얕은 곳에 경계칼라 0.5를 더한다
-                float3 scatterColor = lerp(scatterColor1, _ScatterColor2.rgb, saturate(scaledDepth / _ScatterDepth2));
-                scatterColor = lerp(scatterColor.rgb, _ScatterColor3.rgb, clamp((scaledDepth - _ScatterDepth2) / (_ScatterDepth3 - _ScatterDepth2), 0.0, 1.0));
+                //float3 scatterColor1 = saturate(_ScatterColor1.rgb + (0.5 * _FoamColor.rgb)); //경계에 흰 무늬 생기게 가장 얕은 곳에 경계칼라 0.5를 더한다
+                //float3 scatterColor = lerp(scatterColor1, _ScatterColor2.rgb, saturate(scaledDepth / _ScatterDepth2));
+                //scatterColor = lerp(scatterColor.rgb, _ScatterColor3.rgb, clamp((scaledDepth - _ScatterDepth2) / (_ScatterDepth3 - _ScatterDepth2), 0.0, 1.0));
+                float3 scatterColor = _ScatterColor3.rgb;
 
                 //칼라 선언
                 float4 color = float4(0, 0, 0, 0);
@@ -416,7 +416,7 @@ Shader "MMN/BG/Water"
                 float opacity = depthCoeff;
 
                 //레이케스트 되면 사라지는 기능
-                half RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
+                float RaycasthalftoneAlpha = RaycastingHalftoneAlpha(input.screenPos, input.screenPos, _RaycastHarftoneClip);
                 clip(RaycasthalftoneAlpha - 0.1);
 
                 float4 fogCoord;

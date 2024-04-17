@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMN_WaterfallCollection
+  m_Shaders:
+  - first: {fileID: 4800000, guid: d9518e103595fba469e9975f9e98f4f1, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: FOG_LINEAR
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _SHOWVERTEXALPHA_ON
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _SHOWVERTEXALPHA_ON _SHOWVERTEXCOLOR_ON
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _SHOWVERTEXCOLOR_ON
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _SHOWVERTEXALPHA_ON
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _SHOWVERTEXALPHA_ON _SHOWVERTEXCOLOR_ON
+        passType: 0
+      - keywords: FOG_LINEAR _ADDITIONAL_LIGHTS_VERTEX _SHOWVERTEXCOLOR_ON
+        passType: 0
+      - keywords: FOG_LINEAR _SHOWVERTEXALPHA_ON
+        passType: 0
+      - keywords: FOG_LINEAR _SHOWVERTEXALPHA_ON _SHOWVERTEXCOLOR_ON
+        passType: 0
+      - keywords: FOG_LINEAR _SHOWVERTEXCOLOR_ON
+        passType: 0

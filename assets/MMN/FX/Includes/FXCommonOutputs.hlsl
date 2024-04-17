@@ -27,17 +27,17 @@ void GetPositionCSForBending(out float4 positionCS, out float4 positionNDC, floa
     positionNDC.zw = positionCS.zw;
 }
 
-half3 CalculateVertexSH(float4 vertexUV, float3 normalOS, float4 tangentOS)
+float3 CalculateVertexSH(float4 vertexUV, float3 normalOS, float4 tangentOS)
 {
     VertexNormalInputs normalInput = GetVertexNormalInputs(normalOS, tangentOS);
-    half3 vertexSH = vertexUV.xyz;
+    float3 vertexSH = vertexUV.xyz;
     vertexSH = SampleSHVertex(normalInput.normalWS.xyz);
     return vertexSH;
 }
 
-half CalculateFogCoord(float4 positionCS)
+float CalculateFogCoord(float4 positionCS)
 {
-    half fogFactor = 0;
+    float fogFactor = 0;
     fogFactor = ComputeFogFactor(positionCS.z);
     return fogFactor;
 }
@@ -82,7 +82,7 @@ float2 ScreenOffset()
     return ratio;
 }
 
-void GlobalVolumeController(inout half4 finalColor, float global_Night2Day, float night2DayEnum)
+void GlobalVolumeController(inout float4 finalColor, float global_Night2Day, float night2DayEnum)
 {
     finalColor = (
         night2DayEnum == 1 ? finalColor * abs(1 - global_Night2Day) :
@@ -113,7 +113,7 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
     // Additional light color
     #if defined(_ADDITIONAL_LIGHTS)
     {
-        half shadowDimming = 1; // 셀프 셰도우를 없애기 위함.
+        float shadowDimming = 1; // 셀프 셰도우를 없애기 위함.
         uint pixelLightCount = GetAdditionalLightsCount();
 
         #if USE_CLUSTERED_LIGHTING
@@ -122,7 +122,7 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
             Light light = GetAdditionalLight(lightIndex, inputData.positionWS, shadowMask);
             if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
             {
-                half3 attenuatedLightColor = light.color * (light.distanceAttenuation * saturate(light.shadowAttenuation + shadowDimming));
+                float3 attenuatedLightColor = light.color * (light.distanceAttenuation * saturate(light.shadowAttenuation + shadowDimming));
                 lightingData.additionalLightsColor += attenuatedLightColor;
             }
         }
@@ -132,7 +132,7 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
             Light light = GetAdditionalLight(lightIndex, inputData.positionWS, shadowMask);
             if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
             {
-                half3 attenuatedLightColor = light.color * (light.distanceAttenuation * saturate(light.shadowAttenuation + shadowDimming));
+                float3 attenuatedLightColor = light.color * (light.distanceAttenuation * saturate(light.shadowAttenuation + shadowDimming));
                 lightingData.additionalLightsColor += attenuatedLightColor;
             }
         LIGHT_LOOP_END
@@ -140,7 +140,7 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
     #endif
 }
 
-// void ApplyShadowAtten(inout half4 finalColor, float4 shadowCoord, float3 positionWS, float lightRatio)
+// void ApplyShadowAtten(inout float4 finalColor, float4 shadowCoord, float3 positionWS, float lightRatio)
 // {
 //     #ifdef _LIGHTRECEIVE_ON
 //         // 그림자 영향 받음
@@ -151,14 +151,14 @@ void InitializeFXLightData(InputData inputData, out Light mainLight, out Lightin
 //         #endif
 
 //         Light mainLight = GetMainLight(shadowCoord);
-//         half shadowAtten = saturate(mainLight.shadowAttenuation + (1 - lightRatio));
-//         // half3 attenuatedLightColor = mainLight.color.rgb * saturate(mainLight.distanceAttenuation * shadowAtten);
+//         float shadowAtten = saturate(mainLight.shadowAttenuation + (1 - lightRatio));
+//         // float3 attenuatedLightColor = mainLight.color.rgb * saturate(mainLight.distanceAttenuation * shadowAtten);
 
 //         finalColor.rgb *= shadowAtten;
 //     #endif
 // }
 
-void ApplyLightColor(inout half4 finalColor, half3 normalWS, half lightRatio, half lightReceive)
+void ApplyLightColor(inout float4 finalColor, float3 normalWS, float lightRatio, float lightReceive)
 {
     if (IS_TRUE(lightReceive))
     {
@@ -206,9 +206,9 @@ inline float4 MMN_GlobalTex_HeightFogAlpha(
 
     //y is height
     float y = saturate(positionWS.y / 100 - _Global_FogHeightOffset -GlobalTexture.r * _Global_FogHeightNoiseValue);
-    half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-    half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-    half fogHeight = max(fogHeightBottom, fogHeightTop);
+    float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+    float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+    float fogHeight = max(fogHeightBottom, fogHeightTop);
 
     //딤포그 단일 버전
     float DimFogRange = 0;
@@ -216,7 +216,7 @@ inline float4 MMN_GlobalTex_HeightFogAlpha(
     float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range)); //올리면 멀어짐
     diffRange = smoothstep(0.3, 1, diffRange);
 
-    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - half3(0, -1, 0) - positionWS), normalWS)), 0.5);
+    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - float3(0, -1, 0) - positionWS), normalWS)), 0.5);
     float DimFogLight = 1;
     DimFogRange = 1 - PositivePow(diffRange * DimFogLight, _Global_DimFog_Power); //올리면 경계가 날카로와짐
     fogCoord.r = saturate(DimFogRange * fogCoord.r);
@@ -250,9 +250,9 @@ inline float4 MMN_GlobalTex_HeightFogAdd(
 
     //y is height
     float y = saturate(positionWS.y / 100 - _Global_FogHeightOffset -GlobalTexture.r * _Global_FogHeightNoiseValue);
-    half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-    half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-    half fogHeight = max(fogHeightBottom, fogHeightTop);
+    float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+    float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+    float fogHeight = max(fogHeightBottom, fogHeightTop);
 
     //딤포그 단일 버전
     float DimFogRange = 0;
@@ -260,7 +260,7 @@ inline float4 MMN_GlobalTex_HeightFogAdd(
     float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range)); //올리면 멀어짐
     diffRange = smoothstep(0.3, 1, diffRange);
 
-    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - half3(0, -1, 0) - positionWS), normalWS)), 0.5);
+    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - float3(0, -1, 0) - positionWS), normalWS)), 0.5);
     float DimFogLight = 1;
     DimFogRange = 1 - PositivePow(diffRange * DimFogLight, _Global_DimFog_Power); //올리면 경계가 날카로와짐
     fogCoord.r = saturate(DimFogRange * fogCoord.r);
@@ -294,9 +294,9 @@ inline float4 MMN_GlobalTex_HeightFogMulti(
 
     //y is height
     float y = saturate(positionWS.y / 100 - _Global_FogHeightOffset -GlobalTexture.r * _Global_FogHeightNoiseValue);
-    half fogHeightBottom = saturate(y * _Global_FogHeightScale);
-    half fogHeightTop = saturate(-y * _Global_FogHeightScale);
-    half fogHeight = max(fogHeightBottom, fogHeightTop);
+    float fogHeightBottom = saturate(y * _Global_FogHeightScale);
+    float fogHeightTop = saturate(-y * _Global_FogHeightScale);
+    float fogHeight = max(fogHeightBottom, fogHeightTop);
 
     //딤포그 단일 버전
     float DimFogRange = 0;
@@ -304,7 +304,7 @@ inline float4 MMN_GlobalTex_HeightFogMulti(
     float diffRange = saturate(dot(diff, diff) / (_Global_DimFog_Range * _Global_DimFog_Range)); //올리면 멀어짐
     diffRange = smoothstep(0.3, 1, diffRange);
 
-    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - half3(0, -1, 0) - positionWS), normalWS)), 0.5);
+    // float DimFogLight = lerp(1.0, 0.75 * (1.0 - dot(normalize(_Global_pos.rgb - float3(0, -1, 0) - positionWS), normalWS)), 0.5);
     float DimFogLight = 1;
     DimFogRange = 1 - PositivePow(diffRange * DimFogLight, _Global_DimFog_Power); //올리면 경계가 날카로와짐
     fogCoord.r = saturate(DimFogRange * fogCoord.r);
@@ -316,7 +316,7 @@ inline float4 MMN_GlobalTex_HeightFogMulti(
     return color;
 }
 
-void ApplyFogColor(inout half4 finalColor, float3 positionWS, half3 normalWS, half blendMode, half fogReceive, float fogCoord)
+void ApplyFogColor(inout float4 finalColor, float3 positionWS, float3 normalWS, float blendMode, float fogReceive, float4 fogCoord)
 {
     if (IS_TRUE(fogReceive))
     {
@@ -361,20 +361,44 @@ void ApplyFogColor(inout half4 finalColor, float3 positionWS, half3 normalWS, ha
         }
         // 원본 포그 코드
         // finalColor.rgb = MixFog(finalColor.rgb, fogCoord);                             // NOTE: for normal blend mode
-        // finalColor.rgb = MixFogColor(finalColor.rgb, half3(0.0, 0.0, 0.0), fogCoord);  // NOTE: for additive blend mode
+        // finalColor.rgb = MixFogColor(finalColor.rgb, float3(0.0, 0.0, 0.0), fogCoord);  // NOTE: for additive blend mode
         // finalColor.rgb = MixFogColor(finalColor.rgb, real3(1.0, 1.0, 1.0), fogCoord);  // NOTE: for multiply blend mode
     }
 }
 
-// 환경 이펙트가 레이캐스트로 사라질 때 이펙트의 블렌드모드에 따라 트랜지션 되는 값을 다르게 합니다.
-void ApplyTransitionValue(inout half4 finalColor, float blendMode, float transitionValue)
+// @wooyoung : 액터에 붙은 이펙트가 스폰 / 디스폰 될 때 이펙트의 블렌드모드에 따라 트랜지션 되는 값을 다르게 합니다.
+// https://deskcat.io/d/R37032/MM-기술-모든-액터가-스폰-디스폰-할-때-하프톤-디더링으로-연출할-수-있으면-좋겠습니다
+void ChangeFXSpawnState(inout float4 finalColor, float blendMode, float spawnTransition)
 {
-    if (blendMode == 1 || blendMode == 2)
+    spawnTransition = 1.0 - spawnTransition;
+
+    if (blendMode >= 1.0 && blendMode <= 2.0)
+    {
+        // AdditiveColor, AdditiveAlpha
+        finalColor.rgb *= saturate(spawnTransition);
+    }
+    // else if (blendMode <= 6)
+    // {
+    //     // Multiply
+    //     finalColor.rgb *= saturate(spawnTransition);
+    // }
+    else
+    {
+        // AlphaBlend
+        finalColor.a *= saturate(spawnTransition);
+    }
+}
+
+// @wooyoung : 환경 이펙트가 레이캐스트로 사라질 때 이펙트의 블렌드모드에 따라 트랜지션 되는 값을 다르게 합니다.
+// https://deskcat.io/d/Q65826/MM-기술-가시성-처리시-배경-이펙트의-비주얼-이슈가-있습니다
+void ApplyTransitionValue(inout float4 finalColor, float blendMode, float transitionValue)
+{
+    if (blendMode >= 1.0 && blendMode <= 2.0)
     {
         // AdditiveColor, AdditiveAlpha
         finalColor.rgb *= saturate(transitionValue);
     }
-    // else if (blendMode <= 6)
+    // else if (blendMode <= 6.0)
     // {
     //     // Multiply
     //     finalColor.rgb *= saturate(transitionValue);
@@ -386,33 +410,33 @@ void ApplyTransitionValue(inout half4 finalColor, float blendMode, float transit
     }
 }
 
-void ApplySoftParticle(inout half4 finalColor, half near, half far, half fadeOutRange, float4 positionNDC, half softParticle)
+void ApplySoftParticle(inout float4 finalColor, float near, float far, float fadeOutRange, float4 screenPos, float softParticle)
 {
     if (IS_TRUE(softParticle))
     {
-        half fade = 1;
-        half rawDepth = SampleSceneDepth(positionNDC.xy / positionNDC.w);
-        half sceneZ = LinearEyeDepth(rawDepth, _ZBufferParams);
-        half thisZ = LinearEyeDepth(positionNDC.z / positionNDC.w, _ZBufferParams);
+        float fade = 1;
+        float rawDepth = SampleSceneDepth(screenPos.xy / screenPos.w);
+        float sceneZ = LinearEyeDepth(rawDepth, _ZBufferParams);
+        float thisZ = LinearEyeDepth(screenPos.z / screenPos.w, _ZBufferParams);
         fade = saturate(far * fadeOutRange * ((sceneZ - near) - thisZ));
 
         finalColor.a *= fade;
     }
 }
 
-void ApplyNearPlaneAlpha(inout half alpha, half distance, float4 screenPos, half nearPlane, half nearPlaneInvertDistance, half raycastMinimumAlpha)
+void ApplyNearPlaneAlpha(inout float alpha, float distance, float4 screenPos, float nearPlane, float nearPlaneInvertDistance, float raycastMinimumAlpha)
 {
     // float2 screenUV = float2(screenPos.x, screenPos.y) * ScreenRatio(); // 원형 비율 계산
     // screenUV = screenUV - 0.5 * ScreenRatio();
 
-    half distanceAlpha = distance; //- length(screenUV); // 원형 마스킹
+    float distanceAlpha = distance; //- length(screenUV); // 원형 마스킹
     distanceAlpha = max(0, 0.5 * distanceAlpha);
 
     alpha = saturate(distanceAlpha * nearPlane); // nearPlane 기본 값은 0.5입니다.
     alpha = lerp(alpha, 1 - alpha, nearPlaneInvertDistance); // 경우에 따라서 반전합니다.
     alpha = max(raycastMinimumAlpha, alpha); // 알파의 최솟값을 결정합니다.
 
-    half clipAlpha = smoothstep(0.1, 1, distance); // 카메라의 니어 플레인에 닿기 직전에 최솟값을 무시하고 사라지게 합니다.
+    float clipAlpha = smoothstep(0.1, 1, distance); // 카메라의 니어 플레인에 닿기 직전에 최솟값을 무시하고 사라지게 합니다.
     alpha *= clipAlpha;
 
     alpha = lerp(alpha, 1, unity_OrthoParams.w); // ortho에서는 작동안되게 만들어 줍니다.
@@ -429,35 +453,30 @@ float3 GetCameraPosition()
 }
 
 void ApplyRaycastingAlpha(
-    inout half4 finalColor, float3 positionWS, half4 screenUV, half4 screenPos,
-    half nearPlane, half nearPlaneInvertDistance,
-    half raycastHarftoneClip, half raycastMinimumAlpha,
-    half raycast)
+    inout float4 finalColor, float3 positionWS, float4 screenPos,
+    float nearPlane, float nearPlaneInvertDistance,
+    float raycastHarftoneClip, float raycastMinimumAlpha)
 {
     if (nearPlane != 0)
     {
-        half alpha = 1;
-        half cameraDistance = GetCameraDistance(positionWS);
+        float alpha = 1;
+        float cameraDistance = GetCameraDistance(positionWS);
         ApplyNearPlaneAlpha(alpha, cameraDistance, screenPos, nearPlane, nearPlaneInvertDistance, raycastMinimumAlpha);
         finalColor.a *= saturate(alpha);
     }
 
     #if defined(_RAYCAST_ON)
-        if (IS_TRUE(raycast))
-        {
-            half raycastAlpha = 0;
-            raycastAlpha = RaycastingHalftoneAlphaBlend(screenUV, screenPos, raycastHarftoneClip, raycastMinimumAlpha);
-            finalColor.a *= saturate(raycastAlpha);
-            finalColor.rgb = half3(1, 0, 0); // TEST
-        }
+        float raycastAlpha = 0;
+        raycastAlpha = RaycastingHalftoneAlphaBlend(screenPos, screenPos, raycastHarftoneClip, raycastMinimumAlpha);
+        finalColor.a *= saturate(raycastAlpha);
     #endif
 }
 
-half DepthFade(float distance, float4 positionCS, float4 positionNDC)
+float DepthFade(float distance, float4 positionCS, float4 screenPos)
 {
-    float rawDepth = SampleSceneDepth(positionNDC.xy / positionNDC.w);
+    float rawDepth = SampleSceneDepth(screenPos.xy / screenPos.w);
     float sceneZ = LinearEyeDepth(rawDepth, _ZBufferParams);
-    half distanceDepth = saturate((sceneZ - LinearEyeDepth(positionCS.z, _ZBufferParams)) / distance + 0.001);
+    float distanceDepth = saturate((sceneZ - LinearEyeDepth(positionCS.z, _ZBufferParams)) / distance + 0.001);
     return distanceDepth;
 }
 
@@ -468,10 +487,10 @@ float4 FragComputeScreenPos(float4 positionCS)
     return screenPos;
 }
 
-half3 SceneColor(float4 positionNDC)
+float3 SceneColor(float4 positionNDC)
 {
     float2 screenPos = positionNDC.xy / positionNDC.w;
-    half3 sceneColor = SampleSceneColor(screenPos);
+    float3 sceneColor = SampleSceneColor(screenPos);
     return sceneColor;
 }
 
@@ -485,20 +504,20 @@ void DefineAlpha (inout float alpha, float cutoff)
     #endif
 }
 
-half Triplanar(float3 normalWS, float3 triplanarTex)
+float Triplanar(float3 normalWS, float3 triplanarTex)
 {
-    half triplanarX = triplanarTex.r;
-    half triplanarY = triplanarTex.g;
-    half triplanarZ = triplanarTex.b;
+    float triplanarX = triplanarTex.r;
+    float triplanarY = triplanarTex.g;
+    float triplanarZ = triplanarTex.b;
 
     float3 normalBlend = abs(normalWS);
     normalBlend /= (normalBlend.x + normalBlend.y + normalBlend.z);
 
-    half nx = triplanarX * normalBlend.x;
-    half ny = triplanarY * normalBlend.y;
-    half nz = triplanarZ * normalBlend.z;
+    float nx = triplanarX * normalBlend.x;
+    float ny = triplanarY * normalBlend.y;
+    float nz = triplanarZ * normalBlend.z;
 
-    half triplanar = nx + ny + nz;
+    float triplanar = nx + ny + nz;
     return triplanar;
 }
 
@@ -611,21 +630,33 @@ void InterectionBorderFX(float3 positionWS, float3 globalPosition, float radius,
 
     offset = pushDirection * dist * range / objectScale;
     alpha = 1;
-} 
+}
 
-void FXFinalColorOutputs(inout half4 finalColor, 
-in float4 positionNDC, float3 positionWS,
-in float4 screenUV, float4 screenPos,
-in half3 normalWS, 
-in half nearPlane, half nearPlaneInvertDistance, half raycastHarftoneClip, half raycastMinimumAlpha, half raycast,
-in half lightRatio, half lightReceive, 
-in half near, half far, half fadeOutRange, half softParticle)
+float2 AreaindicatorForDebug(float dist, float radius, float degree, float lineWidth)
 {
-    ApplyRaycastingAlpha(finalColor, positionWS, screenUV, screenPos,
-    nearPlane, nearPlaneInvertDistance,
-    raycastHarftoneClip, raycastMinimumAlpha, raycast);
+    float angleLine = degree < 30.0 ? step(degree % 30.0, 1.0) : degree > 179.0 ? 1.0 : step(degree % 30.0, 2.0);
+    float isOutline = (dist <= radius && dist > radius - lineWidth) ? 1.0 : 0.0;
+
+    return float2(angleLine, isOutline);
+}
+
+void FXFinalColorOutputs(inout float4 finalColor,
+    in float4 screenPos, float4 fogCoord,
+    in float3 positionWS,
+    in float3 normalWS,
+    in float nearPlane, float nearPlaneInvertDistance, float raycastHarftoneClip, float raycastMinimumAlpha,
+    in float lightRatio, float lightReceive,
+    in float near, float far, float fadeOutRange, float softParticle,
+    in float mode, float fogReceive, float transitionValue, float spawnTransition)
+{
+    ApplyRaycastingAlpha(finalColor, positionWS, screenPos,
+        nearPlane, nearPlaneInvertDistance,
+        raycastHarftoneClip, raycastMinimumAlpha);
     ApplyLightColor(finalColor, normalWS, lightRatio, lightReceive);
-    ApplySoftParticle(finalColor, near, far, fadeOutRange, positionNDC, softParticle);
+    ApplySoftParticle(finalColor, near, far, fadeOutRange, screenPos, softParticle);
+    ApplyFogColor(finalColor, positionWS, normalWS, mode, fogReceive, fogCoord);
+    ApplyTransitionValue(finalColor, mode, transitionValue);
+    ChangeFXSpawnState(finalColor, mode, spawnTransition);
 }
 
 #endif // #ifndef MMN_FX_COMMON_OUTPUTS_INCLUDED

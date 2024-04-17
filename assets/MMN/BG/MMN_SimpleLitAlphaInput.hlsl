@@ -6,18 +6,18 @@
 
 CBUFFER_START(UnityPerMaterial)
 float4 _BaseMap_ST;
-half4 _BaseColor;
-half _VertexColorWeight;
-half _AlbedoTintStrength;
-half4 _SpecColor;
-half _Gloss;
-half4 _EmissionColor;
-half _Cutoff;
-half _Surface;
-half _WindMultiply;
-half _WindSpeedMultiply;
-half _VertexAniOn;
-half _RaycastHarftoneClip;
+float4 _BaseColor;
+float _VertexColorWeight;
+float _AlbedoTintStrength;
+float4 _SpecColor;
+float _Gloss;
+float4 _EmissionColor;
+float _Cutoff;
+float _Surface;
+float _WindMultiply;
+float _WindSpeedMultiply;
+float _VertexAniOn;
+float _RaycastHarftoneClip;
 CBUFFER_END
 
 
@@ -42,9 +42,9 @@ CBUFFER_END
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
 
 //실제로 사용하지 않지만 내장된 메타패스에서 참조합니다. 물론 메타패스를 따로 만들면 되긴 하지만 번잡하므로 남겨둡니다. (...)
-// half4 SampleSpecularSmoothness(half2 uv, half alpha, half4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))  
+// float4 SampleSpecularSmoothness(float2 uv, float alpha, float4 specColor, TEXTURE2D_PARAM(specMap, sampler_specMap))  
 // {
-//     half4 specularSmoothness = half4(0.0h, 0.0h, 0.0h, 1.0h);
+//     float4 specularSmoothness = float4(0.0h, 0.0h, 0.0h, 1.0h);
 
 //         specularSmoothness = SAMPLE_TEXTURE2D(specMap, sampler_specMap, uv) * specColor;
 

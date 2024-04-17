@@ -13,18 +13,18 @@ float3 _LightPosition;
 
 struct Attributes
 {
-    float4 color : COLOR;
     float4 positionOS : POSITION;
     float3 normalOS : NORMAL;
-
-    float2 texcoord0 : TEXCOORD0;
-    float4 customData : TEXCOORD1;  // xyz: ParticleSystem의 velocity(속도의 방향 - 월드 -), w: ParticleSystem의 speed(속도의 스칼라)
+    float4 tangentOS : TANGENT;
+    float4 texcoord0 : TEXCOORD0;           // xyz: ParticleSystem의 velocity(속도의 방향 - 월드 -), w: ParticleSystem의 speed(속도의 스칼라)
+    float4 customData : TEXCOORD1;
+    float4 color : COLOR;
 };
 
 struct Varyings
 {
     float4 positionCS : SV_POSITION;
-    float2 texcoord0 : TEXCOORD0;
+    float4 texcoord0 : TEXCOORD0;
 };
 
 Varyings vert(Attributes input)
@@ -54,17 +54,15 @@ Varyings vert(Attributes input)
 
     output.texcoord0 = input.texcoord0;
 
-
     return output;
 }
 
 float4 frag(Varyings input) : SV_TARGET
 {
-    real4 color = 0;
+    float4 color = 0;
 
-    real alpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.texcoord0).a;
+    float alpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.texcoord0.xy).a;
     clip(alpha - _AlphaCutoff);
-
 
     return color;
 }
