@@ -44,7 +44,7 @@ sitemap: false
 - Profiling 
   - ![Unity](/assets/images/Icon/Unity_Mini.png) Unity Profiler
 
-### 레퍼런스(Referrence)
+### 레퍼런스(Reference)
 - [자기소개서(Resume)](https://walll4542developer.github.io/resume/MyResume/)
 - [경력기술서(Career)](https://walll4542developer.github.io/resume/MyCareer/)
 
