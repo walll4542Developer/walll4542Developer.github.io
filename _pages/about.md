@@ -44,12 +44,12 @@ sitemap: false
 - Profiling 
   - ![Unity](/assets/images/Icon/Unity_Mini.png) Unity Profiler
 
+### 레퍼런스(Referrence)
+- [자기소개서(Resume)](https://walll4542developer.github.io/resume/MyResume/)
+- [경력기술서(Career)](https://walll4542developer.github.io/resume/MyCareer/)
+
 ### 연락처(Contact)
 - Mail: walll4542@gmail.com
 - X : [최우영](https://twitter.com/dPv79Noe77Xze92)
 - Github : [walll4542Developer](https://github.com/walll4542Developer)
 - Instagram : [wooyoung7718](https://www.instagram.com/wooyoung7718/)
-
-### 레퍼런스(Referrence)
-- [자기소개서(Resume)](https://walll4542developer.github.io/resume/MyResume/)
-- [경력기술서(Career)](https://walll4542developer.github.io/resume/MyCareer/)
