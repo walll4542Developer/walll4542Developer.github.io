@@ -51,7 +51,7 @@ public class BitwiseOperator : MonoBehaviour
 
 ![7](/assets/images/Docs/Bitwise%20Operator/image%20(7).png){: .align-center}
 
-### OR
+### OR (${\mid}$)
 두 개의 비트 중 하나 이상이 ${1}$일 경우 ${1}$을 반환하고, 그 외의 경우에는 ${0}$을 반환합니다.
 
 ```csharp
@@ -204,10 +204,10 @@ namespace UnityEngine.Rendering
 
 `ColorWriteMask` 이넘은 유니티의 'ShaderLab'에서 `ColorMask` 를 정의 해줄 때 사용하는 이넘 값으로서, 셰이더의 특정 컬러 채널의 렌더링을 활성화 또는 비활성화 하여 채널 별로 아웃풋(Output)을 제어하는 커맨드입니다.
 
-- A = 0x01
-- R = 0x02
-- G = 0x04
-- B = 0x08
+- A = `0x01`
+- R = `0x02`
+- G = `0x04`
+- B = `0x08`
 
 채널 별로 제어가 가능해야 하기 때문에 'RGBA' 네 가지 채널의 조합이 모두 가능해야 합니다. 
 
@@ -224,16 +224,16 @@ ARGB = 0x0F   // 0000 1111
 
 ### 비트 켜기
 
-`OR`을 사용해 비트를 켤 수 있습니다.
+`OR(|)`을 사용해 비트를 켤 수 있습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x00; // 0000 0000
-            var option = 0x10; // 0001 0000
-            result |= option;
-            return result; // 0001 0000 10
-        }
+private static int BitMask()
+{
+    var result = 0x00; // 0000 0000
+    var option = 0x10; // 0001 0000
+    result |= option;
+    return result; // 0001 0000 10
+}
 ```
 
 `OR` 연산은 두 개의 비트 중 하나 이상이 ${1}$일 경우 ${1}$을 반환하고, 그 외의 경우에는 ${0}$을 반환하기 때문에 다섯 번째 비트 플래그가 켜집니다.
@@ -243,28 +243,28 @@ ARGB = 0x0F   // 0000 1111
 `AND(&)`와 `NOT(~)`를 이용해서 비트를 끌 수 있습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x1C; // 0001 1100
-            var option = 0x10; // 0001 0000
-            result &= ~option;
-            return result; // 0000 1100 12
-        }
+private static int BitMask()
+{
+    var result = 0x1C; // 0001 1100
+    var option = 0x10; // 0001 0000
+    result &= ~option;
+    return result; // 0000 1100 12
+}
 ```
 
-`NOT`은 비트를 반전하고 `AND(&)`는 두 개의 비트가 모두 ${1}$일 경우 ${1}$을 반환하며, 그 외의 경우에는 ${0}$을 반환합니다.
+`NOT(~)`은 비트를 반전하고 `AND(&)`는 두 개의 비트가 모두 ${1}$일 경우 ${1}$을 반환하며, 그 외의 경우에는 ${0}$을 반환합니다.
 
-`~option` 은 `0xEF (1110 1111)` 니까 결괴(result)인 `0x1C (0001 1100)` 와 AND 하면 `0x0C (0000 1100)` 가 됩니다. 따라서 네 번째 비트를 끈 것과 같습니다.
+`~option` 은 `0xEF (1110 1111)` 니까 결과(result)인 `0x1C (0001 1100)` 와 `AND(&)` 하면 `0x0C (0000 1100)` 가 됩니다. 따라서 네 번째 비트를 끈 것과 같습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x1C; // 0001 1100
-            var option0 = 0x10; // 0001 0000
-            var option1 = 0x08; // 0000 1000
-            result &= ~(option0 | option1);
-            return result; // 0000 0100 4
-        }
+private static int BitMask()
+{
+    var result = 0x1C; // 0001 1100
+    var option0 = 0x10; // 0001 0000
+    var option1 = 0x08; // 0000 1000
+    result &= ~(option0 | option1);
+    return result; // 0000 0100 4
+}
 ```
 
 `OR`을 사용해서 옵션을 하나로 묶은 다음 여러 비트를 동시에 끌 수도 있습니다.
@@ -274,26 +274,26 @@ ARGB = 0x0F   // 0000 1111
 `XOR (^)`을 이용해서 비트를 토글(toggle)할 수 있습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x1C; // 0001 1100
-            var option = 0x10; // 0001 0000
-            result ^= option;
-            return result; // 0000 1100 12
-        }
+private static int BitMask()
+{
+    var result = 0x1C; // 0001 1100
+    var option = 0x10; // 0001 0000
+    result ^= option;
+    return result; // 0000 1100 12
+}
 ```
 
 `XOR`은 두 개의 비트가 서로 다른 경우 ${1}$을 반환하고, 그 외의 경우에는 ${0}$을 반환합니다. 따라서 다섯 번째 비트를 반전하는 것과 같습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x1C; // 0001 1100
-            var option0 = 0x10; // 0001 0000
-            var option1 = 0x08; // 0000 1000
-            result ^= (option0 | option1);
-            return result; // 0000 0100 4
-        }
+private static int BitMask()
+{
+    var result = 0x1C; // 0001 1100
+    var option0 = 0x10; // 0001 0000
+    var option1 = 0x08; // 0000 1000
+    result ^= (option0 | option1);
+    return result; // 0000 0100 4
+}
 ```
 
 `XOR`도 `OR`을 사용해서 옵션을 하나로 묶은 다음 여러 비트를 동시에 반전 할 수도 있습니다.
@@ -303,13 +303,13 @@ ARGB = 0x0F   // 0000 1111
 `AND (&)`를 이용해서 플래그의 상태를 알 수 있습니다.
 
 ```csharp
-        private static int BitMask()
-        {
-            var result = 0x1C; // 0001 1100
-            var option = 0x10; // 0001 0000
-            result &= option;
-            return result; // 0001 0000 10
-        }
+private static int BitMask()
+{
+    var result = 0x1C; // 0001 1100
+    var option = 0x10; // 0001 0000
+    result &= option;
+    return result; // 0001 0000 10
+}
 ```
 
 `AND`는 두 개의 비트가 모두 ${1}$일 경우 ${1}$을 반환하고, 그 외의 경우에는 ${0}$을 반환합니다. 따라서 다섯 번째 비트가 켜져있음을 알 수 있습니다.
