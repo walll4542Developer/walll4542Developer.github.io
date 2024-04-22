@@ -90,7 +90,7 @@ n = ~5;
 
 ![3](/assets/images/Docs/Bitwise%20Operator/image%20(3).png){: .align-center}
 
-### Shift (<<, >>) 연산자
+### Shift (<<, >>)
 비트를 왼쪽이나 오른쪽으로 이동시키는 연산자입니다. 
 
 이 연산자는 주로 ${2}$의 거듭제곱 수를 곱하거나 나눌 때 사용됩니다. 
