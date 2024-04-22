@@ -16,7 +16,7 @@
 title: 낭낭하게 개발하기
 email: walll454@gmail.com
 description: "Techblog for Technical Artist"
-# twitter_username: dPv79Noe77Xze92
+twitter_username: dPv79Noe77Xze92
 github_username: walll4542Developer
 minimal_mistakes_skin: default
 search: true
@@ -69,12 +69,12 @@ author:
     - label: "walll4542@gmail.com"
       icon: "fas fa-fw fa-envelope-square"
       url: "https://walll4542developer.github.io/about"
-    # - label: "Twitter"
-    #   icon: "fab fa-fw fa-twitter-square"
-    #   url: "https://twitter.com/dPv79Noe77Xze92"
-    # - label: "GitHub"
-    #   icon: "fab fa-fw fa-github"
-    #   url: "https://github.com/walll4542Developer"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/dPv79Noe77Xze92"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/walll4542Developer"
     # - label: "Instagram"
     #   icon: "fab fa-fw fa-instagram"
     #   url: "https://www.instagram.com/wooyoung7718/"
