@@ -52,4 +52,3 @@ sitemap: false
 - ![Gmail](/assets/images/Icon/Gmail_Mini.png) walll4542@gmail.com
 - ![X](/assets/images/Icon/X_Mini.png) [최우영](https://twitter.com/dPv79Noe77Xze92)
 - ![Github](/assets/images/Icon/Github_Mini.png) [walll4542Developer](https://github.com/walll4542Developer)
-- ![Instagram](/assets/images/Icon/Instagram_Mini.png) [wooyoung7718](https://www.instagram.com/wooyoung7718/)
