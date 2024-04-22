@@ -1,6 +1,6 @@
 ---
 title: "후디니 입문 03 - 점, 선, 면 그리고 바운드"
-excerpt: "3D 아티스트의 기준에서 이해하는 점, 선, 면에 대한 개념은 프로그래머 또는 수학자들의 개념과는 다른 부분이 있습니다. 컴퓨터 그래픽스에서 다루는 데이터나 유클리드 기하학의 엄밀한 정의보다는 폴리곤 덩어리들이 3차원 공간에서 이루는 형태와 기능에 집중하는 사람들이기 때문입니다."
+excerpt: "후디니에서 점, 선, 면 모두 더하기(Add) 라는 노드를 사용해서 구현 할 수 있습니다."
 date: 2024-02-03 00:00:00 -0000
 categories: Houdini
 tag: Research
@@ -24,7 +24,7 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/033.png){: .align-center}
 
-더하기 노드를 처음 생성하면 씬 뷰(Scene view)에는 아무 것도 출력되지 않습니다.
+더하기 노드를 처음 생성하면 씬 뷰(Scene View)에는 아무 것도 출력되지 않습니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/037.png){: .align-center}
 

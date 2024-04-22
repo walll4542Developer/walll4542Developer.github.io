@@ -25,13 +25,13 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/054.png){: .align-center}
 
-한 쪽 포인트에는 컬러 데이터인 **Cd 값**이 들어있는데, 다른 쪽 포인트에는 없어서 그렇습니다.
+한 쪽 포인트에는 컬러 데이터인 `Cd` 값이 들어있는데, 다른 쪽 포인트에는 없어서 그렇습니다.
 
 머지 노드로 합쳤는데 두 포인트가 가진 데이터 타입이 일치하지 않기 떄문입니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/055.png){: .align-center}
 
-양쪽 모두 컬러 노드를 연결해서 Cd 값이 있으면 경고 표시는 사라집니다.
+양쪽 모두 컬러 노드를 연결해서 `Cd` 값이 있으면 경고 표시는 사라집니다.
 
 ### 그룹(Group) 노드
 
@@ -88,7 +88,8 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/016.gif){: .align-center} 
 
-'${-}$' 기호를 사용해서 인덱스의 범위를 조절해서 블라스트를 실행할 수도 있습니다. \\
+'${-}$' 기호를 사용해서 인덱스의 범위를 조절해서 블라스트를 실행할 수도 있습니다.
+
 예를 들어 '${0-2}$', '${4-5}$' 등으로 묶어주면 '${3}$'과 '${6}$'만 남습니다.
 
 ## 그룹 데이터 타입
@@ -97,8 +98,8 @@ toc_sticky: true
 
 그룹으로 묶을 수 있는 데이터 타입은 다음의 네 가지로 분류됩니다.
 
-- primitives
-- points
+- Primitives
+- Points
 - Edges
 - Vertices
 
@@ -112,7 +113,8 @@ toc_sticky: true
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/017.gif){: .align-center} 
 
-컬러 노드도 그룹 이름에 따라서 적용할 그룹을 지정해 줄 수 있습니다. \\
+컬러 노드도 그룹 이름에 따라서 적용할 그룹을 지정해 줄 수 있습니다.
+
 컬러 노드의 output에 다시 새로운 컬러 노드를 연결하면 전체 색상이 변합니다.
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/018.gif){: .align-center} 
@@ -142,11 +144,11 @@ Vertices와 Polygons에 대한 설명은 지금 시점에서는 다루지 않겠
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/021.gif){: .align-center} 
 
-Base Group 에서 입력하지 않고 씬 뷰 에서 마우스로 원하는 프리미티브를 직접 선택하는 **셀렉트(Select) 모드**를 사용할 수 있습니다. 
+'Base Group' 에서 입력하지 않고 씬 뷰 에서 마우스로 원하는 프리미티브를 직접 선택하는 **셀렉트(Select) 모드**를 사용할 수 있습니다. 
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/069.png){: .align-center} 
 
-Base Group 또는 씬 뷰의 마우스 아이콘을 누르면 **셀렉트(Select) 모드**를 사용 가능합니다.
+'Base Group' 또는 씬 뷰의 마우스 아이콘을 누르면 **셀렉트(Select) 모드**를 사용 가능합니다.
 
 혹은 씬 뷰 위에 마우스를 두고 **S** 키를 눌러도 셀렉트 모드가 됩니다.
 
