@@ -6,7 +6,7 @@ categories: Unity
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-20.gif
+  teaser: 
   overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.8
 
@@ -35,6 +35,7 @@ toc_sticky: true
 그래서 셰이더를 사용하여 일종의 **가짜 에디셔널 라이트**를 그릴 수 있는 방법에 대해서 고민했습니다.
 
 ## 계획
+
 
 
 ## 레퍼런스(Reference)
