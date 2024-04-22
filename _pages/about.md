@@ -13,7 +13,7 @@ sitemap: false
 ## 최우영 – @walll4542Developer
 3D Art Based Junior Technical Artist
 
-### 경력(Carrer)
+### 경력(Career)
 - ![loadComplete](/assets/images/Icon/loadComplete_Mini.png) [LoadComplete / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)
   - 09.2020 ~ 12.2020
 - ![Devcat](/assets/images/Icon/Devcat_Mini.png) [Nexon Devcat / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)

@@ -315,6 +315,5 @@ private static int BitMask()
 `AND(&)`는 두 개의 비트가 모두 ${1}$일 경우 ${1}$을 반환하고, 그 외의 경우에는 ${0}$을 반환합니다. 따라서 다섯 번째 비트가 켜져있음을 알 수 있습니다.
 
 ## 레퍼런스(Reference)
-- 내 블로그 : ([https://walll4542.wixsite.com/watchthis/post/비트-연산자-이해하기](https://walll4542.wixsite.com/watchthis/post/비트-연산자-이해하기)) 
 - ColorWriteMask Enum : ([https://docs.unity3d.com/ScriptReference/Rendering.ColorWriteMask.html](https://docs.unity3d.com/ScriptReference/Rendering.ColorWriteMask.html))
 - ColorMask : ([https://docs.unity3d.com/kr/2021.3/Manual/SL-ColorMask.html](https://docs.unity3d.com/kr/2021.3/Manual/SL-ColorMask.html))
