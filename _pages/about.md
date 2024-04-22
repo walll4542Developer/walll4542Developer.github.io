@@ -15,8 +15,8 @@ sitemap: false
 
 ### 경력(Carrer)
 - ![loadComplete](/assets/images/Icon/loadComplete_Mini.png) [LoadComplete / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)
-  - 08.2020 ~ 12.2020
-- ![DevCat](/assets/images/Icon/DevCat_Mini.png) [Nexon Devcat / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)
+  - 09.2020 ~ 12.2020
+- ![Devcat](/assets/images/Icon/Devcat_Mini.png) [Nexon Devcat / Junior Technical Artist](https://walll4542developer.github.io/resume/MyCareer/)
   - 12.2020 ~ Present
 
 ### 기술 스택(Tech stack)
