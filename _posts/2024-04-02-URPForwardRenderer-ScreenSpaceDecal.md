@@ -128,5 +128,7 @@ void ApplyScreenSpaceDecal(in float4 screenPos, out float2 decalUV, out float bo
 }
 ```
 
+URP의 렌더러 피처(RendererFeature)를 사용하면 약간의 오버드로우(Overdraw)가 발생하지만 레이어 마스크 기능도 구현 할 수 있습니다.
+
 ## 레퍼런스(Reference)
 - Unity URP Decal : [https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@16.0/manual/renderer-feature-decal.html](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@16.0/manual/renderer-feature-decal.html)
