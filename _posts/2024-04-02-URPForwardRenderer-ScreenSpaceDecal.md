@@ -109,7 +109,7 @@ decalUV = (decalObjectSpace + 0.5).xy;
 그리고 오브젝트 스페이스를 ${0.5}$만큼 더한 값을 `uv`로 사용하면 완성입니다.
 
 ```hlsl
-void ApplyScreenSpaceDecal(in float4 screenPos, out float2 decalUV, out float boundingBox, out float4 decalWorldSpace)
+void ScreenSpaceDecal(in float4 screenPos, out float2 decalUV, out float boundingBox, out float4 decalWorldSpace)
 {
     float2 screenUV = screenPos.xy * 2 - 1;
     float rawDepth = SampleSceneDepth(screenPos.xy / screenPos.w);
