@@ -2,7 +2,7 @@
 title: "OpenGL 입문 01 - 그래픽스 시스템(Graphics System)"
 excerpt: "그래픽스 시스템에 대해서 전체적으로 알아봅니다."
 date: 2024-04-02 00:00:00 -0000
-categories: Unity
+categories: OpenGL Graphics
 tag: Research
 
 header:
