@@ -58,11 +58,6 @@ toc_sticky: true
 
 프레임 버퍼란 전체 화면이 **2차원 배열(Array)으로 구성**되어 있을 때 **전체 화면을 저장하는 메모리**입니다.
 
-![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/006.png){: .align-center}
-
-([Graphic Kernel System](https://www.computerhope.com/jargon/g/gks.htm))
-{: .text-center} 
-
 또한 컬러 TV가 발명되면서 컬러 모델(Color Model), 3D 모델의 가능성이 보이기 시작하면서 컴퓨터 그래픽스 표준들도 이때 처음 만들어집니다. GKS(Graphic Kernel System), Core 등의 표준 그래픽스 라이브러리들이 등장합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/007.png){: .align-center}
@@ -98,18 +93,34 @@ toc_sticky: true
 (Renderman)
 {: .text-center}
 
-이 시기의 특징으로는 최신 반도체 기술을 이용하여 그래픽스 파이프라인을 제작하기 시작했다는 것이며 산업 표준으로는 **피그스(PHIGS), 렌더맨(RenderMan)** 등의 소프트웨어들이 등장 합니다.
+이 시기의 특징으로는 최신 반도체 기술을 이용하여 그래픽스 파이프라인을 제작하기 시작했다는 것이며 
 
-![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/ATI_Logo.png)
-![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/AMD_Logo.png){: .align-center}
+산업 표준으로는 **피그스(PHIGS), 렌더맨(RenderMan)** 등의 소프트웨어들이 등장 합니다.
 
-또한 **ATI**라는 회사는 팹리스(Fabrication-less) 방식으로 3D 그래픽스 칩을 설계하고 **그래픽 카드**를 제작하였고 PC 시장이 성장할 때 컴퓨터에 내장되는 그래픽 카드를 제공하면서 함께 성장합니다. ATI가 추후 AMD에 인수 합병되었지만 유명한 그래픽 카드인 *Radeon* 시리즈는 ATI 시절에 제작된 네이밍으로 유명합니다.
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/011.png){: .align-center}
+
+(ATI & AMD)
+{: .text-center}
+
+또한 **ATI**라는 회사는 팹리스(Fabrication-less) 방식으로 3D 그래픽스 칩을 설계하고 **그래픽 카드**를 제작하였고 PC 시장이 성장할 때 컴퓨터에 내장되는 그래픽 카드를 제공하면서 함께 성장합니다. 
+
+ATI가 추후 AMD에 인수 합병되었지만 유명한 그래픽 카드인 *Radeon* 시리즈는 ATI 시절에 제작된 네이밍으로 유명합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/Nvidia_Logo.png){: .align-center}
 
+(Nvidia)
+{: .text-center}
+
 후발 주자로는 **NVIDIA**가 있습니다. AMD에서 반도체 설계를 담당하던 직원들이 독립하여 창업한 회사로 지금도 유명한 그래픽 카드인 *GeForce* 시리즈를 제작했으며 최근에는 인공지능 분야까지 진출하면서 현재는 그래픽 카드에 있어서 독보적인 위치의 회사로 성장합니다.
 
-1990년대로 들어오면서 그래픽스 표준이 정립되었고 OpenGL API가 완전한 표준으로 정착하게 됩니다. 포토 리얼리스틱 그래픽 분야에서는 **Pixar**가 컴퓨터 그래픽스 만으로 제작된 애니메이션이 상업적 성공을 거둘 수 있음을 증명하였습니다.
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/Pixar_Logo.png){: .align-center}
+
+(Pixar)
+{: .text-center}
+
+1990년대로 들어오면서 그래픽스 표준이 정립되었고 OpenGL API가 완전한 표준으로 정착하게 됩니다. 
+
+포토 리얼리스틱 그래픽 분야에서는 **Pixar**가 컴퓨터 그래픽스 만으로 제작된 애니메이션이 상업적 성공을 거둘 수 있음을 증명하였습니다.
 
 2000년대는 AMD, NVIDIA 사의 고급 그래픽 카드들이 포토 리얼리스틱 이미지를 실시간으로 만들어내는 것이 가능해지면서 게임 그래픽스 시장에서 포토 리얼리스틱 방향으로 상업적인 성공을 거두게 됩니다. 
 
@@ -118,6 +129,11 @@ toc_sticky: true
 ## 그래픽스 API
 ### OpenGL의 탄생까지
 그래픽스 API란 'Application Programmer Interface'의 약자로서 C나 C++ 같은 고급 언어의 라이브러리들 중에서 그래픽스 프로그래머를 위해 만들어진 라이브러리를 바로 그래픽스 API라고 부릅니다.
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/006.png){: .align-center}
+
+([Graphic Kernel System](https://www.computerhope.com/jargon/g/gks.htm))
+{: .text-center} 
 
 최초의 그래픽스 전용 API는 1977년 개발된 **GKS(Graphical kernel system)**입니다. 개발 당시에는 2D 그래픽스만 구현 가능 했으나 같은 년도 개발된 라이브러리 중 하나인 **Core**는 2D와 3D 그래픽스 모두 구현 가능합니다.
 
@@ -129,9 +145,15 @@ toc_sticky: true
 
 IRIS GL은 당시로서는 엄청난 고성능 API였으나... 개발자들이 *하드웨어 설계 전문가* 였기 때문에 인터페이스에서 좋지 못한 평가를 받았습니다.
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/OpenGL_Logo.png){: .align-center}
+
 그래서 기존에 실리콘 그래픽스사에서 제공하던 그래픽 라이브러리의 인터페이스를 개선하고 체계적으로 만들자는 논의가 활발해졌고 OpenGL이 탄생했습니다. 
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/Khronos_Logo.png){: .align-center}
+
 OpenGL의 발전과 품질 관리를 위한 조직으로 **ARB(Architectural Review Board)** 가 만들어졌습니다. 이후 ARB가 **크로노스 그룹(Khronos Group)** 에 흡수되었으며 대부분의 명망있는 IT 기업들은 모두 크로노스 그룹에 가입하여 컨소시엄(Consortium) 형태로 OpenGL의 표준을 관리하게 됩니다. 
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/OpenGL_Fam.png){: .align-center}
 
 - OpenGL : 워크스테이션 또는 PC 기반
 - OpenGL ES (Embedded System) : 스마트폰 기반
@@ -167,6 +189,10 @@ OpenGL ES은 스마트폰 시장에서 시장점유율이 압도적으로 높습
 OpenGL과 DirectX는 아주 긴 기간동안 서로 경쟁하며 꾸준히 성장하고 상업적으로 성공해왔습니다. 두 그래픽스 API가 고도화 될수록 기능이 방대해져 접근성이 떨어지고 사용하기도 어려워 오버헤드(Overhead)가 커지게 되었습니다.
 
 그래서 고성능을 보장하되 오버헤드가 적고 여러 플랫폼(Platform)에서 사용할 수 있는 3D 그래픽스 API의 필요성이 생기게 됩니다.
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/AppleMetal_Logo.png){: .align-center}
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/AMDMentle_Logo.png){: .align-center}
 
 - Direct3D 12 : 하위 레벨 API 추가
 - Metal : Apple 개발
