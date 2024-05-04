@@ -6,7 +6,7 @@ categories: OpenGL Graphics
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Computer%20Graphics/000.png
+  teaser: /assets/images/Docs/Computer%20Graphics/002.png
   overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.8
 
@@ -23,15 +23,31 @@ toc_sticky: true
 
 ## 초기 그래픽스 하드웨어
 ### 최초의 그래픽스 프로그램
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/002.png){: .align-center}
+
+(OXO, Alexander S. Douglas){: .text-center}
+
 최초의 그래픽스 프로그램은 1952년 영국 캠브릿지(Cambridge) 대학의 알렉산더 더글라스(Alexander S. Douglas)가 박사 학위 논문(Ph.D. Thesis)을 작성하는 과정에서 개발 된 틱택토(Tic-Tac-Toe) 게임 **OXO**입니다. 
 
 사실 OXO가 컴퓨터 그래픽스 프로그램이라기 보다는 사용자 인터페이스, HCI(Human Computer Interface) 분야의 시초를 알리는 논문에 가깝습니다.
 
 컴퓨터 그래픽스가 본격적으로 발전하기 시작한 것은 1960년대 흑백 TV가 등장하여 이를 컴퓨터용 모니터로 사용하기 시작했을 때 부터입니다. 
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/005.png){: .align-center}
+
+(Wireframe Render Image){: .text-center}
+
 초기 컴퓨터 그래픽스 프로그램들은 모니터의 한계 때문에 선분만 출력 가능했기 때문에 현재까지도 이어져온 것이 바로 와이어프레임(Wireframe) 방식 렌더링입니다.
 
-1960년대 당시 가장 획기적인 발전중 하나는 우리가 현재 사용하는 펜 타블렛(Pen Tablet)으로 펜을 사용하여 화면에 직접 그리는 방식을 1963년 MIT(Massachusetts Institute of Technology)의 이반 서덜랜드(Ivan Sutherland)가 박사 과정에서 처음으로 제안한 것입니다. 다만 이때까지도 사용자 인터페이스 관점에서의 발전에 가까웠습니다.
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/004.png){: .align-center}
+
+(Sketchpad, Ivan Sutherland){: .text-center}
+
+1960년대 당시 가장 획기적인 발전중 하나는 우리가 현재 사용하는 펜 타블렛(Pen Tablet)으로 펜을 사용하여 화면에 직접 그리는 방식입니다.
+
+{% include video id="6orsmFndx_o" provider="youtube" %}
+
+1963년 MIT(Massachusetts Institute of Technology)의 이반 서덜랜드(Ivan Sutherland)가 박사 과정에서 처음으로 제안한 것입니다. 다만 이때까지도 사용자 인터페이스 관점에서의 발전에 가까웠습니다.
 
 ### 래스터 시스템(Raster System)의 출현
 
@@ -39,7 +55,11 @@ toc_sticky: true
 
 프레임 버퍼란 전체 화면이 **2차원 배열(Array)으로 구성**되어 있을 때 **전체 화면을 저장하는 메모리**입니다.
 
-또한 컬러 TV가 발명되면서 완전한 컬러 모델(), 3D 모델의 가능성이 보이기 시작하면서 컴퓨터 그래픽스 표준들도 이때 처음 만들어집니다. GKS, Core 등의 표준 그래픽스 라이브러리들이 등장합니다.
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/006.png){: .align-center}
+
+(Graphic Kernel System){: .text-center} 
+
+또한 컬러 TV가 발명되면서 컬러 모델(Color Model), 3D 모델의 가능성이 보이기 시작하면서 컴퓨터 그래픽스 표준들도 이때 처음 만들어집니다. GKS(Graphic Kernel System), Core 등의 표준 그래픽스 라이브러리들이 등장합니다.
 
 1977년 스티브 워즈니악(Steve Wozniak)이 만든 8비트(8bit) 개인용 컴퓨터(Personal Computer) 애플 2(Apple II) 가 출시되었고 프레임 버퍼를 사용하는 기술들이 워크스테이션(Workstation)에 적용됩니다. 
 
