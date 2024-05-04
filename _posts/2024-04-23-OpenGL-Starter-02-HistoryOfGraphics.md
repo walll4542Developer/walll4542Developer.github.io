@@ -61,15 +61,26 @@ toc_sticky: true
 
 또한 컬러 TV가 발명되면서 컬러 모델(Color Model), 3D 모델의 가능성이 보이기 시작하면서 컴퓨터 그래픽스 표준들도 이때 처음 만들어집니다. GKS(Graphic Kernel System), Core 등의 표준 그래픽스 라이브러리들이 등장합니다.
 
-1977년 스티브 워즈니악(Steve Wozniak)이 만든 8비트(8bit) 개인용 컴퓨터(Personal Computer) 애플 2(Apple II) 가 출시되었고 프레임 버퍼를 사용하는 기술들이 워크스테이션(Workstation)에 적용됩니다. 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/007.png){: .align-center}
+
+(Steve Jobs & Steve Wozniak, Apple II){: .text-center} 
+
+1977년 스티브 잡스(Steve Jobs)와 스티브 워즈니악(Steve Wozniak)이 만든 8비트(8bit) 개인용 컴퓨터(Personal Computer) 애플 2(Apple II) 가 출시되었고 프레임 버퍼를 사용하는 기술들이 워크스테이션(Workstation)에 적용됩니다. 
 
 이때부터 PC 기반 게임이 제작되기 시작하지만 아직 완전한 3D는 아니며 간단한 2D 그래픽 화면의 게임이 개발됩니다.
 
 ## 근현대 그래픽스 하드웨어
 ### 최신 반도체 기술의 적용
+
 1980년대는 컴퓨터 하드웨어들이 획기적으로 발전하면서 CPU 성능도 좋아지고 메모리 용량도 커집니다. 발전한 성능과 메모리를 기반으로 **포토 리얼리스틱(Photo-realistic)**, 사실주의, 사진에 가까운 이미지를 렌더링하는 것이 가능해집니다.
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/008.png){: .align-center}
+
+(Silicon Graphics Logo){: .text-center}
+
 특히 **실리콘 그래픽스(Silicon Graphics)**라는 회사가 3D 그래픽스의 발전에 지대한 공헌을 합니다. 실리콘 그래픽스는 3D 그래픽스의 VLSI(Very-Large Scale Integrated circuits)칩을 설계했으며 OpenGL의 전신이 되는 IRIS GL 표준 라이브러리를 작성합니다.
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/009.png){: .align-center}
 
 맨 인 블랙(Man in black) 쥐라기 공원(Jurassic park) 등 유명 할리우드 영화에서 사용된 컴퓨터 그래픽스가 실리콘 그래픽스의 하드웨어와 소프트웨어로 제작되었으며 아카데미 특수효과상을 석권합니다.
 
