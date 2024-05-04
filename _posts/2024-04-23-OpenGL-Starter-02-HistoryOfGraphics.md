@@ -79,7 +79,7 @@ toc_sticky: true
 (Silicon Graphics)
 {: .text-center}
 
-특히 **실리콘 그래픽스(Silicon Graphics)**라는 회사가 3D 그래픽스의 발전에 지대한 공헌을 합니다. 실리콘 그래픽스는 3D 그래픽스의 VLSI(Very-Large Scale Integrated circuits)칩을 설계했으며 OpenGL의 전신이 되는 IRIS GL 표준 라이브러리를 작성합니다.
+특히 **실리콘 그래픽스(Silicon Graphics)**라는 회사가 3D 그래픽스의 발전에 지대한 공헌을 합니다. 실리콘 그래픽스는 3D 그래픽스의 VLSI(Very-Large Scale Integrated circuits)칩을 설계했으며 OpenGL의 전신(前身)이 되는 IRIS GL 표준 라이브러리를 작성합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/009.png){: .align-center}
 
@@ -93,9 +93,7 @@ toc_sticky: true
 (Renderman)
 {: .text-center}
 
-이 시기의 특징으로는 최신 반도체 기술을 이용하여 그래픽스 파이프라인을 제작하기 시작했다는 것이며 
-
-산업 표준으로는 **피그스(PHIGS), 렌더맨(RenderMan)** 등의 소프트웨어들이 등장 합니다.
+이 시기의 특징으로는 최신 반도체 기술을 이용하여 그래픽스 파이프라인을 제작하기 시작했다는 것이며 산업 표준으로는 **피그스(PHIGS), 렌더맨(RenderMan)** 등의 소프트웨어들이 등장 합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/011.png){: .align-center}
 
@@ -147,13 +145,23 @@ IRIS GL은 당시로서는 엄청난 고성능 API였으나... 개발자들이 *
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/OpenGL_Logo.png){: .align-center}
 
+(OpenGL)
+{: .text-center}
+
+
 그래서 기존에 실리콘 그래픽스사에서 제공하던 그래픽 라이브러리의 인터페이스를 개선하고 체계적으로 만들자는 논의가 활발해졌고 OpenGL이 탄생했습니다. 
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/Khronos_Logo.png){: .align-center}
 
+(Khronos Group)
+{: .text-center}
+
 OpenGL의 발전과 품질 관리를 위한 조직으로 **ARB(Architectural Review Board)** 가 만들어졌습니다. 이후 ARB가 **크로노스 그룹(Khronos Group)** 에 흡수되었으며 대부분의 명망있는 IT 기업들은 모두 크로노스 그룹에 가입하여 컨소시엄(Consortium) 형태로 OpenGL의 표준을 관리하게 됩니다. 
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/OpenGL_Fam.png){: .align-center}
+
+(OpenGL Family)
+{: .text-center}
 
 - OpenGL : 워크스테이션 또는 PC 기반
 - OpenGL ES (Embedded System) : 스마트폰 기반
@@ -174,23 +182,29 @@ OpenGL ES은 스마트폰 시장에서 시장점유율이 압도적으로 높습
 
 ### 다양한 다른 시도들
 
-#### DirectX
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/010.png){: .align-center}
 
-마이크로 소프트(Microsoft)사의 PC OS인 윈도우즈(Windows) 및 콘솔 엑스박스(Xbox) 전용 그래픽스 API 입니다.
+(DirectX)
+{: .text-center}
+
+**DirectX**는 마이크로 소프트(Microsoft)사의 PC OS인 윈도우즈(Windows) 및 콘솔 엑스박스(Xbox) 전용 그래픽스 API 입니다.
 
 컨소시엄 형태가 아닌 마이크로소프트라는 단일 기업이 단독으로 개발하기 때문에 발전속도가 빠르고 굉장히 많은 기능을 가지고 있습니다.
 
 다만 마이크로소프트가 개발한 기종에서만 작동하며 스마트폰에서는 사용이 불가능하다는 치명적인 단점이 있습니다.
 
-현재의 추세는 셰이더 프로그래밍 분야에서 OpenGL과 호환을 추구하고 있습니다. 
+현재의 추세는 셰이더 프로그래밍 분야에서 OpenGL과 호환성을 추구하고 있습니다. 
 
 #### 저수준(Low-Level) 그래픽스 API
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/012.png){: .align-center}
+
+(Apple Metal, AMD Mentle, Khronos Group Vulkan)
+{: .text-center}
+
 OpenGL과 DirectX는 아주 긴 기간동안 서로 경쟁하며 꾸준히 성장하고 상업적으로 성공해왔습니다. 두 그래픽스 API가 고도화 될수록 기능이 방대해져 접근성이 떨어지고 사용하기도 어려워 오버헤드(Overhead)가 커지게 되었습니다.
 
 그래서 고성능을 보장하되 오버헤드가 적고 여러 플랫폼(Platform)에서 사용할 수 있는 3D 그래픽스 API의 필요성이 생기게 됩니다.
-
-![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/012.png){: .align-left}
 
 - Direct3D 12 : 하위 레벨 API 추가
 - Metal : Apple 개발
