@@ -25,7 +25,8 @@ toc_sticky: true
 ### 최초의 그래픽스 프로그램
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/002.png){: .align-center}
 
-(OXO, Alexander S. Douglas){: .text-center}
+(OXO, Alexander S. Douglas)
+{: .text-center}
 
 최초의 그래픽스 프로그램은 1952년 영국 캠브릿지(Cambridge) 대학의 알렉산더 더글라스(Alexander S. Douglas)가 박사 학위 논문(Ph.D. Thesis)을 작성하는 과정에서 개발 된 틱택토(Tic-Tac-Toe) 게임 **OXO**입니다. 
 
@@ -35,13 +36,15 @@ toc_sticky: true
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/005.png){: .align-center}
 
-(Wireframe Render Image){: .text-center}
+(Wireframe Render Image)
+{: .text-center}
 
 초기 컴퓨터 그래픽스 프로그램들은 모니터의 한계 때문에 선분만 출력 가능했기 때문에 현재까지도 이어져온 것이 바로 와이어프레임(Wireframe) 방식 렌더링입니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/004.png){: .align-center}
 
-(Sketchpad, Ivan Sutherland){: .text-center}
+(Sketchpad, Ivan Sutherland)
+{: .text-center}
 
 1960년대 당시 가장 획기적인 발전중 하나는 우리가 현재 사용하는 펜 타블렛(Pen Tablet)으로 펜을 사용하여 화면에 직접 그리는 방식입니다.
 
@@ -57,13 +60,15 @@ toc_sticky: true
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/006.png){: .align-center}
 
-([Graphic Kernel System](https://www.computerhope.com/jargon/g/gks.htm)){: .text-center} 
+([Graphic Kernel System](https://www.computerhope.com/jargon/g/gks.htm))
+{: .text-center} 
 
 또한 컬러 TV가 발명되면서 컬러 모델(Color Model), 3D 모델의 가능성이 보이기 시작하면서 컴퓨터 그래픽스 표준들도 이때 처음 만들어집니다. GKS(Graphic Kernel System), Core 등의 표준 그래픽스 라이브러리들이 등장합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/007.png){: .align-center}
 
-(Steve Jobs & Steve Wozniak, Apple II){: .text-center} 
+(Steve Jobs & Steve Wozniak, Apple II)
+{: .text-center} 
 
 1977년 스티브 잡스(Steve Jobs)와 스티브 워즈니악(Steve Wozniak)이 만든 8비트(8bit) 개인용 컴퓨터(Personal Computer) 애플 2(Apple II) 가 출시되었고 프레임 버퍼를 사용하는 기술들이 워크스테이션(Workstation)에 적용됩니다. 
 
@@ -76,19 +81,22 @@ toc_sticky: true
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/008.png){: .align-center}
 
-(Silicon Graphics){: .text-center}
+(Silicon Graphics)
+{: .text-center}
 
 특히 **실리콘 그래픽스(Silicon Graphics)**라는 회사가 3D 그래픽스의 발전에 지대한 공헌을 합니다. 실리콘 그래픽스는 3D 그래픽스의 VLSI(Very-Large Scale Integrated circuits)칩을 설계했으며 OpenGL의 전신이 되는 IRIS GL 표준 라이브러리를 작성합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/009.png){: .align-center}
 
-(Man in black & Jurassic park){: .text-center}
+(Man in black & Jurassic park)
+{: .text-center}
 
 맨 인 블랙(Man in black) 쥐라기 공원(Jurassic park) 등 유명 할리우드 영화에서 사용된 컴퓨터 그래픽스가 실리콘 그래픽스의 하드웨어와 소프트웨어로 제작되었으며 아카데미 특수효과상을 석권합니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/RenderMan_Logo.png){: .align-center}
 
-(Renderman){: .text-center}
+(Renderman)
+{: .text-center}
 
 이 시기의 특징으로는 최신 반도체 기술을 이용하여 그래픽스 파이프라인을 제작하기 시작했다는 것이며 산업 표준으로는 **피그스(PHIGS), 렌더맨(RenderMan)** 등의 소프트웨어들이 등장 합니다.
 
