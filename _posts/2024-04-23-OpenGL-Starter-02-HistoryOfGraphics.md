@@ -7,7 +7,7 @@ tag: Research
 
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png
-  overlay_image: /assets/images/Docs/Thumbnails/code.png
+  overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png
   overlay_filter: 0.8
 
 # table of contents
