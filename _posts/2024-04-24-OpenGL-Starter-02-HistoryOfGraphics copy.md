@@ -1,14 +1,14 @@
 ---
 title: "OpenGL 입문 02 - 그래픽스 역사(History of Graphics)"
 excerpt: "그래픽스 시스템의 역사를 하드웨어(Hardware)와 소프트웨어(Software) 관점에서 알아봅니다."
-date: 2024-04-02 00:00:00 -0000
+date: 2024-04-24 00:00:00 -0000
 categories: OpenGL Graphics
 tag: Research
 
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png
   overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png
-  overlay_filter: 0.8
+  overlay_filter: 0.5
 
 # table of contents
 toc: true
@@ -17,7 +17,7 @@ toc_icon: "bars"
 toc_sticky: true
 ---
 
-## 개요
+## 그래픽스 시스템
 
 그래픽스 시스템의 역사를 하드웨어(Hardware)와 소프트웨어(Software) 관점에서 알아봅니다.
 
@@ -39,7 +39,7 @@ toc_sticky: true
 (Wireframe Render Image)
 {: .text-center}
 
-초기 컴퓨터 그래픽스 프로그램들은 모니터의 한계 때문에 선분만 출력 가능했기 때문에 현재까지도 이어져온 것이 바로 와이어프레임(Wireframe) 방식 렌더링입니다.
+초기 컴퓨터 그래픽스 하드웨어들은 모니터의 한계 때문에 선분만 출력 가능했기 때문에 현재까지도 이어져온 것이 바로 와이어프레임(Wireframe) 방식 렌더링입니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/004.png){: .align-center}
 
@@ -180,7 +180,7 @@ OpenGL ES은 스마트폰 시장에서 시장점유율이 압도적으로 높습
 
 그래서 제조사마다 성능 차이가 있을 수 있고 예를 들어 NVIDIA의 그래픽 카드가 다른 제조사들보다 OpenGL 처리 성능이 더 우수하다는 평가를 받고 있습니다.
 
-### 다양한 다른 시도들
+### 다양한 시도들
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/010.png){: .align-center}
 
