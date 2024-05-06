@@ -6,7 +6,7 @@ categories: OpenGL Graphics
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Computer%20Graphics/000.png
+  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-01.png
   overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.8
 
