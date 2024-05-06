@@ -6,7 +6,7 @@ categories: OpenGL Graphics
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png
+  teaser: /assets/images/Docs/Computer%20Graphics/012.png
   overlay_image: /assets/images/Docs/Thumbnails/code.png
   overlay_filter: 0.8
 
@@ -197,16 +197,21 @@ OpenGL ES은 스마트폰 시장에서 시장점유율이 압도적으로 높습
 
 #### 저수준(Low-Level) 그래픽스 API
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/DirectX3D12_Logo.png){: .align-center}
+
+(DirectX3D 12)
+{: .text-center}
+
+OpenGL과 DirectX는 아주 긴 기간동안 서로 경쟁하며 꾸준히 성장하고 상업적으로 성공해왔습니다. 두 그래픽스 API가 고도화 될수록 기능이 방대해져 접근성이 떨어지고 사용하기도 어려워 오버헤드(Overhead)가 커지게 되었습니다.
+
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/012.png){: .align-center}
 
 (Apple Metal, AMD Mentle, Khronos Group Vulkan)
 {: .text-center}
 
-OpenGL과 DirectX는 아주 긴 기간동안 서로 경쟁하며 꾸준히 성장하고 상업적으로 성공해왔습니다. 두 그래픽스 API가 고도화 될수록 기능이 방대해져 접근성이 떨어지고 사용하기도 어려워 오버헤드(Overhead)가 커지게 되었습니다.
-
 그래서 고성능을 보장하되 오버헤드가 적고 여러 플랫폼(Platform)에서 사용할 수 있는 3D 그래픽스 API의 필요성이 생기게 됩니다.
 
-- Direct3D 12 : 하위 레벨 API 추가
+- DirectX3D 12 : 하위 레벨 API 추가
 - Metal : Apple 개발
 - Mentle : AMD 개발
 - Vulkan : 크로노스 그룹에서 OpenGL과 별도 제공
