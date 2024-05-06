@@ -6,8 +6,8 @@ categories: OpenGL Graphics
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-03.png
-  overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-03.png
+  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-01.png
+  overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-01.png
   overlay_filter: 0.8
 
 # table of contents
@@ -43,8 +43,10 @@ OpenGL의 기능은 그래픽 카드에 굉장히 의존적(Dependent)이기 때
 
 OpenGL은 2D 또는 3D 그래픽을 출력하기 위해 설계되었으나 이미지를 출력하기 위해서는 반드시 윈도우가 필요합니다. 그래서 윈도우 시스템에 대한 설명이 필요합니다.
 
-- X Windows : Linux
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/015.png){: .align-center}
+
 - MS Windows : MS Windows
+- X Windows : Linux
 - iOS Windows : Mac
 
 윈도우 시스템은 2D 화면을 위해서 설계되어 있습니다. 화면에 2D 윈도우를 생성, 이동, 크기조절, 축소, 삭제 하는 역할을 담당합니다.
