@@ -19,6 +19,8 @@ toc_sticky: true
 
 ## 그래픽스 시스템
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/Thumbnail-02.png){: .align-center}
+
 그래픽스 시스템의 역사를 하드웨어(Hardware)와 소프트웨어(Software) 관점에서 알아봅니다.
 
 ## 초기 그래픽스 하드웨어
