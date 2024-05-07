@@ -6,8 +6,8 @@ categories: OpenGL Graphics
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-01.png
-  overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-01.png
+  teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-03.png
+  overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-03.png
   overlay_filter: 0.8
 
 # table of contents
@@ -95,7 +95,7 @@ OpenGL 익스텐션은 핵심 기능은 아니라서 *제공하지 않아도 문
 
 추후 익스텐션 중에서 뛰어난 성능 또는 상업적 성공을 거두어 그래픽 카드 시장에서 범용적으로 사용하는 익스텐션이 되는 경우 OpenGL 코어 라이브러리에 포함 시킬 수 있습니다.
 
-이런 익스텐션 구조의 특수성 덕분에 그래픽 카드 제조사들 사이에서 공정한 경쟁이 일어납니다. 어느 제조사든 표준을 유지하기 때문에 개발자들이 코어 라이브러리만으로 개발한다면 높은 이식성(portability)과 호환성을 보장 할 수 있습니다.
+이런 익스텐션 구조의 특수성 덕분에 그래픽 카드 제조사들 사이에서 공정한 **경쟁**이 일어납니다. 어느 제조사든 표준을 유지하기 때문에 개발자들이 코어 라이브러리만으로 개발한다면 높은 이식성(portability)과 호환성을 보장 할 수 있습니다.
 
 시장에서 성능이 훌륭한 것으로 평가받는 익스텐션이 있고 특정 제조사에서 이를 지원하는 그래픽 카드를 제작한다면 개발자들이 더 높은 효율로 동작하는 소프트웨어를 개발할 것이기 때문에 자사 그래픽 카드 제품의 장점이 됩니다.
 
@@ -121,6 +121,11 @@ glewInit();
 
 ## OpenGL 라이브러리의 특징
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/017.png){: .align-center}
+
+(simplified Open GL software diagram)
+{: .text-center}
+
 OpenGL은 3D 그래픽스를 목적으로 설계된 라이브러리이기 때문에 모든 함수가 3D 출력을 목표로 동작합니다.
 - 프리미티브(Primitives) 출력
   - 점(Point), 선분(Segment), 삼각형(Triangles)
@@ -139,13 +144,13 @@ OpenGL의 가장 핵심인 출력 기능입니다. 프리미티브란 화면에 
 
 프리미티브 중에서 가장 중요한 것은 삼각형입니다. **모든 오브젝트를 작은 삼각형들의 집합**으로 이루어져있다고 생각하는 아이디어입니다. 
 
-예를 들어 거대한 산을 표현한 배경을 작은 삼각형들로 분할해서 근사(Approximation) 처리하면 자연스럽게 렌더링 할 수 있습니다.
+예를 들어 거대한 산을 표현한 배경을 작은 삼각형들로 분할해서 **근사(Approximation)** 처리하면 자연스럽게 렌더링 할 수 있습니다.
 
-또한 가까운 오브젝트는 삼각형을 밀도 높게 분할해서 많이 사용하고 반대로 멀리 있는 오브젝트는 적게 사용할 수 있습니다. 이를 정제(Refinement)라고 합니다.
+또한 가까운 오브젝트는 삼각형을 밀도 높게 분할해서 많이 사용하고 반대로 멀리 있는 오브젝트는 적게 사용할 수 있습니다. 이를 **정제(Refinement)**라고 합니다.
 
 ### OpenGL 스테이트(State) 관리
 
-OpenGL은 스테이트 머신(State Machine) 개념으로 구현되어 있습니다. 예를 들어 삼각형의 색상이나 텍스쳐 등 속성(Attribute)을 OpenGL 내부 구현에서는 **스테이트**라고 부릅니다. 
+OpenGL은 스테이트 머신(State Machine) 개념으로 구현되어 있습니다. 예를 들어 삼각형의 색상이나 텍스쳐 등 속성(Attribute)을 OpenGL 내부 구현에서는 **스테이트(State)**라고 부릅니다. 
 
 OpenGL 으로 오브젝트를 렌더링 하는 과정은 먼저 스테이트를 설정한 다음 프리미티브를 출력하는 순서입니다. 그래서 같은 프리미티브를 가지고 다른 색상으로 출력해줄 수 있습니다.
 
@@ -196,8 +201,6 @@ void glUniform3fv(GLint location, GLsizei count, const GLfloat * value);
 
 전형적인 OpenGL 프로그램을 작성할 때 `glew.h`에서 OpenGL 익스텐션의 자료형과 상수 등을 가져와서 사용할 것이며 \\
 `glfw3.h`에서 가상 윈도우 시스템을 가져와서 사용하게 됩니다.
-
-
 
 ## 레퍼런스(Reference)
 - GLFW : [https://www.glfw.org/](https://www.glfw.org/)
