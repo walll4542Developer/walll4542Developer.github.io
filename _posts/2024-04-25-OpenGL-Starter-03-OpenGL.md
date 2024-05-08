@@ -123,7 +123,7 @@ glewInit();
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/017.png){: .align-center}
 
-(simplified Open GL software diagram)
+(simplified OpenGL software diagram)
 {: .text-center}
 
 OpenGL은 3D 그래픽스를 목적으로 설계된 라이브러리이기 때문에 모든 함수가 3D 출력을 목표로 동작합니다.
@@ -155,7 +155,7 @@ OpenGL은 스테이트 머신(State Machine) 개념으로 구현되어 있습니
 OpenGL 으로 오브젝트를 렌더링 하는 과정은 먼저 스테이트를 설정한 다음 프리미티브를 출력하는 순서입니다. 그래서 같은 프리미티브를 가지고 다른 색상으로 출력해줄 수 있습니다.
 
 ### 객체 지향(Object Orientation) 개념의 부재
-객체 지향 개념이 탄생하기 전에 C언어로 OpenGL이 개발되었기 때문에 C++의 객체 지향 개념을 전혀 사용하지 않습니다. 이런 문제를 개선하고자 C++ 인터페이스를 도입하려 했지만 효율성 문제로 기각되었습니다.
+객체 지향 개념이 탄생하기 전에 C로 OpenGL이 개발되었기 때문에 C++의 객체 지향 개념을 전혀 사용하지 않습니다. 이런 문제를 개선하고자 C++ 인터페이스를 도입하려 했지만 효율성 문제로 기각되었습니다.
 
 ```c
 void glUniform3i(GLint location, GLint v0, GLint v1, GLint v2);

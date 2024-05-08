@@ -1,5 +1,5 @@
 ---
-title: "후디니 입문 20 - Particle System"
+title: "후디니 입문 20 - Particle System Part 1"
 excerpt: "solver 노드를 사용하여 파티클 시스템(Particle System) 구현을 모방하고 원리를 이해하고자 합니다."
 date: 2024-02-20 00:00:00 -0000
 categories: Houdini
@@ -48,6 +48,7 @@ vector velocity = point(1, "velocity", 0);
 
 또한 파라미터를 담당하는 'add2' 를 `solver` 노드의 네 번째 인풋(input)으로 설정합니다.
 
+## 포인트 생성
 ### 스위치(Switch) 노드
 
 ![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/175.png){: .align-center}

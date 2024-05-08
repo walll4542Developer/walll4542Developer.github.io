@@ -155,6 +155,7 @@ f@hourRotation = setHour * (totalRotation / hourDivision)
 #### 포인트(point) 함수
 
 이제 초침을 회전 시키려면 초침의 트랜스폼의 로테이션(Rotation) 에서 `Z`값을 조절해야 합니다.
+
 파라미터에 로테이션 값을 전달하기 위해서 `point(,,,)`함수를 사용할 것입니다.
 
 ```hlsl
