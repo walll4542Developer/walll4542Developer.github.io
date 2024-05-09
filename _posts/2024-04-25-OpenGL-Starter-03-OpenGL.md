@@ -20,6 +20,11 @@ toc_sticky: true
 ## OpenGL 라이브러리(OpenGL Library)
 OpenGL 라이브러리 전반에 대해서 소개합니다.
 
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/017.png){: .align-center}
+
+(simplified OpenGL software diagram)
+{: .text-center}
+
 OpenGL은 C, C++ 언어에서 라이브러리 형태로 제공되고 있습니다.
 
 - 정적 라이브러리(Static Library) : 컴파일 시에 결합하는 방식
@@ -120,11 +125,6 @@ glewInit();
 모든 버전의 OpenGL 사용을 지원하며 어떤 익스텐션이 사용 가능한지 검사 해주고 익스텐션으로 등록된 모든 함수에 대한 인터페이스를 제공합니다. 지원하지 않는 함수는 자동으로 에러 처리해줍니다.
 
 ## OpenGL 라이브러리의 특징
-
-![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/017.png){: .align-center}
-
-(simplified OpenGL software diagram)
-{: .text-center}
 
 OpenGL은 3D 그래픽스를 목적으로 설계된 라이브러리이기 때문에 모든 함수가 3D 출력을 목표로 동작합니다.
 - 프리미티브(Primitives) 출력
