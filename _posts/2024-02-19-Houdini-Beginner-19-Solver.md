@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-19.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-19.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -19,23 +19,23 @@ toc_sticky: true
 
 ## 개요
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/166.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/166.png){: .align-center}
 
 `Solver` 노드는 이전 프레임의 결과에 만들어준 규칙을 시간에 따라 이터레이션 횟수만큼 반복하는 기능입니다. 후디니에서 많은 연산이 필요한 물리 시뮬레이션(Simulation)을 시행 할 때 주로 사용됩니다.
 
 몇 가지 조건을 갖춘다면 `Solver` 노드는 `forloop`와 동일하게 사용 할 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/167.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/167.png){: .align-center}
 
 `Solver` 노드를 더블 클릭하면 노드 내부로 들어갈 수 있습니다. 
 
 여기에 `forloop` 의 내용을 복사후 붙혀넣기해서 `Prev_Frame` 과 `OUT` 사이에 연결합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/127.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/127.gif){: .align-center}
 
 파라미터(Parameter)의 **'Reset Simulation'** 버튼을 눌러서 시뮬레이션에 사용된 캐시(Cache)를 모두 초기화 한 후 애니메이션을 플레이해서 결과를 보면 `forloop`와 동일한 결과임을 알 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/170.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/170.png){: .align-center}
 
 시뮬레이션 캐시는 후디니의 타임라인에 파란색으로 나타납니다.
 
@@ -45,14 +45,14 @@ toc_sticky: true
 
 ### 솔버(Solver) 노드
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/168.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/168.png){: .align-center}
 
 - 'Start Frame' 은 시뮬레이션을 시작할 프레임입니다.
 - 'Sub Steps' 는 한 프레임당 반복할 횟수입니다. 단, 최초 'Start Frame'에는 적용되지 않습니다. 이후부터 정상 적용됩니다. 
 
 `Solver` 노드를 응용하면서 실제 동작을 구체적으로 살펴보겠습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/169.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/169.png){: .align-center}
 
 ```hlsl
 @Alpha = 1.0;
@@ -66,7 +66,7 @@ s@condition = "a";
 
 `Solver`의 'Start Frame'을 ${11}$으로 설정합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/128.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/128.gif){: .align-center}
 
 ```hlsl
 if(s@condition == "a" && i@count >= 9)
@@ -97,7 +97,7 @@ else
 
 `s@condition` 값이 `a` 라면 매 프레임마다 ${1}$씩 `i@count` 를 증가시키고 아니면 반대로 감소시킵니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/171.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/171.png){: .align-center}
 
 ```hlsl
 @P.y = i@count;
@@ -105,7 +105,7 @@ else
 
 `Solver`의 반복이 끝난 시점에서 포인트의 높이 `@P.y`을 `i@count`로 정한다면, 포인트의 위치는 ${y}$축 방향으로 ${9}$까지 올라갔다가 다시 ${0}$으로 내려오는 것을 반복할 것입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/129.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/129.gif){: .align-center}
 
 완성입니다. 끝까지 읽어주셔서 감사합니다.
 

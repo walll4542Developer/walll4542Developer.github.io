@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-18.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-18.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -19,34 +19,34 @@ toc_sticky: true
 
 ## 개요
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/163.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/163.png){: .align-center}
 
 후디니에서 `forloop` 반복문 노드를 사용하는 방법에 대해서 알아보겠습니다. 위와 같이 노드를 준비해주세요.
 
 ### forloop 반복문
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/164.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/164.png){: .align-center}
 
 `foreach` 반복문은 여러 프리셋이 있지만, `forloop`는 없는 것이 특징입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/165.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/165.png){: .align-center}
 
 `foreach input`은 모든 `input`을 분해(blast)한 뒤, `foreach` 블록(block)의 내부 작업을 수행하고 나서 하나의 결과로 묶어(merge)줍니다.
 
 그러나 `forloop`는 분해 하지 않습니다. 그저 `forloop` 블록 내부의 내용을 이터레이션(iteration) 횟수 만큼 반복할 뿐입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/124.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/124.gif){: .align-center}
 
 그리고 결과를 **'Feedback each iteration'** 또는 **'Merge each iteration'** 으로 사용할 수 있습니다.
 
 - 'Feedback each iteration'은 모든 이터레이션이 반복된 최종 결과만 반환합니다.
 - 'Merge each iteration'은 개별 이터레이션의 결과를 모두 합쳐서 반환합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/125.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/125.gif){: .align-center}
 
 hscript의 `$F` 구문을 사용하여 현재 프레임 값을 이터레이션으로 넣어주면 위와 같이 프레임에 따라 애니메이션 됩니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/126.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/126.gif){: .align-center}
 
 ```hlsl
 f@Alpha -= 0.05;

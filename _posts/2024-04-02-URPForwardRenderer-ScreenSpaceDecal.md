@@ -39,17 +39,17 @@ URP의 렌더러 피처(Renderer Feature)를 응용하면 약간의 오버드로
 
 ## 계획
 
-![Houdini-Starter](/assets/images/Docs/ScreenSpaceDecal/000.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/ScreenSpaceDecal/000.png){: .align-center}
 
 박스를 배치 했을 때 박스의 밑면과 바닥이 닿는 경계 부분의 픽셀을 검출하고, 그 픽셀에만 데칼 텍스쳐가 맵핑 되어야 합니다.
 
-![Houdini-Starter](/assets/images/Docs/ScreenSpaceDecal/001.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/ScreenSpaceDecal/001.png){: .align-center}
 
 카메라 뎁스 텍스쳐를 이용하여 씬(Scene) 전체의 깊이 값을 알아낼 수 있습니다.
 
 이를 바탕으로 경계면이 어디인지 계산 할 수 있습니다. 마젠타로 표시한 경계면의 픽셀만 살리고 나머지 픽셀은 버려야합니다.
 
-![Houdini-Starter](/assets/images/Docs/ScreenSpaceDecal/002.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/ScreenSpaceDecal/002.png){: .align-center}
 
 해당 픽셀을 계산하는 방법은 박스를 오브젝트 스페이스(Object Space)로 행렬 변환(Matrix transformation)하면 됩니다.
 
@@ -61,7 +61,7 @@ URP의 렌더러 피처(Renderer Feature)를 응용하면 약간의 오버드로
 
 `float3(0.4, 0.8, -0.5)`는 ${y}$축 위치가 ${0.8}$이니 경계면 외부에 있다고 알 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/ScreenSpaceDecal/003.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/ScreenSpaceDecal/003.png){: .align-center}
 
 `uv` 데이터는 오브젝트 포지션 값중 ${xz}$ 평면을 사용합니다.
 
@@ -81,7 +81,7 @@ float3 negateScreenPos = float3(screenUV.x, -1 * screenUV.y, rawDepth);
 
 `negateScreenPos`에서 ${y}$축을 반전하는 이유는 데칼이 경계면 바닥을 향하게 계산하기 위해서입니다.
 
-![Houdini-Starter](/assets/images/Docs/ScreenSpaceDecal/004.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/ScreenSpaceDecal/004.png){: .align-center}
 
 ```hlsl
 decalWorldSpace = mul(UNITY_MATRIX_I_VP, float4(negateScreenPos, 1));

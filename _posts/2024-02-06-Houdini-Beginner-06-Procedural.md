@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-06.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-06.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -26,13 +26,13 @@ toc_sticky: true
 
 ### 널(null) 노드
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/075.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/075.png){: .align-center}
 
 먼저 우리는 오직 다른 기능은 없이 파라미터들만 제어하기 위한 노드가 필요합니다.
 
 그래서 비어있는 **Null 노드**를 생성합니다. 
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/076.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/076.png){: .align-center}
 
 이 노드는 제어하는 역할을 담당할 것이기 때문에 노드의 이름을 컨트롤러(Controller) 라고 정했습니다.
 
@@ -40,17 +40,17 @@ toc_sticky: true
 
 ### 파라미터(parameter) 설정하기
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/077.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/077.png){: .align-center}
 
 톱니바퀴 모양 아이콘을 클릭하면 **'Edit Parameter Interface...'** 라는 메뉴가 나옵니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/040.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/040.gif){: .align-center}
 
 이를 클릭하면 여러가지 파라미터를 선택 하고 생성할 수 있는 창으로 연결됩니다.
 
 왼쪽에서 드래그 앤 드랍을 통해 오른쪽으로 원하는 파라미터를 옮겨 올 수 있습니다. 여러가지 파라미터를 정리할 수 있도록 폴더 기능도 제공합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/078.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/078.png){: .align-center}
 
 여기서 파라미터를 생성하기 전에 *테이블은 정말 단순한 가구지만* 이를 절차생성 하려면 테이블의 구조에 대해서 먼저 고민해 볼 필요가 있습니다.
 
@@ -58,7 +58,7 @@ toc_sticky: true
 
 상판과 하부구조 둘 다 디자인에 따라 천차만별의 다양성이 있겠으나, 이번에는 절차생성이 처음인 만큼 위 이미지와 같이 박스(box) 형태의 상판과 ${4}$개의 박스 형태의 다리가 붙어있는 가장 심플한 구조인 것으로 생각하겠습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/079.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/079.png){: .align-center}
 
 먼저 상판의 형태와 크기를 결정하고자 합니다.
 
@@ -66,17 +66,17 @@ toc_sticky: true
 
 이때 상판의 중앙 좌표는 ${(0, 0, 0)}$ 에 있는 것이 계산하기 편하므로 각 포인트의 위치 좌표는 위 이미지와 같습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/041.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/041.gif){: .align-center}
 
 바운드 노드로 묶으면 상판이 만들어지고, `Upper Padding` 값을 조절하면 상판의 두께를 제어할 수 있습니다.
 
 지금 제작한 바운드 노드의 기능을 컨트롤러 노드에 파라미터 추가한 다음 트랜스폼 노드와 연결해서 다시 제작 해보겠습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/080.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/080.png){: .align-center}
 
 먼저 포인트의 위치는 ${(1, 0, 1)}$ 에 둡니다. 왜냐하면 트랜스폼 노드의 스케일(scale) 값을 사용해서 파라미터를 제어할 것이기 때문에 포인트의 포지션 값이 1이어야 스케일 계산을 하기 쉽기 때문입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/081.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/081.png){: .align-center}
 
 이전에 제작했던 컨트롤러 노드의 'Edit Parameter Interface...' 메뉴로 진입해서 위와 같이 파라미터를 작성합니다.
 
@@ -84,21 +84,21 @@ toc_sticky: true
 
 또한 파라미터의 범위(Range)를 제한 해줄 수 있습니다. 상판의 ${x}$축 크기를 결정하는 파라미터인 `SizeX`의 값은 최소 ${0}$이며 최대 ${5}$로 설정했습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/082.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/082.png){: .align-center}
 
 폴더를 제작할 때는 'End Tab Group' 옵션을 활성화 해서 폴더가 파라미터를 담는 끝 부분이 있도록 합니다.
 
 활성화 하지 않으면 이후에 추가되는 파라미터들도 따로 폴더를 설정하지 않을 경우엔 모두 해당 폴더에 추가됩니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/043.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/043.gif){: .align-center}
 
 'Edit Parameter Interface' 창에서 파라미터를 선택하고 단축키 'Ctrl + C, V'로 복사 후 붙혀넣기도 가능합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/083.png){: .align-center}
 
 컨트롤러 노드에 `SizeX` 와 `SizeY` 파라미터가 추가된 것을 확인 하실 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/042.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/042.gif)
 
 다음은 컨트롤러 노드의 파라미터와 트랜스폼 노드의 파라미터를 연결할 것입니다.
 
@@ -106,13 +106,13 @@ toc_sticky: true
 
 다음은 연결 해야하는 'transform1' 노드의 `scale` ${x}$값 파라미터에 마우스를 가져다 대고 우클릭 후 **'Paste Relative References'** 버튼을 누르면 파라미터가 초록색으로 변하며 연결 됩니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/044.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/044.gif)
 
 초록색으로 표시된 파라미터와 연결되어 포인트가 스케일 되어 위치가 변하는 것을 확인 하실 수 있습니다.
 
 이는 파라미터 값을 일종의 수식과 함수로 연결한 것이며, 수식을 직접 입력해서 연결하거나 내용을 편집할 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/045.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/045.gif)
 
 파라미터의 라벨을 클릭하면 파라미터를 수식이 아닌 실제로 계산하는 수치 값을 확인 할 수 있습니다.
 
@@ -122,29 +122,29 @@ toc_sticky: true
 
 위 이미지에서 파라미터가 음수가 되게 하였을 때 포인트의 위치가 음수 값의 좌표로 이동하는 것을 확인 하실 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/046.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/046.gif)
 
 트랜스폼 노드의 스케일 파라미터 값에 음수를 입력하여 포인트들의 좌표가 ${(x, y) (-x, y) (x, -y) (-x, -y)}$ 가 되도록 하고 바운드 노드와 연결하면 위 이미지 처럼 원점 ${(0, 0, 0)}$ 에서 대칭하는 테이블탑을 만들 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/047.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/047.gif)
 
 같은 방식으로 컨트롤러에 테이블탑의 두께를 조절할 프로퍼티를 넣어줍니다. 저는 'TopThick' 이라는 이름으로 정했습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/048.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/048.gif)
 
 다음은 테이블의 다리(Leg)를 만들 차례입니다. 트랜스폼 노드로 만든 포인트들의 좌표를 재활용해서  다리를 만들어줄 것입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/084.png)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/084.png)
 
 트랜스폼 노드를 하나 더 추가하고, 둘을 머지(merge) 노드로 합친 다음 바운드 노드로 박스를 만들어 다리를 만들었습니다. 이것을 세번 더 반복하여 4개의 다리를 모두 만들어줍시다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/049.gif)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/049.gif)
 
 다음은 다리의 두께를 결정해줄 `LegThick` 파라미터를 추가합니다. 이를 레그(leg) 의 모든 바운드 노드의 `Lower Padding` 그리고 `Upper Padding` 값에 파라미터로 연결해줍니다.
 
 위 이미지 처럼 같은 노드 내부의 파라미터 값을 연결하는 것도 가능합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/085.png)
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/085.png)
 
 컨트롤러의 `LegThick` 값을 'Lower Padding' 의 `x` 파라미터에 연결했습니다.
 

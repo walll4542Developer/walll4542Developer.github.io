@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-14.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-14.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -23,13 +23,13 @@ toc_sticky: true
 
 `Chramp(,)` 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 **직접 그래프를 제어**하여 묘사할 수 있는 함수입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/087.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/087.gif){: .align-center}
 
 함수를 사용하기 위해 준비가 필요합니다. 먼저 위 처럼 포인트 두 개를 생성하고 'By Group'으로 묶어서 선을 만들어주세요. 
 
 `Length` 값은 ${0.02}$ 정도로 아주 촘촘하게 포인트가 생성되도록 제어해주세요.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/147.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/147.png){: .align-center}
 
 ```hlsl
 Chramp("램프 이름", 'input')
@@ -40,7 +40,7 @@ Chramp("램프 이름", 'input')
 
 ## 응용하기
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/088.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/088.gif){: .align-center}
 
 ```hlsl
 @P.y = chramp("ramp", @P.y);
@@ -48,24 +48,24 @@ Chramp("램프 이름", 'input')
 
 인풋(input)으로 `@P.y`를 사용하면 ${0}$ 에서 ${1}$ 사이의 값을 가진 포지션 y축의 그래프를 제어하는 것과 같습니다. 
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/089.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/089.gif){: .align-center}
 
 그래프에 마우스 커서를 올리고 좌클릭을 하면 그래프의 포인트(Point)가 생성됩니다. 
 또한 'Delete' 키를 눌러서 포인트를 제거할 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/090.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/090.gif){: .align-center}
 
 포인트와 포인트 사이를 **보간(Interpolation)하는 방식을 변경**할 수 있습니다.
 
 포인트를 선택하고 'Interpolation' 파라미터(Parameter) 값을 베지어(Bezier), 컨스턴트(Constant) 등으로 바꾸면 선택된 포인트의 보간 방식이 해당 값으로 바뀝니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/091.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/091.gif){: .align-center}
 
 `@P.y` 값을 ${2}$ 로 설정해보면 그래프가 ${1}$ 이 넘는 값을 표현하지 못하고 끊어지는 것을 확인 할 수 있습니다. 
 
 대신 `@P.x`를 ${2}$ 로 설정하면 전체 그래프가 ${x}$ 축 방향으로 두 배 늘어나게 됩니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/092.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/092.gif){: .align-center}
 
 ```hlsl
 float input = @P.x - int(@P.x);
@@ -78,7 +78,7 @@ Vex 언어에는 소수부가 반복되게 하는 hlsl 언어의 `frac()`같은 
 
 `int()`로 형변환 해서 소수점 부분을 버린 `int(@P.x)`를 원본 `@P.x`에서 뺄셈하면 소수부만 남도록 구현 할 수 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/093.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/093.gif){: .align-center}
 
 제작한 패턴이 ${0}$ 에서 시작해서 ${1}$ 으로 끝나기 때문에, 패턴이 끊김없이 이어지도록 끝 값을 ${0}$ 으로 바꾸는 처리를 해줄 수도 있습니다.
 

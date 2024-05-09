@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-13.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-13.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -28,7 +28,7 @@ fit(y, 'y의 최솟값', 'y의 최대값', 'y의 진폭 최솟값', 'y의 진폭
 
 함수를 사용하기 위해 준비가 필요합니다. 다음과 같은 코드를 작성해주세요.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/081.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/081.gif){: .align-center}
 
 ```hlsl
 float x = @P.x;
@@ -37,7 +37,7 @@ float y = sin(x * abs(beta) + gamma) * alpha + delta;
 @P = set(x, y, 0);
 ```
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/142.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/142.png){: .align-center}
 
 - ${\alpha}$(알파)는 진폭을 조절 합니다.
 - ${\beta}$(베타)는 파장을 조절 합니다.
@@ -46,7 +46,7 @@ float y = sin(x * abs(beta) + gamma) * alpha + delta;
 
 ### 클램프(clamp) 함수
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/082.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/082.gif){: .align-center}
 
 ```hlsl
 float a = point(0, "y", @ptnum); // "y"는 sin 그래프
@@ -67,7 +67,7 @@ Vex 언어에서는 hlsl 처럼 `saturate()` 함수가 없어서 대신 `clamp(,
 
 ### 핏(fit) 함수
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/083.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/083.gif){: .align-center}
 
 ```hlsl
 float a = point(0, "y", @ptnum);
@@ -87,13 +87,13 @@ float y = fit(a, min, max, outMin, outMax);
 
 연산 순서가 중요한데요, `min`, `max`가 먼저 적용되고 난 다음에 `outMin` 과 `outMax`가 적용됩니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/084.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/084.gif){: .align-center}
 
 `outMin` 과 `outMax` 값에 맞춰 진폭을 늘리고 줄이기 때문에, `outMax` 값이 `outMin` 값보다 작아지는 경우에는 그래프가 ${y}$축 방향으로 **반전**됩니다.
 
 ## 응용하기
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/085.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/085.gif){: .align-center}
 
 ```hlsl
 float x = @P.x;
@@ -106,7 +106,7 @@ f@y = y;
 
 눈으로 보기 편하도록 `noise()` 함수에 포인트 컬러 어트리뷰트(attribute)를 추가해서 파란색으로 출력 하고 `clamp(,,)` 와 `fit(,,,,)` 는 빨간색으로 출력해서 겹쳐놓고 비교해봅니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/086.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/086.gif){: .align-center}
 
 ```hlsl
 float x = @P.x;

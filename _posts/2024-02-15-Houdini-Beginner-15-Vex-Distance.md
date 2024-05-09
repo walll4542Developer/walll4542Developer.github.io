@@ -6,8 +6,8 @@ categories: Houdini
 tag: Research
 
 header:
-  teaser: /assets/images/Docs/Houdini%20Starter/thumbnail-15.gif
-  overlay_image: /assets/images/Docs/Houdini%20Starter/sidefx-houdini-hd-logo-01.png
+  teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-15.gif
+  overlay_image: /assets/images/Docs/Houdini%20Beginner/sidefx-houdini-hd-logo-01.png
   overlay_filter: 0.5
 
 # table of contents
@@ -25,7 +25,7 @@ toc_sticky: true
 - `Distance(,)`
 - `nearpoint(,)`
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/094.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/094.gif){: .align-center}
 
 함수를 사용하기 위해 준비가 필요합니다. 원점을 중심으로 회전 운동을 하는 포인트를 만들어줄 것입니다.
 
@@ -40,7 +40,7 @@ float speed = @Frame * 0.1; // 원하는 만큼 속도를 조절할 것
 @P = set(cos(speed), 0, sin(speed));
 ```
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/148.png){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/148.png){: .align-center}
 
 포인트의 위치를 편하게 정할 수 있도록 **hscript 방식**으로 작성할 것입니다.
 
@@ -62,7 +62,7 @@ Vex의 `length`, `distance` 는 hlsl 문법과 동일하게 동작합니다.
 
 ### 길이(Length), 거리(Distance) 함수
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/095.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/095.gif){: .align-center}
 
 ```hlsl
 vector a = point(0, "P", 0);
@@ -84,7 +84,7 @@ f@length = length(a - b);
 
 이를 **Head to tail** 이라고 합니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/096.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/096.gif){: .align-center}
 
 ```hlsl
 removepoint("주소", '포인트 인덱스');
@@ -107,13 +107,13 @@ if(f@dist < chf("limit"))
 `limit` 값보다 `f@dist`가 더 작으면 해당하는 모든 포인트를 제거하도록 코드를 작성했습니다. //
 `f@dist` 값의 응용은 무궁무진하여 `@Cd` 등의 포인트 컬러 값으로 사용할 수도 있을 것입니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/097.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/097.gif){: .align-center}
 
 `f@dist` 값을 사용해서 `a` 와 가장 가까운 포인트를 찾아낸 다음 가장 가까운 포인트의 인덱스 넘버가 ${0}$이 되도록 정렬할 수 있습니다.
 
 if문을 제거한 다음, 소트(Sort) 노드를 추가합니다. 노드의 'Point Sort' 파라미터 값을 **By attribute** 로 설정하고 `dist` 값을 받아옵니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/098.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/098.gif){: .align-center}
 
 `dist` 값이 가장 작은 순서대로 포인트 인덱스가 새롭게 정렬됩니다. 그래서 가장 가까운 포인트의 인덱스는 항상 ${0}$이 됩니다.
 
@@ -127,7 +127,7 @@ nearpoint("주소", '포인트 포지션')
 
 앞서 가장 가까운 포인트를 소트(Sort) 노드를 응용하여 찾아봤습니다. 그런데 Vex의 내장 함수중에 같은 기능을 하는 `nearpoint(,)` 함수가 있습니다.
 
-![Houdini-Starter](/assets/images/Docs/Houdini%20Starter/099.gif){: .align-center}
+![Houdini-Beginner](/assets/images/Docs/Houdini%20Beginner/099.gif){: .align-center}
 
 ```hlsl
 int pointNumber = nearpoint(1, @P);
