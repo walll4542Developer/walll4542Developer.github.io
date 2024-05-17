@@ -1,5 +1,5 @@
 ﻿#include "GLFW/glfw3.h"
-#pragma comment(lib,"glfw3.lib")
+#pragma comment(lib, "glfw3.lib")
 
 const unsigned int WIN_W = 300;
 const unsigned int WIN_H = 300;
