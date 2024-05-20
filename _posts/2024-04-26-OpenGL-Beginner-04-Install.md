@@ -54,7 +54,7 @@ GLFW를 본인 컴퓨터의 운영체제(32 bit 또는 64 bit) 에 알맞게 다
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/025.png){: .align-center}
 
-**C++ 과 Windows 콘솔**을 사용하는 템플릿으로 시작하는 것이 가장 무난합니다. 솔루션을 생성해줍니다.
+**C++ 과 Windows 콘솔**(Console)을 사용하는 템플릿으로 시작하는 것이 가장 무난합니다. 솔루션을 생성해줍니다.
 
 ![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/026.png){: .align-center}
 
@@ -157,7 +157,9 @@ int main(void)
 }
 ```
 
-${300 * 300}$ 크기의 윈도우를 출력하는 간단한 GLFW 코드입니다.
+${300 * 300}$ 크기의 GLFW 윈도우를 출력하는 간단한 코드입니다. 
+
+콘솔 창과 함께 'Hello GLFW' 창이 흰색 배경으로 출력되면 빌드 성공입니다.
 
 ## GLEW 설치
 
@@ -242,6 +244,13 @@ int main(void)
   return 0;
 }
 ```
+
+![ComputerGraphics](/assets/images/Docs/Computer%20Graphics/040.png){: .align-center}
+
+${300 * 300}$ 크기의 GLFW 윈도우를 검은색으로 출력하는 간단한 코드입니다. 
+
+콘솔 창과 함께 'Hello GLFW' 창이 검은색 배경으로 출력되면 빌드 성공입니다.
+
 
 ## 레퍼런스(Reference)
 - Nvidia 다운로드 센터 : [https://www.nvidia.co.kr/Download/index.aspx?lang=kr](https://www.nvidia.co.kr/Download/index.aspx?lang=kr)
