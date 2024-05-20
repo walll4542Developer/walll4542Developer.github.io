@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{31D99BAD-C113-411A-9CD9-15A508B0D6E1}|OpenGLStudy.vcxproj|solutionrelative:OpenGLStudy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{31D99BAD-C113-411A-9CD9-15A508B0D6E1}|OpenGLStudy.vcxproj|C:\\USERS\\WOOYOUNG\\DOCUMENTS\\GITHUB\\WALLL4542DEVELOPER.GITHUB.IO\\ASSETS\\OPENGLPROJECT\\OPENGLSTUDY\\GLEW\\GLEW.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{31D99BAD-C113-411A-9CD9-15A508B0D6E1}|OpenGLStudy.vcxproj|solutionrelative:GLEW\\GLEW.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\wooyoung\\Documents\\GitHub\\walll4542Developer.github.io\\assets\\OpenGLproject\\OpenGLStudy\\GLFW\\glfw3.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GLFW\\glfw3.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,6 +31,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "glew.h",
+              "DocumentMoniker": "C:\\Users\\wooyoung\\Documents\\GitHub\\walll4542Developer.github.io\\assets\\OpenGLproject\\OpenGLStudy\\GLEW\\glew.h",
+              "RelativeDocumentMoniker": "GLEW\\glew.h",
+              "ToolTip": "C:\\Users\\wooyoung\\Documents\\GitHub\\walll4542Developer.github.io\\assets\\OpenGLproject\\OpenGLStudy\\GLEW\\glew.h",
+              "RelativeToolTip": "GLEW\\glew.h",
+              "ViewState": "AQIAAEcAAAAAAAAAAAAcwFQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-17T07:14:17.785Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "glfw3.h",
               "DocumentMoniker": "C:\\Users\\wooyoung\\Documents\\GitHub\\walll4542Developer.github.io\\assets\\OpenGLproject\\OpenGLStudy\\GLFW\\glfw3.h",
               "RelativeDocumentMoniker": "GLFW\\glfw3.h",
@@ -34,7 +51,8 @@
               "RelativeToolTip": "GLFW\\glfw3.h",
               "ViewState": "AQIAAJUMAAAAAAAAAAAcwKUMAAACAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-05-17T04:32:58.466Z"
+              "WhenOpened": "2024-05-17T04:32:58.466Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -44,7 +62,7 @@
               "RelativeDocumentMoniker": "OpenGLStudy.cpp",
               "ToolTip": "C:\\Users\\wooyoung\\Documents\\GitHub\\walll4542Developer.github.io\\assets\\OpenGLproject\\OpenGLStudy\\OpenGLStudy.cpp",
               "RelativeToolTip": "OpenGLStudy.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-05-17T03:19:42.739Z",
               "EditorCaption": ""
