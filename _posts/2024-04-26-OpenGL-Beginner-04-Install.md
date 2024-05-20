@@ -8,7 +8,7 @@ tag: Research
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-04.png
   overlay_image: /assets/images/Docs/Computer%20Graphics/Thumbnail-04.png
-  overlay_filter: 0.8
+  overlay_filter: 0.5
 
 # table of contents
 toc: true
@@ -257,5 +257,3 @@ ${300 * 300}$ 크기의 GLFW 윈도우를 검은색으로 출력하는 간단한
 - Nvidia Geforce Experience : [https://www.nvidia.com/en-us/geforce/geforce-experience/](https://www.nvidia.com/en-us/geforce/geforce-experience/)
 - GLFW : [https://www.glfw.org/](https://www.glfw.org/)
 - GLEW : [https://glew.sourceforge.net/](https://glew.sourceforge.net/)
-- OpenGL Extension : [https://www.khronos.org/opengl/wiki/OpenGL_Extension](https://www.khronos.org/opengl/wiki/OpenGL_Extension)
-
