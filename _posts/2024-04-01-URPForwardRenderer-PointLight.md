@@ -16,7 +16,7 @@ toc_label: "목차"
 toc_icon: "bars"
 toc_sticky: true
 ---
-
+<!-- 
 ## 개요
 
 이 연구는 Unity URP 2021.3~ 버전 기준으로 작성되었음을 미리 알립니다. 
@@ -73,4 +73,4 @@ if (lightType != LightType.Directional)
 
 공식을 그대로 셰이더로 옮겨서 GPU로 연산하게 해봅시다.
 
-## 레퍼런스(Reference)
+## 레퍼런스(Reference) -->
