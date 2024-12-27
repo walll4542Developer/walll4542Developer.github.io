@@ -3,7 +3,7 @@ title: "후디니 입문 02 - 주소 개념과 카메라, 라이트, 렌더러, 
 excerpt: 후디니의 네트워크 뷰에서 사용하는 모든 노드에는 고유한 주소가 존재합니다. 후디니는 모든 네트워크 간의 연결을 주소 입력을 바탕으로 하며, 주소 개념이 후디니 설계 철학입니다.  
 date: 2024-02-02 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-02.png

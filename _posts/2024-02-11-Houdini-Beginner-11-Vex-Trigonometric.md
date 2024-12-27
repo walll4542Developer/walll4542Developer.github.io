@@ -3,7 +3,7 @@ title: "후디니 입문 11 - Vex 함수 : 삼각함수"
 excerpt: "후디니에서 삼각함수를 사용하는 방법에 대해 소개합니다. 함수를 소개하기 위해 삼각함수를 시각화 하여 여러개의 포인트를 이어 그래프를 그릴 수 있도록 할 것입니다."
 date: 2024-02-11 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-11.gif

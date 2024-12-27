@@ -2,8 +2,8 @@
 title: "Unity URP Forward Renderer - Screen Space Decal"
 excerpt: "스크린 스페이스 데칼(Screen Space Decal)을 간단히 셰이더로 제작하는 방법을 소개합니다."
 date: 2024-04-02 00:00:00 -0000
-categories: Unity
-tag: Research
+categories: Research
+tag: Shader
 
 header:
   teaser: 
@@ -22,7 +22,7 @@ toc_sticky: true
 이 연구는 Unity URP 2021.3~ 버전 기준으로 작성되었음을 미리 알립니다. 
 {: .notice--info}
 
-Unity URP에서 데칼 기능이 제대로 지원되지 않는 버전이 있습니다. 예를 들어 데칼의 레이어 마스크(LayerMask) 기능이 없는 경우거나 또는 드로우 콜(DrawCall)을 절약하기 위해 뎁스 노말(DepthNormal) 패스를 사용하지 않는 프로젝트도 있죠.
+Unity URP에서 데칼 기능이 제대로 지원되지 않는 버전이 있습니다. 예를 들어 데칼의 레이어 마스크(LayerMask) 기능이 없는 경우거나 또는 드로우 콜(DrawCall)을 절약하기 위해 뎁스 노말(DepthNormal) 패스를 사용하지 않는 프로젝트도 있습니다.
 
 그럴 때는 직접 데칼 시스템을 구현해야 합니다. **스크린 스페이스 데칼(Screen Space Decal)**을 간단히 셰이더로 제작하는 방법을 소개합니다.
 
@@ -156,7 +156,7 @@ decalObjectSpace.xyz /= scale.xzy;
 
 유니티의 파티클 시스템에서 데칼을 사용하고자 한다면 파티클 시스템에서 커스텀 데이터로 포지션(Position), 로테이션(Rotation), 스케일(Scale) 값을 받아와서 처리해야 합니다.
 
-${xzy}$ 로 좌표축을 변경했기 때문에 파티클의 Yaw 축 로테이션 값으로 회전행렬을 계산하여 텍스쳐가 같이이 회전해야 합니다.
+${xzy}$ 로 좌표축을 변경했기 때문에 파티클의 `Yaw` 축 로테이션 값으로 회전행렬을 계산하여 텍스쳐가 같이 회전해야 합니다.
 
 다음은 URP의 렌더러 피처(Renderer Feature)를 응용하여 레이어 마스크 기능을 구현해야 하는데 나중에 따로 다루도록 하겠습니다.
 

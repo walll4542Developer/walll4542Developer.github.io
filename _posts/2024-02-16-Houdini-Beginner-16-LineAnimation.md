@@ -3,7 +3,7 @@ title: "후디니 입문 16 - 라인(line) 애니메이션 기초"
 excerpt: "지금까지 공부한 여러 함수들을 응용하여 위와 같은 간단한 라인 애니메이션을 제작해보고자 합니다."
 date: 2024-02-16 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-16.gif

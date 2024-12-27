@@ -3,7 +3,7 @@ title: "후디니 입문 04 - 데이터 타입, 그룹, 블라스트"
 excerpt: "노드로 생성한 데이터들을 머지 노드를 사용해서 하나로 합쳐줄 때, 노드가 가지고 있는 데이터 타입이 모두 동일해야 합니다."
 date: 2024-02-04 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-04.gif

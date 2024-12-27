@@ -2,8 +2,8 @@
 title: "Unity URP Forward Renderer - Additional light Tweak"
 excerpt: "Unity URP Forward Renderer - Additional light Tweak"
 date: 2024-04-01 00:00:00 -0000
-categories: Unity
-tag: Research
+categories: Research
+tag: Shader
 
 header:
   teaser: 

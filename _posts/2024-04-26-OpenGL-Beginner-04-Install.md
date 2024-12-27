@@ -2,8 +2,8 @@
 title: "OpenGL 입문 04 - OpenGL 설치 및 실행"
 excerpt: "OpenGL과  GLFW, GLEW를 설치 및 실행 후 간단한 프로그램을 작성합니다."
 date: 2024-04-25 00:00:00 -0000
-categories: OpenGL Graphics
-tag: Research
+categories: Study
+tag: OpenGL
 
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-04.png

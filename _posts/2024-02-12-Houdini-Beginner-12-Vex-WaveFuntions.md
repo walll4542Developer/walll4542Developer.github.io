@@ -3,7 +3,7 @@ title: "후디니 입문 12 - Vex 함수 : 파동의 합성"
 excerpt: "sin(), cos()는 삼각 함수이며 위 처럼 진동하고 일정한 주기를 가지는 파동의 형태를 가지고 있습니다. noise() 함수는 사실 위 이미지 처럼 여러 개의 삼각함수가 만드는 파동의 합성으로 이루어져 있습니다."
 date: 2024-02-12 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-12.gif

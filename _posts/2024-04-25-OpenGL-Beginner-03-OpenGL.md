@@ -2,8 +2,8 @@
 title: "OpenGL 입문 03 - OpenGL 소개"
 excerpt: "OpenGL 라이브러리 전반에 대해서 소개합니다."
 date: 2024-04-25 00:00:00 -0000
-categories: OpenGL Graphics
-tag: Research
+categories: Study
+tag: OpenGL
 
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-03.png
