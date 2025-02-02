@@ -3,7 +3,7 @@ title: "후디니 입문 09 - Vex 언어 : 시계 애니메이션 만들기"
 excerpt: "Vex 와 Vop 을 복습하는 차원으로 후디니에서 시계 시스템을 구현해보고자 합니다."
 date: 2024-02-09 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-09.gif

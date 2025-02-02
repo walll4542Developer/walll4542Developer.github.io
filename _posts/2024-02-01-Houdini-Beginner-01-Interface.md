@@ -3,7 +3,7 @@ title: "후디니 입문 01 - 인터페이스"
 excerpt: 후디니는 작업 환경을 커스텀 할 수 있습니다. 인터페이스와 작업 환경을 설정하고 저장과 불러오기 하는 방법에 대해 알아보겠습니다.
 date: 2024-02-01 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-01.png

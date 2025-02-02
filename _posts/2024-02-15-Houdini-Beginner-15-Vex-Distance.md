@@ -3,7 +3,7 @@ title: "후디니 입문 15 - Vex 함수 : 거리 값을 다루는 함수들"
 excerpt: "후디니에서 두 벡터 사이의 거리(Distance) 값을 측정하고 다루는 함수들을 소개하고자 합니다."
 date: 2024-02-15 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-15.gif

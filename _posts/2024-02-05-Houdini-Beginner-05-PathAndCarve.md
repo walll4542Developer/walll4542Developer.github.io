@@ -3,7 +3,7 @@ title: "후디니 입문 05 - 패스 그리기, 카브 활용"
 excerpt: "다수의 포인트들을 이어서 선을 그리는 방법에 대해서 학습했습니다. 이번에는 선을 사용하여 특정 오브젝트가 따라 움직일 수 있도록 패스를 그려보겠습니다."
 date: 2024-02-05 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-05.gif

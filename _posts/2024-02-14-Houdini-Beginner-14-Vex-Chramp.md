@@ -3,7 +3,7 @@ title: "후디니 입문 14 - Vex 함수 : Chramp"
 excerpt: "함수가 그리는 그래프를 원하는 형태의 램프로 수정할 수 있는 채널 램프(Chramp) 함수에 대해서 소개하고자 합니다. Chramp(,) 는 정규화된 ${0}$ 에서 ${1}$ 사이 값에 대하여 대응할 함수를 직접 그래프를 제어하여 묘사할 수 있는 함수입니다."
 date: 2024-02-14 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-14.gif

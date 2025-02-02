@@ -3,7 +3,7 @@ title: "후디니 입문 03 - 점, 선, 면 그리고 바운드"
 excerpt: "후디니에서 점, 선, 면 모두 더하기(Add) 라는 노드를 사용해서 구현 할 수 있습니다."
 date: 2024-02-03 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-03.gif

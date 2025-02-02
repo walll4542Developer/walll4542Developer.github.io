@@ -2,8 +2,8 @@
 title: "OpenGL 입문 02 - 그래픽스 역사(History of Graphics)"
 excerpt: "그래픽스 시스템의 역사를 하드웨어(Hardware)와 소프트웨어(Software) 관점에서 알아봅니다."
 date: 2024-04-24 00:00:00 -0000
-categories: OpenGL Graphics
-tag: Research
+categories: Study
+tag: OpenGL
 
 header:
   teaser: /assets/images/Docs/Computer%20Graphics/Thumbnail-02.png

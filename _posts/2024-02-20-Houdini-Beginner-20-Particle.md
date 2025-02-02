@@ -2,8 +2,8 @@
 title: "후디니 입문 20 - Particle System Part 1"
 excerpt: "solver 노드를 사용하여 파티클 시스템(Particle System) 구현을 모방하고 원리를 이해하고자 합니다."
 date: 2024-02-20 00:00:00 -0000
-categories: Houdini
-tag: Research
+categories: Study
+tag: Houdini
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-20.gif

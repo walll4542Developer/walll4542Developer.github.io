@@ -3,7 +3,7 @@ title: "후디니 입문 10 - Vex 함수 : Point & if"
 excerpt: "다수의 포인트와 프리미티브 데이터를 다루는 여러가지 함수들에 대해서 소개합니다."
 date: 2024-02-10 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-10.gif

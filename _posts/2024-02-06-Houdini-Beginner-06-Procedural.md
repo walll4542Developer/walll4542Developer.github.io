@@ -3,7 +3,7 @@ title: "후디니 입문 06 - 절차생성(Procedural) 모델링"
 excerpt: "후디니에서 절차생성 모델링 개념의 핵심은 모델의 모든 데이터를 하나의 인풋으로 제어하여 모델링 데이터를 생산하는 시스템을 구축하는 것입니다. 예를 들어 테이블을 절차생성으로 모델링 하고 싶다면, 단일 노드의 파라미터에 적절한 초기값만 설정하면 테이블이 생성되어야 합니다."
 date: 2024-02-06 00:00:00 -0000
 categories: Houdini
-tag: Research
+tag: Study
 
 header:
   teaser: /assets/images/Docs/Houdini%20Beginner/thumbnail-06.gif
