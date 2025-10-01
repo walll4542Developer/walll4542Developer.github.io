@@ -5,7 +5,8 @@ date: 2023-04-08 00:00:00 -0000
 categories: [HLSL, Unity]
 tags: [Shader]
 
-image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
+image: 
+    path: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
 
 toc: true 
 toc_label: "목차" 
