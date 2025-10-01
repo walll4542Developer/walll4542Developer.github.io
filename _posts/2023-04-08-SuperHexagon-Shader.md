@@ -19,13 +19,13 @@ math: true
 
 <div class="row justify-content-center">
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif" alt="">
     </div>
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif" alt="">
     </div>
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif" alt="">
     </div>
 </div>
 
@@ -187,11 +187,11 @@ col.rgb = float3(a, 0);
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp" alt="">
         <p class="text-center small">float2 A = frac(uv - 0.5) - 0.5</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp" alt="">
         <p class="text-center small">float2 B = frac(uv) - 0.5</p>
     </div>
 </div>
@@ -210,11 +210,11 @@ col.rgb = float3(B, 0);
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/002.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/002.webp" alt="">
         <p class="text-center small">length(A)</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/003.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/003.webp" alt="">
         <p class="text-center small">length(B)</p>
     </div>
 </div>
@@ -275,11 +275,11 @@ b = fmod(uv, 1) - 0.5;
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/004.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/004.webp" alt="">
         <p class="text-center small">fmod(,)</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/005.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/005.webp" alt="">
         <p class="text-center small">frac()</p>
     </div>
 </div>
@@ -294,11 +294,11 @@ float2 uv = (i.uv + 0.5) * _Tile; // 음수 제거
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp" alt="">
         <p class="text-center small">uv - 0.5</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp" alt="">
         <p class="text-center small">uv + 0.5</p>
     </div>
 </div>
@@ -373,13 +373,13 @@ float HexaDistance(float2 uv)
 
 <div class="row justify-content-center">
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif" alt="">
     </div>
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif" alt="">
     </div>
     <div class="col-sm-4 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif" alt="">
     </div>
 </div>
 
