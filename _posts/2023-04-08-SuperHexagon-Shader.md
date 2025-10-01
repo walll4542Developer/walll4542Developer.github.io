@@ -5,29 +5,27 @@ date: 2023-04-08 00:00:00 -0000
 categories: [HLSL, Unity]
 tags: [Shader]
 
-cover: /assets/images/Docs/Super%20Hexagon%20Shader/009.gif 
+image: /assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif
 
 toc: true 
 toc_label: "목차" 
 toc_icon: "bars" 
 toc_sticky: true 
-layout: post 
+layout: post
+math: true
 ---
 
 ## 개요
 
 <div class="row justify-content-center">
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif">
     </div>
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif">
     </div>
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif" alt="오른쪽 이미지">
-        <p class="text-center small">오른쪽 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif">
     </div>
 </div>
 
@@ -189,22 +187,19 @@ col.rgb = float3(a, 0);
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp">
+        <p class="text-center small">float2 A = frac(uv - 0.5) - 0.5</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp">
+        <p class="text-center small">float2 B = frac(uv) - 0.5</p>
     </div>
 </div>
-
-(`float2 A = frac(uv - 0.5) - 0.5;` / `float2 B = frac(uv) - 0.5;`)
-{: .text-center}
 
 ```hlsl
 float2 uv = (i.uv - 0.5) * _Tile;
 float2 A = frac(uv - 0.5) - 0.5;
-col.rgb = float3(b, 0);
+col.rgb = float3(B, 0);
 ```
 
 같은 `uv`에서 ${-0.5}$ 만큼 수직, 수평 이동한 `uv`를 하나 더 만들어줍니다.
@@ -215,17 +210,14 @@ col.rgb = float3(b, 0);
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/002.webp" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/002.webp">
+        <p class="text-center small">length(A)</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/003.webp" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/003.webp">
+        <p class="text-center small">length(B)</p>
     </div>
 </div>
-
-(`length(A)` / `length(B)`)
-{: .text-center}
 
 `length()`함수로 원점 ${(0,0)}$에서 거리를 재면 위와 같은 데이터를 얻을 수 있습니다.
 
@@ -283,17 +275,14 @@ b = fmod(uv, 1) - 0.5;
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/004.webp" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/004.webp">
+        <p class="text-center small">fmod(,)</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/005.webp" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/005.webp">
+        <p class="text-center small">frac()</p>
     </div>
 </div>
-
-(`fmod(,)` / `frac()`)
-{: .text-center}
 
 하지만 두 함수의 결과물은 이렇게 큰 차이가 있는데, 유니티에서 `fmod(,)`는 나머지 값이 음수일 경우 그대로 음수로 반환하기 때문에 생기는 오류입니다.
 
@@ -305,12 +294,12 @@ float2 uv = (i.uv + 0.5) * _Tile; // 음수 제거
 
 <div class="row justify-content-center">
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/000.webp">
+        <p class="text-center small">uv - 0.5</p>
     </div>
     <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/001.webp">
+        <p class="text-center small">uv + 0.5</p>
     </div>
 </div>
 
@@ -383,17 +372,14 @@ float HexaDistance(float2 uv)
 이렇게 만들어진 디스턴스 필드에 프랙탈 노이즈(Fractal Noise) 텍스쳐를 사용하거나 다른 방법으로 랜덤성을 부여해서, 여러가지 효과의 셰이더를 작성 할 수 있습니다.
 
 <div class="row justify-content-center">
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif" alt="왼쪽 이미지">
-        <p class="text-center small">왼쪽 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(9).gif">
     </div>
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(10).gif" alt="중간 이미지">
-        <p class="text-center small">중간 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/009.gif">
     </div>
-    <div class="col-sm-6 text-center">
-        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif" alt="오른쪽 이미지">
-        <p class="text-center small">오른쪽 캡션</p>
+    <div class="col-sm-4 text-center">
+        <img src="/assets/images/Docs/Super%20Hexagon%20Shader/image%20(11).gif">
     </div>
 </div>
 
