@@ -1,143 +1,88 @@
-<!doctype html>
-<html lang="en" data-mode="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-  <meta name="theme-color" content="#1b1b1e">
-  <meta name="description" content="실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다.">
-  <link rel="canonical" href="https://walll4542developer.github.io/posts/Cartesian-coordinate-system/">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
-  <link rel="manifest" href="/assets/img/favicons/site.webmanifest">
-  <meta property="og:title" content="게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)">
-  <meta property="og:description" content="실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다.">
-  <meta property="og:url" content="https://walll4542developer.github.io/posts/Cartesian-coordinate-system/">
-  <meta property="og:type" content="article">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)","description":"실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다.","url":"https://walll4542developer.github.io/posts/Cartesian-coordinate-system/","author":{"@type":"Person","name":"최우영"}}</script>
-  <title>게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system) | 낭낭하게 개발하기</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/assets/css/site.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다."><link rel="canonical" href="https://walll4542developer.github.io/posts/Cartesian-coordinate-system/"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><meta property="og:title" content="게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)"><meta property="og:description" content="실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다."><meta property="og:url" content="https://walll4542developer.github.io/posts/Cartesian-coordinate-system/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)","description":"실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 데카르트 좌표계(Cartesian coordinate system)라고 부릅니다.","url":"https://walll4542developer.github.io/posts/Cartesian-coordinate-system/","author":{"@type":"Person","name":"최우영"}}</script><title>게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system) | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.32.2/dist/tocbot.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
-  <script src="/assets/js/dist/theme.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
   <script defer src="/assets/js/static-site.js"></script>
   <script defer src="/app.js"></script>
-</head>
-<body>
-  <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
-  <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/images/Portrait/watchman.png" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
-    <a class="site-title d-block" href="/">낭낭하게 개발하기</a>
-    <p class="site-subtitle fst-italic mb-0">Tech blog for Technical Artist</p>
-  </header>
-  <nav class="flex-column flex-grow-1 w-100 ps-0">
-    <ul class="nav">
-      <li class="nav-item"><a href="/" class="nav-link"><i class="fa-fw fas fa-home"></i><span>HOME</span></a></li>
-      <li class="nav-item"><a href="/categories/" class="nav-link"><i class="fa-fw fas fa-stream"></i><span>CATEGORIES</span></a></li>
-      <li class="nav-item"><a href="/tags/" class="nav-link"><i class="fa-fw fas fa-tags"></i><span>TAGS</span></a></li>
-      <li class="nav-item"><a href="/archives/" class="nav-link"><i class="fa-fw fas fa-archive"></i><span>ARCHIVES</span></a></li>
-      <li class="nav-item"><a href="/about/" class="nav-link"><i class="fa-fw fas fa-info-circle"></i><span>ABOUT</span></a></li>
-    </ul>
-  </nav>
-  <div class="sidebar-bottom d-flex flex-wrap align-items-center w-100"><a href="https://github.com/walll4542Developer" aria-label="github" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
-      <a href="https://twitter.com/dPv79Noe77Xze92" aria-label="x" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
-      <a href="mailto:walll4542@gmail.com" aria-label="email"><i class="fas fa-envelope"></i></a>
-      <a href="/feed.xml" aria-label="rss"><i class="fas fa-rss"></i></a></div>
-</aside>
-  <div id="main-wrapper" class="d-flex justify-content-center">
-    <div class="container d-flex flex-column px-xxl-5">
-      <header id="topbar-wrapper" class="flex-shrink-0" aria-label="Top Bar">
-  <div id="topbar" class="d-flex align-items-center justify-content-between px-lg-3 h-100">
-    <nav id="breadcrumb" aria-label="Breadcrumb"><span><a href="/">Home</a></span><span>게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)</span></nav>
-    <button type="button" id="sidebar-trigger" class="btn btn-link" aria-label="Sidebar"><i class="fas fa-bars fa-fw"></i></button>
-    <div id="topbar-title">게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)</div>
-    <button type="button" id="search-trigger" class="btn btn-link" aria-label="Search"><i class="fas fa-search fa-fw"></i></button>
-    <search id="search" class="align-items-center ms-3 ms-lg-0"><i class="fas fa-search fa-fw"></i><input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."></search>
-    <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">Cancel</button>
-  </div>
-</header>
-      <div class="row flex-grow-1"><main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4"><article class="px-1" data-toc="true"><header><h1 data-toc-skip>게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)</h1><div class="post-meta text-muted"><span>Posted <time data-ts="1682208000" data-df="ll" data-bs-toggle="tooltip" data-bs-placement="bottom">Apr 23, 2023</time></span><div class="d-flex justify-content-between"><span>By <em><a href="https://twitter.com/dPv79Noe77Xze92">최우영</a></em></span><div><span class="readtime"><i class="far fa-clock fa-fw"></i>5 min read</span></div></div></div></header><div class="content"><h2 id="데카르트-좌표계-cartesian-coordinate-system"><span class="me-2">데카르트 좌표계 (Cartesian coordinate system)</span><a href="#데카르트-좌표계-cartesian-coordinate-system" class="anchor text-muted" aria-label="Link to 데카르트 좌표계 (Cartesian coordinate system)"><i class="fas fa-hashtag"></i></a></h2>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],tags:"ams"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],processHtmlClass:"math-source"}};</script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><span class="brand-mark">G</span><span><strong>GAME<span>//</span>TECH</strong><small>RENDER PIPELINE NOTES</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> Math / NOTE 31</p><h1>게임 수학 입문 03 - 데카르트 좌표계(Cartesian coordinate system)</h1><div class="article-meta"><time datetime="2023-04-23T00:00:00.000Z">APR 23, 2023</time><span>5 MIN READ</span><span>BY 최우영</span></div></header><div class="article-content"><h2 id="데카르트-좌표계-cartesian-coordinate-system">데카르트 좌표계 (Cartesian coordinate system)</h2>
 <p>이전 포스트에서 함수에 대해서 알아봤을 때, 실수와 실수의 곱집합을 사용하여 직선으로 표현되는 영역을 평면으로 확장해 표현할 수 있었습니다. \
 이렇게 직선의 수 집합을 수직으로 배치해 평면을 표기하는 방식을 **데카르트 좌표계(Cartesian coordinate system)**라고 부릅니다. \
 곱집합의 원어가 데카르트 곱(Cartesian Product)임을 생각해본다면 이 둘은 동일한 개념임을 알 수 있습니다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(1).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(데카르트 좌표계)</p>
-<p>데카르트 좌표계는 위 이미지와 같이 수평으로 배치한 첫 번째 실수 집합의 미지수를 ${x}$, 수직으로 배치한 두 번째 실수 집합의 미지수를 ${y}$로 표기하고 원점을 기준으로 x축의 오른편, y축의 위편은 양의 영역을 나타냅니다. \
+<p>데카르트 좌표계는 위 이미지와 같이 수평으로 배치한 첫 번째 실수 집합의 미지수를 <span class="math-source">${x}$</span>, 수직으로 배치한 두 번째 실수 집합의 미지수를 <span class="math-source">${y}$</span>로 표기하고 원점을 기준으로 x축의 오른편, y축의 위편은 양의 영역을 나타냅니다. \
 이렇게 배치된 두 실수 집합으로 평면을 가르면 평면의 영역은 총 4개의 **사분면(quadrant)**으로 나뉘는데 오른쪽 상단에서 부터 반시계 방향으로 위와 같이 이름을 붙입니다.</p>
-<p>$$
+<div class="math-source math-display">$$
 (x, y)
-$$</p>
+$$</div>
 <p>데카르트 좌표계의 한 원소는 곱집합과 동일하게 위와 같은 순서쌍으로 표현하며 좌표(Coordinate)라고 부릅니다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(0).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(좌표의 시각화)</p>
 <p>일반적으로 좌표는 수와 동일하게 점 또는 원점으로부터의 화살표로 표현합니다. 좌표는 <strong>크기와 방향</strong> 두 가지 속성을 가집니다.</p>
 <p>좌표를 다루는 작업은 직선에서 평면으로 무대만 넓어졌을 뿐, 수직선에서 수를 다루는 방식과 매우 유사합니다. 하지만 평면에서 점이 움직이는 것 처럼 보이게 하려면 평면에서 이뤄지는 새로운 연산을 고안해야 할 것입니다.</p>
-<h2 id="벡터-공간과-벡터"><span class="me-2">벡터 공간과 벡터</span><a href="#벡터-공간과-벡터" class="anchor text-muted" aria-label="Link to 벡터 공간과 벡터"><i class="fas fa-hashtag"></i></a></h2>
-<h3 id="스칼라-scalar-와-벡터-vector"><span class="me-2">스칼라(Scalar)와 벡터(Vector)</span><a href="#스칼라-scalar-와-벡터-vector" class="anchor text-muted" aria-label="Link to 스칼라(Scalar)와 벡터(Vector)"><i class="fas fa-hashtag"></i></a></h3>
-<p>평면의 좌표${(x,y)}$는 두 실수 ${x}$와 ${y}$를 결합해서 만들어집니다. \
+<h2 id="벡터-공간과-벡터">벡터 공간과 벡터</h2>
+<h3 id="스칼라-scalar-와-벡터-vector">스칼라(Scalar)와 벡터(Vector)</h3>
+<p>평면의 좌표<span class="math-source">${(x,y)}$</span>는 두 실수 <span class="math-source">${x}$</span>와 <span class="math-source">${y}$</span>를 결합해서 만들어집니다. \
 그렇기 때문에 좌표의 연산은 실수가 지니는 연산의 성질을 바탕으로 설계되어야 합니다. \</p>
 <p>실수의 연산 성질은 체의 구조를 가진다는 사실을 확인했습니다. \
 이를 기반으로 새로운 공리를 덧붙여서 평면을 대표하는 집합을 규정하고, 해당 집합에서 이뤄지는 덧셈과 곱셈 연산 체계를 만들어야 평면에서의 움직임을 표현 할 수 있습니다.</p>
 <p>두 개 이상의 실수를 곱집합으로 묶어 형성된 집합을 공리적 집합론의 관점에서 규정한 것을 **벡터 공간(Vector Space)**라고 부르며, 벡터 공간의 원소를 **벡터(Vector)**라고 합니다. </p>
-<p>공리적 집합론의 관점에서는 특정한 수 집합을 지칭하지 않고 연산이 갖는 성질만 다루기 때문에 좌푯값으로 사용하는 ${x}$와 ${y}$를 실수로 규정하기 보다는 체(Field)의 구조를 지니는 집합, 즉 체 집합의 원소로 규정합니다.</p>
+<p>공리적 집합론의 관점에서는 특정한 수 집합을 지칭하지 않고 연산이 갖는 성질만 다루기 때문에 좌푯값으로 사용하는 <span class="math-source">${x}$</span>와 <span class="math-source">${y}$</span>를 실수로 규정하기 보다는 체(Field)의 구조를 지니는 집합, 즉 체 집합의 원소로 규정합니다.</p>
 <p>이렇게 체의 구조를 가지는 수 집합의 원소를 **스칼라(Scalar)**라고 부릅니다. \
-우리가 좌표로 사용하는 실수 ${x}$와 ${y}$는 모두 공리적 집합론의 관점에서는 스칼라인 것입니다. </p>
-<p>$$
+우리가 좌표로 사용하는 실수 <span class="math-source">${x}$</span>와 <span class="math-source">${y}$</span>는 모두 공리적 집합론의 관점에서는 스칼라인 것입니다. </p>
+<div class="math-source math-display">$$
 \vec{v} = (x,y)
-$$</p>
-<p>집합의 개념인 벡터 공간을 표기할 때는 주로 대문자 ${V}$를 사용하고, 이의 원소인 벡터는 소문자 ${\vec{v}}$로 표기합니다. 벡터는 위와 같이 좌표와 동일한 방법으로 표기합니다.</p>
-<h3 id="벡터-공간의-연산"><span class="me-2">벡터 공간의 연산</span><a href="#벡터-공간의-연산" class="anchor text-muted" aria-label="Link to 벡터 공간의 연산"><i class="fas fa-hashtag"></i></a></h3>
-<p>공리적 집합론의 관점에서 정의된 벡터 공간은 두 가지 기본 연산이 존재합니다. 다음의 수식에서 사용되는 수 ${a, x, y}$는 모두 체 집합의 원소인 스칼라입니다.</p>
-<h4 id="벡터와-벡터의-덧셈-벡터의-합"><span class="me-2">벡터와 벡터의 덧셈 (벡터의 합)</span><a href="#벡터와-벡터의-덧셈-벡터의-합" class="anchor text-muted" aria-label="Link to 벡터와 벡터의 덧셈 (벡터의 합)"><i class="fas fa-hashtag"></i></a></h4>
-<p>$$
+$$</div>
+<p>집합의 개념인 벡터 공간을 표기할 때는 주로 대문자 <span class="math-source">${V}$</span>를 사용하고, 이의 원소인 벡터는 소문자 <span class="math-source">${\vec{v}}$</span>로 표기합니다. 벡터는 위와 같이 좌표와 동일한 방법으로 표기합니다.</p>
+<h3 id="벡터-공간의-연산">벡터 공간의 연산</h3>
+<p>공리적 집합론의 관점에서 정의된 벡터 공간은 두 가지 기본 연산이 존재합니다. 다음의 수식에서 사용되는 수 <span class="math-source">${a, x, y}$</span>는 모두 체 집합의 원소인 스칼라입니다.</p>
+<h4 id="벡터와-벡터의-덧셈-벡터의-합">벡터와 벡터의 덧셈 (벡터의 합)</h4>
+<div class="math-source math-display">$$
 \vec{v_{1}} + \vec{v_{2}} = (x_{1}, y_{1}) + (x_{2}, y_{2}) = (x_{1} + x_{2}, y_{1} + y_{2})
-$$</p>
-<h4 id="스칼라와-벡터의-곱셈-스칼라-곱셈"><span class="me-2">스칼라와 벡터의 곱셈 (스칼라 곱셈)</span><a href="#스칼라와-벡터의-곱셈-스칼라-곱셈" class="anchor text-muted" aria-label="Link to 스칼라와 벡터의 곱셈 (스칼라 곱셈)"><i class="fas fa-hashtag"></i></a></h4>
-<p>$$
+$$</div>
+<h4 id="스칼라와-벡터의-곱셈-스칼라-곱셈">스칼라와 벡터의 곱셈 (스칼라 곱셈)</h4>
+<div class="math-source math-display">$$
 a * \vec{v} = a * (x, y) = (a * x, a * y)
-$$</p>
+$$</div>
 <p>체가 갖는 연산의 성질에 기반해서 벡터 공간의 연산이 갖는 성질은 다음과 같이 8가지로 정리됩니다. 이를 <strong>벡터 공간의 공리</strong>라고 합니다.</p>
 <ul>
 <li>벡터의 합<ul>
 <li>벡터의 합의 결합법칙        <ul>
-<li>${\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w}}$</li>
+<li><span class="math-source">${\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w}}$</span></li>
 </ul>
 </li>
 <li>벡터의 합의 교환법칙        <ul>
-<li>${\vec{u} + \vec{v} = \vec{v} + \vec{u}}$</li>
+<li><span class="math-source">${\vec{u} + \vec{v} = \vec{v} + \vec{u}}$</span></li>
 </ul>
 </li>
 <li>벡터의 합의 항등원          <ul>
-<li>${\vec{v} + \vec{0} = \vec{v}}$</li>
+<li><span class="math-source">${\vec{v} + \vec{0} = \vec{v}}$</span></li>
 </ul>
 </li>
 <li>벡터의 합의 역원            <ul>
-<li>${\vec{v} + (-\vec{v}) = \vec{0}}$</li>
+<li><span class="math-source">${\vec{v} + (-\vec{v}) = \vec{0}}$</span></li>
 </ul>
 </li>
 </ul>
 </li>
 <li>스칼라 곱셈<ul>
 <li>스칼라 곱셈의 호환성         <ul>
-<li>${a(b\vec{v}) = (ab)\vec{u}}$</li>
+<li><span class="math-source">${a(b\vec{v}) = (ab)\vec{u}}$</span></li>
 </ul>
 </li>
 <li>스칼라 곱셈의 항등원         <ul>
-<li>${1 * \vec{v} = \vec{v}}$</li>
+<li><span class="math-source">${1 * \vec{v} = \vec{v}}$</span></li>
 </ul>
 </li>
 <li>벡터의 합에 대한 분배법칙    <ul>
-<li>${a(\vec{u} + \vec{v}) = a\vec{u} + a\vec{v}}$</li>
+<li><span class="math-source">${a(\vec{u} + \vec{v}) = a\vec{u} + a\vec{v}}$</span></li>
 </ul>
 </li>
 <li>스칼라 합에 대한 분배법칙    <ul>
-<li>${(a + b)\vec{v} = a\vec{v} + b\vec{v}}$</li>
+<li><span class="math-source">${(a + b)\vec{v} = a\vec{v} + b\vec{v}}$</span></li>
 </ul>
 </li>
 </ul>
@@ -145,65 +90,49 @@ $$</p>
 </ul>
 <p>위와 같은 벡터 공간의 공리는 모두 체의 공리를 기반으로 하기 때문에 해당 공리가 참임을 바로 파악할 수 있습니다. \
 예를 들어서 벡터의 합이 교환법칙을 만족하는 까닭은 두 스칼라의 덧셈이 교환법칙을 만족하기 때문입니다.</p>
-<p>$$
-\vec{v_{1}} + \vec{v_{2}} = (x_{1}, y_{1}) + (x_{2}, y_{2}) = (x_{1} + x_{2}, y_{1} + y_{2}) \
-\vec{v_{2}} + \vec{v_{1}} = (x_{2}, y_{2}) + (x_{1}, y_{1}) = (x_{2} + x_{1}, y_{2} + y_{1}) \
+<div class="math-source math-display">$$
+\vec{v_{1}} + \vec{v_{2}} = (x_{1}, y_{1}) + (x_{2}, y_{2}) = (x_{1} + x_{2}, y_{1} + y_{2}) \\
+\vec{v_{2}} + \vec{v_{1}} = (x_{2}, y_{2}) + (x_{1}, y_{1}) = (x_{2} + x_{1}, y_{2} + y_{1}) \\
 \therefore \vec{v_{1}} + \vec{v_{2}} = \vec{v_{2}} + \vec{v_{1}}
-$$</p>
+$$</div>
 <p>벡터 공간에서 벡터의 합과 스칼라 곱셈에 따라 점의 움직임이 어떻게 달라지는지 시각화 하여 확인해봅시다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(2).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(2).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(2).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(2).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(벡터의 합 연산)</p>
 <p>벡터의 합은 위 이미지와 같이 평면의 점을 각 축에 대해 독립적으로 평행이동 시키는 작업으로 해석할 수 있습니다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(3).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(3).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(3).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(3).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(스칼라 곱셈)</p>
 <p>위와 같이 스칼라 곱셈을 시각화 해봤습니다. \
-벡터 ${\vec{v}}$에 스칼라 곱셈을 하여 생성된 벡터는 원점을 지나고 벡터와 평행한 직선상에 위치합니다. \ 
+벡터 <span class="math-source">${\vec{v}}$</span>에 스칼라 곱셈을 하여 생성된 벡터는 원점을 지나고 벡터와 평행한 직선상에 위치합니다. \ 
 따라서 스칼라 곱셈의 결과는 항상 검은색 점선으로 표현한 원점을 지나는 직선상의 벡터를 만들어냅니다.</p>
-<h3 id="벡터의-크기와-이동"><span class="me-2">벡터의 크기와 이동</span><a href="#벡터의-크기와-이동" class="anchor text-muted" aria-label="Link to 벡터의 크기와 이동"><i class="fas fa-hashtag"></i></a></h3>
-<p>벡터 ${\vec{v}}$의 크기는 원점으로 부터의 거리를 의미하며 절댓값 기호 ${\mid\vec{v}\mid}$ 를 사용해 구할 수 있습니다. \
+<h3 id="벡터의-크기와-이동">벡터의 크기와 이동</h3>
+<p>벡터 <span class="math-source">${\vec{v}}$</span>의 크기는 원점으로 부터의 거리를 의미하며 절댓값 기호 <span class="math-source">${\mid\vec{v}\mid}$</span> 를 사용해 구할 수 있습니다. \
 벡터의 크기도 동일하게 원점으로부터의 최단거리를 의미합니다. </p>
 <p>수학에서 일반적인 표기법으로 벡터의 크기는 절댓값 기호를 두 번 사용하여 표기하지만 이 포스트에서는 하나만 사용합니다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(4).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(4).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(4).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(4).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(피타고라스 정리로 벡터의 크기를 측정)</p>
 <p>이를 측정하려면 원점과 벡터를 연결해 직각 삼각형을 그린 후, 피타고라스 정리를 사용해 거리를 측정 할 수 있습니다.</p>
-<p>$$
+<div class="math-source math-display">$$
 |\vec{v}| = \sqrt{x^{2} + y^{2}}
-$$</p>
-<p>이렇게 측정된 벡터의 크기 역시 절댓값 기호와 동일한 것을 사용합니다. 벡터${(x,y)}$의 크기를 구하는 공식은 위와 같습니다.</p>
+$$</div>
+<p>이렇게 측정된 벡터의 크기 역시 절댓값 기호와 동일한 것을 사용합니다. 벡터<span class="math-source">${(x,y)}$</span>의 크기를 구하는 공식은 위와 같습니다.</p>
 <p>벡터의 크기는 노름(Norm)이라는 용어로 부르기도 합니다.</p>
 <p>벡터의 크기에 관련된 유용한 표기방법과 수식을 알아봅시다. \
-먼저 크기가 ${1}$인 벡터를 **단위 벡터(unit vector)**라고 합니다. \
+먼저 크기가 <span class="math-source">${1}$</span>인 벡터를 **단위 벡터(unit vector)**라고 합니다. \
 단위 벡터는 벡터의 크기를 측정하는 기준이 되며, 앞으로 벡터와 관련된 다양한 응용식을 전개하는데 자주 사용될 것입니다. \
-단위 벡터는 다음과 같이 모자 기호(Hat)을 씌워 ${\hat{v}}$의 형태로 표시합니다.</p>
-<p><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(5).png" class="popup img-link shimmer"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(5).png" alt="Cartesian coordinate system" loading="lazy"></a></p>
+단위 벡터는 다음과 같이 모자 기호(Hat)을 씌워 <span class="math-source">${\hat{v}}$</span>의 형태로 표시합니다.</p>
+<figure class="article-image"><a href="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(5).png" class="popup"><img src="/assets/images/Docs/Cartesian%20coordinate%20system/image%20(5).png" alt="Cartesian coordinate system" loading="lazy"></a><figcaption>Cartesian coordinate system</figcaption></figure>
 <p>(벡터의 정규화)</p>
 <p>스칼라 곱셈의 성질을 이용해서 
-임의의 벡터 ${\vec{v}}$ 를 
-크기인 ${|\vec{v}|}$로 나누면 
-단위 벡터 ${\hat{v}}$를 얻을 수 있습니다.</p>
-<p>$$
+임의의 벡터 <span class="math-source">${\vec{v}}$</span> 를 
+크기인 <span class="math-source">${|\vec{v}|}$</span>로 나누면 
+단위 벡터 <span class="math-source">${\hat{v}}$</span>를 얻을 수 있습니다.</p>
+<div class="math-source math-display">$$
 \hat{v} = \frac {\vec{v}} {|\vec{v}|}
-$$</p>
-<p>임의의 벡터 ${\vec{v}}$를 크기가 1인 단위벡터 ${\hat{v}}$로 다듬는 작업을 정규화(Normalize)한다 라고 부르며 수식은 위와 같습니다.</p>
+$$</div>
+<p>임의의 벡터 <span class="math-source">${\vec{v}}$</span>를 크기가 1인 단위벡터 <span class="math-source">${\hat{v}}$</span>로 다듬는 작업을 정규화(Normalize)한다 라고 부르며 수식은 위와 같습니다.</p>
 <p>TMI : 위 계산은 HLSL에서 x / length(x) 연산과 같으며, normalize() 라는 이름의 함수로 만들어져있습니다. </p>
-<h2 id="레퍼런스-reference"><span class="me-2">레퍼런스(Reference)</span><a href="#레퍼런스-reference" class="anchor text-muted" aria-label="Link to 레퍼런스(Reference)"><i class="fas fa-hashtag"></i></a></h2>
+<h2 id="레퍼런스-reference">레퍼런스(Reference)</h2>
 <ul>
 <li>이득우의 게임수학 : (<a href="http://www.yes24.com/Product/Goods/107025224">http://www.yes24.com/Product/Goods/107025224</a>)</li>
 </ul>
-</div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"><i class="far fa-folder-open fa-fw me-1"></i><a href="/categories/math/">Math</a></div><div class="post-tags"><i class="fa fa-tags fa-fw me-1"></i><a href="/tags/algebra/" class="post-tag no-text-decoration">Algebra</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-5 pb-2"><div class="license-wrapper">This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div></div></div></article><nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation"><a href="/posts/Function/" class="btn btn-outline-primary" aria-label="Older"><p>게임 수학 입문 02 - 함수(Function)</p></a><a href="/posts/Vector-Combination/" class="btn btn-outline-primary" aria-label="Newer"><p>게임 수학 입문 04 - 벡터의 결합과 생성(Vector Combination)</p></a></nav></main><aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
-  <div class="access">
-    <section id="access-lastmod"><h2 class="panel-heading">Recently Updated</h2><ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2"><li class="text-truncate lh-lg"><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li class="text-truncate lh-lg"><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li class="text-truncate lh-lg"><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li class="text-truncate lh-lg"><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li><li class="text-truncate lh-lg"><a href="/posts/URPForwardRenderer-ScreenSpaceDecal/">Unity URP Forward Renderer - Screen Space Decal</a></li></ul></section>
-    <section><h2 class="panel-heading">Trending Tags</h2><div class="d-flex flex-wrap mt-3 mb-1 me-3"><a class="post-tag btn btn-outline-primary" href="/tags/study/">Study</a><a class="post-tag btn btn-outline-primary" href="/tags/algebra/">Algebra</a><a class="post-tag btn btn-outline-primary" href="/tags/opengl/">OpenGL</a><a class="post-tag btn btn-outline-primary" href="/tags/shader/">Shader</a><a class="post-tag btn btn-outline-primary" href="/tags/houdini/">Houdini</a><a class="post-tag btn btn-outline-primary" href="/tags/resume/">Resume</a><a class="post-tag btn btn-outline-primary" href="/tags/career/">Career</a><a class="post-tag btn btn-outline-primary" href="/tags/favicon/">favicon</a><a class="post-tag btn btn-outline-primary" href="/tags/getting-started/">getting started</a><a class="post-tag btn btn-outline-primary" href="/tags/script-csharp-unity/">Script CSharp Unity</a></div></section>
-  </div><section id="toc-wrapper" class="ps-0"><h2 class="panel-heading">Contents</h2><nav id="toc"><ul><li class="toc-entry toc-h2"><a href="#데카르트-좌표계-cartesian-coordinate-system">데카르트 좌표계 (Cartesian coordinate system)</a></li><li class="toc-entry toc-h2"><a href="#벡터-공간과-벡터">벡터 공간과 벡터</a></li><li class="toc-entry toc-h3"><a href="#스칼라-scalar-와-벡터-vector">스칼라(Scalar)와 벡터(Vector)</a></li><li class="toc-entry toc-h3"><a href="#벡터-공간의-연산">벡터 공간의 연산</a></li><li class="toc-entry toc-h3"><a href="#벡터의-크기와-이동">벡터의 크기와 이동</a></li><li class="toc-entry toc-h2"><a href="#레퍼런스-reference">레퍼런스(Reference)</a></li></ul></nav></section>
-</aside></div>
-      <div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4"><footer aria-label="Site Info" class="d-flex flex-column justify-content-center text-muted flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3">
-  <p>© <time>2026</time> <a href="https://twitter.com/dPv79Noe77Xze92">최우영</a>. <span>Some rights reserved.</span></p>
-  <p>Built as a static HTML site with a <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy-compatible</a> interface.</p>
-</footer></div></div>
-      <div id="search-result-wrapper" class="d-flex justify-content-center d-none"><div class="col-11 content"><div id="search-hints"><section><h2 class="panel-heading">Trending Tags</h2><div class="d-flex flex-wrap mt-3 mb-1 me-3"><a class="post-tag btn btn-outline-primary" href="/tags/study/">Study</a><a class="post-tag btn btn-outline-primary" href="/tags/algebra/">Algebra</a><a class="post-tag btn btn-outline-primary" href="/tags/opengl/">OpenGL</a><a class="post-tag btn btn-outline-primary" href="/tags/shader/">Shader</a><a class="post-tag btn btn-outline-primary" href="/tags/houdini/">Houdini</a><a class="post-tag btn btn-outline-primary" href="/tags/resume/">Resume</a><a class="post-tag btn btn-outline-primary" href="/tags/career/">Career</a><a class="post-tag btn btn-outline-primary" href="/tags/favicon/">favicon</a><a class="post-tag btn btn-outline-primary" href="/tags/getting-started/">getting started</a><a class="post-tag btn btn-outline-primary" href="/tags/script-csharp-unity/">Script CSharp Unity</a></div></section></div><div id="search-results" class="d-flex flex-wrap flex-md-row flex-column text-muted mt-3"></div></div></div>
-    </div>
-    <aside aria-label="Scroll to Top"><button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow"><i class="fas fa-angle-up"></i></button></aside>
-  </div>
-  <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
-</body>
-</html>
+</div><footer class="article-footer"><div><p class="rail-label">FILED UNDER</p><p class="category-links"><a href="/categories/math/">Math</a></p></div><div><p class="rail-label">SIGNAL TAGS</p><p class="article-tags"><a href="/tags/algebra/">#Algebra</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/Function/"><small>PREVIOUS NOTE</small><span>게임 수학 입문 02 - 함수(Function)</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/Vector-Combination/"><small>NEXT NOTE</small><span>게임 수학 입문 04 - 벡터의 결합과 생성(Vector Combination)</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#데카르트-좌표계-cartesian-coordinate-system">데카르트 좌표계 (Cartesian coordinate system)</a></li><li class="level-2"><a href="#벡터-공간과-벡터">벡터 공간과 벡터</a></li><li class="level-3"><a href="#스칼라-scalar-와-벡터-vector">스칼라(Scalar)와 벡터(Vector)</a></li><li class="level-3"><a href="#벡터-공간의-연산">벡터 공간의 연산</a></li><li class="level-3"><a href="#벡터의-크기와-이동">벡터의 크기와 이동</a></li><li class="level-2"><a href="#레퍼런스-reference">레퍼런스(Reference)</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST SIGNALS</p><ol class="signal-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">ACTIVE STACK</p><div class="rail-tags"><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/shader/">#Shader</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/resume/">#Resume</a><a href="/tags/career/">#Career</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> 최우영 · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>QUERY // ARCHIVE</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH THE LAB</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR SIGNALS</span><div><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/shader/">#Shader</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/resume/">#Resume</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

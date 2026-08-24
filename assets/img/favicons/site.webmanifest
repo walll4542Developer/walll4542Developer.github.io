@@ -4,8 +4,8 @@
   "description": "Junior Technical Artist / 3d WEEABOO. This blog use personal issue only.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1b1b1e",
-  "theme_color": "#1b1b1e",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
   "icons": [
     {
       "src": "/assets/img/favicons/android-chrome-192x192.png",

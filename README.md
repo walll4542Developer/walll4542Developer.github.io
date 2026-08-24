@@ -33,6 +33,10 @@ tags: [Shader]
 ---
 ```
 
+## 수식 작성
+
+게시글의 LaTeX는 Front Matter 설정 없이 자동으로 감지되어 MathJax로 렌더링됩니다. 인라인 수식은 `$...$`, 블록 수식은 빈 줄로 구분한 `$$...$$` 또는 `\[...\]` 문법을 사용하세요. 코드 블록과 인라인 코드는 수식 처리에서 제외되어 예시 문법을 안전하게 작성할 수 있습니다.
+
 생성 명령은 HTML 페이지, 태그·카테고리·보관함, RSS, sitemap, 검색 색인, 캐시를 모두 갱신합니다. 새 글의 Markdown만 커밋해 `main`에 푸시하면 GitHub Actions가 같은 작업을 수행하고 결과 HTML을 배포합니다.
 
 GitHub 저장소의 **Settings → Pages → Build and deployment → Source**는 반드시 **GitHub Actions**로 설정해야 합니다.

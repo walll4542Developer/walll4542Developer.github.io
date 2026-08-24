@@ -1,46 +1,64 @@
 (() => {
-  const byId = (id) => document.getElementById(id);
-  const searchTrigger = byId('search-trigger');
-  const searchCancel = byId('search-cancel');
-  const search = byId('search');
-  const input = byId('search-input');
-  const resultsWrapper = byId('search-result-wrapper');
-  const results = byId('search-results');
-  const hints = byId('search-hints');
-  const sidebarTrigger = byId('sidebar-trigger');
-  const sidebar = byId('sidebar');
-  const backToTop = byId('back-to-top');
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+  const menu = $('.site-header');
+  const menuToggle = $('[data-menu-toggle]');
+  const overlay = $('#search-overlay');
+  const input = $('#search-input');
+  const results = $('#search-results');
+  const hints = $('#search-hints');
   let index = [];
 
   const closeSearch = () => {
-    document.body.classList.remove('search-active');
-    resultsWrapper?.classList.add('d-none');
-    search?.classList.remove('d-flex');
-    input && (input.value = '');
+    if (!overlay) return;
+    overlay.hidden = true;
+    document.body.style.overflow = '';
   };
   const openSearch = () => {
-    document.body.classList.add('search-active');
-    resultsWrapper?.classList.remove('d-none');
-    search?.classList.add('d-flex');
-    input?.focus();
+    if (!overlay) return;
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => input?.focus());
   };
   const renderResults = (query) => {
     if (!results) return;
     const normalized = query.trim().toLowerCase();
-    const matches = normalized ? index.filter((entry) => `${entry.title} ${entry.categories} ${entry.tags} ${entry.content}`.toLowerCase().includes(normalized)).slice(0, 30) : [];
-    hints?.classList.toggle('d-none', normalized.length > 0);
-    results.innerHTML = matches.map((entry) => `<article class="px-1 px-sm-2 px-lg-4 px-xl-0 w-100"><header><h2><a href="${entry.url}">${entry.title}</a></h2><div class="post-meta text-muted">${entry.categories || ''} ${entry.tags || ''}</div></header><p>${entry.content.slice(0, 180)}${entry.content.length > 180 ? '…' : ''}</p></article>`).join('') || (normalized ? '<p class="text-muted">No results found.</p>' : '');
+    const matches = normalized ? index.filter((entry) => `${entry.title} ${entry.categories} ${entry.tags} ${entry.content}`.toLowerCase().includes(normalized)).slice(0, 24) : [];
+    if (hints) hints.hidden = normalized.length > 0;
+    results.innerHTML = matches.map((entry) => `<a class="search-result" href="${escapeHtml(entry.url)}"><p class="result-meta">${escapeHtml(entry.categories || 'DEVLOG')} // ${escapeHtml(entry.tags || 'NOTE')}</p><h2>${escapeHtml(entry.title)}</h2><p class="result-copy">${escapeHtml(entry.content.slice(0, 180))}${entry.content.length > 180 ? '…' : ''}</p></a>`).join('') || (normalized ? '<p class="search-empty">NO MATCHING SIGNALS FOUND.</p>' : '');
   };
 
   fetch('/assets/js/data/search.json').then((response) => response.ok ? response.json() : []).then((data) => { index = Array.isArray(data) ? data : []; }).catch(() => {});
-  searchTrigger?.addEventListener('click', openSearch);
-  searchCancel?.addEventListener('click', closeSearch);
+  menuToggle?.addEventListener('click', () => {
+    const expanded = menu?.dataset.menuOpen === 'true';
+    if (menu) menu.dataset.menuOpen = String(!expanded);
+  });
+  $('[data-search-open]')?.addEventListener('click', openSearch);
+  $('[data-search-close]')?.addEventListener('click', closeSearch);
+  overlay?.addEventListener('click', (event) => { if (event.target === overlay) closeSearch(); });
   input?.addEventListener('input', (event) => renderResults(event.target.value));
-  sidebarTrigger?.addEventListener('click', () => sidebar?.classList.toggle('sidebar-expanded'));
-  backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  document.querySelectorAll('[data-copy-code]').forEach((button) => button.addEventListener('click', () => {
-    const code = button.closest('.highlighter-rouge')?.querySelector('code')?.innerText;
-    if (code) navigator.clipboard?.writeText(code);
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openSearch(); }
+    if (event.key === 'Escape') closeSearch();
+  });
+  document.querySelectorAll('[data-copy-code]').forEach((button) => button.addEventListener('click', async () => {
+    const code = button.closest('.code-block')?.querySelector('code')?.innerText;
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      const original = button.innerHTML;
+      button.innerHTML = '<i class="fa-solid fa-check"></i><b>COPIED</b>';
+      setTimeout(() => { button.innerHTML = original; }, 1500);
+    } catch { /* Clipboard access may be unavailable on older static hosts. */ }
   }));
   if (window.GLightbox) window.GLightbox({ selector: '.popup' });
+  const progress = $('#reading-progress');
+  if (progress) {
+    const updateProgress = () => {
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = `${height > 0 ? Math.min(100, (window.scrollY / height) * 100) : 0}%`;
+    };
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+  }
 })();
