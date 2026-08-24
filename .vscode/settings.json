@@ -2,16 +2,16 @@
   // Prettier
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  // Static HTML and Markdown
+  // Shopify Liquid
   "files.associations": {
-    "*.html": "html"
+    "*.html": "liquid"
   },
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   // Formatter
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "[html][liquid]": {
+    "editor.defaultFormatter": "Shopify.theme-check-vscode"
   },
   "[shellscript]": {
     "editor.defaultFormatter": "mkhl.shfmt"

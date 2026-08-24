@@ -2,25 +2,25 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build static site",
+      "label": "Run Jekyll Server",
       "type": "shell",
-      "command": "pnpm run build",
+      "command": "./tools/run.sh",
       "group": {
         "kind": "build",
         "isDefault": true
       },
       "problemMatcher": [],
-      "detail": "Generates the static HTML pages from content/ and assets/."
+      "detail": "Runs the Jekyll server with live reload."
     },
     {
-      "label": "Check static site",
+      "label": "Build Jekyll Site",
       "type": "shell",
-      "command": "pnpm run check",
+      "command": "./tools/test.sh",
       "group": {
         "kind": "build"
       },
       "problemMatcher": [],
-      "detail": "Checks generated routes, assets, and the search index."
+      "detail": "Build the Jekyll site for production."
     }
   ]
 }
