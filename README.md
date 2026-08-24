@@ -1,6 +1,6 @@
 # 낭낭하게 개발하기
 
-Jekyll 없이 제공되는 순수 정적 HTML 블로그입니다. GitHub Actions가 저장소의 콘텐츠를 HTML로 생성한 뒤 GitHub Pages에 배포하며, 게시글 URL과 기존 `/assets/` 경로를 유지합니다.
+Jekyll 없이 제공되는 순수 정적 HTML 블로그입니다. GitHub Pages는 저장소 루트를 그대로 제공하며, 게시글 URL과 기존 `/assets/` 경로를 유지합니다.
 
 ## 수정 위치
 
@@ -33,6 +33,4 @@ tags: [Shader]
 ---
 ```
 
-생성 명령은 HTML 페이지, 태그·카테고리·보관함, RSS, sitemap, 검색 색인, 캐시를 모두 갱신합니다. 새 글의 Markdown만 커밋해 `main`에 푸시하면 GitHub Actions가 같은 작업을 수행하고 결과 HTML을 배포합니다.
-
-GitHub 저장소의 **Settings → Pages → Build and deployment → Source**는 반드시 **GitHub Actions**로 설정해야 합니다.
+생성 명령은 HTML 페이지, 태그·카테고리·보관함, RSS, sitemap, 검색 색인, 캐시를 모두 갱신합니다. 생성 결과까지 함께 커밋해야 GitHub Pages에 반영됩니다.
