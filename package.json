@@ -1,0 +1,13 @@
+{
+  "name": "walll4542developer-static-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-static-site.mjs",
+    "check": "node scripts/check-static-site.mjs"
+  },
+  "dependencies": {
+    "marked": "17.0.5"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

@@ -1,43 +1,36 @@
-# Chirpy Starter
+# 낭낭하게 개발하기
 
-[![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;
-[![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+Jekyll 없이 제공되는 순수 정적 HTML 블로그입니다. GitHub Pages는 저장소 루트를 그대로 제공하며, 게시글 URL과 기존 `/assets/` 경로를 유지합니다.
 
-When installing the [**Chirpy**][chirpy] theme through [RubyGems.org][gem], Jekyll can only read files in the folders
-`_data`, `_layouts`, `_includes`, `_sass` and `assets`, as well as a small part of options of the `_config.yml` file
-from the theme's gem. If you have ever installed this theme gem, you can use the command
-`bundle info --path jekyll-theme-chirpy` to locate these files.
+## 수정 위치
 
-The Jekyll team claims that this is to leave the ball in the user’s court, but this also results in users not being
-able to enjoy the out-of-the-box experience when using feature-rich themes.
+- `content/site.json`: 사이트 제목, 프로필, 소셜 링크, PWA, 페이지당 글 수
+- `content/posts/`: 게시글 Markdown과 Front Matter
+- `content/pages/about.md`: 소개 페이지
+- `assets/`: 이미지, 다운로드 파일, 스타일과 브라우저 JavaScript
 
-To fully use all the features of **Chirpy**, you need to copy the other critical files from the theme's gem to your
-Jekyll site. The following is a list of targets:
+`posts/`, `categories/`, `tags/`, `archives/`, `feed.xml`, `sitemap.xml`, 검색 색인은 생성 결과입니다. 직접 고치지 말고 콘텐츠를 수정한 뒤 생성하세요.
 
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
+## 글 작성과 생성
+
+Node.js 22 이상과 pnpm이 필요합니다.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm run check
 ```
 
-To save you time, and also in case you lose some files while copying, we extract those files/configurations of the
-latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so that you can start writing in minutes.
+새 글은 `content/posts/YYYY-MM-DD-Title.md` 형식으로 작성합니다. 최소 Front Matter는 다음과 같습니다.
 
-## Usage
+```md
+---
+title: "글 제목"
+excerpt: "목록과 검색에 표시할 요약"
+date: 2026-08-24 09:00:00 +0900
+categories: [Research]
+tags: [Shader]
+---
+```
 
-Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
-
-## Contributing
-
-This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.
-
-## License
-
-This work is published under [MIT][mit] License.
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+생성 명령은 HTML 페이지, 태그·카테고리·보관함, RSS, sitemap, 검색 색인, 캐시를 모두 갱신합니다. 생성 결과까지 함께 커밋해야 GitHub Pages에 반영됩니다.
