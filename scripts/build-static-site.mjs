@@ -57,17 +57,21 @@ function parseScalar(value = '') {
 }
 
 function parseFrontMatter(source, filePath) {
-  if (!source.startsWith('---')) return { data: {}, body: source };
-  const close = source.indexOf('\n---', 3);
+  // Content may be edited on Windows (CRLF) or in GitHub Actions (LF).
+  // Normalize before locating the closing fence so the last front-matter
+  // field is parsed identically on both platforms.
+  const normalized = source.replace(/\r\n?/g, '\n');
+  if (!normalized.startsWith('---')) return { data: {}, body: normalized };
+  const close = normalized.indexOf('\n---', 3);
   if (close === -1) throw new Error(`Unclosed front matter: ${filePath}`);
-  const frontMatter = source.slice(3, close).replace(/^\r?\n/, '');
+  const frontMatter = normalized.slice(3, close).replace(/^\n/, '');
   const data = {};
-  for (const line of frontMatter.split(/\r?\n/)) {
+  for (const line of frontMatter.split('\n')) {
     if (/^\s/.test(line) || line.trimStart().startsWith('#')) continue;
     const match = line.match(/^([A-Za-z][\w-]*):(?:\s*(.*))?$/);
     if (match) data[match[1]] = parseScalar(match[2]);
   }
-  return { data, body: source.slice(close + 4).replace(/^\r?\n/, '') };
+  return { data, body: normalized.slice(close + 4).replace(/^\n/, '') };
 }
 
 function toArray(value) {
