@@ -25,7 +25,7 @@
     const normalized = query.trim().toLowerCase();
     const matches = normalized ? index.filter((entry) => `${entry.title} ${entry.categories} ${entry.tags} ${entry.content}`.toLowerCase().includes(normalized)).slice(0, 24) : [];
     if (hints) hints.hidden = normalized.length > 0;
-    results.innerHTML = matches.map((entry) => `<a class="search-result" href="${escapeHtml(entry.url)}"><p class="result-meta">${escapeHtml(entry.categories || 'DEVLOG')} // ${escapeHtml(entry.tags || 'NOTE')}</p><h2>${escapeHtml(entry.title)}</h2><p class="result-copy">${escapeHtml(entry.content.slice(0, 180))}${entry.content.length > 180 ? '…' : ''}</p></a>`).join('') || (normalized ? '<p class="search-empty">NO MATCHING SIGNALS FOUND.</p>' : '');
+    results.innerHTML = matches.map((entry) => `<a class="search-result" href="${escapeHtml(entry.url)}"><p class="result-meta">${escapeHtml(entry.categories || 'DEVLOG')} // ${escapeHtml(entry.tags || 'POST')}</p><h2>${escapeHtml(entry.title)}</h2><p class="result-copy">${escapeHtml(entry.content.slice(0, 180))}${entry.content.length > 180 ? '…' : ''}</p></a>`).join('') || (normalized ? '<p class="search-empty">NO MATCHING POSTS FOUND.</p>' : '');
   };
 
   fetch('/assets/js/data/search.json').then((response) => response.ok ? response.json() : []).then((data) => { index = Array.isArray(data) ? data : []; }).catch(() => {});
