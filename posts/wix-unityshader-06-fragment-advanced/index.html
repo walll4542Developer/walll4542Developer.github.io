@@ -1,0 +1,107 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="(UnityShader) 06 Fragment Advanced버텍스/프래그먼트 쉐이더로 위의 예제를 구현해야 합니다. 쉐이더를 관찰하면서 기능을 파악 해봅시다. 제가 보기에는 크게 다섯가지로 구성 되어 있습니다.1. Vertex/Fragment 쉐이더 방식으로만 구현 할 것.2. 배경과 자연스레 섞이게 "><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unityshader-06-fragment-advanced/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) Fragment Advanced"><meta property="og:description" content="(UnityShader) 06 Fragment Advanced버텍스/프래그먼트 쉐이더로 위의 예제를 구현해야 합니다. 쉐이더를 관찰하면서 기능을 파악 해봅시다. 제가 보기에는 크게 다섯가지로 구성 되어 있습니다.1. Vertex/Fragment 쉐이더 방식으로만 구현 할 것.2. 배경과 자연스레 섞이게 "><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unityshader-06-fragment-advanced/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) Fragment Advanced","description":"(UnityShader) 06 Fragment Advanced버텍스/프래그먼트 쉐이더로 위의 예제를 구현해야 합니다. 쉐이더를 관찰하면서 기능을 파악 해봅시다. 제가 보기에는 크게 다섯가지로 구성 되어 있습니다.1. Vertex/Fragment 쉐이더 방식으로만 구현 할 것.2. 배경과 자연스레 섞이게 ","url":"https://walll4542developer.github.io/posts/wix-unityshader-06-fragment-advanced/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) Fragment Advanced | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],tags:"ams"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],processHtmlClass:"math-source"}};</script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 53</p><h1>(UnityShader) Fragment Advanced</h1><div class="article-meta"><time datetime="2020-08-01T14:22:18.809Z">AUG 01, 2020</time><span>4 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><p>(UnityShader) 06 Fragment Advanced</p>
+<figure class="article-image"><a href="/assets/images/wix/68aba18093-ce7a39_40d5ef13d5e5422bbfc812eb86835d4c~mv2.png" class="popup"><img src="/assets/images/wix/68aba18093-ce7a39_40d5ef13d5e5422bbfc812eb86835d4c~mv2.png" alt="" loading="lazy"></a></figure>
+<p><strong>버텍스/프래그먼트 쉐이더로 위의 예제를 구현</strong>해야 합니다. 쉐이더를 관찰하면서 기능을 파악 해봅시다. 제가 보기에는 크게 다섯가지로 구성 되어 있습니다.</p>
+<ol>
+<li>Vertex/Fragment 쉐이더 방식으로만 구현 할 것.</li>
+<li>배경과 자연스레 섞이게 만들 것. (alpha-sorting 해결 할 것)</li>
+<li>알파 값을 조절 가능하게 하여 사라졌다가 다시 나타날 수도 있게 만들 것.</li>
+<li>불규칙적인 모양으로 사라지게 할 것. (텍스처 사용)</li>
+<li>사라져 없어지는 부분이 빛나게 만들 것. (HDR Color 사용)</li>
+</ol>
+<figure class="article-image"><a href="/assets/images/wix/ac1c95aba8-ce7a39_0df8c7c0385b4d90bc39993cec643dd4~mv2.png" class="popup"><img src="/assets/images/wix/ac1c95aba8-ce7a39_0df8c7c0385b4d90bc39993cec643dd4~mv2.png" alt="" loading="lazy"></a></figure>
+<p>배경과 자연스레 섞이게 하는 것부터 시작해봅시다. 투명(transparent)로 구현을 할 건데 서피스 쉐이더였다면 알파-블렌드(Alpha-Blend)하기 위해 <a href="https://walll4542.wixsite.com/watchthis/watchthis/hashtags/pragma">#pragma</a> surface surf (커스텀 라이트 모델) <strong>alpha:blend</strong> 만 써주면 됩니다.</p>
+<p>프래그먼트 쉐이더에서는 <strong>블렌드(blend) 명령</strong>으로 알파 연산 공식을 수동 제어 해줄 수 있습니다. (서피스도 됨) 서피스보다 손이 많이 가지만 원하는대로 알파 연산을 세부조정 해 줄 수 있는 것이 큰 장점 입니다. 블렌드 명령은 아래와 같이 표기 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/14708a0651-ce7a39_acece5a00081422195f87ae0afd31f4d~mv2.png" class="popup"><img src="/assets/images/wix/14708a0651-ce7a39_acece5a00081422195f87ae0afd31f4d~mv2.png" alt="" loading="lazy"></a></figure>
+<h2 id="blend-source-math-0-destination-math-1">blend (Source) * <div class="math-source math-display">\[SrcBlend\]</div> + (Destination) * <div class="math-source math-display">\[DstBlend\]</div></h2>
+<p>이것이 블렌드 공식의 형태입니다. 이전에 <a href="/posts/wix-unityshader-01-post-process-shader/">포스트-프로세스 쉐이더(링크)</a>를 다룬 포스트에서 <strong>Scr은 원본</strong>, 소스(Soruce)의 약어라고 말씀 드렸고 <strong>Dst는 배경</strong>, 데스티네이션(Destination)의 약어라고 말씀 드렸었습니다.</p>
+<p>원본에 <div class="math-source math-display">\[SrcBlend\]</div>을 곱하고 배경에 <div class="math-source math-display">\[DstBlend\]</div>를 곱한 뒤 더해서 합치는 방식인 것이죠.</p>
+<ul>
+<li><figure class="article-image"><a href="/assets/images/wix/dd8e079f6e-ce7a39_98fcc11e40184ec28a8a1f3b24c736c7~mv2.png" class="popup"><img src="/assets/images/wix/dd8e079f6e-ce7a39_98fcc11e40184ec28a8a1f3b24c736c7~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/6bfca54217-ce7a39_3dec14f8caa64af1ad90da9b9a80d54d~mv2.png" class="popup"><img src="/assets/images/wix/6bfca54217-ce7a39_3dec14f8caa64af1ad90da9b9a80d54d~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/4ce164b79b-ce7a39_a742af07855e4e23a434be3bee531a0a~mv2.png" class="popup"><img src="/assets/images/wix/4ce164b79b-ce7a39_a742af07855e4e23a434be3bee531a0a~mv2.png" alt="" loading="lazy"></a></figure></li>
+</ul>
+<p>원본(Source), 배경(Destination), 블렌드(blend)</p>
+<p>원본이란 <strong>알파 연산에 사용할 텍스쳐</strong>를 말합니다. 배경은 <strong>소스 텍스처를 제외한 &#39;씬 전부&#39;를 렌더링 한 텍스쳐</strong>라고 생각하시면 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ad244c7414-ce7a39_93c5d09a51284e3d9d82129240dafe5a~mv2.gif" class="popup"><img src="/assets/images/wix/ad244c7414-ce7a39_93c5d09a51284e3d9d82129240dafe5a~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>소스컬러(SrcColor) RGB와 소스알파(SrcAlpha) A</p>
+<p>블렌드 명령에는 다음과 같은 블렌드 옵션(Option)들이 존재합니다. <div class="math-source math-display">\[SrcBlend\]</div>와 <div class="math-source math-display">\[DstBlend\]</div> 자리에 기입할 수 있습니다.</p>
+<ul>
+<li>One : 1입니다. 1을 곱하면 데이터는 그대로입니다.</li>
+<li>Zero : 0입니다. 0을 곱하면 데이터는 무조건 0이 됩니다.</li>
+<li>SrcColor : 텍스쳐의 RGB 값을 말합니다.</li>
+<li>SrcAlpha : 텍스쳐의 A 값을 말합니다.</li>
+<li>DstColor : 배경의 RGB 값을 말합니다.</li>
+<li>DstAlpha : 배경의 A 값을 말합니다.</li>
+<li>OneMinusSrcColor : 원 마이너스(1-), <strong>반전</strong>된 텍스쳐의 RGB 값을 말합니다.</li>
+<li>OneMinusSrcAlpha  : 반전된 텍스쳐의 A 값을 말합니다.</li>
+<li>OneMinusDstColor : 반전된 배경의 RGB 값을 말합니다.</li>
+<li>OneMinusDstAlpha : 반전된 배경의 A 값을 말합니다.</li>
+</ul>
+<figure class="article-image"><a href="/assets/images/wix/fba056bfea-ce7a39_67b11a48c1564ac99479e4dc0ff341b9~mv2.png" class="popup"><img src="/assets/images/wix/fba056bfea-ce7a39_67b11a48c1564ac99479e4dc0ff341b9~mv2.png" alt="" loading="lazy"></a></figure>
+<h3 id="blend-source-math-6-destination-math-7-result">blend (Source) * <div class="math-source math-display">\[SrcBlend\]</div> + (Destination) * <div class="math-source math-display">\[DstBlend\]</div> = result</h3>
+<h2 id="src-srcalpha-dst-oneminussrcalpha-alpha-blend">(Src) * SrcAlpha + (Dst) * OneminusSrcAlpha = Alpha-blend</h2>
+<p>따라서 알파-블렌드 공식은 위와 같이 정의할 수 있습니다.</p>
+<p>원본에 소스알파를 곱하면 알파 채널 값 만큼 데이터가 제거됩니다.</p>
+<p>배경에 소스알파를 반전한 값을 곱하면 알파 채널 만큼의 데이터만 남게 됩니다.</p>
+<p>이렇게 만들어진 결과 둘을 더해서 합치면 완벽하게 블렌드 되는 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/fbb58b7ccc-ce7a39_7bf69225a7c34553a7ac1fa6d043903a~mv2.png" class="popup"><img src="/assets/images/wix/fbb58b7ccc-ce7a39_7bf69225a7c34553a7ac1fa6d043903a~mv2.png" alt="" loading="lazy"></a></figure>
+<ul>
+<li><figure class="article-image"><a href="/assets/images/wix/c5d3163b77-ce7a39_4e9783f9d8e64f44b7bbd86cf9374054~mv2.png" class="popup"><img src="/assets/images/wix/c5d3163b77-ce7a39_4e9783f9d8e64f44b7bbd86cf9374054~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/d273a118af-ce7a39_0883d7e385f444778ddb1256acbd55f2~mv2.png" class="popup"><img src="/assets/images/wix/d273a118af-ce7a39_0883d7e385f444778ddb1256acbd55f2~mv2.png" alt="" loading="lazy"></a></figure></li>
+</ul>
+<p>(노이즈 SubTex)</p>
+<p>지금까지의 코드입니다. &#39;불규칙적인 모양으로 사라지게 할 것.&#39; 을 만족 시키기 위해 노이즈 텍스처를 하나 만들어줬습니다.</p>
+<p>샘플러 변수 _SubTex로 받아주고 노이즈 텍스처를 알파 채널으로 넣어줍시다. float1만 쓰면 되니까 R 8으로 압축해주는 센스가 필요합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f82b5e950c-ce7a39_a11787e1a867499796fa3b572203a852~mv2.png" class="popup"><img src="/assets/images/wix/f82b5e950c-ce7a39_a11787e1a867499796fa3b572203a852~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/292e1d58d7-ce7a39_dd31641960744293b51525378d9c6982~mv2.png" class="popup"><img src="/assets/images/wix/292e1d58d7-ce7a39_dd31641960744293b51525378d9c6982~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/743123d3fb-ce7a39_f4abab8cc6b5480193cec4c3f09c1be9~mv2.png" class="popup"><img src="/assets/images/wix/743123d3fb-ce7a39_f4abab8cc6b5480193cec4c3f09c1be9~mv2.png" alt="" loading="lazy"></a></figure>
+<p><div class="math-source math-display">\[HDR\]</div>_HDRColor (&quot;HDR Color&quot;, Color) = (1,1,1,1)</p>
+<p>프로퍼티에서 컬러 변수 앞에 <div class="math-source math-display">\[HDR\]</div>을 쓰면 HDR 컬러를 사용할 수 있습니다. 현재 상태는 이렇게 됩니다. 알파 소팅(alpha-sorting) 문제를 해결 해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/352341fa8e-ce7a39_c04141ad2b8a4accaeed2ffd7ee61686~mv2.gif" class="popup"><img src="/assets/images/wix/352341fa8e-ce7a39_c04141ad2b8a4accaeed2ffd7ee61686~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>반투명의 알파-블렌드가 적용된 경우에, 두 오브젝트가 겹쳐 있을 경우 **오브젝트와 카메라의 거리인 깊이 버퍼(Z-buffer)**에 따라 어떤 오브젝트가 앞에 있는지를 판단하고 <strong>뒤에 있는 것 부터 먼저 렌더</strong>하게 됩니다.</p>
+<p>하지만 오브젝트의 피벗 위치를 위와 같이 움직이게 되면 깊이 버퍼로 비교하면 뒤에 있는데, 오브젝트의 피벗은 카메라에 더 가까우니 <strong>해당 부분을 렌더하지 않게</strong> 되는 것입니다.</p>
+<p>알파 소팅 문제는 2020년인 아직까지도 완벽한 해결 방법이 없는 난제이며, 크게 세 가지 완화 방법과 각각 장단점이 있습니다.</p>
+<ol>
+<li>오브젝트의 피벗을 여러개로 나눈다. (드로우 콜이 늘어남)</li>
+<li>아예 Z버퍼를 그리지 않는다. (오버드로우가 발생함)</li>
+<li>Z버퍼만 따로 작성하는 패스를 만든다. (패스를 하나 더 써야됨)</li>
+</ol>
+<figure class="article-image"><a href="/assets/images/wix/8d556defe9-ce7a39_42db57280d524fe686dd009275875840~mv2.png" class="popup"><img src="/assets/images/wix/8d556defe9-ce7a39_42db57280d524fe686dd009275875840~mv2.png" alt="" loading="lazy"></a></figure>
+<p>Zwrite off</p>
+<p>저희는 가장 간단하지만 가장 무거운 방법인 2번으로 해결하겠습니다. Z-버퍼를 그리지 않으려면 &#39;Zwrite off&#39; 딱 한줄만 써주면 됩니다. 지금같이 오브젝트가 한~두개인 경우에는 상관없지만,</p>
+<p>이렇게 반투명을 처리해버리면 실제 게임 클라이언트에서는 엄청난 수준의 오버드로우를 일으키기 때문에 추천되지 않는 방식입니다. 나중에 알파 관련 포스트에서 3번 방식을 작성해보겠습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/fbfc7eaf89-ce7a39_f4d5d7d5c3204a27a72c114017c83c94~mv2.png" class="popup"><img src="/assets/images/wix/fbfc7eaf89-ce7a39_f4d5d7d5c3204a27a72c114017c83c94~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(step)</p>
+<p>&#39;알파 값을 조절 가능하게 하여 사라졌다가 다시 나타날 수도 있게 만들 것&#39;을 충족하기 위해 저희는 스텝 **step(x,y)**함수를 사용할 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/91a417a1ef-ce7a39_16b535b039cf4aa69f33db179b85f78c~mv2.gif" class="popup"><img src="/assets/images/wix/91a417a1ef-ce7a39_16b535b039cf4aa69f33db179b85f78c~mv2.gif" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/c5d3163b77-ce7a39_4e9783f9d8e64f44b7bbd86cf9374054~mv2.png" class="popup"><img src="/assets/images/wix/c5d3163b77-ce7a39_4e9783f9d8e64f44b7bbd86cf9374054~mv2.png" alt="" loading="lazy"></a></figure>
+<p>step**(SubTex.r, _Slider)**</p>
+<p>step 함수는 x 보다 y가 크거나 같을 경우, 1을 반환하고 작으면 0을 반환합니다. 매우 가볍고 널리 유용하게 자주 쓰이는 함수입니다.</p>
+<p>따라서 0~1으로 이루어진 노이즈 텍스쳐의 검은색(0) 부분이 가장 먼저 1으로 반환 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/2024ed4298-ce7a39_288e77c322394d848a4956dbc120a32e~mv2.gif" class="popup"><img src="/assets/images/wix/2024ed4298-ce7a39_288e77c322394d848a4956dbc120a32e~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(result)</p>
+<p>step으로 노이즈 텍스쳐와 변수를 비교하여 알파 값을 불규칙 적인 모양으로 만드는데 성공했습니다.</p>
+<p>다음은 &#39;사라져 없어지는 부분이 빛나게 만들 것.&#39; 입니다.</p>
+<p>자 생각해볼 시간입니다. 저희는 위에서 <strong>알파-블렌드에서 반전 연산으로 원하는 데이터를 원하는 영역만큼 마스킹 하는 것을</strong> 배웠습니다. 노이즈 텍스쳐에서도 이것을 응용할 수 있을 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/1d43da7caf-ce7a39_105cde9088b44d58adb051212c0a2dc7~mv2.png" class="popup"><img src="/assets/images/wix/1d43da7caf-ce7a39_105cde9088b44d58adb051212c0a2dc7~mv2.png" alt="" loading="lazy"></a></figure>
+<p>위 이미지를 보시면 바로 감이 오셔야 합니다. step(SubTex.r, _Slider)와 반전한 값입니다. <strong>둘을 곱하되, 어느 한 쪽의 값이 살짝 더 크다면..?</strong></p>
+<figure class="article-image"><a href="/assets/images/wix/296a325961-ce7a39_053fca9daa4f4b1ba400a50bc2565972~mv2.png" class="popup"><img src="/assets/images/wix/296a325961-ce7a39_053fca9daa4f4b1ba400a50bc2565972~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ float stepvalue = step(SubTex.r, _Slider) * (1 - step(saturate(SubTex.r + _Range), _Slider));
+ //stepvalue</code></pre></section>
+<figure class="article-image"><a href="/assets/images/wix/757ec20ebd-ce7a39_5605750bba5a43dd85b65bf86bfcd6dc~mv2.png" class="popup"><img src="/assets/images/wix/757ec20ebd-ce7a39_5605750bba5a43dd85b65bf86bfcd6dc~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/f8e51c09c3-ce7a39_9525db05212d479598f39445b94e062f~mv2.gif" class="popup"><img src="/assets/images/wix/f8e51c09c3-ce7a39_9525db05212d479598f39445b94e062f~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>짜잔. 이렇게 원하는 경계 값을 원하는 두께만큼 마스킹 할 수 있습니다. 여기에 HDR 컬러를 곱해주면 끝납니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/de18f02b00-ce7a39_1ef31278dec849ce8606408191645944~mv2.png" class="popup"><img src="/assets/images/wix/de18f02b00-ce7a39_1ef31278dec849ce8606408191645944~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/c32da42594-ce7a39_eb7e8d62839c47d19db8572386c7ae85~mv2.gif" class="popup"><img src="/assets/images/wix/c32da42594-ce7a39_eb7e8d62839c47d19db8572386c7ae85~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>완성입니다. 읽어주셔서 감사합니다.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unityshader-05-cast-receive-shadow/"><small>PREVIOUS POST</small><span>(UnityShader) 05 Cast &amp; Receive Shadow</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unityshader-07-fragment-advanced/"><small>NEXT POST</small><span>(UnityShader) 07 Fragment Advanced : Flowmap</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#blend-source-math-0-destination-math-1">blend (Source) * \[SrcBlend\] + (Destination) * \[DstBlend\]</a></li><li class="level-3"><a href="#blend-source-math-6-destination-math-7-result">blend (Source) * \[SrcBlend\] + (Destination) * \[DstBlend\] = result</a></li><li class="level-2"><a href="#src-srcalpha-dst-oneminussrcalpha-alpha-blend">(Src) * SrcAlpha + (Dst) * OneminusSrcAlpha = Alpha-blend</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

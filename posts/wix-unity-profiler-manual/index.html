@@ -1,0 +1,97 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="유니티 내장 프로파일러를 실사용 해보고 얻은 경험을 토대로 작성한 메뉴얼을 들고왔습니다. 누구나 따라할 수 있을 만큼 정말 쉽고 간단합니다.Unity 2020.3.17f1 / Galaxy S8 / Android Build 기준으로 작성되었습니다.\n개인 PC (Local)에서 빌드 하는 경우를 다룹니다.사"><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unity-profiler-manual/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityEngine) Unity Profiler Manual"><meta property="og:description" content="유니티 내장 프로파일러를 실사용 해보고 얻은 경험을 토대로 작성한 메뉴얼을 들고왔습니다. 누구나 따라할 수 있을 만큼 정말 쉽고 간단합니다.Unity 2020.3.17f1 / Galaxy S8 / Android Build 기준으로 작성되었습니다.\n개인 PC (Local)에서 빌드 하는 경우를 다룹니다.사"><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unity-profiler-manual/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityEngine) Unity Profiler Manual","description":"유니티 내장 프로파일러를 실사용 해보고 얻은 경험을 토대로 작성한 메뉴얼을 들고왔습니다. 누구나 따라할 수 있을 만큼 정말 쉽고 간단합니다.Unity 2020.3.17f1 / Galaxy S8 / Android Build 기준으로 작성되었습니다.\\n개인 PC (Local)에서 빌드 하는 경우를 다룹니다.사","url":"https://walll4542developer.github.io/posts/wix-unity-profiler-manual/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityEngine) Unity Profiler Manual | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> Unity / POST 40</p><h1>(UnityEngine) Unity Profiler Manual</h1><div class="article-meta"><time datetime="2021-09-04T04:12:01.720Z">SEP 04, 2021</time><span>3 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><figure class="article-image"><a href="/assets/images/wix/15046946bb-ce7a39_2fedad6f26e94b59a4a4909dfa306cc9~mv2.png" class="popup"><img src="/assets/images/wix/15046946bb-ce7a39_2fedad6f26e94b59a4a4909dfa306cc9~mv2.png" alt="" loading="lazy"></a></figure>
+<p>유니티 내장 프로파일러를 실사용 해보고 얻은 경험을 토대로 작성한 메뉴얼을 들고왔습니다. 누구나 따라할 수 있을 만큼 정말 쉽고 간단합니다.</p>
+<p><strong>Unity 2020.3.17f1 / Galaxy S8 / Android Build</strong> 기준으로 작성되었습니다.
+개인 PC (Local)에서 빌드 하는 경우를 다룹니다.</p>
+<h2 id="사전-준비물">사전 준비물</h2>
+<h3 id="android-bulid-support">Android Bulid Support</h3>
+<figure class="article-image"><a href="/assets/images/wix/99c41991ed-ce7a39_c43192b8faba41189a80b1db16aa73d8~mv2.png" class="popup"><img src="/assets/images/wix/99c41991ed-ce7a39_c43192b8faba41189a80b1db16aa73d8~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빌드 서포트)</p>
+<p>유니티를 다운로드 받을 때 유니티 허브(Unity Hub)에서 Android Bulid Support 모듈을 추가하여 SDK, NDK, JDK를 같이 설치합시다.</p>
+<h3 id="주의사항">주의사항</h3>
+<figure class="article-image"><a href="/assets/images/wix/253aad1c6f-ce7a39_2e927fd9e5ef4d50b552706f578b78b4~mv2.png" class="popup"><img src="/assets/images/wix/253aad1c6f-ce7a39_2e927fd9e5ef4d50b552706f578b78b4~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(삼성 매장에서 직접 판매하는 정품 케이블)</p>
+<p>로컬에서 USB 포트에 유선으로 연결하는 방식을 권장합니다.</p>
+<p>와이파이(Wi-Fi) 무선 연결로도 인식이 가능하지만, 유선보다는 안정성이 떨어집니다.</p>
+<p><strong>반드시 ‘정품’ 케이블</strong>을 사용해야 인식이 잘 됩니다.</p>
+<h2 id="테스트-기기-설정하기">테스트 기기 설정하기</h2>
+<figure class="article-image"><a href="/assets/images/wix/d686b3bf47-ce7a39_1f7f6d8de823408d9fe6307278f27c7b~mv2.png" class="popup"><img src="/assets/images/wix/d686b3bf47-ce7a39_1f7f6d8de823408d9fe6307278f27c7b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(갤럭시 S8)</p>
+<p>테스트 기기마다 유니티 원격 프로파일러가 인식하는 조건이 다릅니다.</p>
+<p>예를 들어 갤럭시 S5로 테스트할 때는 &#39;충전 모드&#39;로 설정 해야합니다.</p>
+<p>본 포스트는 <strong>갤럭시 S8</strong>으로 진행했습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/0abaa908b1-ce7a39_375de97ded8c4d32b78c31cfe95c6027~mv2.png" class="popup"><img src="/assets/images/wix/0abaa908b1-ce7a39_375de97ded8c4d32b78c31cfe95c6027~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(메인 화면)</p>
+<p>설정으로 들어갑시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/023efc23ff-ce7a39_c891cbbfb3504cc2ab39c1971fce48c2~mv2.png" class="popup"><img src="/assets/images/wix/023efc23ff-ce7a39_c891cbbfb3504cc2ab39c1971fce48c2~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(개발자 옵션)</p>
+<p>개발자 옵션으로 들어가서 USB 디버깅을 켜줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/8728d174d5-ce7a39_d0ce7d62a3be477a95ad7ed11c0f3447~mv2.png" class="popup"><img src="/assets/images/wix/8728d174d5-ce7a39_d0ce7d62a3be477a95ad7ed11c0f3447~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(휴대전화 데이터에 접근 허용)</p>
+<p>데이터 접근을 허용 하면 준비 완료입니다.</p>
+<h2 id="프로파일러-연결하기">프로파일러 연결하기</h2>
+<figure class="article-image"><a href="/assets/images/wix/c0e2bacd7e-ce7a39_f94c84905b664a4f9427a018339d81c3~mv2.png" class="popup"><img src="/assets/images/wix/c0e2bacd7e-ce7a39_f94c84905b664a4f9427a018339d81c3~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(platform-tools)</p>
+<p>SDK를 설치했던 경로로 찾아갑시다. adb 파일이 있는지 확인합니다.</p>
+<p>ADB란? 안드로이드 디버그 브릿지(Android Debug Bridge)의 줄임말 입니다.</p>
+<p><strong>C:\Program Files\Unity\Editor\Data\PlaybackEngines\AndroidPlayer\SDK\platform-tools</strong></p>
+<p>보통 유니티 에디터와 같은 경로에 설치되어 있을 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/24338e4e13-ce7a39_7182fcaacefe47bca14bc083246d4c4f~mv2.png" class="popup"><img src="/assets/images/wix/24338e4e13-ce7a39_7182fcaacefe47bca14bc083246d4c4f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>폴더에서 ‘파일’을 누르고 ‘Windows PowerShell 열기’를 선택합시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/01937b0a71-ce7a39_9908211f7901426690c59d792e0578c5~mv2.png" class="popup"><img src="/assets/images/wix/01937b0a71-ce7a39_9908211f7901426690c59d792e0578c5~mv2.png" alt="" loading="lazy"></a></figure>
+<p>이런 파란 Dos 창이 나옵니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d0452e84a2-ce7a39_5f18316fa52c452d88946f39d72b21aa~mv2.png" class="popup"><img src="/assets/images/wix/d0452e84a2-ce7a39_5f18316fa52c452d88946f39d72b21aa~mv2.png" alt="" loading="lazy"></a></figure>
+<p>먼저 <strong>.\adb devices</strong> 명령어를 입력합니다.</p>
+<p>해당 명령어는 adb에 붙어(Attached)있는 장치들을 쭉 알려줍니다.</p>
+<p>현재는 연결이 되어있지 않기 때문에 아무것도 나오지 않는 것이 정상입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/e2e3806c44-ce7a39_d1e29220563a4cfe853172025577ed8e~mv2.png" class="popup"><img src="/assets/images/wix/e2e3806c44-ce7a39_d1e29220563a4cfe853172025577ed8e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>만약 장치가 붙어있으면 위와 같이 ce031713b22e58600d device 라는 이름으로 출력됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/009972f422-ce7a39_ad96e083a9ae4e77b16ceb2a887b3c22~mv2.png" class="popup"><img src="/assets/images/wix/009972f422-ce7a39_ad96e083a9ae4e77b16ceb2a887b3c22~mv2.png" alt="" loading="lazy"></a></figure>
+<p><strong>.\adb forward tcp:34999 localabstract:Unity-(패키지 이름)</strong> 명령어를 입력합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/37c3433c88-ce7a39_b63870c3221f4c558a8375f9ee50e22c~mv2.png" class="popup"><img src="/assets/images/wix/37c3433c88-ce7a39_b63870c3221f4c558a8375f9ee50e22c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>위와 같이 출력 되거나, 혹은 아무것도 출력되지 않으면 이미 연결이 되어있거나 정상적으로 동작한 것입니다.</p>
+<p>패키지 이름은 무엇일까요?</p>
+<figure class="article-image"><a href="/assets/images/wix/234fba9bca-ce7a39_e40a133d6334455694c9ce7284fdb5ec~mv2.png" class="popup"><img src="/assets/images/wix/234fba9bca-ce7a39_e40a133d6334455694c9ce7284fdb5ec~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Identification)</p>
+<p>유니티의 프로젝트 세팅(Project Settings)의 플레이어(Player) 탭, Identification 옵션에 있습니다.</p>
+<p>패키지 이름(Package Name)의 ‘com.’~ 를 입력해줍시다. 다른 프로젝트를 빌드하고 싶으면 해당 프로젝트의 패키지 이름을 사용하면 됩니다.</p>
+<h2 id="버그-리포팅">버그 리포팅</h2>
+<p>테스트가 끝나서 다른 테스트 기기를 USB 포트에 꽂았더니 안 붙는 경우가 간혹 있습니다.</p>
+<p><strong>.\adb kill-server</strong> 명령어를 입력하고,</p>
+<p><strong>.\adb start-server</strong> 바로 명령어를 입력하면 server를 재시작 합니다.</p>
+<h2 id="빌드-설정">빌드 설정</h2>
+<figure class="article-image"><a href="/assets/images/wix/81a4c5b746-ce7a39_085a201e642e45f1961d6e98ecb3fc74~mv2.png" class="popup"><img src="/assets/images/wix/81a4c5b746-ce7a39_085a201e642e45f1961d6e98ecb3fc74~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빌드 설정)</p>
+<p>프로파일링을 위해 설정하는 옵션들은 인게임 퍼포먼스에 영향을 끼칩니다. 실제 배포용 빌드의 성능과 다소 차이가 있을 수 있다는 점을 감안하여 프로파일링 해야 합니다.</p>
+<ul>
+<li>Development Build</li>
+</ul>
+<p>지금 같이 개발자 빌드인 경우에는 해당 설정을 활성화 해줍시다.</p>
+<ul>
+<li>Autoconnect Profiler</li>
+</ul>
+<p>해당 설정을 활성화 하고 Build And Run을 하면 자동으로 연결된 기기에 APK를 설치하고 실행하고 프로파일러를 붙혀줍니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f222a7949a-ce7a39_271db1b0a7854c749420a309f5b40a58~mv2.svg" class="popup"><img src="/assets/images/wix/f222a7949a-ce7a39_271db1b0a7854c749420a309f5b40a58~mv2.svg" alt="" loading="lazy"></a></figure>
+<p>(Deep Profile)</p>
+<ul>
+<li>Deep Profiling Support</li>
+</ul>
+<p>이 설정을 활성화하면 모든 C# 메서드를 프로파일링하며, Unity는 모든 모노 호출에 계측을 추가하므로 스크립트를 더욱 자세히 조사할 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/79df7ccc2e-ce7a39_0686b75c9dc3497fa5694679ec5bbf23~mv2.png" class="popup"><img src="/assets/images/wix/79df7ccc2e-ce7a39_0686b75c9dc3497fa5694679ec5bbf23~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Build / Build And Run)</p>
+<p>마지막으로 <strong>Build And Run</strong>을 눌러줍시다. 빌드가 끝나면 자동으로 실행되고 프로파일러가 붙을 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3937a6b733-ce7a39_c12d413376394b6fb5095e16d0c40e3c~mv2.gif" class="popup"><img src="/assets/images/wix/3937a6b733-ce7a39_c12d413376394b6fb5095e16d0c40e3c~mv2.gif" alt="" loading="lazy"></a></figure>
+<blockquote>
+<p>프로파일링의 첫 시작을 환영합니다! 시작이 절반입니다.</p>
+</blockquote>
+<p>개발 환경이 잘 되어있는 게임 회사에서는 빌드 파일(APK)를 동시에 여러 테스트 기기들에 뿌려주는(자동으로 다운로드, 설치, 실행) 과정을 젠킨스(Jenkins)를 사용하여 자동화 해놓습니다.</p>
+<p>온라인(Appbox 같은 클라우드 서비스를 통해)또는 오프라인 저장소(NAS 혹은 인트라넷을 통해)에 자동으로 빌드를 공유하게 설정한 후 개발자가 수동으로 다운로드 받는 식으로 처리 해둡니다.</p>
+<p>참고로 Windows PowerShell 켜서 테스트 기기를 붙이는 과정 정도는 로컬 환경에서도 배치(Batch) 파일을 제작해서 자동화 하실 수 있습니다. (나중에 따로 다뤄보도록 하겠습니다)</p>
+<p>읽어주셔서 감사합니다. 여러분들의 관심이 제게 큰 도움이 됩니다.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/study/">#Study</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unityshader-fireworks/"><small>PREVIOUS POST</small><span>(UnityShader) Fireworks</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unityshader-polar-coordinate-part1/"><small>NEXT POST</small><span>(UnityShader) Polar Coordinate Part 1</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#사전-준비물">사전 준비물</a></li><li class="level-3"><a href="#android-bulid-support">Android Bulid Support</a></li><li class="level-3"><a href="#주의사항">주의사항</a></li><li class="level-2"><a href="#테스트-기기-설정하기">테스트 기기 설정하기</a></li><li class="level-2"><a href="#프로파일러-연결하기">프로파일러 연결하기</a></li><li class="level-2"><a href="#버그-리포팅">버그 리포팅</a></li><li class="level-2"><a href="#빌드-설정">빌드 설정</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

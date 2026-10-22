@@ -1,0 +1,170 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="이번 포스트에서는 극좌표의 정의를 알아보고 유니티 셰이더로 구현하고 응용하는 방법에 대해서 알아보겠습니다.직교좌표계(Coordinate system)수학에서 평면 위에 있는 어떤 점의 위치를 표현해야 할 때, 서로 수직이며 직교 하는 직선인 x, y 두 축을 사용한 좌표계로 점의 위치를 나타냅니다. 점과"><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unityshader-polar-coordinate-part1/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) Polar Coordinate Part 1"><meta property="og:description" content="이번 포스트에서는 극좌표의 정의를 알아보고 유니티 셰이더로 구현하고 응용하는 방법에 대해서 알아보겠습니다.직교좌표계(Coordinate system)수학에서 평면 위에 있는 어떤 점의 위치를 표현해야 할 때, 서로 수직이며 직교 하는 직선인 x, y 두 축을 사용한 좌표계로 점의 위치를 나타냅니다. 점과"><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unityshader-polar-coordinate-part1/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) Polar Coordinate Part 1","description":"이번 포스트에서는 극좌표의 정의를 알아보고 유니티 셰이더로 구현하고 응용하는 방법에 대해서 알아보겠습니다.직교좌표계(Coordinate system)수학에서 평면 위에 있는 어떤 점의 위치를 표현해야 할 때, 서로 수직이며 직교 하는 직선인 x, y 두 축을 사용한 좌표계로 점의 위치를 나타냅니다. 점과","url":"https://walll4542developer.github.io/posts/wix-unityshader-polar-coordinate-part1/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) Polar Coordinate Part 1 | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],tags:"ams"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],processHtmlClass:"math-source"}};</script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 39</p><h1>(UnityShader) Polar Coordinate Part 1</h1><div class="article-meta"><time datetime="2022-02-03T09:36:10.531Z">FEB 03, 2022</time><span>7 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><p>이번 포스트에서는 극좌표의 정의를 알아보고 유니티 셰이더로 구현하고 응용하는 방법에 대해서 알아보겠습니다.</p>
+<h2 id="직교좌표계">직교좌표계</h2>
+<figure class="article-image"><a href="/assets/images/wix/8fddc7b489-ce7a39_87732475dbe3409cabb26047379195de~mv2.png" class="popup"><img src="/assets/images/wix/8fddc7b489-ce7a39_87732475dbe3409cabb26047379195de~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Coordinate system)</p>
+<p>수학에서 평면 위에 있는 어떤 점의 위치를 표현해야 할 때, 서로 수직이며 직교 하는 직선인 x, y 두 축을 사용한 <strong>좌표계</strong>로 점의 위치를 나타냅니다. 점과 두 축 사이의 거리 값으로 점의 위치를 나타내는 방법이며, 직교 좌표계(Cartesian coordinate system) 혹은 이를 소개한 수학자의 이름을 따서 데카르트 좌표계라고 부릅니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d3a07e502b-ce7a39_3accf709c59f478884c26e85ac13fdaf~mv2.png" class="popup"><img src="/assets/images/wix/d3a07e502b-ce7a39_3accf709c59f478884c26e85ac13fdaf~mv2.png" alt="" loading="lazy"></a></figure>
+<p>점의 위치를 가로 거리 값을 x, 세로 거리 값을 y로 하여 (x,y)의 순서쌍으로 나타냅니다. 예를 들어 위에 찍혀있는 점의 위치는 (2,1)으로 표현 할 수 있습니다. 따라서 x와 y의 거리 값이 둘다 0이면 (0,0)이며 이를 <strong>원점</strong>이라고 부릅니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/700dc57c74-ce7a39_f0b6bf3effc04006a40ffb3fd66ef586~mv2.png" class="popup"><img src="/assets/images/wix/700dc57c74-ce7a39_f0b6bf3effc04006a40ffb3fd66ef586~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(UV Coordinate)</p>
+<p>렌더러가 셰이더를 통해 오브젝트에 텍스쳐를 매핑할 때 필요한 텍스쳐의 UV 역시 직교좌표계와 똑같습니다. 단지 이름만 바뀌었을 뿐이죠.</p>
+<h2 id="극좌표계">극좌표계</h2>
+<p>좌표계의 정의를 알게 되었으니 이제 아이작 뉴턴이 소개한 극좌표계(Polar coordinate system)를 알아봅시다. 극좌표계에서 사용하는 축은 특이한 형태 입니다.</p>
+<ul>
+<li><figure class="article-image"><a href="/assets/images/wix/c3ac67f1a4-ce7a39_e1c56b26dc744d7a86f2bec152370dc1~mv2.png" class="popup"><img src="/assets/images/wix/c3ac67f1a4-ce7a39_e1c56b26dc744d7a86f2bec152370dc1~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/751d95bf3d-ce7a39_de0f56bc37cf4b52a7c8d1738865b2e2~mv2.png" class="popup"><img src="/assets/images/wix/751d95bf3d-ce7a39_de0f56bc37cf4b52a7c8d1738865b2e2~mv2.png" alt="" loading="lazy"></a></figure></li>
+</ul>
+<p>(직교좌표계 / 극좌표계)</p>
+<p>수직인 두 직선을 축으로 사용하는 직교좌표계와 달리 극좌표계는 <strong>반직선</strong>과 <strong>원점</strong>을 축으로 사용하는 좌표계입니다. 반직선인 x축을 <strong>극축</strong>(Polar Axis)이라고 부릅니다.</p>
+<ul>
+<li><figure class="article-image"><a href="/assets/images/wix/63b4878966-ce7a39_2c853dfeff144621a1c98b0b0754b939~mv2.png" class="popup"><img src="/assets/images/wix/63b4878966-ce7a39_2c853dfeff144621a1c98b0b0754b939~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/49b114ecb9-ce7a39_c25e2a734a0c4ac5a5c6bce32a469856~mv2.png" class="popup"><img src="/assets/images/wix/49b114ecb9-ce7a39_c25e2a734a0c4ac5a5c6bce32a469856~mv2.png" alt="" loading="lazy"></a></figure></li>
+</ul>
+<p>임의의 점 (x, y)를 극좌표로 나타내면 다음과 같습니다. 극축과 이루는 <strong>각도</strong>(Radian) <strong>θ</strong>와 원점과의 <strong>거리 값 r</strong>을 순서쌍으로 나타내는 좌표계 입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d14fb939ae-ce7a39_f2ca26d37857454790046a9d5b90598d~mv2.gif" class="popup"><img src="/assets/images/wix/d14fb939ae-ce7a39_f2ca26d37857454790046a9d5b90598d~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>위 이미지 처럼 셰이더에서 직교좌표계를 사용하는 UV를 삼각함수를 이용하여 극좌표계로 변환 할 수 있습니다.</p>
+<h2 id="라디안과-삼각함수">라디안과 삼각함수</h2>
+<figure class="article-image"><a href="/assets/images/wix/00c0c5540f-ce7a39_a47c644530b64a489ee5cc1ba0a0f96c~mv2.png" class="popup"><img src="/assets/images/wix/00c0c5540f-ce7a39_a47c644530b64a489ee5cc1ba0a0f96c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(θ = 1 Rad)</p>
+<p>라디안(Radian)과 회전 행렬을 다룬 <a href="/posts/wix-unityshader-09-fragment-advanced/">이전 포스트</a>를 기억하시나요? 읽지 못한 분들을 위해 쉽고 간결하게 설명 드리겠습니다.</p>
+<p>여기 반지름이 1인 원이 있습니다. 이것을 단위 원이라고 합니다. 그리고 호의 길이가 반지름과 똑같이 1이 되는 각도 θ로 부채꼴을 잘라냈습니다. 이때 각도 θ의 값이 바로 <strong>1 라디안</strong> 으로 정의했습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/a432d4b981-ce7a39_ad2a5a5e9f7742c995c72c38fd3aec02~mv2.png" class="popup"><img src="/assets/images/wix/a432d4b981-ce7a39_ad2a5a5e9f7742c995c72c38fd3aec02~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/5001c01e8e-ce7a39_67448c3f03cc4641910ed3fd939e7135~mv2.png" class="popup"><img src="/assets/images/wix/5001c01e8e-ce7a39_67448c3f03cc4641910ed3fd939e7135~mv2.png" alt="" loading="lazy"></a></figure>
+<p>수치로 표현하면 1 라디안은 180˚ / π 입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/07dd9d78fc-ce7a39_c4a1e32a845e4a06a010699abb42f40d~mv2.png" class="popup"><img src="/assets/images/wix/07dd9d78fc-ce7a39_c4a1e32a845e4a06a010699abb42f40d~mv2.png" alt="" loading="lazy"></a></figure>
+<p>그럼 이제 반지름을 셰이더에서 사용하는 벡터로 생각해봅시다. 크기가 1인 단위 벡터(0, 1)이 있고 직교 좌표계 위에서 각도 θ 만큼 회전하면 이제 벡터의 방향은 float2(0, 1)이 아니지만 크기는 1으로 같습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3baa6a0af8-ce7a39_800fa71add3a485d9735bfbb625fbc4a~mv2.png" class="popup"><img src="/assets/images/wix/3baa6a0af8-ce7a39_800fa71add3a485d9735bfbb625fbc4a~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(삼각 함수, Trigonometric functions)</p>
+<p>이제 벡터를 하나의 직각삼각형으로 생각해봅시다.</p>
+<ul>
+<li>단위 벡터의 크기를 빗변 a,</li>
+<li>단위 벡터의 x축 좌표를 밑변 b,</li>
+<li>단위 벡터의 y축 좌표를 높이 c,</li>
+</ul>
+<p>로 가정해서 삼각함수를 대입해서 풀어보면?</p>
+<figure class="article-image"><a href="/assets/images/wix/d38e2860c1-ce7a39_20a1d72a646d423c8a50a70029f1470d~mv2.png" class="popup"><img src="/assets/images/wix/d38e2860c1-ce7a39_20a1d72a646d423c8a50a70029f1470d~mv2.png" alt="" loading="lazy"></a></figure>
+<p>네, 저희가 회전 행렬을 유도 할 때 여기까지는 했었죠.</p>
+<p>얼마 만큼의 각도 θ로 회전하던 간에, <strong>벡터의 머리 좌표는 항상 (sinθ, cosθ) 입니다. b와 c의 길이가 항상 sinθ와 cosθ기 때문입니다.</strong></p>
+<figure class="article-image"><a href="/assets/images/wix/a0a9ebb8f7-ce7a39_9ead842ce62f43088731306cabd40b6b~mv2.png" class="popup"><img src="/assets/images/wix/a0a9ebb8f7-ce7a39_9ead842ce62f43088731306cabd40b6b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>반지름이 1인 단위 벡터가 아닌 경우에는 반지름 길이 값 만큼 삼각함수에 곱해주면 똑같다는 것을 알 수 있습니다. 여기까지 읽었을 때 저희 같은 아티스트들은 이런 사실이 직관적으로 이해가 되지 않을 수 있습니다. 그러니 다른 방법으로 한 번 해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/30d2c39eed-ce7a39_31e6fe22437e43eca54832f8a920a584~mv2.png" class="popup"><img src="/assets/images/wix/30d2c39eed-ce7a39_31e6fe22437e43eca54832f8a920a584~mv2.png" alt="" loading="lazy"></a></figure>
+<p>똑같은 직각삼각형을 세개 더 추가하여 위와 같이 배치합시다. 그러면 저희는 반지름을 변으로 가지는 정사각형을 얻게 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/efda3c4fc2-ce7a39_fd0482bc726b491abe89a93107d18b24~mv2.png" class="popup"><img src="/assets/images/wix/efda3c4fc2-ce7a39_fd0482bc726b491abe89a93107d18b24~mv2.png" alt="" loading="lazy"></a></figure>
+<ul>
+<li>빨간색 정사각형의 넓이는 r²</li>
+<li>초록색 직각삼각형의 넓이는 (r * cosθ * r * sinθ) /2</li>
+<li>전체 넓이는 (r * cosθ + r * sinθ)²</li>
+</ul>
+<p>따라서 빨간색 정사각형과 초록색 직각삼각형 네개와 더하면 전체 넓이와 같습니다. 식을 세워 봅시다.</p>
+<blockquote>
+<p>(r * cosθ + r * sinθ)² = 4*1/2 * r * cosθ * r * sinθ + r²</p>
+</blockquote>
+<p>한 눈에 보기 굉장히 불편하네요. 식을 치환해서 보기 좋게 바꿔봅시다.</p>
+<p>r * cosθ는 모든 벡터의 x축 좌표죠? r * cosθ = x</p>
+<p>r * sinθ는 모든 벡터의 y축 좌표죠? r * sinθ = y</p>
+<p>로 치환하면 아래와 같이 정리됩니다.</p>
+<p>(x+y)² = 2xy + r²</p>
+<p>(x+y)² - 2xy = r²</p>
+<p>x² + 2xy + y² - 2xy = r²</p>
+<blockquote>
+<p><strong>x****²</strong> <strong>+ y****²</strong> <strong>= r****²</strong></p>
+</blockquote>
+<p>잠시만요, 이 공식 어디서 많이 보던 것 같은데 눈치 채셨나요?</p>
+<figure class="article-image"><a href="/assets/images/wix/001d6e4936-ce7a39_0fd97693993c44dc82b2a47c7b84abaa~mv2.png" class="popup"><img src="/assets/images/wix/001d6e4936-ce7a39_0fd97693993c44dc82b2a47c7b84abaa~mv2.png" alt="" loading="lazy"></a></figure>
+<p>그렇습니다. 저희는 방금 피타고라스 정리를 증명한 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/c0da3bdd35-ce7a39_737de3c2723040e59518c29366a6af96~mv2.gif" class="popup"><img src="/assets/images/wix/c0da3bdd35-ce7a39_737de3c2723040e59518c29366a6af96~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(원의 방정식)</p>
+<p>피타고라스 정리를 그래프로 그렸을 때 원이 나옵니다. 반지름 값이 얼마이든 <strong>좌표는 항상 (r*sinθ, r*cosθ)인 것을 확인 하실 수 있습니다.</strong></p>
+<figure class="article-image"><a href="/assets/images/wix/f9b8b26386-ce7a39_06ea7e968e9047a1aefbc2c3017ab84f~mv2.png" class="popup"><img src="/assets/images/wix/f9b8b26386-ce7a39_06ea7e968e9047a1aefbc2c3017ab84f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(탄젠트의 경우)</p>
+<p>극좌표계는 극축인 x축과 이루는 각도 θ와 원점과의 거리 값 r의 순서쌍으로 나타냅니다. 원의 반지름이 r인데, 곧 원점과의 거리 값이랑 똑같지요. 그러니 각도만 구하면 됩니다.</p>
+<p>tanθ 값은 직교좌표계 평면 위에서 임의의 점(x, y)에 대한 <strong>기울기(y/x)</strong> 라는 사실을 알 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/452374014f-ce7a39_4cd6a87872224e68804b40a9cf29f496~mv2.png" class="popup"><img src="/assets/images/wix/452374014f-ce7a39_4cd6a87872224e68804b40a9cf29f496~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(y/x)</p>
+<blockquote>
+<p><strong>tanθ = y/x</strong></p>
+</blockquote>
+<p>각도 θ는 직교좌표계 위에 그려질 수 있는 모든 벡터와 극축이 이루는 각도입니다. 모든 벡터가 들어있는 데이터는 직교좌표계인 UV 그 자체입니다. UV의 x축과 y축에 대한 y/x를 계산하면 tanθ가 나옵니다. (x나 y 좌표 값이 0인 경우에는 기울기 값이 무한대가 됩니다)</p>
+<p><strong>따라서 탄젠트 함수에 각도 θ를 대입하면 기울기(y/x)가 나오니까 반대로 기울기를 대입하면 각도를 반환하게 거꾸로 계산하면 모든 좌표에 대한 각도를 얻을 수 있습니다.</strong></p>
+<h2 id="역삼각함수">역삼각함수</h2>
+<p>이렇게 거꾸로 계산하는 함수를 역함수라고 부릅니다. 삼각함수도 당연히 함수의 일종이며, 저희는 탄젠트의 역함수를 구해볼 것입니다. 먼저 역함수의 개념을 정확히 이해해야 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/7cc8d4985e-ce7a39_e94a682e24a3495089b9f4419cb3564f~mv2.png" class="popup"><img src="/assets/images/wix/7cc8d4985e-ce7a39_e94a682e24a3495089b9f4419cb3564f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>쉽게 1차 함수로 예를 들어 봅시다. y = x + a 라는 함수가 있다고 한다면, 위와 같은 모습으로 그래프가 그려집니다.</p>
+<ul>
+<li>x = 1 이면 y = 1 + a니까 y는 2입니다.</li>
+<li>x = 2 이면 y = 2 + a니까 y는 3입니다.</li>
+</ul>
+<p>y에 대응 하는 x값이 존재하며 항상 하나 밖에 없습니다. 이것을 <strong>일대일 대응</strong> 한다고 말합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/c1934dc460-ce7a39_98bfd1000eb644cdb1bdb1fabfd73174~mv2.png" class="popup"><img src="/assets/images/wix/c1934dc460-ce7a39_98bfd1000eb644cdb1bdb1fabfd73174~mv2.png" alt="" loading="lazy"></a></figure>
+<p>일대일 대응 하지 않는 함수의 예시로 2차 함수 그래프를 보여 드리겠습니다.</p>
+<ul>
+<li>x = 2 이면 y = 2² 니까 4입니다.</li>
+<li>x = -2 이면 y = -2² 니까 똑같이 4입니다.</li>
+</ul>
+<p>y에 대응 하는 x값이 두개입니다. 이런 경우에는 일대일 대응하지 않습니다.</p>
+<p>오직 <strong>일대일 대응하는 함수에만 역함수가 존재</strong>합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/6436ae4d52-ce7a39_7546322e4bd7490da99269bfb0661c9f~mv2.png" class="popup"><img src="/assets/images/wix/6436ae4d52-ce7a39_7546322e4bd7490da99269bfb0661c9f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(y = 2x)</p>
+<p>이제 y = 2x 의 역함수를 구해봅시다. 역함수를 계산하는 방법은 간단합니다. x를 좌변으로 정리해주면 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/878af871d9-ce7a39_1c64f997b8fd4e4981faa5eb38defa25~mv2.png" class="popup"><img src="/assets/images/wix/878af871d9-ce7a39_1c64f997b8fd4e4981faa5eb38defa25~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(역함수 그래프)</p>
+<p>y = 2x</p>
+<p>-2x = -y</p>
+<p>x = y / 2</p>
+<p>이렇게 정리 한 후 그래프로 그리려면 좌변에 y값이 있어야 하니, x와 y의 위치를 바꿔주면 됩니다.</p>
+<blockquote>
+<p><strong>y = x / 2</strong></p>
+</blockquote>
+<figure class="article-image"><a href="/assets/images/wix/e0d5784a26-ce7a39_c2835f5dd0f9410cbcdc24c19bc842b0~mv2.png" class="popup"><img src="/assets/images/wix/e0d5784a26-ce7a39_c2835f5dd0f9410cbcdc24c19bc842b0~mv2.png" alt="" loading="lazy"></a></figure>
+<p>시각적으로 이해하기 쉽게 함수와 역함수에 변수를 하나 추가하였습니다. 두 함수의 관계는 함수와 그 역함수로 동일합니다. 각각 f1과 f2로 부르겠습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/8fdb7188e1-ce7a39_ada95bdb3e7840e3abef7f1b3bcef8da~mv2.gif" class="popup"><img src="/assets/images/wix/8fdb7188e1-ce7a39_ada95bdb3e7840e3abef7f1b3bcef8da~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>함수와 역함수의 성질은 x값 대신 함수를 집어넣어서 그래프를 그려보면 알 수 있습니다.</p>
+<p>f1(f2)인 경우의 그래프와 f2(f1)인 경우의 그래프를 보면 <strong>y = x</strong> 형태가 되어 정의역과 공역이 같은 <strong>항등함수</strong> 모양이 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/0e2d68f709-ce7a39_bb7ea7a3feb64dce91bb87b4ccd6d196~mv2.gif" class="popup"><img src="/assets/images/wix/0e2d68f709-ce7a39_bb7ea7a3feb64dce91bb87b4ccd6d196~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>이제 삼각함수의 역함수인 <strong>역삼각함수</strong>를 구해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/5e9c5ce592-ce7a39_afdb34bd46a14d56ac6254d21c314191~mv2.png" class="popup"><img src="/assets/images/wix/5e9c5ce592-ce7a39_afdb34bd46a14d56ac6254d21c314191~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(sine)</p>
+<p>sin이나 cos의 그래프를 그려보면 각도 값에 따라 물결 모양이 반복되는 그래프가 그려집니다. 이런 경우에는 y에 대응하는 x값이 무한합니다. 위에서 언급 했듯이 함수는 <strong>일대일 대응이어야</strong> 역함수가 존재 할 수 있는데 어떻게 해야 할까요?</p>
+<figure class="article-image"><a href="/assets/images/wix/e3b959d097-ce7a39_4c2008f6a5fb4a13a7d3d7ad56403f4f~mv2.png" class="popup"><img src="/assets/images/wix/e3b959d097-ce7a39_4c2008f6a5fb4a13a7d3d7ad56403f4f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>저희는 범위를 제한하는 꼼수를 씁니다. x축 <strong>정의역을 <div class="math-source math-display">\[\-π/2 \~ π/2\]</div>로 제한</strong>해서 역함수를 만들어보는 것입니다.</p>
+<p>삼각함수는 항상 반복되는 주기를 가지고 있으니 반복되는 부분을 자르면 치역의 범위는 <div class="math-source math-display">\[\-1 \~ 1\]</div>이 되어 y에 대응하는 x값은 항상 하나 뿐 입니다. 그래서 일대일 대응이 성립합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/71de98e094-ce7a39_c71a1b30abaa47589106a18649e1f352~mv2.png" class="popup"><img src="/assets/images/wix/71de98e094-ce7a39_c71a1b30abaa47589106a18649e1f352~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(arcsin)</p>
+<p><strong>sin</strong> 함수의 역함수는 <strong>arcsin</strong>이라고 부릅니다.</p>
+<p>sin 함수에 각도<div class="math-source math-display">\[\-π/2 \~ π/2\]</div>를 대입하면 반환하는 것은 직각삼각형의 높이 값<div class="math-source math-display">\[\-1 \~ 1\]</div>입니다. 역함수의 정의에 따라 반대로 높이 값<div class="math-source math-display">\[\-1 \~ 1\]</div>을 대입하면 각도<div class="math-source math-display">\[\-π/2 \~ π/2\]</div>를 반환합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3376042060-ce7a39_306487ec260d433f8111288404a28d8f~mv2.png" class="popup"><img src="/assets/images/wix/3376042060-ce7a39_306487ec260d433f8111288404a28d8f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(sin(90˚)은 y축 값이 1, arcsin(1)은 π/2 = 90˚)</p>
+<p>따라서 y = x 그래프를 기준으로 대칭 이동한 것과 똑같은 결과물을 얻을 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/e63301c609-ce7a39_d537ca8228b148c7bead21b808d62ceb~mv2.png" class="popup"><img src="/assets/images/wix/e63301c609-ce7a39_d537ca8228b148c7bead21b808d62ceb~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(arccos)</p>
+<p>코사인의 경우는 반복되는 부분인 정의역을 <div class="math-source math-display">\[0 \~ π\]</div>로 제한합니다.</p>
+<p><strong>cos</strong> 함수의 역함수는 <strong>arccos</strong> 이라고 부릅니다.</p>
+<p>cos 함수에 각도<div class="math-source math-display">\[0 \~ π\]</div>를 대입하면 반환하는 것은 직각삼각형 밑변의 길이 값<div class="math-source math-display">\[\-1 \~ 1\]</div>입니다. 역함수의 정의에 따라 반대로 길이 값<div class="math-source math-display">\[\-1 \~ 1\]</div>을 대입하면 각도<div class="math-source math-display">\[0 \~ π\]</div>를 반환합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ebbf0f40e3-ce7a39_5a34f55dc1c04a0eb5380a8ba06e925e~mv2.png" class="popup"><img src="/assets/images/wix/ebbf0f40e3-ce7a39_5a34f55dc1c04a0eb5380a8ba06e925e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(cos(180˚)은 x축 값이 -1, arcsin(-1)은 π = 180˚)</p>
+<figure class="article-image"><a href="/assets/images/wix/23d650a717-ce7a39_d40e80beb99c4437a07f6a263bd4eb0c~mv2.png" class="popup"><img src="/assets/images/wix/23d650a717-ce7a39_d40e80beb99c4437a07f6a263bd4eb0c~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/41472f4840-ce7a39_07f861d34e244a59bc7ea3745aff6904~mv2.png" class="popup"><img src="/assets/images/wix/41472f4840-ce7a39_07f861d34e244a59bc7ea3745aff6904~mv2.png" alt="" loading="lazy"></a></figure>
+<p>드디어 대망의 탄젠트의 역함수를 구해보겠습니다. 탄젠트는 곧 **기울기(y/x)**입니다. 그래서 각도가 90(π/2)일 때, 기울기 값은 무한히 커집니다. 음수인 -90(-π/2) 경우에는 반대로 무한히 작아집니다. 밑변의 길이가 0인 삼각형을 상상해보세요.</p>
+<p>똑같이 반복되는 구간인 x축 <strong>정의역을 (-π/2 ~ π/2)로 제한</strong>해서 역함수를 만들어보겠습니다. y값은 무한히 커지고 작아지기 때문에 실수 전체를 공역으로 두지만 y에 대응하는 x값은 항상 하나라서 일대일 대응 한다는 것을 알 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/835c2963fb-ce7a39_1dcbc8951843416593f726e0d1b53548~mv2.png" class="popup"><img src="/assets/images/wix/835c2963fb-ce7a39_1dcbc8951843416593f726e0d1b53548~mv2.png" alt="" loading="lazy"></a></figure>
+<p>tan 함수에 각도(-π/2 ~ π/2)를 대입하면 반환하는 것은 기울기 값(-∞ ~ ∞)입니다. 역함수의 정의에 따라 반대로 기울기 값(-∞ ~ ∞)을 대입하면 각도(-π/2 ~ π/2)를 반환합니다.</p>
+<p><strong>tan</strong> 함수의 역함수는 <strong>arctan</strong> 이라고 부릅니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/405ed712ee-ce7a39_71d19d91575f40e4b03014a48c115ebe~mv2.png" class="popup"><img src="/assets/images/wix/405ed712ee-ce7a39_71d19d91575f40e4b03014a48c115ebe~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(부채꼴 호와 반지름의 관계)</p>
+<p><strong>arc</strong>sin, <strong>arc</strong>cos, <strong>arc</strong>tan 등등 역삼각함수의 이름에 공통적으로 &#39;arc&#39;가 들어가는데요, 그 이유는 위에서 1 라디안을 정의할 때 쓴 부채꼴의 호가 바로 <strong>arc</strong>입니다.</p>
+<p>호의 길이 L과 반지름의 길이 r의 비(L/r)가 1 라디안이며, 역삼각함수는 각도를 반환하는 함수이기 때문에 이런 이름이 붙었습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/82b662191a-ce7a39_b55acb1e86104ab6a17333c18b4caae3~mv2.png" class="popup"><img src="/assets/images/wix/82b662191a-ce7a39_b55acb1e86104ab6a17333c18b4caae3~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(tan(45˚)은 기울기 값이 1, arcsin(1)은 π/4 = 45˚)</p>
+<p>이제 저희는 모든 직교좌표계에 대한 기울기(x/y)를 대입해서 극축(polar axis)을 기준으로 한 각도 값을 arctan 함수로 구할 수 있습니다.</p>
+<p>모든 수학적 이론의 준비를 마쳤습니다. 이제 셰이더 코딩을 해봅시다.</p>
+<p>(<a href="/posts/wix-unityshader-polar-coordinate-part-2/">파트2</a>에 계속)</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unity-profiler-manual/"><small>PREVIOUS POST</small><span>(UnityEngine) Unity Profiler Manual</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unityshader-polar-coordinate-part-2/"><small>NEXT POST</small><span>(UnityShader) Polar Coordinate Part 2</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#직교좌표계">직교좌표계</a></li><li class="level-2"><a href="#극좌표계">극좌표계</a></li><li class="level-2"><a href="#라디안과-삼각함수">라디안과 삼각함수</a></li><li class="level-2"><a href="#역삼각함수">역삼각함수</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

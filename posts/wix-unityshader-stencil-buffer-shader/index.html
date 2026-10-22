@@ -1,0 +1,252 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="소박한 집합론(Naive set theory)오늘 포스트에서는 스텐실 버퍼에 대해 알아보고 그것을 응용해서 쉐이더를 작성해 볼겁니다. 새로운 출발을 가벼운 마음으로 하기 위해 매우 쉬운 난이도의 주제를 가져왔습니다. 중학교 수학 교과 과정의 집합(set) 개념입니다.(빛의 3원색, 가산혼합과 감산혼합)저"><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unityshader-stencil-buffer-shader/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) Stencil Buffer Shader"><meta property="og:description" content="소박한 집합론(Naive set theory)오늘 포스트에서는 스텐실 버퍼에 대해 알아보고 그것을 응용해서 쉐이더를 작성해 볼겁니다. 새로운 출발을 가벼운 마음으로 하기 위해 매우 쉬운 난이도의 주제를 가져왔습니다. 중학교 수학 교과 과정의 집합(set) 개념입니다.(빛의 3원색, 가산혼합과 감산혼합)저"><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unityshader-stencil-buffer-shader/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) Stencil Buffer Shader","description":"소박한 집합론(Naive set theory)오늘 포스트에서는 스텐실 버퍼에 대해 알아보고 그것을 응용해서 쉐이더를 작성해 볼겁니다. 새로운 출발을 가벼운 마음으로 하기 위해 매우 쉬운 난이도의 주제를 가져왔습니다. 중학교 수학 교과 과정의 집합(set) 개념입니다.(빛의 3원색, 가산혼합과 감산혼합)저","url":"https://walll4542developer.github.io/posts/wix-unityshader-stencil-buffer-shader/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) Stencil Buffer Shader | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 47</p><h1>(UnityShader) Stencil Buffer Shader</h1><div class="article-meta"><time datetime="2020-09-14T04:53:13.928Z">SEP 14, 2020</time><span>11 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><h2 id="소박한-집합론-naive-set-theory">**소박한 집합론(**<strong>Naive set theory)</strong></h2>
+<p>오늘 포스트에서는 <strong>스텐실 버퍼</strong>에 대해 알아보고 그것을 응용해서 쉐이더를 작성해 볼겁니다. 새로운 출발을 가벼운 마음으로 하기 위해 매우 쉬운 난이도의 주제를 가져왔습니다. 중학교 수학 교과 과정의 <strong>집합(set)</strong> 개념입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/c191b15384-ce7a39_6b023c9abe2c425f91f3d0604f32d562~mv2.png" class="popup"><img src="/assets/images/wix/c191b15384-ce7a39_6b023c9abe2c425f91f3d0604f32d562~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빛의 3원색, 가산혼합과 감산혼합)</p>
+<p>저희같이 수학에 약한 초보 아티스트들에게 익숙한 <strong>빛의 3원색</strong>으로 집합 개념을 설명하는 것이 분명 이해에 큰 도움이 될 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f69964006b-ce7a39_e711b8605e3945dca0f66e119f6af286~mv2.png" class="popup"><img src="/assets/images/wix/f69964006b-ce7a39_e711b8605e3945dca0f66e119f6af286~mv2.png" alt="" loading="lazy"></a></figure>
+<p>위의 자료를 봅시다. 여기 두 조명이 있습니다. 저희는 빛이 반사되는 영역을 집합으로 치환해서 부를 겁니다. 저희 편한대로 이름을 붙혀 줍시다. 빨간 빛 영역을 &#39;집합 R&#39;이라고 부르고 초록 빛 영역을 &#39;집합 G&#39;라고 부릅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f54129badb-ce7a39_09bda6bf08b944ae90a5143c2c702b73~mv2.png" class="popup"><img src="/assets/images/wix/f54129badb-ce7a39_09bda6bf08b944ae90a5143c2c702b73~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(픽셀이 곧 원소)</p>
+<p>이제 조명이 아니라 모니터 속의 픽셀으로 생각해봅시다. 이러한 &#39;픽셀&#39;들은 집합이라는 모니터 내부에서도 특정한 영역 속에 포함된 개별적 존재로서 **원소(Element)**라고 부릅니다.</p>
+<p>수학적 정의로 &#39;빨간색 픽셀 r은 집합 R의 원소이다.&#39;는 <strong>r∈R</strong>로 표기합니다. 그리고 원소가 여러개일 경우 <strong>원소나열법으로 R = {r1, r2, r3 ...}</strong> 라고 표기해줄수도 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/45dcbe8015-ce7a39_daeaf68f362842748b53424bbc2c5f7c~mv2.png" class="popup"><img src="/assets/images/wix/45dcbe8015-ce7a39_daeaf68f362842748b53424bbc2c5f7c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(전체집합 <em>U</em>)</p>
+<p>여기서 &#39;모니터&#39;는 존재하는 다루어지는 모든 집합들을 원소로 포함하는 **전체집합(Universal set)**의 개념으로 이해할 수 있습니다.</p>
+<p>(러셀의 역설 때문에 지금은 쓰이지 않는 개념입니다만, 소박한 집합론을 설명할때는 매우 유용한 도구이기 때문에 사용하겠습니다)</p>
+<figure class="article-image"><a href="/assets/images/wix/bfaf6088b1-ce7a39_99130713928249fdbb0453407297783e~mv2.png" class="popup"><img src="/assets/images/wix/bfaf6088b1-ce7a39_99130713928249fdbb0453407297783e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(가산혼합과 교집합)</p>
+<p>빨간 빛(float3 1,0,0)과 초록 빛(float3 0,1,0)이 동시에 존재하는 영역은 어떻게 될까요? 빛의 성질은 **가산혼합(덧셈)**이니 노란 빛(float 1,1,0)이 됩니다.</p>
+<p>이렇게 두 집합이 공유하는 영역 역시 &#39;집합&#39;이며 이런 영역을 **교집합(Intersection)<strong>이라고 부르고 <strong>R</strong></strong>∩**<strong>G</strong>로 표기합니다.</p>
+<p>이처럼 두 개 이상의 집합의 관계를 집합 연산 기호를 통해 정의하는 집합의 종류가 매우 많습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ced666bf64-ce7a39_468dcd5546d24a0c9551c0872b7f7d0e~mv2.png" class="popup"><img src="/assets/images/wix/ced666bf64-ce7a39_468dcd5546d24a0c9551c0872b7f7d0e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(합집합)</p>
+<p>집합 R과 G의 영역 전부를 포함하는 영역은 **합집합(Union set)<strong>이라고 부르며 <strong>R</strong></strong>∪**<strong>G</strong>로 표기합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/45e515a143-ce7a39_4343854ab7234c6097ff0dea5e066bd0~mv2.png" class="popup"><img src="/assets/images/wix/45e515a143-ce7a39_4343854ab7234c6097ff0dea5e066bd0~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(부분집합)</p>
+<p>교집합처럼 일부분만 겹쳐 있는 것이 아니라, 아예 집합 R 내부에 집합 G가 들어있다면 &#39;집합 G는 집합 R의 <strong>부분집합(Subset)<strong>이다.&#39; 라고 정의하며 <strong>G</strong></strong>⊂R</strong>로 표기합니다.</p>
+<p>집합 G가 집합 R에 포함되긴 하지만, 전체집합인 모니터 내에서 차지하는 영역과 픽셀의 색이 다르기 때문에 여전히 별개의 다른 집합이라고 부를 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/07c554f335-ce7a39_6ebd6e7e65ab4e2eb2580613f5a8aefc~mv2.png" class="popup"><img src="/assets/images/wix/07c554f335-ce7a39_6ebd6e7e65ab4e2eb2580613f5a8aefc~mv2.png" alt="" loading="lazy"></a></figure>
+<p>여기 집합 R1과 R2가 있습니다. 그런데 R1의 모든 픽셀의 색은 빨간색이고 R2역시 그러합니다. 심지어 모니터에서 차지하고 있는 영역까지 똑같습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d74a06bb49-ce7a39_5044fa2381e344a58d729abb3add0570~mv2.png" class="popup"><img src="/assets/images/wix/d74a06bb49-ce7a39_5044fa2381e344a58d729abb3add0570~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(상등)</p>
+<p>R1이 R2의 부분집합이면서 동시에 R2가 R1의 부분집합일 경우(R1⊂R2, R2⊂R1) 이것은 완전히 똑같은 집합이며 <strong>상등(<strong><strong>Equality</strong></strong>)</strong> 이라고 부릅니다. 등호를 써서 <strong>R1=R2</strong>라고 표기합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/12e595793a-ce7a39_8778043de3b7427098812700b6c215d1~mv2.png" class="popup"><img src="/assets/images/wix/12e595793a-ce7a39_8778043de3b7427098812700b6c215d1~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(차집합)</p>
+<p>집합 R에서 G가 겹치는 부분을 뺀 나머지 영역을 차집합(Difference set)이라고 부르며 <strong>R-G</strong>라고 표기합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/dadf9a4769-ce7a39_a7e63f41ea52422e9b3a68037bbe0e45~mv2.png" class="popup"><img src="/assets/images/wix/dadf9a4769-ce7a39_a7e63f41ea52422e9b3a68037bbe0e45~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(공집합)</p>
+<p>전체집합을 포함한 그 어떤 집합에도 속하지 않는 영역이며 그 어떤 픽셀도 포함하지 않는 집합을 *<em>공집합(Empty set)*<em>이라고 부르고 기호 <strong>&#39;</strong></em>*∅</em>***&#39;**로 표기합니다.</p>
+<h2 id="스텐실-버퍼의-구조"><strong>스텐실 버퍼의 구조</strong></h2>
+<p>저희는 위에서 현대 집합론 중에서도 극히 기초적인 일부분(소박한 집합론)만을 살펴봤습니다, 하지만 이정도 수준만 알고 있더라도 스텐실을 사용하는데 필요한 배경지식은 다 갖춘 셈입니다.</p>
+<p>모니터에 배치된 <strong>화소(pixel)들이 어느 집합에 포함되어 있는지에 대한 정보와 집합들의 연산</strong>이 바로 오늘 배울 스텐실의 핵심 원리입니다.</p>
+<blockquote>
+<p>이 포스트는 <strong>포워드 렌더링 파이프라인</strong> 기준으로 작성되었습니다. 디퍼드 렌더링 파이프라인 환경에서 스텐실 버퍼는 다른 방식으로 사용되고 몇몇 기능이 제한적으로 동작합니다.</p>
+</blockquote>
+<p>스텐실은 다음과 같은 옵션으로 이루어져 있습니다. 천천히 하나하나 알아보도록 합시다.</p>
+<ul>
+<li>레퍼런스(Reference)</li>
+<li>컴패리슨(Comparison)</li>
+<li>읽기마스크(ReadMask)</li>
+<li>쓰기마스크(WriteMask)</li>
+<li>성공(Pass)</li>
+<li>실패(Fail)</li>
+<li>Z-실패(Z-Fail)</li>
+</ul>
+<figure class="article-image"><a href="/assets/images/wix/536a54acff-ce7a39_e9a1a44ec82040f18d03e6dc82883e5b~mv2.png" class="popup"><img src="/assets/images/wix/536a54acff-ce7a39_e9a1a44ec82040f18d03e6dc82883e5b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Screen-Space)</p>
+<p>레퍼런스(Reference)는 줄여서 **레프(Ref)**라고 부르며, 개념을 설명하기 위해선 먼저 모니터 화면을 봐야합니다.</p>
+<p>픽셀이 모니터의 해상도에 맞춰 출력되는 공간을 **스크린 스페이스(Screen-Space)**라고 합니다. 그리고 해상도 크기대로 만들어진 스크린 스페이스 UV가 존재합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ac3934ca02-ce7a39_27f18b41455c40d98564bd3bc5a220b5~mv2.gif" class="popup"><img src="/assets/images/wix/ac3934ca02-ce7a39_27f18b41455c40d98564bd3bc5a220b5~mv2.gif" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/6929aae3e3-ce7a39_d6949bd625fc486a993e9806832c380f~mv2.png" class="popup"><img src="/assets/images/wix/6929aae3e3-ce7a39_d6949bd625fc486a993e9806832c380f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(스크린 스페이스 출력하기)</p>
+<p>스크린 스페이스 uv를 직접 눈으로 보고 싶다면 위와 같이 코드를 작성하면 됩니다.</p>
+<p>유니티에서 기본적으로 제공하는 ComputeScreenPos() 매크로에 클립공간으로 변환된 o.vertex를 넣으면 미리 설정한 float4(w,x,y,z) 변수에 값이 들어갑니다.</p>
+<p>w에는 원근(perspective) 값이 들어 있어서 w로 xy를 나눠주면 원근 왜곡이 없는 순수한 float2 스크린 스페이스 UV를 볼 수 있습니다.</p>
+<p>이러한 스크린 스페이스를 위에서 배운대로 집합으로 따지면 <strong>모든 픽셀을 포함</strong>하고 있기 때문에 <strong>전체집합</strong>입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ca560b5ce8-ce7a39_8555bf9850004e2e9915bd3343d64495~mv2.png" class="popup"><img src="/assets/images/wix/ca560b5ce8-ce7a39_8555bf9850004e2e9915bd3343d64495~mv2.png" alt="" loading="lazy"></a></figure>
+<p>만약 이 상태에서 스텐실 버퍼를 스크린 스페이스로 출력해보면 검은색으로 가득 차있습니다. 아무것도 표시할 것이 없습니다. 아티스트가 아무 값도 스텐실 버퍼에 넣어주지 않았으니까요. 집합으로 따지면 <strong>공집합</strong>인 것입니다.</p>
+<p>**레퍼런스(Reference)**란 집합의 속성을 &#39;숫자&#39;로서 정의하는 것입니다. 집합 R,G를 스텐실에서는 집합 1,2라는 숫자로 부를 수 있는 겁니다. 스텐실 버퍼에는 8비트 공간이 할당 됩니다. 0~255 범위에서 레퍼런스 값을 정할 수 있습니다.</p>
+<p>아티스트가 사용할 수 있는 256개의 스텐실 버퍼 단계가 있는 것입니다. 그리고 255를 넘는 값은 오버플로우(overflow)되어 다시 0으로 시작합니다.</p>
+<p>아티스트가 쉐이더에서 스텐실에 아무 값도 넣어주지 않았다면 레퍼런스의 기본(Default)값은 0입니다. 그리고 0은 검은색입니다. 사실 float3(0,0,0) 픽셀은 <strong>레퍼런스 0번을 색상으로 표시</strong>하고 있었던 것이죠.</p>
+<figure class="article-image"><a href="/assets/images/wix/07d5aa6a91-ce7a39_c4c4e176211a4955bf96bf3280721ecd~mv2.png" class="popup"><img src="/assets/images/wix/07d5aa6a91-ce7a39_c4c4e176211a4955bf96bf3280721ecd~mv2.png" alt="" loading="lazy"></a></figure>
+<p>OpenGL의 TBDR 하드웨어 렌더링 파이프라인에서 Clear명령에 의해 On-chip 버퍼들 (Colour, Z, Stencil)이 항상 기본(Default) 값으로 초기화 되어 스텐실 버퍼가 검은 화면인 것을 프레임 디버거(frame Debuger)로 확인 할 수 있습니다.</p>
+<p>그렇습니다. 모바일 하드웨어 렌더링 파이프라인에서 <strong>레퍼런스 0이 공집합</strong>의 역할을 합니다. 그리고 이러한 초기화 과정이 모바일 환경에서 빠른 렌더링 속도를 유지시켜줍니다. 자세한 내용은 이후 TBDR 하드웨어 렌더링 파이프라인 포스트를 작성하겠습니다.</p>
+<h3 id="컴패리슨-comparison">컴패리슨(Comparison)</h3>
+<p>컴패리슨은 줄여서 **컴프(Comp)**라고 부르며, 지정된 레퍼런스 값과 현재 스텐실 버퍼의 값을 비교하여 연산하는 작업에 사용됩니다. 위에서 배웠던 집합 개념을 써먹을 때가 왔습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/bab2d49da6-ce7a39_c871c7324f90469685879eb62c43ee87~mv2.png" class="popup"><img src="/assets/images/wix/bab2d49da6-ce7a39_c871c7324f90469685879eb62c43ee87~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(유니티 씬 뷰)</p>
+<p>저희가 아직 쉐이더 코딩 하진 않았지만, 저기 공중에 떠있는 빨간 큐브(Cube) 메쉬 스텐실 값을 1으로 지정해줬다고 가정해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/71c401515c-ce7a39_28eaaaa52549411ab4399cf1caa0b0fb~mv2.png" class="popup"><img src="/assets/images/wix/71c401515c-ce7a39_28eaaaa52549411ab4399cf1caa0b0fb~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(가상의 스텐실 버퍼 내부 모습)</p>
+<p>스텐실 버퍼 값을 픽셀로 출력하라고 명령하면 버퍼는 이런 모습일 것입니다. (사실 이것으로는 스텐실 버퍼 값이 바뀌지 않지만 개념 이해를 위해 큐브가 렌더링 된 픽셀 전부 스텐실이 1이라고 가정합시다)</p>
+<p>아무 스텐실 입력이 없는 공집합 부분은 레퍼런스 값이 0 입니다. <strong>빨간 큐브 메쉬가 그려진 픽셀에 레퍼런스 &#39;1&#39; 이라는 값이 할당되었습니다.</strong></p>
+<figure class="article-image"><a href="/assets/images/wix/6c7a871d38-ce7a39_6ef3f49132074272863659e403a55e7f~mv2.gif" class="popup"><img src="/assets/images/wix/6c7a871d38-ce7a39_6ef3f49132074272863659e403a55e7f~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(8비트 채널)</p>
+<p>상술했듯이 스텐실 버퍼에 할당된 값은 8비트, 즉 256단계입니다. 저기 회색 부분이 레퍼런스 &#39;1&#39;이지만 절대로 저런 색이 아닙니다. (R:1 G:1 B:1)이죠. 잘 보이게 제가 과장해서 그린 것이니 착각하시면 안됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" class="popup"><img src="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/3e871c05ef-ce7a39_61c9fea3e5ac4acfa4afd655b3c9faa6~mv2.png" class="popup"><img src="/assets/images/wix/3e871c05ef-ce7a39_61c9fea3e5ac4acfa4afd655b3c9faa6~mv2.png" alt="" loading="lazy"></a></figure>
+<blockquote>
+<p>중요한 점. 항상 스텐실 버퍼의 상태와 실제 메쉬가 존재하는 씬을 함께 봐야 합니다. 그래야 혼란스럽게 느껴지지 않습니다.</p>
+</blockquote>
+<p>이번에는 두번째 파란 큐브 메쉬를 추가하고 레퍼런스 2번으로 만들었습니다. 이제 스텐실 버퍼를 봅시다. 레퍼런스 1번 픽셀과 2번 픽셀에 겹치는 픽셀이 생겼습니다. 이런 경우 겹쳐지는 픽셀의 스텐실 버퍼 값은 얼마일까요?</p>
+<p>정답은 <strong>나중에 렌더링 된 레퍼런스 2</strong>입니다. 파란 큐브 메쉬가 카메라에 더 가까이 있기 때문에 나중에 그려서 덮어씌워진 것입니다. 왜냐하면 알파에 대해 다뤘던 <a href="/posts/wix-unityshader-06-fragment-advanced/">이전 포스트(링크)</a>에서 깊이 버퍼(Z, Depth Buffer)로 어떤 픽셀이 더 카메라에 가까이 있는가를 판단하기 때문입니다.</p>
+<p>스텐실에서는 <strong>그리는 순서대로 연산하기 때문에 정말 중요</strong>합니다.</p>
+<p>하지만 레퍼런스 1번으로 코딩 되어있는 큐브 메쉬는 그대로 값을 보존하고 있기 때문에 카메라를 움직여서 레퍼런스 1번 큐브 메쉬를 카메라 가까이에 두면 반대로 1번 값이 그대로 남아있게 됩니다.</p>
+<h3 id="비교-논리-연산자"><strong>비교 / 논리 연산자</strong></h3>
+<p>이제 컴패리슨의 연산자들을 위의 스텐실 버퍼에 코딩으로 적용하여 어떤 기능을 수행하는지 예시를 보며 하나하나 알아봅시다.</p>
+<p>부울대수(T/F)</p>
+<ul>
+<li>Always : 스텐실 테스트를 항상 통과하도록 만듭니다. <strong>기본(Default) 값</strong>입니다.</li>
+<li>Never : 스텐실 테스트를 항상 실패하도록 만듭니다.</li>
+</ul>
+<p>상등(==,  =/=)</p>
+<ul>
+<li>Equal : 레퍼런스 값이 버퍼 안의 값과 같은 픽셀만 렌더링합니다.</li>
+<li>NotEqual : 레퍼런스 값이 버퍼 안의 값과 다른 픽셀만 렌더링합니다.</li>
+</ul>
+<p>부등식(&gt;=, =&lt;)</p>
+<ul>
+<li>LEqual : 레퍼런스 값이 버퍼 안의 값보다 작거나 같은 픽셀만 렌더링합니다.</li>
+<li>GEqual : 레퍼런스 값이 버퍼 안의 값보다 크거나 같은 픽셀만 렌더링합니다.</li>
+</ul>
+<p>부등식(&gt;, &lt;)</p>
+<ul>
+<li>Greater : 레퍼런스 값이 버퍼 안의 값보다 큰 픽셀만 렌더링합니다.</li>
+<li>Less : 레퍼런스 값이 버퍼 안의 값보다 작은 픽셀만 렌더링합니다.</li>
+</ul>
+<p>초기 조건은 아까와 똑같습니다. 빨간 큐브(Ref 1)가 파란 큐브(Ref 2)와 함께 같은 씬에 있습니다. 파란 큐브 역시 디폴트 값이 Always기 때문에 빨간 큐브와 똑같습니다.</p>
+<p>빨간 큐브(Ref 1)에 컴프는 <strong>Always</strong> 를 적용하면 어떻게 될까요?</p>
+<figure class="article-image"><a href="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" class="popup"><img src="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/3312389af0-ce7a39_72df756e2a9d441b9d8788c61853e295~mv2.png" class="popup"><img src="/assets/images/wix/3312389af0-ce7a39_72df756e2a9d441b9d8788c61853e295~mv2.png" alt="" loading="lazy"></a></figure>
+<p>레퍼런스 값과 상관 없이 어떤 비교도 하지 않고 테스트 결과로 참(True)을 반환합니다. 따라서 픽셀이 스텐실 테스트를 항상 통과(Pass)하는 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/4f30e954fa-ce7a39_bf5a2ff016b645e08df27eba631f9721~mv2.png" class="popup"><img src="/assets/images/wix/4f30e954fa-ce7a39_bf5a2ff016b645e08df27eba631f9721~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/2bf0cd1733-ce7a39_853554f5f92b4b46a4976a03402ba0e9~mv2.png" class="popup"><img src="/assets/images/wix/2bf0cd1733-ce7a39_853554f5f92b4b46a4976a03402ba0e9~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(항상 실패 한 픽셀로 분류됨)</p>
+<p>반대로 <strong>Never</strong>를 적용하면 어떤 비교도 하지 않고 테스트 결과로 거짓(False)를 반환합니다. 따라서 픽셀이 스텐실 테스트를 항상 실패(Fail) 하는 것입니다. 또한 실패한 픽셀은 그려지지(Render) 않습니다.</p>
+<p>참/거짓 논리 연산을 스텐실에서는 <strong>&#39;픽셀이 테스트를 통과(Pass)했다/실패(Fail)했다&#39;</strong> 라고 표현합니다.</p>
+<p>실제 쉐이더 코딩 단계에서도 테스트가 통과(pass) 했을 때의 분기와 실패(fail) 했을 때, 뎁스 버퍼 때문에 그려지지 않을 때(Z-실패)의 분기를 나눠서 각 <strong>픽셀마다 다른 연산을 지정</strong> 할 수 있습니다.</p>
+<h3 id="통과-pass">통과(Pass)</h3>
+<p>스텐실 테스트를 통과(pass)하고 깊이 버퍼 테스트도 통과해서 렌더되는 픽셀을 어떻게 처리할 지 정해주는 부분입니다.</p>
+<p>기본 값은 &#39;keep&#39; 이며, 성공한 픽셀에 아무런 조작도 하지 않습니다.</p>
+<h3 id="실패-fail">실패(Fail)</h3>
+<p>스텐실 테스트에 실패(fail)한 픽셀을 어떻게 처리할 지 정해주는 부분입니다.</p>
+<p>기본 값은 &#39;keep&#39; 이며, 실패한 픽셀에 아무런 조작도 하지 않습니다.</p>
+<h3 id="z실패-zfail">Z실패(ZFail)</h3>
+<p>깊이 버퍼(Z 혹은 Depth buffer)를 이용한 앞-뒤 구분을 통해 그려지지 않은 픽셀 영역을 어떻게 처리할 지 정해주는 부분입니다. 역시 기본 값은 keep입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" class="popup"><img src="/assets/images/wix/0260c3c6c9-ce7a39_ebb28af131434a069d66ae7c79124e6b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>빨간 큐브(Ref 1)에 컴프는 <strong>Equal</strong>을 적용하면 어떻게 될까요?</p>
+<figure class="article-image"><a href="/assets/images/wix/ed5fb8562c-ce7a39_07e40e389b5f43b8aa0aee578c1dd88f~mv2.png" class="popup"><img src="/assets/images/wix/ed5fb8562c-ce7a39_07e40e389b5f43b8aa0aee578c1dd88f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(???)</p>
+<p>빨간 큐브가 아예 렌더링 되지 않았습니다. 무슨 일이 일어난 것일까요?</p>
+<p>Equal은 &#39;레퍼런스 값이 버퍼 안의 값과 <strong>같은 픽셀</strong>만 렌더링 합니다&#39; 라고 위에서 설명했습니다. 따라서 레퍼런스 1번과 같은 값을 가진 픽셀만 통과하고 나머지는 전부 실패하기 때문입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/6cfff80eba-ce7a39_810dbd6fda94411ba48085f26a834069~mv2.png" class="popup"><img src="/assets/images/wix/6cfff80eba-ce7a39_810dbd6fda94411ba48085f26a834069~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빨간 네모가 렌더링 되기 전 스텐실 버퍼의 모습)</p>
+<p>하지만 &quot;빨간 큐브는 그 자체로 레퍼런스 값이 1이잖아요!&quot; 라고 물어보신다면 비교 연산이 들어가는 시점이 자기 자신을 <strong>스텐실 버퍼에 렌더링 하기 직전</strong>이기 때문입니다.</p>
+<p>기존 스텐실 버퍼에 레퍼런스 1 값이 하나도 없는 상태에서 비교를 하니 같은 1 값이 하나도 없어서 렌더링하지 않는 것입니다.</p>
+<p>그렇다면 파란 큐브의 레퍼런스 값을 1으로 바꿔서 빨간 큐브와의 <strong>교집합</strong> 부분만 나오게 해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d3b3f5a918-ce7a39_0243ad57f1894776989d6a3640dc6773~mv2.png" class="popup"><img src="/assets/images/wix/d3b3f5a918-ce7a39_0243ad57f1894776989d6a3640dc6773~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Geometry +1)</p>
+<p>먼저 파란 큐브의 레퍼런스 값을 1으로 바꿉니다.</p>
+<p>다음은 빨간 큐브가 파란 큐브보다 앞에 있든 뒤에 있든 &#39;무조건&#39; 늦게 그려지도록 빨간 큐브의 렌더 큐를 &#39;2001&#39;로 조작합니다.</p>
+<p>이렇게 해야 스텐실 버퍼에서 파란 큐브의 레퍼런스 값을 받을 수 있습니다. 빨간 큐브가 먼저 스텐실 비교 연산을 하게되면 파란 큐브가 그려지지 않았으니 스텐실 버퍼 내부가 텅 비어있기 때문입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/4d6da6d8be-ce7a39_da7cb70d78a74673ac78dd442936d46b~mv2.png" class="popup"><img src="/assets/images/wix/4d6da6d8be-ce7a39_da7cb70d78a74673ac78dd442936d46b~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/1e76141b91-ce7a39_41d09da14dc640329e55365f51e0016d~mv2.png" class="popup"><img src="/assets/images/wix/1e76141b91-ce7a39_41d09da14dc640329e55365f51e0016d~mv2.png" alt="" loading="lazy"></a></figure>
+<p>결과를 보면 교집합 영역의 픽셀이 빨간색으로 출력됩니다.</p>
+<h2 id="쉐이더-코딩하기"><strong>쉐이더 코딩하기</strong></h2>
+<p>위에서 다뤘던 컴프의 Always와 Equal등의 간단한 스텐실 예제들을 쉐이더 코딩으로 재구성하면서 나머지 연산자들도 공부해 봅시다.</p>
+<p>스텐실은 매 패스마다 새로 정의해줄 수 있으며 코딩으로 아래와 같이 선언됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/dd8f1baa82-ce7a39_6aa57fa539bb4a68a61dfe8cb0224291~mv2.png" class="popup"><img src="/assets/images/wix/dd8f1baa82-ce7a39_6aa57fa539bb4a68a61dfe8cb0224291~mv2.png" alt="" loading="lazy"></a></figure>
+<p>전부 기본(Default)값으로 이루어진 스텐실 입니다. 위에서 빨간 큐브의 Comp를 Always로 설정한 것이 레퍼런스 값을 제외하고는 사실 초기 설정과 다른 것이 없었습니다.</p>
+<h3 id="읽기마스크-readmask-와-쓰기마스크-writemask">읽기마스크(ReadMask)와 쓰기마스크(WriteMask)</h3>
+<p>레퍼런스 값과 같은 8비트의 정보로서 레퍼런스 값을 스텐실 버퍼 속의 값들과 비교할 때 사용합니다. 읽기와 쓰기 마스크 모두 디폴트값이 255이며, 이것이 의미하는 바는 0에서 255사이의 모든 레퍼런스 값과 상호작용 하겠다는 뜻입니다.</p>
+<p>간단한 예를 들어봅시다.</p>
+<p>&#39;ReadMask 254&#39;라고 설정하면 레퍼런스 255번의 스텐실 버퍼를 읽지 않고 무시 하겠다는 뜻입니다.</p>
+<p>&#39;WriteMask 0&#39;이라고 설정하면 어떤 레퍼런스에도 스텐실 데이터를 쓰지 않으며 레퍼런스 0번은 아무 스텐실 데이터도 작성되지 않습니다.</p>
+<p>이러한 마스크 옵션은 사실 특수한 경우가 아니면 기본 값으로 두고 잘 사용하지 않습니다.</p>
+<p>다음은 위에서 했던 빨간 큐브의 교집합 영역을 출력하는 스텐실 쉐이더를 봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/967bc71298-ce7a39_4ea16a7bc5a74235b85d2d7c5c61df99~mv2.png" class="popup"><img src="/assets/images/wix/967bc71298-ce7a39_4ea16a7bc5a74235b85d2d7c5c61df99~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빨간 큐브 / 파란 큐브 설정)</p>
+<figure class="article-image"><a href="/assets/images/wix/19cf3a3d05-ce7a39_566afa39dc59427cbc1101cf44db845e~mv2.png" class="popup"><img src="/assets/images/wix/19cf3a3d05-ce7a39_566afa39dc59427cbc1101cf44db845e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>빨간 큐브는 2000(Geometry/Opaque)+1 으로 렌더 큐를 설정하였고 컴프는 Equal입니다.</p>
+<p>파란 큐브는 그대로 2000번으로 먼저 그려지게 한 뒤 스텐실 테스트를 **통과(Pass)**한 픽셀을 <strong>Replace</strong> 명령으로 레퍼런스 1 값을 집어넣습니다.</p>
+<p>Pass / Fail / ZFail 분기로 나눠진 픽셀들에 다음과 같은 명령들을 내릴 수 있습니다.</p>
+<ul>
+<li>Keep : 아무 동작도 하지 않습니다. 기본 값입니다.</li>
+<li>Zero : 버퍼에 레퍼런스 0값을 대입합니다.</li>
+<li>Replace : 버퍼에 레퍼런스 값을 대입합니다.</li>
+<li>IncrSat : 버퍼의 값을 1 증가시킵니다. 만약 값이 이미 255라면 그대로 255를 유지합니다.</li>
+<li>DecrSat : 버퍼의 값을 1 감소시킵니다. 만약 값이 이미 0이면 그대로 0을 유지합니다.</li>
+<li>Invert : 버퍼의 값을 반전합니다.</li>
+<li>IncrWrap : 버퍼의 값을 1 증가시킵니다. 만약 값이 이미 255라면 0이 됩니다.</li>
+<li>DecrWrap : 버퍼의 값을 1 감소시킵니다. 만약 값이 이미 0이면 255가 됩니다.</li>
+</ul>
+<figure class="article-image"><a href="/assets/images/wix/91c4cc232f-ce7a39_d9e4226f96fc49a8a25e374fd8d4076b~mv2.png" class="popup"><img src="/assets/images/wix/91c4cc232f-ce7a39_d9e4226f96fc49a8a25e374fd8d4076b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(목표하는 스텐실 버퍼의 값)</p>
+<p>코딩으로 명령들을 이용해서 스텐실 버퍼를 위와 같이 조작해 봅시다. 아래의 코드를 보지 않고 한 번 만들어보세요.</p>
+<figure class="article-image"><a href="/assets/images/wix/57ce2397ba-ce7a39_edaabbd0746d44a19490f2d818424695~mv2.gif" class="popup"><img src="/assets/images/wix/57ce2397ba-ce7a39_edaabbd0746d44a19490f2d818424695~mv2.gif" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/a00a4bbb06-ce7a39_15135e0b883347baaf3958f54228af9f~mv2.png" class="popup"><img src="/assets/images/wix/a00a4bbb06-ce7a39_15135e0b883347baaf3958f54228af9f~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(빨간 큐브 / 파란 큐브 / 초록 큐브)</p>
+<p>버퍼 값이 제대로 들어갔는지 검증하기 위해 초록 큐브를 만들었습니다. 위와 같이 Equal으로 설정하면 레퍼런스 값이 1일 때 같은 값이 들어간 픽셀이 초록색이 그려집니다.</p>
+<p>현재 스텐실 버퍼는 그대로 두고 초록 큐브의 컴프 옵션을 변경해서 직접 눈으로 디버깅 하면 익숙해지는 시간을 가집시다.</p>
+<h3 id="comp"><strong>Comp</strong></h3>
+<figure class="article-image"><a href="/assets/images/wix/7d2d5ea247-ce7a39_bd0f0e18cf754b77b38b4cfaa2723aff~mv2.png" class="popup"><img src="/assets/images/wix/7d2d5ea247-ce7a39_bd0f0e18cf754b77b38b4cfaa2723aff~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(NotEqual, <strong>Pass =/= 1</strong>)</p>
+<p>NotEqual : 레퍼런스 값이 버퍼 안의 값과 다른 픽셀만 렌더링합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/6538f0e99e-ce7a39_444c5544376549acbe9ac6aa524efb23~mv2.png" class="popup"><img src="/assets/images/wix/6538f0e99e-ce7a39_444c5544376549acbe9ac6aa524efb23~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(LEqual, <strong>Pass &gt;= 1</strong>)</p>
+<p>LEqual : 레퍼런스 값이 버퍼 안의 값보다 작거나 같은 픽셀만 렌더링합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/e2cb668fec-ce7a39_5cb6e6aa24e54f15a4c2de1b6a1ab4a2~mv2.png" class="popup"><img src="/assets/images/wix/e2cb668fec-ce7a39_5cb6e6aa24e54f15a4c2de1b6a1ab4a2~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(GEqual, <strong>Pass =&lt; 1</strong>)</p>
+<p>GEqual : 레퍼런스 값이 버퍼 안의 값보다 크거나 같은 픽셀만 렌더링합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/bed32d0776-ce7a39_7622fa6b645645298653001d2b712962~mv2.png" class="popup"><img src="/assets/images/wix/bed32d0776-ce7a39_7622fa6b645645298653001d2b712962~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Greater, <strong>Pass &gt; 1</strong>)</p>
+<p>Greater : 레퍼런스 값이 버퍼 안의 값보다 큰 픽셀만 렌더링합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3751b84198-ce7a39_f9e585b741654314aca0733b59d5f15e~mv2.png" class="popup"><img src="/assets/images/wix/3751b84198-ce7a39_f9e585b741654314aca0733b59d5f15e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Less, <strong>Pass &lt; 1</strong>)</p>
+<p>Less : 레퍼런스 값이 버퍼 안의 값보다 작은 픽셀만 렌더링합니다.</p>
+<h2 id="stencil-z-test-응용-쉐이더"><strong>Stencil/Z-Test 응용 쉐이더</strong></h2>
+<figure class="article-image"><a href="/assets/images/wix/f54ffdd0ff-ce7a39_46b37a2954a244ebaba2eb8d38f5907c~mv2.gif" class="popup"><img src="/assets/images/wix/f54ffdd0ff-ce7a39_46b37a2954a244ebaba2eb8d38f5907c~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>이번 포스트의 메인 이벤트입니다. 오브젝트에 가려졌을 때만 외곽선이 나오도록 쉐이더를 작성 해봅시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/b498b75497-ce7a39_875f723ab8314cf4b4426322c2362e0c~mv2.png" class="popup"><img src="/assets/images/wix/b498b75497-ce7a39_875f723ab8314cf4b4426322c2362e0c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(3-Pass)</p>
+<p>위에서 미리 서술했듯이, 스텐실은 패스마다 새로 지정해 줄 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/38f2786307-ce7a39_c167b77f6f264c1abdd0be35573805d7~mv2.png" class="popup"><img src="/assets/images/wix/38f2786307-ce7a39_c167b77f6f264c1abdd0be35573805d7~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(<a href="https://docs.unity3d.com/kr/current/Manual/SL-CullAndDepth.html">유니티 메뉴얼 링크</a>)</p>
+<p><strong>Cull/Zwrite/ZTest 같은 깊이 테스트</strong> 역시 마찬가지입니다. 그래서 이번 쉐이더는 세 개의 패스(Draw call 3)로 구성했습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f00e3d4108-ce7a39_88474d1bdab64219a178558bd1cde88e~mv2.png" class="popup"><img src="/assets/images/wix/f00e3d4108-ce7a39_88474d1bdab64219a178558bd1cde88e~mv2.png" alt="" loading="lazy"></a></figure>
+<p>첫번째는 깊이 값만 그리는 패스입니다. 깊이를 제외하고 아무 연산도 하지 않도록 설정 해줍시다.</p>
+<p>만약 카메라 뷰가 특정한 방향에 고정되어 있어서 모든 방향에서의 정확한 깊이 값이 필요없는 경우 (쿼터뷰, 탑뷰, 횡스크롤뷰 등등)에는 <strong>첫번째 뎁스 패스가 없어도 괜찮기 때문에 드로우 콜을 절약</strong>할 수 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/a346a1bdd9-ce7a39_f0c41c0dd2d94823a97bcfa17725a25a~mv2.png" class="popup"><img src="/assets/images/wix/a346a1bdd9-ce7a39_f0c41c0dd2d94823a97bcfa17725a25a~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(스텐실 버퍼 계획 설정)</p>
+<p>두번째 패스는 메인 패스입니다. 2-pass 외곽선 방식과는 반대로 <strong>메인 패스를 먼저 그려서 스텐실 버퍼를 조작하는 것이 중요 포인트</strong>입니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl"> Tags { &quot;RenderType&quot;=&quot;Opaque&quot; &quot;Queue&quot;=&quot;2001&quot; }
+ Zwrite Off</code></pre></section>
+<p>깊이 값은 첫 패스에서 그렸으니 꺼줍시다. 이제 스텐실 버퍼의 상태를 조작해봅시다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl"> Stencil
+            { Ref 0 Comp Equal Pass keep fail Zero Zfail Zero }</code></pre></section>
+<p><strong>오브젝트</strong>의 <strong>레퍼런스 값은 1</strong>으로 미리 설정해뒀기 때문에 레퍼런스 값 0과 같은 것만 스텐실 테스트를 통과 하도록 설정하고 오브젝트에 의해 가려진 실패하는 부분의 레퍼런스 값을 0으로 만들어줍시다. 사실 2로 만들어줘도 됩니다. <strong>실패하는 픽셀의 레퍼런스 값을 1이 아니게 만들기만 하면 되는 것이죠.</strong></p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">Tags { &quot;RenderType&quot;=&quot;Opaque&quot; &quot;Queue&quot;=&quot;2002&quot; }
+Zwrite Off</code></pre></section>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">Ztest GEqual
+
+ Stencil
+            { Ref 1 Comp Equal Pass keep fail keep Zfail keep }</code></pre></section>
+<p>마지막 세번째 패스는 외곽선 패스입니다. 제일 마지막에 그리지만 외곽선의 역할을 해냅니다.  Cull front로 폴리곤의 노말을 뒤집지도 않습니다. 오직 레퍼런스 1 값이 들어있는 버퍼에만 픽셀을 렌더링하게 설정하기 때문입니다.</p>
+<blockquote>
+<p>중요 포인트 하나 더, Ztest의 비교 연산자는 스텐실 테스트의 컴패리슨(Comparrison)과 똑같은 것을 사용합니다.</p>
+</blockquote>
+<figure class="article-image"><a href="/assets/images/wix/da1002a90d-ce7a39_0f4737e616d04fc9b1d01a0c1c0e59a0~mv2.png" class="popup"><img src="/assets/images/wix/da1002a90d-ce7a39_0f4737e616d04fc9b1d01a0c1c0e59a0~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(GEqual)</p>
+<p>따라서 **GEqual로 &#39;깊이 버퍼&#39;의 값이 크거나 같은 픽셀에만 렌더링(Pass &gt;= Depth)**을 걸게 하면 다른 오브젝트에 의해 가려졌을 때만 외곽선이 그려지게 됩니다. 깊이 값은 카메라에 <strong>가까울수록 0에 수렴</strong>하기 때문입니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">                v.vertex.xyz += v.normal * _Linewidth;
+                o.vertex = UnityObjectToClipPos(v.vertex);</code></pre></section>
+<p>버텍스를 노말 방향으로 움직이게 하면 외곽선이 됩니다.</p>
+<p>완성입니다. 읽어주셔서 감사합니다. 아마 나중에 스텐실 쉐이더 응용해서 몇가지 쉐이더를 더 작성 할 것 같네요.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unityshader-11-fragment-advanced/"><small>PREVIOUS POST</small><span>(UnityShader) 3D Procedural Noise</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unity-c-custom-shader-gui/"><small>NEXT POST</small><span>(UnityScript) Custom Shader GUI</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#소박한-집합론-naive-set-theory">**소박한 집합론(** Naive set theory)</a></li><li class="level-2"><a href="#스텐실-버퍼의-구조">스텐실 버퍼의 구조</a></li><li class="level-3"><a href="#컴패리슨-comparison">컴패리슨(Comparison)</a></li><li class="level-3"><a href="#비교-논리-연산자">비교 / 논리 연산자</a></li><li class="level-3"><a href="#통과-pass">통과(Pass)</a></li><li class="level-3"><a href="#실패-fail">실패(Fail)</a></li><li class="level-3"><a href="#z실패-zfail">Z실패(ZFail)</a></li><li class="level-2"><a href="#쉐이더-코딩하기">쉐이더 코딩하기</a></li><li class="level-3"><a href="#읽기마스크-readmask-와-쓰기마스크-writemask">읽기마스크(ReadMask)와 쓰기마스크(WriteMask)</a></li><li class="level-3"><a href="#comp">Comp</a></li><li class="level-2"><a href="#stencil-z-test-응용-쉐이더">Stencil/Z-Test 응용 쉐이더</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

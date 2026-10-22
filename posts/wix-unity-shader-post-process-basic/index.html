@@ -1,0 +1,87 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="안녕하세요 여러분~ 갑자기 이러려니까 쑥스럽네요 하하. 포스트에서 제 말투가 너무 딱딱하다는 평가가 많아서 앞으로는 분위기를 바꿔서 쓰려고 합니다.카툰 모델링을 해보려다 NPR 쉐이더까지 손을 대서 결국엔 포스트 프로세스를 위해 코딩까지 하는 수준까지 왔는데 정신을 차리고 뒤를 돌아보니 너무 멀리 와버렸"><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unity-shader-post-process-basic/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) 00 Post process Shader"><meta property="og:description" content="안녕하세요 여러분~ 갑자기 이러려니까 쑥스럽네요 하하. 포스트에서 제 말투가 너무 딱딱하다는 평가가 많아서 앞으로는 분위기를 바꿔서 쓰려고 합니다.카툰 모델링을 해보려다 NPR 쉐이더까지 손을 대서 결국엔 포스트 프로세스를 위해 코딩까지 하는 수준까지 왔는데 정신을 차리고 뒤를 돌아보니 너무 멀리 와버렸"><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unity-shader-post-process-basic/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) 00 Post process Shader","description":"안녕하세요 여러분~ 갑자기 이러려니까 쑥스럽네요 하하. 포스트에서 제 말투가 너무 딱딱하다는 평가가 많아서 앞으로는 분위기를 바꿔서 쓰려고 합니다.카툰 모델링을 해보려다 NPR 쉐이더까지 손을 대서 결국엔 포스트 프로세스를 위해 코딩까지 하는 수준까지 왔는데 정신을 차리고 뒤를 돌아보니 너무 멀리 와버렸","url":"https://walll4542developer.github.io/posts/wix-unity-shader-post-process-basic/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) 00 Post process Shader | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],tags:"ams"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],processHtmlClass:"math-source"}};</script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 61</p><h1>(UnityShader) 00 Post process Shader</h1><div class="article-meta"><time datetime="2020-06-03T09:53:07.479Z">JUN 03, 2020</time><span>5 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><p>안녕하세요 여러분~ 갑자기 이러려니까 쑥스럽네요 하하. 포스트에서 제 말투가 너무 딱딱하다는 평가가 많아서 앞으로는 분위기를 바꿔서 쓰려고 합니다.</p>
+<p>카툰 모델링을 해보려다 NPR 쉐이더까지 손을 대서 결국엔 포스트 프로세스를 위해 코딩까지 하는 수준까지 왔는데 정신을 차리고 뒤를 돌아보니 너무 멀리 와버렸다는 것을 깨닫고 절망했습니다... 여긴 어디? 나는 누구? (와하하 잡캐다! 우하하 팡파레~)</p>
+<p>근데 포스트-프로세스가 뭐였죠...?</p>
+<figure class="article-image"><a href="/assets/images/wix/af3af4d780-ce7a39_44e6f8f45d8248539dcf25f30d518208~mv2.png" class="popup"><img src="/assets/images/wix/af3af4d780-ce7a39_44e6f8f45d8248539dcf25f30d518208~mv2.png" alt="" loading="lazy"></a></figure>
+<p>유니티에서 추가할 수 있는 위 친구 만을 뜻하는 것은 아닙니다.  한글로 직역하면 &#39;후-처리&#39; 라는 뜻인데... 사실 렌더링 파이프라인 다 끝나고 나서 남은 데이터로 뭐라도 해보려고 하면 그게 전부 다 후처리라고 불러도 크게 틀린 말이 없습니다.</p>
+<p>그래서 저희가 하려는 후처리는 버텍스, 픽셀이나 서피스 쉐이더에서 끝나는 수준이 아니라 아예 그래픽 카드 속 어딘가에 숨어있는 버퍼(buffer) 라는 새 친구를 건드려보려고 합니다. 유니티에서 C# 스크립트가 없으면 건드리기 어려운 영역들 말이죠. (언리얼은 아예 따로 포스트 프로세스용 노드를 지원합니다)</p>
+<figure class="article-image"><a href="/assets/images/wix/e4b4db8179-ce7a39_7f1ed19fc912479ea1c0670c09737077~mv2.gif" class="popup"><img src="/assets/images/wix/e4b4db8179-ce7a39_7f1ed19fc912479ea1c0670c09737077~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(온 세상이 흑백이야~~)</p>
+<p>참고로 인스펙터 창을 보시면 포스트 프로세스 레이어 보다 C# 스크립트를 아래에 위치시키면 포스트 프로세스가 먼저 작동됩니다. 순서를 바꾸면 거꾸로 실행 됩니다. 제일 간단하고 기본이 되는 흑백 컬러 전환 후처리부터 해봅시다. 버텍스/픽셀 쉐이더로 아래와 같이 작성합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3b57c0fee3-ce7a39_47865466335343b0a8baf9d722663a69~mv2.png" class="popup"><img src="/assets/images/wix/3b57c0fee3-ce7a39_47865466335343b0a8baf9d722663a69~mv2.png" alt="" loading="lazy"></a></figure>
+<p>평소에 작성하던 버텍스/프래그먼트 쉐이더와 다른 점이 몇개 있습니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">Shader &quot;Hidden/NewImageEffectShader&quot;</code></pre></section>
+<p>1번째 줄을 봅시다. 이것은 쉐이더의 위치를 나타내는 일종의 주소 입니다. 이 주소가 제대로 되어 있어야 C#스크립트에서 쉐이더 코드를 참조 할 수 있습니다.</p>
+<p>Cull Off ZWrite Off ZTest Always</p>
+<p>SubShader의 첫 부분에 Cull Off ZWrite Off ZTest Always를 써줍니다.</p>
+<p>Cull Off 란 폴리곤의 노말에 따른 앞뒷면 구분을 하지 않겠다는 뜻이고 (cull 기능을 off하겠다)</p>
+<p>ZWrite Off 란 Z값을 기록하지 않겠다는 뜻이며</p>
+<p>ZTest Always는 Z값을 무시하고 무조건 그리겠다는 뜻입니다.</p>
+<p>간단하게 설명하면 그렇습니다. 나중에 언젠가 자세히 다룰 기회가 올 것입니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">uniform float _bwBlend;</code></pre></section>
+<p>uniform float &quot;변수&quot;</p>
+<p>변수에 uniform 키워드를 접두어로 붙이면 변수가 쉐이더 외부, 예를 들어 C# 어플리케이션에서 초기화 되어 쉐이더에 입력됨을 의미합니다.</p>
+<p>이렇게 설정 해주어야 C#스크립트에서 변수를 조절 할 수 있게 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/c3ca2098f9-ce7a39_625d52d659ad470194c0b625db6e6afd~mv2.png" class="popup"><img src="/assets/images/wix/c3ca2098f9-ce7a39_625d52d659ad470194c0b625db6e6afd~mv2.png" alt="" loading="lazy"></a></figure>
+<p>저희 같은 그래픽 아티스트를 위한 C# 스크립트 만드는 법입니다. ㅎㅎ</p>
+<p>프로젝트 창에서 우클릭 - Creat - C# Script 를 누르고 만들어진 스크립트 파일을 더블클릭해서 개발자 도구로 열면 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/6a2d9a36f5-ce7a39_56bef9fe090c4a1bbb695506080ec675~mv2.png" class="popup"><img src="/assets/images/wix/6a2d9a36f5-ce7a39_56bef9fe090c4a1bbb695506080ec675~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(다 지운다음 위와 같이 작성해줍시다)</p>
+<p>따라쓰고 보니 뭔가 기존의 쉐이더 코드와 느낌이 다르지 않습니다...? 다른 분들에게 여쭤보니 C#과 HLSL 둘다 C언어 기반이기 때문이라고 합니다. (자네 우리 집안 사람이었구만..)</p>
+<div class="math-source math-display">\[ExecuteInEditMode\]</div>
+<figure class="article-image"><a href="/assets/images/wix/991b5a2e73-ce7a39_9adb1bbe525b4f98b1adf152c711343d~mv2.png" class="popup"><img src="/assets/images/wix/991b5a2e73-ce7a39_9adb1bbe525b4f98b1adf152c711343d~mv2.png" alt="" loading="lazy"></a></figure>
+<p>5번째 줄의 <div class="math-source math-display">\[ExecuteInEditMode\]</div>는 스크립트가 씬에 배치만 되어있다면 유니티의 Play 버튼을 눌러서 게임을 실행하지 않아도 에디터 모드에서 작동 할 수 있게 해준다는 뜻입니다. (사실 플레이 하시는게 더 잘 작동 될 겁니다)</p>
+<p>public class test : MonoBehaviour</p>
+<p>6번째 줄에는 뭔가 이상하게 생긴 친구가 보입니다..</p>
+<p><em>클래스는 C#의 가장 기본적인 형식입니다. 클래스는 상태(필드)와 작업(메서드 및 기타 함수 멤버)을 하나의 단위로 결합하는 데이터 구조입니다. 클래스는 해당 클래스의 동적으로 생성된 인스턴스(개체라고도 함)에 대한 정의를 제공합니다. 클래스는 상속및 다형성과 파생된 클래스가기본 클래스를 확장하고 특수화 할 수 있는 메커니즘을 지원합니다.</em></p>
+<p>마이크로소프트 홈페이지에서 긁은건데 정말 어렵게 써놨습니다. 클래스란 HLSL의 <strong>Pass{}</strong> 내부 에서 커스텀 라이팅이나 커스텀 펑션을 만들 수 있는 것 처럼 데이터를 담는 그릇이라고 대충 이해하시면 됩니다.</p>
+<p>퍼블릭(Public)은 이 클래스(Class)를 프로그램 어디서든 접근하기 쉽게 둔다는 뜻인거 같습니다. 클래스 앞에 붙는 이 녀석은 <strong>접근 제어 지시자</strong>라는 것이니 검색 해보시는게 좋을듯 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/2e55513936-ce7a39_11a2209e207340fd9448c6e5496c5db7~mv2.png" class="popup"><img src="/assets/images/wix/2e55513936-ce7a39_11a2209e207340fd9448c6e5496c5db7~mv2.png" alt="" loading="lazy"></a></figure>
+<p>그리고 클래스의 이름은 test 입니다. 쉐이더랩 스크립트와는 다르게 무조건 클래스 이름을 실제 C# 스크립트 파일 이름과 똑같이 맞춰야 오류가 안납니다. 그러니 test.cs로 하시면 됩니다.</p>
+<p>오른쪽에 &#39; : MonoBehaviour &#39; 시맨틱? 같은 것도 보입니다만 조금 다릅니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/73e49e47f0-ce7a39_bd740b1c3a7b4129817a2b04bb87aefe~mv2.png" class="popup"><img src="/assets/images/wix/73e49e47f0-ce7a39_bd740b1c3a7b4129817a2b04bb87aefe~mv2.png" alt="" loading="lazy"></a></figure>
+<p>C#에서는 명시적으로 MonoBehaviour를 써줘야 하는 모양입니다만 계속 파고들면 프로그래밍 강의가 되어버리기 때문에 군말 없이 써줍시다... 언젠가는 다시 짚어볼 날이 오겠죠 하하!</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl"> public float intensity;
+ public Material material;</code></pre></section>
+<p>8~9번째 줄을 봅시다. 클래스처럼 변수도 <strong>지시자</strong>가 붙을 수 있다는 걸 알 수 있고  float은 자주 썻지만 변수 이름이 아예 <strong>메테리얼(Material)</strong> 입니다! 그렇습니다, 빈 깡통 메테리얼 자료형을 만들고 거기에 다른 메테리얼 자료형을 집어 넣어 갖고 놀 수 있습니다.. 헐..(1차 충격 받음)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">void Awake ()
+    {
+ material = new Material (Shader.Find (&quot;Hidden/NewImageEffectShader&quot;));
+    }</code></pre></section>
+<p>11~14번째 줄의 void Awake() 함수는 유니티의 플레이 버튼을 누르기 전 부터 시작 되는 함수입니다. 위에서 미리 선언한 material 변수에 <strong>Shader.Find</strong>라는 명령을 통해 쉐이더랩 스크립트 파일의 주소를 써두면 쉐이더가 메테리얼에 적용됩니다..... 헐....(2차 충격 받음)</p>
+<figure class="article-image"><a href="/assets/images/wix/13974612f7-ce7a39_cd4902fdc74944b3810c71dc06f0c287~mv2.png" class="popup"><img src="/assets/images/wix/13974612f7-ce7a39_cd4902fdc74944b3810c71dc06f0c287~mv2.png" alt="" loading="lazy"></a></figure>
+<p>참고로 <strong>void</strong>는 return이 없어도 되는 함수에 붙는 <strong>키워드</strong>입니다.</p>
+<p>(<a href="https://docs.microsoft.com/ko-kr/dotnet/csharp/language-reference/keywords/">https://docs.microsoft.com/ko-kr/dotnet/csharp/language-reference/keywords/</a>)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">void OnRenderImage (RenderTexture source , RenderTexture destination)</code></pre></section>
+<figure class="article-image"><a href="/assets/images/wix/554a05bbd7-ce7a39_1e378509e9b846679e2190c5d79a7f38~mv2.png" class="popup"><img src="/assets/images/wix/554a05bbd7-ce7a39_1e378509e9b846679e2190c5d79a7f38~mv2.png" alt="" loading="lazy"></a></figure>
+<p>17번째 줄입니다. 다음은 OnRenderImage(source,destination) 함수입니다. 유니티 메뉴얼 설명대로 포스트 프로세싱에 필수적으로 사용되는 저희가 앞으로 친해져야 할 함수입니다.</p>
+<p>source란 후처리 이전의 <strong>원본</strong>을 뜻합니다. 약어로 <em>src</em>로 쓰기도 합니다.</p>
+<blockquote>
+<p>엄청나게 중요한 점. 원본 이미지는 쉐이더 코드 변수인 <strong>Sampler2D Maintex</strong>에 저장됩니다.</p>
+</blockquote>
+<p>destination이란 후처리 이후의 <strong>수정본</strong>을 뜻합니다.  약어로 <em>dest</em>로 쓰기도 합니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">Graphics.Blit (source, destination);</code></pre></section>
+<figure class="article-image"><a href="/assets/images/wix/d67e606809-ce7a39_7735ff6c18d24986a1b100023129e300~mv2.png" class="popup"><img src="/assets/images/wix/d67e606809-ce7a39_7735ff6c18d24986a1b100023129e300~mv2.png" alt="" loading="lazy"></a></figure>
+<p>19~23번째 줄을 봅시다. <strong>Bilt</strong> 명령입니다. 이것이 사실상의 결과를 출력하는 함수입니다. if문은 어떻게 생긴 놈인지 다들 아시니까 생략하고 내용물만 봅시다.</p>
+<p>저희는 intensity라는 float 변수로 포스트-프로세싱의 on/off를 제어할 것입니다. 0인 경우(꺼진 경우)에 아무 연산도 하지 않고 src, dest 그대로 내보냅니다.</p>
+<p>하지만 0이 아니라면? (켜져 있다면?)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">material.SetFloat(&quot;_bwBlend&quot;,intensity);</code></pre></section>
+<p>그렇습니다. 놀랍게도 변수 조차 C# 스크립트로 직접 제어할 수 있습니다. 프로그래머들은 못건드리는게 없었던 겁니다.. 헐... (3차 충격 받음)</p>
+<p>변수명**.SetFloat** 명령으로 intensity 값을 쉐이더랩의 _bwBlend에 집어 넣습니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">Graphics.Blit (source, destination, material);
+ return;</code></pre></section>
+<p>다음에는 포스트 프로세스에 사용할 메테리얼을 지정해서 메테리얼에 적용 되어있는 쉐이더에 따라서 처리합니다. 픽셀 쉐이더의 <strong>연산</strong>이 그대로 화면에 출력되는 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/a48662c22a-ce7a39_e58a0f02a198402282d3d4f0b303f883~mv2.png" class="popup"><img src="/assets/images/wix/a48662c22a-ce7a39_e58a0f02a198402282d3d4f0b303f883~mv2.png" alt="" loading="lazy"></a></figure>
+<p>마지막으로 씬 어디든지 배치되어 있는 빈 오브젝트 혹은 카메라에 Add component로 넣어줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/b3e9be405f-ce7a39_f6e13f50358f4794bd52ba2ba4cd507e~mv2.gif" class="popup"><img src="/assets/images/wix/b3e9be405f-ce7a39_f6e13f50358f4794bd52ba2ba4cd507e~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(완전 새까매~~)</p>
+<p>완성입니다. 다음에는 <strong>포스트 프로세스를 이용한 외곽선 검출 방법</strong>으로 찾아뵙겠습니다.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-ck-vfx-midterm/"><small>PREVIOUS POST</small><span>(CK VFX) Unreal Cascade Midterm</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-substance-painter-tip-메테리얼-나누기/"><small>NEXT POST</small><span>(Substance Painter) Tip 메테리얼 나누기</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

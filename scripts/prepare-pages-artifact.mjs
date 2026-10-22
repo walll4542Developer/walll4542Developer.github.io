@@ -19,6 +19,7 @@ const excluded = new Set([
   '.vscode',
   'content',
   'LICENSE',
+  'migration',
   'node_modules',
   'package.json',
   'pnpm-lock.yaml',

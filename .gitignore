@@ -8,3 +8,15 @@ node_modules
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/tasks.json
+
+# Local migration reports, source caches, and one-off conversion tools
+/migration/
+/scripts/audit-wix-posts.py
+/scripts/import-wix-posts.py
+/scripts/validate-wix-content.py
+/scripts/validate-wix-render.mjs
+
+# Python caches and incomplete image downloads
+__pycache__/
+*.pyc
+/assets/images/wix/*.part

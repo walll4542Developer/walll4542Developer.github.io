@@ -1,0 +1,190 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="서론이번 포스트에서는 소벨 필터를 통한 후처리 쉐이더 코드 작성을 합니다.이번엔 작성할 코드가 많기 때문에 처음으로 저희는 자체제작 함수(Custom Function)를 만들어서 모듈화 시킬 것입니다. 커스텀 펑션으로 데이터를 다루는 것은객체지향 프로그래밍(Object-Oriented Programmin"><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unityshader-03-post-process-shader/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) 03 Post process Shader"><meta property="og:description" content="서론이번 포스트에서는 소벨 필터를 통한 후처리 쉐이더 코드 작성을 합니다.이번엔 작성할 코드가 많기 때문에 처음으로 저희는 자체제작 함수(Custom Function)를 만들어서 모듈화 시킬 것입니다. 커스텀 펑션으로 데이터를 다루는 것은객체지향 프로그래밍(Object-Oriented Programmin"><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unityshader-03-post-process-shader/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) 03 Post process Shader","description":"서론이번 포스트에서는 소벨 필터를 통한 후처리 쉐이더 코드 작성을 합니다.이번엔 작성할 코드가 많기 때문에 처음으로 저희는 자체제작 함수(Custom Function)를 만들어서 모듈화 시킬 것입니다. 커스텀 펑션으로 데이터를 다루는 것은객체지향 프로그래밍(Object-Oriented Programmin","url":"https://walll4542developer.github.io/posts/wix-unityshader-03-post-process-shader/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) 03 Post process Shader | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 57</p><h1>(UnityShader) 03 Post process Shader</h1><div class="article-meta"><time datetime="2020-06-28T09:47:27.739Z">JUN 28, 2020</time><span>7 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><h2 id="서론"><strong>서론</strong></h2>
+<p>이번 포스트에서는 소벨 필터를 통한 후처리 쉐이더 코드 작성을 합니다.</p>
+<p>이번엔 작성할 코드가 많기 때문에 처음으로 저희는 자체제작 함수(Custom Function)를 만들어서 <strong>모듈화</strong> 시킬 것입니다.</p>
+<p>커스텀 펑션으로 데이터를 다루는 것은<em>객체지향 프로그래밍</em>(Object-Oriented Programming)이라는 개념인데, 저희같은 초보 아티스트가 이해하기 쉽게 3D 배경 모델러의 업무를 비유로 들어보겠습니다.</p>
+<p>대뜸 하늘 같으신 AD님이 모델러에게 아래와 같은 건물 오브젝트를 원화를 보여주며 &quot;내일까지 만들어라!&quot; 라고 살벌한 오더를 내려주셨습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/c002434025-ce7a39_74293e4f19674145874da71f785a098f~mv2.jpg" class="popup"><img src="/assets/images/wix/c002434025-ce7a39_74293e4f19674145874da71f785a098f~mv2.jpg" alt="" loading="lazy"></a></figure>
+<p><a href="https://www.artstation.com/artwork/3r2rv?utm_campaign=digest&utm_medium=email&utm_source=email_digest_mailer">(아트스테이션에서 아무거나 집어온 원화 링크)</a></p>
+<p>이제 모델러가 가장 먼저 할 일은 프로젝트가 어떤 아트 스타일을 지향하고 있는지 숙지하고, 여유가 좀 있다면 관련 건축 양식 자료도 찾아보고, 해서 원화 속 오브젝트들의 형태를 분석합니다. 다음은 가장 자연스럽게 표현할 수 있는 최적의 폴리곤 구조를 머릿속에서 재구성합니다.</p>
+<p>그런데 원화 속에서 반복되는 부분들이 있습니다. 잘 설계한다면 리소스에 들이는 노력을 줄일 수 있을 것 같기도 하고 작업 시간도 단축되고, 수정하기도 용이하고, 그리고 따로 몇조각을 떼어내서 여차하면 나중에 다른 오브젝트에 재사용 할 수 도 있을 것 같습니다!</p>
+<figure class="article-image"><a href="/assets/images/wix/249f237291-ce7a39_b9c6092157c24c3da5d3430ceb21e62f~mv2.jpg" class="popup"><img src="/assets/images/wix/249f237291-ce7a39_b9c6092157c24c3da5d3430ceb21e62f~mv2.jpg" alt="" loading="lazy"></a></figure>
+<p>(반복 구조와 분리 가능한 부분 찾아내기)</p>
+<p>쉐이더 코드에서도 이러한 반복되는 부분이나 나중에 재사용할 수 있을 부분을 캐치해서 재사용이 가능하게 하고 가독성 좋게 코드를 작성 할 수 있는 것입니다.</p>
+<h2 id="커스텀-펑션-제작하기"><strong>커스텀 펑션 제작하기</strong></h2>
+<figure class="article-image"><a href="/assets/images/wix/0ddc6a031a-ce7a39_0d6c1eb03be9480588c143504d5d03d0~mv2.png" class="popup"><img src="/assets/images/wix/0ddc6a031a-ce7a39_0d6c1eb03be9480588c143504d5d03d0~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(뎁스 버퍼와 노말 버퍼 코드)</p>
+<p>이전 포스트에서 카메라를 통해 깊이 값과 노말 값을 가진 뎁스, 노말 버퍼 텍스쳐를 얻는 코드를 작성했었습니다. 저희는 이 부분을 함수로 만들어서 재사용 하고자 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/df856999cd-ce7a39_a82877c36f2b4b68878df10857d7be0c~mv2.png" class="popup"><img src="/assets/images/wix/df856999cd-ce7a39_a82877c36f2b4b68878df10857d7be0c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(<em>ExtractDepthMap</em>)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">float ExtractDepthMap (float2 DepthUV)
+            {
+ float result;
+
+ float4 depthNormal = tex2D(_CameraDepthNormalsTexture, DepthUV);
+ //뎁스 노말 텍스쳐 맵핑
+ DecodeDepthNormal(depthNormal, cameraDepth, cameraNormal);
+                cameraDepth = cameraDepth * _ProjectionParams.z;
+ //_ProjectionParam.z는 카메라의 Clipping planes의 0 ~ far 값 리니어 데이터
+
+                result = cameraDepth;
+
+ return result;
+            }</code></pre></section>
+<p>함수의 형태는 위와 같습니다. 첫번째 줄부터 차근차근 봅시다. <em>ExtractDepthMap</em>이 바로 <strong>함수의 이름</strong>(함수명)이고 함수의 이름 앞에 계산이 다 끝난 자료의 크기가 float 이라고 미리 정의하는 것입니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">return result;</code></pre></section>
+<p>버텍스/프래그먼트 쉐이더의 frag 함수와 똑같이 함수의 결과물 역시 <em>return</em>으로 정의됩니다. 이것을 함수가 계산한 결과물을 <strong>반환(return)</strong> 한다고 부릅니다. (<em>Void</em> 키워드를 사용하여 <em>return</em>이 없게 함수를 짜는 것도 가능합니다)</p>
+<p>(float2 DepthUV)</p>
+<p>함수명 뒤에 *(float2 DepthUV)*라고 쓰인 부분은 함수 밖에서 계산을 위해 필요한 변수를 받아올 수 있는 입구를 만들어준 것입니다. 이것을 **인풋(Input)**이라고 부릅니다. 자연스레 return은 출구인 셈입니다. 이렇게 작성하면 float2 DepthUV에는 무엇이든지 float2 라면 인풋으로 들어올 수 있는 것입니다.</p>
+<p>하지만 주의할 점이 있습니다. 인풋으로 선언된 변수명이 이미 함수 밖에 선언(전역 변수) 되어 있을 경우(DepthUV라는 이름이 이미 어디선가 다른곳에서 쓰이고 있을 경우) 기본값(default)이 됩니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">float result;</code></pre></section>
+<p>함수 내부에 변수를 선언해 줄 수도 있습니다. 여기서 선언된 변수는 함수 내부에서만 존재하고 동작합니다. 이것을 <strong>&#39;지역 변수&#39;</strong> 라고 합니다.</p>
+<p>지역 변수는 함수 내부에서 선언된 변수로, 함수가 실행되면 만들어지고 함수가 종료되면 소멸하는 변수입니다. 전역 변수는 함수 외부에서 선언된 변수로, 쉐이더 코드 전체에서 접근 할 수 있는 변수입니다.</p>
+<p>이전 포스트에서는 인풋으로 스크린 스페이스 UV를 넣었습니다. 하지만 저희는 미분으로 변화량을 측정하기 위해서, 뎁스 버퍼 텍스쳐를 1픽셀씩 상하,좌우,대각선(3x3)으로 움직인 버퍼 텍스처 UV를 만들 것입니다.</p>
+<p>그래서 자기자신인 원본 UV(0,0)을 제외한 여덟번의 연산 반복이 필요하기 때문에 함수로 만들어 주었습니다. 다음은 버퍼 텍스처에서 픽셀 하나만큼 움직인 UV 데이터를 추출해내는 과정이 필요합니다. 역시 여덟번 반복해야 하기 때문에 함수로 작성해줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/b13b95f133-ce7a39_07ddddba7045421186b71ea3cf044cff~mv2.png" class="popup"><img src="/assets/images/wix/b13b95f133-ce7a39_07ddddba7045421186b71ea3cf044cff~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(<em>GetOffsetPixel</em>)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">float2 GetOffsetPixel (float2 OffsetDirection, float _LineWidth, float2 InvSize)
+            {
+ float2 result =  _uv + OffsetDirection * _LineWidth * InvSize;
+
+ return result;
+            }</code></pre></section>
+<figure class="article-image"><a href="/assets/images/wix/f46adc3875-ce7a39_e78287613b184e3f93ea850a8b6b73cf~mv2.png" class="popup"><img src="/assets/images/wix/f46adc3875-ce7a39_e78287613b184e3f93ea850a8b6b73cf~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(3x3 UV Offset Pixel)</p>
+<p>함수의 이름은 GetOffsetPixel 입니다. 상하, 좌우, 대각으로 1픽셀 씩 움직인 UV데이터를 얻기위해 float2 OffsetDirection에는 위 자료와 같은 UV 좌표 이동이 필요합니다.</p>
+<p>여기에 _LineWidth라는 임의의 변수를 곱해줌으로서 외곽선의 굵기를 조절할 수 있습니다.</p>
+<p>invSize 변수는 버퍼 텍스쳐의 해상도 값(역수)이 들어갈 것입니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ float4 _CameraDepthNormalsTexture_TexelSize;</code></pre></section>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">InvSize = float2(_CameraDepthNormalsTexture_TexelSize.x, _CameraDepthNormalsTexture_TexelSize.y);</code></pre></section>
+<p><strong>정말 신기하게도 float4 (텍스쳐 변수명)_TexelSize</strong>로 변수를 선언하면 다음과 같은 값이 자동적으로 float4로 들어옵니다. 유니티 엔진에서 자체적으로 지원해 주는 기능인지, HLSL에 내장된 기능인지, include된 UnityCG.cginc에 들어있는 기능중 하나인지는 모르겠지만 어떤 텍스처에 사용해도 문제없이 동작합니다.</p>
+<ul>
+<li><strong>x</strong> = 1/Width (텍스쳐 해상도 너비의 역수)</li>
+<li><strong>y</strong> = 1/Height (텍스쳐 해상도 높이의 역수)</li>
+<li><strong>z</strong> = Width (텍스쳐 해상도 너비)</li>
+<li><strong>w</strong> = Height (텍스쳐 해상도 높이)</li>
+</ul>
+<p>우리가 받아온 뎁스, 노말 버퍼 텍스쳐는 실시간으로 카메라에 의해 촬영되고 있습니다. 따라서 실제 게임 플레이 화면 해상도와 다르지 않습니다. 변수명 이름 그대로 텍셀의 사이즈, 즉 화면 해상도인 것입니다.</p>
+<p>따라서 텍셀사이즈.xy는 float2(1/Width, 1/Height)입니다. 그리고 _uv 변수는 <strong>실제 화면 해상도와 똑같은 크기의 Source인 _Maintex의 &#39;스크린 스페이스 UV&#39;(i.uv)</strong> 입니다.</p>
+<p>잠깐 멈춰봅시다. 아무 변화없는 원본(0,0)인 스크린 스페이스 UV에 해상도의 역수를 더하면 어떻게 될까요? 쉐이더 기본기를 다시 생각 해볼 때가 왔습니다.</p>
+<p>UV에 임의의 값을 (*)곱하면? UV가 임의의 값 만큼 확장되서 타일링이 됩니다.</p>
+<p>UV에 임의의 값을 (+)더하면? UV가 임의의 값 만큼 이동해서 오프셋이 됩니다!</p>
+<figure class="article-image"><a href="/assets/images/wix/e43d13b1be-ce7a39_19ecee8338cd40358b0163ac6d42bfbf~mv2.gif" class="popup"><img src="/assets/images/wix/e43d13b1be-ce7a39_19ecee8338cd40358b0163ac6d42bfbf~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>쉐이더 프로그래밍 03 포스트</p>
+<p>(<a href="/posts/wix-unityshader-03-shader-programming/">https://walll4542.wixsite.com/watchthis/post/unityshader-03-shader-programming</a>)</p>
+<blockquote>
+<p>따라서 텍스쳐 전체가 같은 비율 그대로 움직이게 됩니다. 이것을 오프셋(Offset)이라고 합니다.</p>
+</blockquote>
+<p>비율로 따져서 1/Width 만큼의 값이 U에 더해지고 1/Height 만큼의 값이 V에 더해지면 1px(픽셀)만큼 오프셋 이동하는 것이 됩니다. 거기에 float2(x,y)만큼 곱해서 움직일 방향을 정해줄 수 있습니다.</p>
+<p>그러기 위해 곱해주는 변수가 바로 float2 OffsetDirection입니다. 예를 들어 OffsetDirection값이 (-1,0)이라면 왼쪽으로 1픽셀 이동한 UV를 얻게 됩니다.</p>
+<p>이렇게 우리가 필요했던 UV 데이터의 원본을 제외하고 여덟개를 얻어냈습니다. 다음은 8개의 UV를 성분으로 가상의 3x3 행렬을 만들어 합쳐줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/0b34b4884c-ce7a39_3f35fae9e1484c12bf25fc986b7d50fa~mv2.png" class="popup"><img src="/assets/images/wix/0b34b4884c-ce7a39_3f35fae9e1484c12bf25fc986b7d50fa~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(CombineMap)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ float3 CombineMap (float3 Row0, float3 Row1, float3 Row2, 
+ float3 TopLeft, float3 TopCenter, float3 TopRight, 
+ float3 MidLeft, float3 MidCenter, float3 MidRight, 
+ float3 BotLeft, float3 BotCenter, float3 BotRight)
+            {
+ float3 result =
+                Row0.r * TopLeft +
+                Row0.g * TopCenter +
+                Row0.b * TopRight +
+
+                Row1.r * MidLeft +
+                Row1.g * MidCenter +
+                Row1.b * MidRight +
+
+                Row2.r * BotLeft +
+                Row2.g * BotCenter +
+                Row2.b * BotRight;
+
+ return result;
+            }</code></pre></section>
+<p>먼저 각각의 UV 데이터를 저장할 3x3 = 9개의 변수가 필요합니다. 코드를 읽기 힘든 저희 아티스트들의 &#39;시각적 직관성&#39;을 위해서 저는 전역 변수로 선언했습니다.</p>
+<p>float3 Row0,1,2는 또 다른 9개의 데이터를 담기 위한 변수입니다. 바로 **소벨 필터(Sobel Filter)**입니다. 함수 이름이 <em>CombineMap</em>인 이유 입니다. 여기서 소벨 필터 값만큼 수직으로 한번 수평으로 한 번 가중치를 줘서 필터링을 한 뒤 변화량을 측정할 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/4e8c341b1f-ce7a39_7da05a8d08664fe5b68a34f59c2e6b32~mv2.png" class="popup"><img src="/assets/images/wix/4e8c341b1f-ce7a39_7da05a8d08664fe5b68a34f59c2e6b32~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(Sobel filter를 위해 가상으로 만든 행렬 구조, 
+행과 열이 뒤바뀌어도 순서만 맞으면 상관 없습니다)</p>
+<p>필터를 3x3보다 더 확장하고 싶다면 변수 숫자를 수정하면 됩니다. 5x5 = 25개의 변수가 필요하고 7x7 = 49개가 필요하겠죠?</p>
+<p>이제 지금까지 작성한 커스텀 펑션들을 사용하여 더 큰 커스텀 펑션으로 묶어 하나로 만듭시다!</p>
+<figure class="article-image"><a href="/assets/images/wix/077197126e-ce7a39_8a2a525a8b7a447ba19206107bcd9c64~mv2.png" class="popup"><img src="/assets/images/wix/077197126e-ce7a39_8a2a525a8b7a447ba19206107bcd9c64~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ /////////////////////////////////////////////////////////////////////////////////////
+ //SOBEL Operation
+ float SobelDepthOperation (float _LineWidth, float _Maxwidth)
+            {
+ float result;
+ // 3x3 Top Mid Bot * Left Center Right
+ float2 TL = GetOffsetPixel(float2(-1,-1), _LineWidth, InvSize);
+ float2 TC = GetOffsetPixel(float2(-1,0), _LineWidth, InvSize);
+ float2 TR = GetOffsetPixel(float2(-1,1), _LineWidth, InvSize);
+
+ float2 ML = GetOffsetPixel(float2(0,-1), _LineWidth, InvSize);
+ float2 MC = GetOffsetPixel(float2(0,0), _LineWidth, InvSize);
+ float2 MR = GetOffsetPixel(float2(0,1), _LineWidth, InvSize);
+
+ float2 BL = GetOffsetPixel(float2(1,-1), _LineWidth, InvSize);
+ float2 BC = GetOffsetPixel(float2(1,0), _LineWidth, InvSize);
+ float2 BR = GetOffsetPixel(float2(1,1), _LineWidth, InvSize);
+
+ //Coordinated Depth Map to Pixel
+ float3 TopLeft = ExtractDepthMap(TL);
+ float3 TopCenter = ExtractDepthMap(TC);
+ float3 TopRight = ExtractDepthMap(TR);
+
+ float3 MidLeft = ExtractDepthMap(ML);
+ float3 MidCenter = ExtractDepthMap(MC);
+ float3 MidRight = ExtractDepthMap(MR);
+
+ float3 BotLeft = ExtractDepthMap(BL);
+ float3 BotCenter = ExtractDepthMap(BC);
+ float3 BotRight = ExtractDepthMap(BR);
+ 
+ //Horizontal
+ float3 Horizontal = CombineMap(float3(1,2,1), float3(0,0,0), float3(-1,-2,-1),
+                TopLeft, TopCenter, TopRight, 
+                MidLeft, MidCenter, MidRight, 
+                BotLeft, BotCenter, BotRight);
+
+ //Vertical
+ float3 Vertical = CombineMap(float3(1,0,-1), float3(2,0,-2), float3(1,0,-1),
+                TopLeft, TopCenter, TopRight, 
+                MidLeft, MidCenter, MidRight, 
+                BotLeft, BotCenter, BotRight);
+
+                result = saturate(distance(float2(Horizontal.x, Vertical.x), float2(0,0)));
+                result = pow(saturate(result * _DepthDistance), _Maxwidth);
+ return result;
+            }
+ /////////////////////////////////////////////////////////////////////////////////////</code></pre></section>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">SobelDepthOperation (float _LineWidth, float _Maxwidth);</code></pre></section>
+<p>커스텀 펑션을 사용 하는 방법은 다른 함수들과 똑같습니다. **함수이름();**과 괄호안에 들어갈 인풋에 적절한 값을 입력해 주는 것으로 결과 값을 얻을 수 있습니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">result = pow(saturate(result * _DepthDistance), _Maxwidth);</code></pre></section>
+<p><em>CombineMap</em> 커스텀 펑션을 통해 수평으로 한 번, 수직으로 한 번 소벨 필터링하고 이렇게 나온 결과물을 <strong>distance 함수</strong>로 vector2(0,0) 원점으로 부터의 거리를 재서 변화량을 측정(미분)합니다.</p>
+<p>이렇게 나온 결과 값을 임의의 변수로 제곱해서 아주 약한 외곽선이 마치 노이즈 처럼 나오는 것을 조절할 수 있게 프로퍼티로 빼줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/ef0d6ed90b-ce7a39_6f4497455eb04a04863f74f9c4303ed7~mv2.png" class="popup"><img src="/assets/images/wix/ef0d6ed90b-ce7a39_6f4497455eb04a04863f74f9c4303ed7~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(frag)</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">_uv = i.uv;</code></pre></section>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">InvSize = float2(_CameraDepthNormalsTexture_TexelSize.x, _CameraDepthNormalsTexture_TexelSize.y);</code></pre></section>
+<p>//텍셀 사이즈 (스크린 사이즈) 역수 값</p>
+<p>frag{}에는 다음과 같이 써줍시다. <em>GetOffsetPixel</em>에 i.uv를 넣어주고 InvSize 변수를 정의해줍시다.</p>
+<p>위에서 했던 것과 같은 방식으로 노말 버퍼 텍스쳐로도 커스텀 펑션을 만들고 똑같이 소벨필터로 외곽선을 검출합니다.</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">float4 Source = tex2D(_MainTex, i.uv);</code></pre></section>
+<p>//Source</p>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">col.rgb = lerp(Source.rgb, 0, saturate(DepthOutline + NormalOutline));</code></pre></section>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">col.a = 1;</code></pre></section>
+<p><strong>Source _MainTex에 외곽선을 적용하기 위해서 외곽선으로 검출된 픽셀을 마스킹으로 써서 lerp 함수로 합쳐줍시다.</strong></p>
+<p>저는 0을 써서 외곽선을 검은색으로 했는데, 당연히 응용 가능하며 다른 색을 넣을 수도 있고 Source에서 채도나 색조를 변경하여 넣어줄 수도 있습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/b91c64d25b-ce7a39_1d3c2d1fa4f1444fb31e7da51f23072b~mv2.png" class="popup"><img src="/assets/images/wix/b91c64d25b-ce7a39_1d3c2d1fa4f1444fb31e7da51f23072b~mv2.png" alt="" loading="lazy"></a></figure>
+<p>유니티 엔진에서 play 버튼을 누르거나 game 뷰로 결과물을 확인 가능합니다. 마음에 드는 결과물을 얻기 위해 세부 수치를 조절하려면 위와 같이 C#스크립트에서 프로퍼티를 빼줘야 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/7f9e4ecd4a-ce7a39_8088b054450e4c81aead4198c75f554e~mv2.gif" class="popup"><img src="/assets/images/wix/7f9e4ecd4a-ce7a39_8088b054450e4c81aead4198c75f554e~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>완성입니다. 읽어주셔서 감사합니다.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unityshader-02-post-process-shader/"><small>PREVIOUS POST</small><span>(UnityShader) 02 Post process Shader</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unityshader-17-urp-shader-graph/"><small>NEXT POST</small><span>URP Shader Graph로 실시간 SSS 만들기</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#서론">서론</a></li><li class="level-2"><a href="#커스텀-펑션-제작하기">커스텀 펑션 제작하기</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>

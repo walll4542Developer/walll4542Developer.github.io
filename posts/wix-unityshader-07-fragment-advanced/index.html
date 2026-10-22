@@ -1,0 +1,106 @@
+<!doctype html><html lang="en" data-page="post"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0a0c10"><meta name="description" content="(UnityShader) 07 Fragment Advanced : Flowmap(Hurricane)FlowMap저희는 기나긴 폭풍과 장마의 시련을 겪고 있습니다. Advanced 포스팅 이지만 오늘은 좀 쉽고, 멋진 걸 해볼겁니다. 플로우맵을 써서 위 이미지 처럼 텍스쳐가 원하는 방향으로 영원히 흐르게 "><link rel="canonical" href="https://walll4542developer.github.io/posts/wix-unityshader-07-fragment-advanced/"><link rel="icon" type="image/svg+xml" href="/assets/img/favicons/walll-v1.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico?v=walll-v1"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png?v=walll-v1"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png?v=walll-v1"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png?v=walll-v1"><link rel="manifest" href="/assets/img/favicons/site.webmanifest?v=walll-v1"><meta property="og:title" content="(UnityShader) 07 Fragment Advanced : Flowmap"><meta property="og:description" content="(UnityShader) 07 Fragment Advanced : Flowmap(Hurricane)FlowMap저희는 기나긴 폭풍과 장마의 시련을 겪고 있습니다. Advanced 포스팅 이지만 오늘은 좀 쉽고, 멋진 걸 해볼겁니다. 플로우맵을 써서 위 이미지 처럼 텍스쳐가 원하는 방향으로 영원히 흐르게 "><meta property="og:url" content="https://walll4542developer.github.io/posts/wix-unityshader-07-fragment-advanced/"><meta property="og:type" content="article"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"(UnityShader) 07 Fragment Advanced : Flowmap","description":"(UnityShader) 07 Fragment Advanced : Flowmap(Hurricane)FlowMap저희는 기나긴 폭풍과 장마의 시련을 겪고 있습니다. Advanced 포스팅 이지만 오늘은 좀 쉽고, 멋진 걸 해볼겁니다. 플로우맵을 써서 위 이미지 처럼 텍스쳐가 원하는 방향으로 영원히 흐르게 ","url":"https://walll4542developer.github.io/posts/wix-unityshader-07-fragment-advanced/","author":{"@type":"Person","name":"walll4542Developer"}}</script><title>(UnityShader) 07 Fragment Advanced : Flowmap | 낭낭하게 개발하기</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"><script defer src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+  <script defer src="/assets/js/static-site.js"></script>
+  <script defer src="/app.js"></script>
+  <script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],tags:"ams"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],processHtmlClass:"math-source"}};</script>
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script></head><body><header class="site-header" data-menu-open="false"><a class="brand" href="/" aria-label="낭낭하게 개발하기 home"><img class="brand-mark" src="/assets/img/favicons/walll-v1.svg" width="33" height="33" alt=""><span><strong>낭낭하게 개발하기</strong><small>Watch this</small></span></a><nav class="site-nav" aria-label="Primary navigation"><a href="/">HOME</a><a href="/posts/" aria-current="page">POSTS</a><a href="/categories/">TOPICS</a><a href="/archives/">ARCHIVE</a><a href="/about/">ABOUT</a></nav><div class="header-actions"><button class="search-button" type="button" data-search-open aria-label="Search posts"><i class="fa-solid fa-magnifying-glass"></i><span>SEARCH</span><kbd>⌘ K</kbd></button><button class="menu-button" type="button" data-menu-toggle aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button></div></header><div class="reading-line"><i id="reading-progress"></i></div><main class="site-main"><div class="page-grid"><article class="article-page"><header class="article-header"><p class="system-label"><i></i> HLSL / POST 52</p><h1>(UnityShader) 07 Fragment Advanced : Flowmap</h1><div class="article-meta"><time datetime="2020-08-03T16:49:17.615Z">AUG 04, 2020</time><span>3 MIN READ</span><span>BY walll4542Developer</span></div></header><div class="article-content"><h2 id="unityshader-07-fragment-advanced-flowmap">(UnityShader) 07 Fragment Advanced : Flowmap</h2>
+<figure class="article-image"><a href="/assets/images/wix/a4e137081c-ce7a39_a2d174f70ad548ef8cddde3d53ff8cd6~mv2.gif" class="popup"><img src="/assets/images/wix/a4e137081c-ce7a39_a2d174f70ad548ef8cddde3d53ff8cd6~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(Hurricane)</p>
+<h2 id="flowmap"><strong>FlowMap</strong></h2>
+<p>저희는 기나긴 폭풍과 장마의 시련을 겪고 있습니다. <em>Advanced</em> 포스팅 이지만 오늘은 좀 쉽고, 멋진 걸 해볼겁니다. <strong>플로우맵</strong>을 써서 위 이미지 처럼 텍스쳐가 원하는 방향으로 영원히 흐르게 해봅시다.</p>
+<p>시작하기 전에 몇 가지 준비물이 필요합니다. 흐르게 할 메인 텍스쳐를 정하시고, 플로우맵을 직관적으로 그릴 수 있게 해주는 <a href="http://teckartist.com/?page_id=107">플로우맵 페인터(링크)</a>을 다운 받습니다.</p>
+<p>자세한 플로우맵 페인터 사용법은 마둠파님 블로그를 참고하십시오.</p>
+<p>(<a href="https://blog.naver.com/mnpshino/221456311217">https://blog.naver.com/mnpshino/221456311217</a>)</p>
+<figure class="article-image"><a href="/assets/images/wix/e144a9af27-ce7a39_51ea7715342f40538707a1cd7f670165~mv2.png" class="popup"><img src="/assets/images/wix/e144a9af27-ce7a39_51ea7715342f40538707a1cd7f670165~mv2.png" alt="" loading="lazy"></a></figure>
+<p>FlowMapPainter.exe를 더블클릭하여 실행합시다. Configuration 창이 뜨는데, 여기서 프로그램 윈도우의 크기를 정해줍시다. (텍스쳐 해상도 아님) 그래픽 퀄리티는 제일 높은 fantastic으로 해주고 <div class="math-source math-display">\[play!\]</div>를 눌러서 시작합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/f694e776ca-ce7a39_6d94928b7a6c4dbc86df3e090bc00e00~mv2.png" class="popup"><img src="/assets/images/wix/f694e776ca-ce7a39_6d94928b7a6c4dbc86df3e090bc00e00~mv2.png" alt="" loading="lazy"></a></figure>
+<p>기본적으로 빨간 네모처럼 R,G채널을 뒤집어(Flip) 줘야 합니다.</p>
+<p>Custom Texture Path: 에 메인 텍스쳐의 경로를 직접 입력합시다. 그 다음 <div class="math-source math-display">\[*Load Custum Tiling Texture\]</div>*를 눌러 이미지를 가져옵니다. 메인 텍스쳐에 플로우맵이 어떻게 적용될지 미리보는 용도입니다. 이미지가 180도 뒤집어져 있을 건데 포토샵으로 편집해서 방향을 맞춰줍시다.</p>
+<p>참고로 커스텀 텍스쳐는 png로 저장해야 로드 오류가 없습니다. 유니티 엔진에서는 targa 포맷으로 할 거지만 말이죠.</p>
+<figure class="article-image"><a href="/assets/images/wix/0482243f2f-ce7a39_f919557bea8c4e4ab51e94f19cdea3af~mv2.png" class="popup"><img src="/assets/images/wix/0482243f2f-ce7a39_f919557bea8c4e4ab51e94f19cdea3af~mv2.png" alt="" loading="lazy"></a></figure>
+<p>적당히 동그랗게 그려준 뒤 <em>Save to:</em> 경로를 입력하고 <div class="math-source math-display">\[*Bake to Texture\]</div>*를 눌러 플로우 맵을 구워(Bake) 줍시다.</p>
+<ul>
+<li><figure class="article-image"><a href="/assets/images/wix/fbfab34c05-ce7a39_5f7efd943c684fc89e0b6d9bf3b79e1c~mv2.svg" class="popup"><img src="/assets/images/wix/fbfab34c05-ce7a39_5f7efd943c684fc89e0b6d9bf3b79e1c~mv2.svg" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/1b39f09fe3-ce7a39_7d95f9f6e849473db11dd7940433bb2a~mv2.png" class="popup"><img src="/assets/images/wix/1b39f09fe3-ce7a39_7d95f9f6e849473db11dd7940433bb2a~mv2.png" alt="" loading="lazy"></a></figure></li>
+<li><figure class="article-image"><a href="/assets/images/wix/267c050665-ce7a39_61c35e11f1904c3f94e82705f008f095~mv2.png" class="popup"><img src="/assets/images/wix/267c050665-ce7a39_61c35e11f1904c3f94e82705f008f095~mv2.png" alt="" loading="lazy"></a></figure></li>
+</ul>
+<p><strong>플로우맵은 R,G채널만 사용하는 float3 데이터 텍스쳐</strong>입니다. 그러니 <strong>sRGB 체크 해제</strong>하고 사용하며 압축도 하지 않습니다. 맵 사이즈는 작을수록 아티팩트(픽셀 찌꺼기)가 적게 생깁니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/e9acf33a5a-ce7a39_765e66417e6f46078bf9e4a38880a606~mv2.png" class="popup"><img src="/assets/images/wix/e9acf33a5a-ce7a39_765e66417e6f46078bf9e4a38880a606~mv2.png" alt="" loading="lazy"></a></figure>
+<p>플로우맵 텍스쳐를 보면서 색을 숫자로 생각해봅시다. RGB 값이 (128,128,0) 입니다. 그래서 그리지 않아서 UV가 변동이 없는 부분(디폴트)도 짙은 노란색으로 나옵니다. 따라서 코딩으로 플로우맵을 적용 할 때 <strong>0.5만큼 값을 빼주면</strong> 될 것 같습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/591d5bfb27-ce7a39_3fba1f1d8c5f415c937a7cac6568b0b1~mv2.png" class="popup"><img src="/assets/images/wix/591d5bfb27-ce7a39_3fba1f1d8c5f415c937a7cac6568b0b1~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ sampler2D _MainTex;
+ float4 _MainTex_ST;
+
+ sampler2D _FlowTex;
+ float4 _FlowTex_ST;
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv1 = TRANSFORM_TEX(v.uv1, _FlowTex);
+ return o;
+            }</code></pre></section>
+<p>메인 텍스쳐와 플로우 텍스쳐를 샘플러 변수로 받아 줍시다. 버텍스 쉐이더에서 TRANSFORM_TEX(uv, tex); 매크로로 프래그먼트 쉐이더에서 tex2D를 사용할 수 있게 해줍시다.</p>
+<figure class="article-image"><a href="/assets/images/wix/a6650e3d32-ce7a39_1eee7e6b107943349650fc137ff51967~mv2.png" class="popup"><img src="/assets/images/wix/a6650e3d32-ce7a39_1eee7e6b107943349650fc137ff51967~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ float4 FlowTex = tex2D(_FlowTex, i.uv1);
+ float4 MainTex = tex2D(_MainTex, i.uv + float2(FlowTex.rg) - 0.5);
+ 
+                col.rgb = MainTex.rgb;
+                col.a = 1;
+
+ return col;</code></pre></section>
+<p>플로우맵을 Maintex의 UV에 더해서 오프셋 이동합니다. 그리지 않은 부분에 오프셋이 적용되지 않도록 FlowTex.rg에서 <strong>0.5만큼 값을 뺍니다.</strong></p>
+<figure class="article-image"><a href="/assets/images/wix/0bbb855bde-ce7a39_78d80b0454044aec99b5670ec71723b4~mv2.png" class="popup"><img src="/assets/images/wix/0bbb855bde-ce7a39_78d80b0454044aec99b5670ec71723b4~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(result)</p>
+<p>제대로 적용되었습니다. 다음은 UV가 반복해서 흐르도록 만들어줄 차례입니다. 그러려면 uv에 <strong>타임 함수</strong>를 사용해야 할 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/3d5db32339-ce7a39_ab23713e476542a69ec07980aa21b011~mv2.png" class="popup"><img src="/assets/images/wix/3d5db32339-ce7a39_ab23713e476542a69ec07980aa21b011~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+                _TimeSpeed = _Time.y * _TimeSpeed;
+
+ float4 FlowTex = tex2D(_FlowTex, i.uv1);
+ float4 MainTex = tex2D(_MainTex, i.uv + (float2(FlowTex.rg) - 0.5) * frac(_TimeSpeed));
+ 
+                col.rgb = MainTex.rgb;
+                col.a = 1;
+
+ return col;</code></pre></section>
+<h2 id="frac-time-y"><strong>frac(_Time.y);</strong></h2>
+<p>frac(); 함수는 변수의 <em>소수점 부분만 반환</em>하는 단순한 함수입니다. 하지만 _Time 함수 처럼 영원히 값이 증가하는 함수에 쓰이게 된다면 <strong>0 =&lt; n =&lt; 0.999... n값</strong>을 계속 반환하게 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/a99efbab1e-ce7a39_8ccc81de74254a668079ad37f74064ea~mv2.png" class="popup"><img src="/assets/images/wix/a99efbab1e-ce7a39_8ccc81de74254a668079ad37f74064ea~mv2.png" alt="" loading="lazy"></a></figure>
+<p>(세로축은 값, 가로축은 시간. 0~0.999...를 무한히 반복함)</p>
+<figure class="article-image"><a href="/assets/images/wix/3deca0aa24-ce7a39_6b7a74dec3fa4b49aca734d056b05328~mv2.gif" class="popup"><img src="/assets/images/wix/3deca0aa24-ce7a39_6b7a74dec3fa4b49aca734d056b05328~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>(result)</p>
+<p>무한히 흐르게 만드는건 성공했지만 시작과 끝이 연결되지 않고 끊어집니다. frac으로 _Time 함수가 0.999,,,가 다시 0에서 시작하기 때문입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/46bf61c919-ce7a39_a094b92c09d741b487e9d48561cb1d3e~mv2.png" class="popup"><img src="/assets/images/wix/46bf61c919-ce7a39_a094b92c09d741b487e9d48561cb1d3e~mv2.png" alt="" loading="lazy"></a></figure>
+<h2 id="y-sin-θ-β-γ-α-δ"><em>y = Sin(θ*|β|+γ)*α+δ</em></h2>
+<p>이것을 해결 하려면 삼각함수의 <strong>Sine 그래프</strong>처럼 루프의 시작점과 끝점의 값이 똑같아야 합니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/897d91c4bd-ce7a39_04bc569a0dc74736829d64d0f6a0e5f1~mv2.png" class="popup"><img src="/assets/images/wix/897d91c4bd-ce7a39_04bc569a0dc74736829d64d0f6a0e5f1~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">
+ float4 MainTex = tex2D(_MainTex, i.uv + (float2(FlowTex.rg) - 0.5) * frac(_TimeSpeed));
+ float4 MainTex_loop = tex2D(_MainTex, i.uv + (float2(FlowTex.rg) - 0.5) * frac(_TimeSpeed + 0.5));</code></pre></section>
+<p>중학교 수학시간에 배웠던 대로 함수 그래프에 상수를 더하면 원하는 값 만큼 그래프를 <strong>수평이동</strong> 시킬 수 있습니다. 저희는 0.5만큼 수평이동한 _Time.y 함수로 플로우맵이 0.5초 만큼 빠르게 진행되는 메인 텍스쳐를 하나 더 만들 것입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/43796ef023-ce7a39_ede57150d9b04d8998fa05df581a6e1e~mv2.png" class="popup"><img src="/assets/images/wix/43796ef023-ce7a39_ede57150d9b04d8998fa05df581a6e1e~mv2.png" alt="" loading="lazy"></a></figure>
+<h2 id="lerp-maintex-maintex-loop-lerpvalue"><strong>lerp</strong><strong>(MainTex, MainTex_loop, lerpvalue);</strong></h2>
+<p>두가지의 메인 텍스쳐를 합치면 위와 같은 모양이 됩니다. 저희는 <strong>선형보간을 통해 메인텍스쳐가 끊어지지 않는 부분을 검출</strong> 해낼 것입니다. 보간에 사용할 인자인 <em>lerpvalue</em>의 값은 아래와 같습니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/efa3872e3c-ce7a39_adb1c351391349e899470c6d4f301543~mv2.png" class="popup"><img src="/assets/images/wix/efa3872e3c-ce7a39_adb1c351391349e899470c6d4f301543~mv2.png" alt="" loading="lazy"></a></figure>
+<p>먼저 frac(_Time.y)로 똑같이 씁니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/d902190bd2-ce7a39_4fb2af4f80a442e9923e87bf2610da3c~mv2.png" class="popup"><img src="/assets/images/wix/d902190bd2-ce7a39_4fb2af4f80a442e9923e87bf2610da3c~mv2.png" alt="" loading="lazy"></a></figure>
+<p>2를 곱하면 그래프의 <strong>높이가 2배 증가</strong>합니다. 0~0.999...는 **0~1.999...**가 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/8c90701387-ce7a39_5c15d9aa66ae4d9191c13441f35264f4~mv2.png" class="popup"><img src="/assets/images/wix/8c90701387-ce7a39_5c15d9aa66ae4d9191c13441f35264f4~mv2.png" alt="" loading="lazy"></a></figure>
+<p>-1을 하면 그래프는 <strong>수직이동</strong>합니다. 이제 그래프의 범위는 <strong>음수를 포함하여 -0.999... =&lt; n =&lt; 0.999...</strong> 입니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/4b2ff3fe25-ce7a39_c32e3ffc837647b69f2dbf57c31cfacb~mv2.png" class="popup"><img src="/assets/images/wix/4b2ff3fe25-ce7a39_c32e3ffc837647b69f2dbf57c31cfacb~mv2.png" alt="" loading="lazy"></a></figure>
+<section class="code-block"><header><span>hlsl</span><button type="button" data-copy-code aria-label="Copy code"><i class="fa-regular fa-copy"></i><b>COPY</b></button></header><pre><code class="language-hlsl">float lerpvalue = abs(frac(_TimeSpeed) * 2 - 1);</code></pre></section>
+<p>절대값을 반환하는 <strong>abs 함수</strong>를 사용해 음수 부분을 양수 부분으로 꺾어줍니다. 이제 그래프는 0과 0.999... 사이를 왕복하게 됩니다.</p>
+<figure class="article-image"><a href="/assets/images/wix/48bc4b9134-ce7a39_add21fb21a9245719dd5ebd392260566~mv2.png" class="popup"><img src="/assets/images/wix/48bc4b9134-ce7a39_add21fb21a9245719dd5ebd392260566~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/13792dcca8-ce7a39_f419666c3d0e42bdaa401ba96880261b~mv2.png" class="popup"><img src="/assets/images/wix/13792dcca8-ce7a39_f419666c3d0e42bdaa401ba96880261b~mv2.png" alt="" loading="lazy"></a></figure>
+<figure class="article-image"><a href="/assets/images/wix/07ed9fff2b-ce7a39_55d3a1c9bc424e0c8414202d95a88d13~mv2.gif" class="popup"><img src="/assets/images/wix/07ed9fff2b-ce7a39_55d3a1c9bc424e0c8414202d95a88d13~mv2.gif" alt="" loading="lazy"></a></figure>
+<p>완성입니다. 읽어주셔서 감사합니다.</p>
+</div><footer class="article-footer"><div><p class="rail-label">CATEGORY</p><p class="category-links"><a href="/categories/hlsl/">HLSL</a> · <a href="/categories/unity/">Unity</a></p></div><div><p class="rail-label">POST TAGS</p><p class="article-tags"><a href="/tags/shader/">#Shader</a></p></div></footer><nav class="post-navigation" aria-label="Post navigation"><a href="/posts/wix-unityshader-06-fragment-advanced/"><small>PREVIOUS POST</small><span>(UnityShader) Fragment Advanced</span><i class="fa-solid fa-arrow-left"></i></a><a href="/posts/wix-unityshader-08-fragment-advanced/"><small>NEXT POST</small><span>(UnityShader) Rotation Matrix</span><i class="fa-solid fa-arrow-right"></i></a></nav></article><aside class="context-rail"><section class="rail-section table-of-contents"><p class="rail-label">IN THIS NOTE</p><nav aria-label="Table of contents"><ol><li class="level-2"><a href="#unityshader-07-fragment-advanced-flowmap">(UnityShader) 07 Fragment Advanced : Flowmap</a></li><li class="level-2"><a href="#flowmap">FlowMap</a></li><li class="level-2"><a href="#frac-time-y">frac(_Time.y);</a></li><li class="level-2"><a href="#y-sin-θ-β-γ-α-δ">y = Sin(θ*|β|+γ)*α+δ</a></li><li class="level-2"><a href="#lerp-maintex-maintex-loop-lerpvalue">lerp (MainTex, MainTex_loop, lerpvalue);</a></li></ol></nav></section><section class="rail-section"><p class="rail-label">LATEST POSTS</p><ol class="post-list"><li><span>01</span><a href="/posts/OpenGL-Beginner-03-OpenGL/">OpenGL 입문 03 - OpenGL 소개</a></li><li><span>02</span><a href="/posts/OpenGL-Beginner-04-Install/">OpenGL 입문 04 - OpenGL 설치 및 실행</a></li><li><span>03</span><a href="/posts/OpenGL-Beginner-02-HistoryOfGraphics/">OpenGL 입문 02 - 그래픽스 역사(History of Graphics)</a></li><li><span>04</span><a href="/posts/OpenGL-Beginner-01-GraphicsSystem/">OpenGL 입문 01 - 그래픽스 시스템(Graphics System)</a></li></ol></section><section class="rail-section"><p class="rail-label">TOP TAGS</p><div class="rail-tags"><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a><a href="/tags/script-csharp-unity/">#Script CSharp Unity</a></div></section></aside></div></main><footer class="site-footer"><p><span>© 2026</span> walll4542Developer · CC BY 4.0</p><p>BUILT FOR <em>REAL-TIME WORLDS</em></p></footer><section class="search-overlay" id="search-overlay" hidden aria-label="Search posts"><div class="search-panel"><div class="search-panel-top"><p>POST SEARCH</p><button type="button" data-search-close aria-label="Close search"><i class="fa-solid fa-xmark"></i></button></div><label for="search-input">SEARCH POSTS</label><div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search-input" type="search" autocomplete="off" placeholder="Shader, Unity, vector …"></div><div id="search-hints"><span>POPULAR POSTS</span><div><a href="/tags/shader/">#Shader</a><a href="/tags/study/">#Study</a><a href="/tags/algebra/">#Algebra</a><a href="/tags/vfx/">#VFX</a><a href="/tags/opengl/">#OpenGL</a><a href="/tags/houdini/">#Houdini</a></div></div><div id="search-results" aria-live="polite"></div></div></section></body></html>
