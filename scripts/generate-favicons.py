@@ -20,7 +20,7 @@ def icon(size):
 
 DEST.mkdir(parents=True, exist_ok=True)
 (DEST / f'{VERSION}.svg').write_text(SVG, encoding='utf-8')
-for filename, size in [('favicon-16x16.png',16),('favicon-32x32.png',32),('apple-touch-icon.png',180),('android-chrome-192x192.png',192),('android-chrome-512x512.png',512),('mstile-150x150.png',150)]:
+for filename, size in [('favicon.png',192),('favicon-16x16.png',16),('favicon-32x32.png',32),('apple-touch-icon.png',180),('android-chrome-192x192.png',192),('android-chrome-512x512.png',512),('mstile-150x150.png',150)]:
     icon(size).save(DEST / filename)
 icon(64).save(DEST / 'favicon.ico', sizes=[(16,16),(32,32),(48,48),(64,64)])
 icon(64).save(ROOT / 'favicon.ico', sizes=[(16,16),(32,32),(48,48),(64,64)])

@@ -3,10 +3,19 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const required = ['index.html', 'posts/index.html', 'archives/index.html', 'categories/index.html', 'tags/index.html', 'about/index.html', 'assets/css/site.css', 'assets/js/data/search.json', 'app.js', 'sw.js'];
+const required = ['index.html', 'posts/index.html', 'archives/index.html', 'categories/index.html', 'tags/index.html', 'about/index.html', 'assets/css/site.css', 'assets/js/data/search.json', 'assets/img/favicons/favicon.png', 'favicon.ico', 'app.js', 'sw.js'];
 
 for (const relativePath of required) {
   await access(path.join(root, relativePath));
+}
+
+const home = await readFile(path.join(root, 'index.html'), 'utf8');
+if (!home.includes('<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicons/favicon.png">')) {
+  throw new Error('Homepage must declare the stable, high-resolution PNG favicon.');
+}
+const favicon = await readFile(path.join(root, 'assets/img/favicons/favicon.png'));
+if (favicon.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a' || favicon.readUInt32BE(16) !== 192 || favicon.readUInt32BE(20) !== 192) {
+  throw new Error('Search favicon must be a 192x192 PNG.');
 }
 
 const search = JSON.parse(await readFile(path.join(root, 'assets/js/data/search.json'), 'utf8'));
